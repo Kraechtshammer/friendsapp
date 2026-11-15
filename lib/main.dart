@@ -2,8 +2,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'app/app.dart';
+import 'app/providers.dart';
+import 'app/services.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ProviderScope(child: KeptApp()));
+  // create() can't throw (see there), so the app always opens.
+  final services = await AppServices.create();
+  runApp(
+    ProviderScope(
+      overrides: [servicesProvider.overrideWithValue(services)],
+      child: const KeptApp(),
+    ),
+  );
 }

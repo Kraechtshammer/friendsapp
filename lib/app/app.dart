@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/app_settings.dart';
 import '../l10n/app_localizations.dart';
 import '../ui/home_shell.dart';
 import '../ui/material.dart';
@@ -16,7 +17,7 @@ class KeptApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: buildTheme(Brightness.light),
       darkTheme: buildTheme(Brightness.dark),
-      themeMode: ref.watch(themeModeProvider),
+      themeMode: themeModeFor(ref.settings.themeMode),
       // Material 3 Expressive components take their colours and type from
       // the current Material theme.
       builder: (context, child) => M3ETheme(
@@ -32,3 +33,10 @@ class KeptApp extends ConsumerWidget {
     );
   }
 }
+
+/// The stored theme choice as Flutter's [ThemeMode].
+ThemeMode themeModeFor(AppThemeMode mode) => switch (mode) {
+  AppThemeMode.system => ThemeMode.system,
+  AppThemeMode.light => ThemeMode.light,
+  AppThemeMode.dark => ThemeMode.dark,
+};

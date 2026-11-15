@@ -1,6 +1,11 @@
+import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kept/app/app.dart';
+import 'package:kept/app/providers.dart';
+import 'package:kept/app/services.dart';
+import 'package:kept/data/app_settings.dart';
+import 'package:kept/data/database.dart';
 import 'package:kept/app/theme.dart';
 import 'package:kept/ui/kept_icon.dart';
 import 'package:kept/ui/material.dart';
@@ -9,7 +14,16 @@ void main() {
   testWidgets('shows the four tabs and opens settings from the gear', (
     tester,
   ) async {
-    await tester.pumpWidget(const ProviderScope(child: KeptApp()));
+    final services = AppServices(
+      db: AppDatabase(NativeDatabase.memory()),
+      openDemo: () => AppDatabase(NativeDatabase.memory()),
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [servicesProvider.overrideWithValue(services)],
+        child: const KeptApp(),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Kept.'), findsOneWidget);
@@ -41,5 +55,13 @@ void main() {
       Theme.of(tester.element(find.text('Settings'))).extension<KeptColors>(),
       KeptColors.light,
     );
+    // The choice is stored in the database.
+    expect((await services.settings.load()).themeMode, AppThemeMode.light);
+
+    // Drift closes its streams with a timer; let it run before the end.
+    // Closing the database needs real async, not the test's fake clock.
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 1));
+    await tester.runAsync(services.close);
   });
 }

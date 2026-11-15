@@ -1,6 +1,10 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
+import '../../data/app_settings.dart';
 import '../common.dart';
 import '../material.dart';
 
@@ -10,6 +14,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final settings = ref.settings;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settings)),
       body: ListView(
@@ -20,25 +25,61 @@ class SettingsScreen extends ConsumerWidget {
             style: context.text.labelMedium,
           ),
           const SizedBox(height: 12),
-          SegmentedButton<ThemeMode>(
+          SegmentedButton<AppThemeMode>(
             showSelectedIcon: false,
             segments: [
               ButtonSegment(
-                value: ThemeMode.system,
+                value: AppThemeMode.system,
                 label: Text(l10n.themeSystem),
               ),
               ButtonSegment(
-                value: ThemeMode.light,
+                value: AppThemeMode.light,
                 label: Text(l10n.themeLight),
               ),
-              ButtonSegment(value: ThemeMode.dark, label: Text(l10n.themeDark)),
+              ButtonSegment(
+                value: AppThemeMode.dark,
+                label: Text(l10n.themeDark),
+              ),
             ],
-            selected: {ref.watch(themeModeProvider)},
-            onSelectionChanged: (chosen) =>
-                ref.read(themeModeProvider.notifier).set(chosen.single),
+            selected: {settings.themeMode},
+            onSelectionChanged: (chosen) => unawaited(
+              ref.services.settings.update(
+                (s) => s.copyWith(themeMode: chosen.single),
+              ),
+            ),
           ),
+          if (kDebugMode) _Development(demoMode: settings.demoMode),
         ],
       ),
+    );
+  }
+}
+
+/// Development builds only (02-design.md §8, demo data). These texts are
+/// hard-coded English on purpose: the user never sees them, so they are
+/// not ARB keys.
+class _Development extends ConsumerWidget {
+  const _Development({required this.demoMode});
+
+  final bool demoMode;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: 32),
+        Text('DEVELOPMENT', style: context.text.labelMedium),
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          title: const Text('Demo data'),
+          subtitle: const Text(
+            'Shows invented people. Your own data is not touched.',
+          ),
+          value: demoMode,
+          onChanged: (on) => unawaited(ref.services.setDemoMode(on)),
+        ),
+      ],
     );
   }
 }
