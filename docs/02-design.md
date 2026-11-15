@@ -1,6 +1,6 @@
 # 02 Design
 
-Status: **draft proposal** by Claude, 2026-11-14. Nothing here is confirmed unless a line says "decided". Background and reasons are in [01-research.md](01-research.md); F#, Q# and B# refer to it.
+Status: **closed by the developer on 2026-11-15.** It began as a draft proposal by Claude on 2026-11-14; §6 keeps the history of how each point was settled, including names used along the way (the working name "Friends" on the concept screens). Changes from now on are listed in §8, not written into the text. Background and reasons are in [01-research.md](01-research.md); F#, Q# and B# refer to it.
 
 ## 1. What the app is
 
