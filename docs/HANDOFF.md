@@ -6,7 +6,7 @@ The first thing a new session reads. Rewritten on 2026-11-15 at the end of the d
 
 - Phase: **implement**. Research closed 2026-11-14, design closed 2026-11-15, both by the developer.
 - The app is called **Kept.** with the full stop, which is also the app label; running text may write Kept. Version 0.1.0+1; Claude chooses the steps up to 1.0.0, which is the first real release. App ID `de.gartenpa.kept` (final). The repository and folder are `friendsapp`.
-- **M0 has started.** The Flutter project exists but is still Flutter's counter template. Nothing of Kept is built.
+- **M0 has started.** The app skeleton stands: theme, four empty tabs, settings with a theme choice. No feature of Kept is built.
 - Everything is committed and pushed. The repository on GitHub is public.
 
 ## 2. What to read, and how much
@@ -72,12 +72,13 @@ Done:
 - Flutter project: Android only, label "Kept". In the container `flutter analyze` is clean, the template test passes, debug and release APKs build.
 - CI and release workflows, build and install scripts, F5 launch configurations, commit hook. The first CI run on GitHub passed (2026-11-15).
 - Packages (2026-11-15): all packages from 02-design.md §4 are in pubspec.yaml, both `url_launcher` and `android_intent_plus` until the phone test picks one. `compileSdk` is 37 and core library desugaring is on, as the plugins need. Checked: analyze clean, debug APK builds in the container. Not checked: CI with the new packages.
+- App skeleton (2026-11-15): layers as in akai-timetrack (`lib/app`, `lib/ui`, `lib/l10n`). `app/theme.dart` holds every colour of the style guide (`KeptColors`, read with `context.kept`) and builds the dark and the light theme. Outfit is bundled as a variable font (`assets/fonts`, OFL licence beside it). Four tabs with empty screens, the gear on Home opens Settings, which has only the theme choice (system, light, dark; kept in memory until the database exists). English and German texts; English is the template. Checked: analyze clean, one widget test passes. Not checked: how it looks, on a phone or anywhere else.
 - Release signing: the developer created a key for Kept on 2026-11-15 (`android/kept-release.jks`, `android/key.properties`, both git-ignored) and says the three GitHub secrets are entered. Checked by Claude: a local release APK is signed with a non-debug key. Not checked: the secrets and the release workflow, which has never run.
 
 Next, in this order. One small commit per step.
 
 1. Done: packages.
-2. App skeleton after akai-timetrack's layering: theme for dark and light from the style guide (through `material_3_expressive`, wrapped as akai does in `ui/material.dart`), the four tabs with empty screens, the gear to an empty settings screen, German and English.
+2. Done: app skeleton.
 3. Icons: write the sixteen SVGs from `gen_v6.py` into asset files and show them through `flutter_svg`. Gift is still to be drawn.
 4. Run it on the developer's phone. This needs the developer.
 5. Phone checks, each as a small throwaway screen or debug action, with the developer:

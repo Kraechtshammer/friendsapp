@@ -1,0 +1,14 @@
+{
+  "@@locale": "en",
+  "appTitle": "Kept.",
+  "tabHome": "Home",
+  "tabUpcoming": "Upcoming",
+  "tabPeople": "People",
+  "tabProgress": "Progress",
+  "settings": "Settings",
+  "settingsTheme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "nothingHereYet": "Nothing here yet."
+}

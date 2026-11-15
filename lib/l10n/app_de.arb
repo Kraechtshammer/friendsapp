@@ -1,0 +1,14 @@
+{
+  "@@locale": "de",
+  "appTitle": "Kept.",
+  "tabHome": "Start",
+  "tabUpcoming": "Demnächst",
+  "tabPeople": "Leute",
+  "tabProgress": "Fortschritt",
+  "settings": "Einstellungen",
+  "settingsTheme": "Design",
+  "themeSystem": "System",
+  "themeLight": "Hell",
+  "themeDark": "Dunkel",
+  "nothingHereYet": "Hier ist noch nichts."
+}
