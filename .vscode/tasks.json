@@ -1,0 +1,99 @@
+{
+  // Run with Ctrl+Shift+P → "Tasks: Run Task".
+  // All tasks run inside the dev container. Device tasks need the adb server on Windows
+  // (scripts/windows/start-adb-server.cmd), see docs/03-dev-setup.md.
+  // The Flutter tasks work once the app project exists (milestone M0).
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Flutter: Get packages",
+      "type": "shell",
+      "command": "flutter pub get",
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter: Analyze",
+      "type": "shell",
+      "command": "flutter analyze",
+      "problemMatcher": "$dart-flutter-analyze"
+    },
+    {
+      "label": "Flutter: Test",
+      "type": "shell",
+      "command": "flutter test",
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Device: List devices",
+      "type": "shell",
+      "command": "adb devices -l && echo && flutter devices",
+      "problemMatcher": []
+    },
+    {
+      "label": "Device: Pair wireless debugging",
+      "detail": "Phone: Developer options → Wireless debugging → Pair device with pairing code",
+      "type": "shell",
+      "command": "adb pair ${input:pairAddress} ${input:pairCode}",
+      "problemMatcher": []
+    },
+    {
+      "label": "Device: Connect wireless debugging",
+      "detail": "Phone: Developer options → Wireless debugging → IP address & Port",
+      "type": "shell",
+      "command": "adb connect ${input:connectAddress}",
+      "problemMatcher": []
+    },
+    {
+      "label": "Emulator: Start",
+      "detail": "Opens the Android emulator window and waits until it has booted",
+      "type": "shell",
+      "command": "bash scripts/emulator.sh start",
+      "problemMatcher": []
+    },
+    {
+      "label": "Emulator: Stop",
+      "type": "shell",
+      "command": "bash scripts/emulator.sh stop",
+      "problemMatcher": []
+    },
+    {
+      "label": "Emulator: Set up (one time, ~3 GB download)",
+      "detail": "Only needed if akai-timetrack has not set it up already; the emulator is shared",
+      "type": "shell",
+      "command": "bash scripts/emulator.sh setup",
+      "problemMatcher": []
+    },
+    {
+      "label": "Emulator: Factory reset",
+      "detail": "Deletes all apps and data on the shared emulator (also akai-timetrack's), then starts it",
+      "type": "shell",
+      "command": "bash scripts/emulator.sh wipe",
+      "problemMatcher": []
+    },
+    {
+      "label": "Device: Show app logs",
+      "type": "shell",
+      "command": "flutter logs",
+      "isBackground": true,
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "pairAddress",
+      "type": "promptString",
+      "description": "Pairing address shown on the phone (IP:port), e.g. 192.168.1.23:37121"
+    },
+    {
+      "id": "pairCode",
+      "type": "promptString",
+      "description": "Six-digit pairing code shown on the phone"
+    },
+    {
+      "id": "connectAddress",
+      "type": "promptString",
+      "description": "Address under 'IP address & Port' on the phone, e.g. 192.168.1.23:41235"
+    }
+  ]
+}
