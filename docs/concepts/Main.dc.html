@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Home</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.s{width:390px;height:844px;box-sizing:border-box;background:#F3F5F1;color:#1C2A26;font-family:'Nunito',system-ui,sans-serif;display:flex;flex-direction:column;font-size:16px;line-height:1.35}
+.c{flex:1;padding:28px 20px 16px;display:flex;flex-direction:column;gap:16px;overflow:hidden}
+.card{background:#fff;border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.b{height:48px;border:0;border-radius:14px;font:700 16px 'Nunito',sans-serif;padding:0 18px;background:#1F6F5C;color:#fff}
+.b2{background:#E1EAE5;color:#1C2A26}
+.chip{height:44px;border-radius:22px;border:1px solid #C5D1CA;background:#fff;color:#1C2A26;font:600 15px 'Nunito',sans-serif;padding:0 16px}
+.on{background:#1F6F5C;border-color:#1F6F5C;color:#fff}
+.m{color:#55635E}
+.l{font-size:13px;font-weight:700;color:#55635E;letter-spacing:.04em;text-transform:uppercase}
+.av{width:44px;height:44px;border-radius:22px;background:#D5E6DE;display:flex;align-items:center;justify-content:center;font-weight:800;color:#1F6F5C;flex:none}
+.in{box-sizing:border-box;width:100%;border:1px solid #C5D1CA;border-radius:14px;padding:12px 14px;font:400 16px 'Nunito',sans-serif;color:#1C2A26;background:#F8FAF7}
+h1{margin:0;font-size:26px;font-weight:800}
+h2{margin:0;font-size:19px;font-weight:800}
+p{margin:0}
+.nav{display:flex;background:#fff;border-top:1px solid #DDE5E0}
+.nav a{flex:1;height:64px;box-sizing:border-box;border-top:3px solid transparent;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#55635E;text-decoration:none}
+.nav a.cur{color:#1F6F5C;border-top-color:#1F6F5C}
+</style>
+</helmet>
+<div class="s">
+<div class="c">
+<h1>Who came to mind?</h1>
+<div class="card">
+<label class="l" for="cap">Write it down before it is gone</label>
+<textarea id="cap" class="in" style="height: 60px; resize: none" placeholder="A few words, e.g. saw a bouldering video"></textarea>
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<button class="chip">Tom</button>
+<button class="chip">Anna</button>
+<button class="chip">Jonas</button>
+<button class="chip">Search</button>
+</div>
+</div>
+<p class="l">Open for you</p>
+<div class="card">
+<div style="display: flex; gap: 12px; align-items: center">
+<div class="av" aria-hidden="true">T</div>
+<div>
+<h2>Tom</h2>
+<p class="m" style="font-size: 14px">Close friend, on WhatsApp</p>
+</div>
+</div>
+<p style="font-size: 18px; font-weight: 600">Saw a bouldering video. Ask if he wants to go.</p>
+<p class="m" style="font-size: 14px">From last time: new job since March.</p>
+<button class="b">Open chat</button>
+<div style="display: flex; gap: 8px">
+<button class="b b2" style="flex: 1">Another one</button>
+<button class="b b2" style="flex: 1">Done</button>
+</div>
+</div>
+</div>
+<nav class="nav">
+<a class="cur" href="Main.dc.html">Home</a>
+<a href="People.dc.html">People</a>
+<a href="Progress.dc.html">Progress</a>
+<a href="Settings.dc.html">Settings</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

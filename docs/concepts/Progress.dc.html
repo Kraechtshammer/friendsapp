@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Progress and treats</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.s{width:390px;height:844px;box-sizing:border-box;background:#F3F5F1;color:#1C2A26;font-family:'Nunito',system-ui,sans-serif;display:flex;flex-direction:column;font-size:16px;line-height:1.35}
+.c{flex:1;padding:28px 20px 16px;display:flex;flex-direction:column;gap:14px;overflow:hidden}
+.card{background:#fff;border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.chip{height:44px;border-radius:22px;border:1px solid #C5D1CA;background:#fff;color:#1C2A26;font:600 15px 'Nunito',sans-serif;padding:0 16px}
+.m{color:#55635E}
+.l{font-size:13px;font-weight:700;color:#55635E;letter-spacing:.04em;text-transform:uppercase}
+.d{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#55635E}
+.d i{width:28px;height:28px;border-radius:14px;box-sizing:border-box;border:2px solid #C5D1CA;display:block}
+.d i.y{background:#1F6F5C;border-color:#1F6F5C}
+.d i.n{background:#DCE6E0;border-color:#DCE6E0}
+h1{margin:0;font-size:26px;font-weight:800}
+p{margin:0}
+.nav{display:flex;background:#fff;border-top:1px solid #DDE5E0}
+.nav a{flex:1;height:64px;box-sizing:border-box;border-top:3px solid transparent;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#55635E;text-decoration:none}
+.nav a.cur{color:#1F6F5C;border-top-color:#1F6F5C}
+</style>
+</helmet>
+<div class="s">
+<div class="c">
+<h1>Your year so far</h1>
+<div class="card">
+<p style="font-size: 44px; font-weight: 800; color: #1F6F5C; line-height: 1">14 people</p>
+<p class="m">reached this year. This number only ever grows.</p>
+</div>
+<div class="card" style="background: #FBEBD8">
+<p class="l" style="color: #5E3208">Next treat</p>
+<p style="font-size: 20px; font-weight: 800; color: #5E3208">Cinema evening</p>
+<div role="img" aria-label="2 of 3 done" style="display: flex; gap: 6px">
+<div style="flex: 1; height: 10px; border-radius: 5px; background: #8F4A0C"></div>
+<div style="flex: 1; height: 10px; border-radius: 5px; background: #8F4A0C"></div>
+<div style="flex: 1; height: 10px; border-radius: 5px; background: #fff"></div>
+</div>
+<p style="color: #5E3208">2 of 3. One more person and it is yours.</p>
+<button class="chip" style="align-self: flex-start">My treats</button>
+</div>
+<div class="card">
+<p class="l">This week</p>
+<div style="display: flex">
+<div class="d"><i class="y"></i>Mon</div>
+<div class="d"><i class="n"></i>Tue</div>
+<div class="d"><i class="n"></i>Wed</div>
+<div class="d"><i class="y"></i>Thu</div>
+<div class="d"><i class="n"></i>Fri</div>
+<div class="d"><i></i>Sat</div>
+<div class="d"><i></i>Sun</div>
+</div>
+<p class="m" style="font-size: 14px">Dark: you reached someone. Light: not today, which is a fine answer.</p>
+</div>
+<div class="card">
+<p class="l">Weeks</p>
+<p style="font-weight: 700">3 weeks in a row with at least one person.</p>
+<p class="m" style="font-size: 14px">A quiet week pauses this. It never resets to zero.</p>
+</div>
+<div class="card">
+<p class="l">This month</p>
+<p>9 thoughts noted, 6 followed up.</p>
+</div>
+</div>
+<nav class="nav">
+<a href="Main.dc.html">Home</a>
+<a href="People.dc.html">People</a>
+<a class="cur" href="Progress.dc.html">Progress</a>
+<a href="Settings.dc.html">Settings</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

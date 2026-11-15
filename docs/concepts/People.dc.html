@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>People</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.s{width:390px;height:844px;box-sizing:border-box;background:#F3F5F1;color:#1C2A26;font-family:'Nunito',system-ui,sans-serif;display:flex;flex-direction:column;font-size:16px;line-height:1.35}
+.c{flex:1;padding:28px 20px 16px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+.card{background:#fff;border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.b{height:48px;border:0;border-radius:14px;font:700 16px 'Nunito',sans-serif;padding:0 18px;background:#1F6F5C;color:#fff}
+.chip{height:44px;border-radius:22px;border:1px solid #C5D1CA;background:#fff;color:#1C2A26;font:600 15px 'Nunito',sans-serif;padding:0 16px}
+.m{color:#55635E}
+.l{font-size:13px;font-weight:700;color:#55635E;letter-spacing:.04em;text-transform:uppercase;margin-top:4px}
+.av{width:40px;height:40px;border-radius:20px;background:#D5E6DE;display:flex;align-items:center;justify-content:center;font-weight:800;color:#1F6F5C;flex:none}
+.row{display:flex;gap:12px;align-items:center;background:#fff;border-radius:16px;padding:8px 12px;min-height:44px;color:#1C2A26;text-decoration:none}
+.row b{flex:1;font-weight:700}
+.row span{font-size:14px;color:#55635E}
+h1{margin:0;font-size:26px;font-weight:800}
+h2{margin:0;font-size:19px;font-weight:800}
+p{margin:0}
+.nav{display:flex;background:#fff;border-top:1px solid #DDE5E0}
+.nav a{flex:1;height:64px;box-sizing:border-box;border-top:3px solid transparent;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#55635E;text-decoration:none}
+.nav a.cur{color:#1F6F5C;border-top-color:#1F6F5C}
+</style>
+</helmet>
+<div class="s">
+<div class="c">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<h1>People</h1>
+<a class="chip" href="Setup.dc.html" style="display: flex; align-items: center; text-decoration: none">Add</a>
+</div>
+<div class="card" style="background: #DDEBE4">
+<p class="l" style="margin-top: 0">Getting back in touch</p>
+<h2>This week: Jonas</h2>
+<p class="m" style="font-size: 14px">School friend, on Telegram. After him: Lena, Marc.</p>
+<button class="b">Open chat</button>
+</div>
+<p class="l">Close friends</p>
+<a class="row" href="Person.dc.html"><div class="av" aria-hidden="true">T</div><b>Tom</b><span>WhatsApp</span></a>
+<a class="row" href="Person.dc.html"><div class="av" aria-hidden="true">A</div><b>Anna</b><span>WhatsApp</span></a>
+<p class="l">Now and then</p>
+<a class="row" href="Person.dc.html"><div class="av" aria-hidden="true">M</div><b>Marek</b><span>Discord</span></a>
+<p class="l">A few times a year</p>
+<a class="row" href="Person.dc.html"><div class="av" aria-hidden="true">S</div><b>Sophie</b><span>Signal</span></a>
+<p class="l">Family</p>
+<a class="row" href="Person.dc.html"><div class="av" aria-hidden="true">M</div><b>Aunt Maria</b><span>WhatsApp</span></a>
+<a class="row" href="Person.dc.html"><div class="av" aria-hidden="true">G</div><b>Grandpa</b><span>Phone</span></a>
+</div>
+<nav class="nav">
+<a href="Main.dc.html">Home</a>
+<a class="cur" href="People.dc.html">People</a>
+<a href="Progress.dc.html">Progress</a>
+<a href="Settings.dc.html">Settings</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,524 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "AfterContact.dc.html": {
+      "h": 844,
+      "title": "4 Back from the chat",
+      "w": 390,
+      "x": 1410,
+      "y": 0
+    },
+    "Capture.dc.html": {
+      "h": 844,
+      "title": "2 Capturing, and the list-of-three setting",
+      "w": 390,
+      "x": 470,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "h": 844,
+      "title": "1 Home: capture and one open item",
+      "w": 390,
+      "x": 0,
+      "y": 0
+    },
+    "Notifications.dc.html": {
+      "h": 844,
+      "title": "3 Notifications",
+      "w": 390,
+      "x": 940,
+      "y": 0
+    },
+    "People.dc.html": {
+      "h": 844,
+      "title": "5 People and reconnecting",
+      "w": 390,
+      "x": 0,
+      "y": 1264
+    },
+    "Person.dc.html": {
+      "h": 844,
+      "title": "6 One person",
+      "w": 390,
+      "x": 470,
+      "y": 1264
+    },
+    "Progress.dc.html": {
+      "h": 844,
+      "title": "8 Progress and treats",
+      "w": 390,
+      "x": 1410,
+      "y": 1264
+    },
+    "Settings.dc.html": {
+      "h": 844,
+      "title": "9 Settings",
+      "w": 390,
+      "x": 1880,
+      "y": 1264
+    },
+    "Setup.dc.html": {
+      "h": 844,
+      "title": "7 First start",
+      "w": 390,
+      "x": 940,
+      "y": 1264
+    },
+    "V2Done.dc.html": {
+      "h": 844,
+      "title": "V2 · 3 After \"Yes, I wrote\"",
+      "w": 390,
+      "x": 940,
+      "y": 2528
+    },
+    "V2Home.dc.html": {
+      "h": 844,
+      "title": "V2 · 1 Home: capture, tonight's pick, coming up",
+      "w": 390,
+      "x": 0,
+      "y": 2528
+    },
+    "V2People.dc.html": {
+      "h": 844,
+      "title": "V2 · 4 People",
+      "w": 390,
+      "x": 1410,
+      "y": 2528
+    },
+    "V2Person.dc.html": {
+      "h": 844,
+      "title": "V2 · 5 One person",
+      "w": 390,
+      "x": 1880,
+      "y": 2528
+    },
+    "V2Progress.dc.html": {
+      "h": 844,
+      "title": "V2 · 6 Progress and treats",
+      "w": 390,
+      "x": 2350,
+      "y": 2528
+    },
+    "V2Upcoming.dc.html": {
+      "h": 844,
+      "title": "V2 · 2 Upcoming timeline (new)",
+      "w": 390,
+      "x": 470,
+      "y": 2528
+    },
+    "V3HomeDark.dc.html": {
+      "h": 844,
+      "title": "V3 · Home, dark",
+      "w": 390,
+      "x": 0,
+      "y": 3792
+    },
+    "V3HomeLight.dc.html": {
+      "h": 844,
+      "title": "V3 · Home, light",
+      "w": 390,
+      "x": 1410,
+      "y": 3792
+    },
+    "V3ProgressDark.dc.html": {
+      "h": 844,
+      "title": "V3 · Progress and stamp card, dark",
+      "w": 390,
+      "x": 940,
+      "y": 3792
+    },
+    "V3ProgressLight.dc.html": {
+      "h": 844,
+      "title": "V3 · Progress and stamp card, light",
+      "w": 390,
+      "x": 2350,
+      "y": 3792
+    },
+    "V3UpcomingDark.dc.html": {
+      "h": 844,
+      "title": "V3 · Upcoming, dark",
+      "w": 390,
+      "x": 454,
+      "y": 3792
+    },
+    "V3UpcomingLight.dc.html": {
+      "h": 844,
+      "title": "V3 · Upcoming, light",
+      "w": 390,
+      "x": 1880,
+      "y": 3792
+    },
+    "V4HomeA.dc.html": {
+      "x": 0,
+      "y": 5056,
+      "w": 390,
+      "h": 844,
+      "title": "V4 · Home A: colourful icons everywhere"
+    },
+    "V4HomeB.dc.html": {
+      "x": 470,
+      "y": 5056,
+      "w": 390,
+      "h": 844,
+      "title": "V4 · Home B: plain icons on coloured areas"
+    },
+    "V4Upcoming.dc.html": {
+      "x": 940,
+      "y": 5056,
+      "w": 390,
+      "h": 844,
+      "title": "V4 · Upcoming"
+    },
+    "V4Done.dc.html": {
+      "x": 1410,
+      "y": 5056,
+      "w": 390,
+      "h": 844,
+      "title": "V4 · After 'Yes, I wrote'"
+    },
+    "V4Person.dc.html": {
+      "x": 1880,
+      "y": 5056,
+      "w": 390,
+      "h": 844,
+      "title": "V4 · One person"
+    },
+    "V4Progress.dc.html": {
+      "x": 2350,
+      "y": 5056,
+      "w": 390,
+      "h": 844,
+      "title": "V4 · Progress and stamp card"
+    },
+    "V5Home.dc.html": {
+      "x": 0,
+      "y": 6320,
+      "w": 390,
+      "h": 844,
+      "title": "V5 · Home"
+    },
+    "V5Upcoming.dc.html": {
+      "x": 470,
+      "y": 6320,
+      "w": 390,
+      "h": 844,
+      "title": "V5 · Upcoming"
+    },
+    "V5Done.dc.html": {
+      "x": 940,
+      "y": 6320,
+      "w": 390,
+      "h": 844,
+      "title": "V5 · After 'Yes, I wrote'"
+    },
+    "V5Person.dc.html": {
+      "x": 1410,
+      "y": 6320,
+      "w": 390,
+      "h": 844,
+      "title": "V5 · One person"
+    },
+    "V5Progress.dc.html": {
+      "x": 1880,
+      "y": 6320,
+      "w": 390,
+      "h": 844,
+      "title": "V5 · Progress and stamp card"
+    },
+    "V6Home.dc.html": {
+      "x": 0,
+      "y": 7584,
+      "w": 390,
+      "h": 844,
+      "title": "V6 · Home"
+    },
+    "V6Capture.dc.html": {
+      "x": 470,
+      "y": 7584,
+      "w": 390,
+      "h": 844,
+      "title": "V6 · Capturing, and the list of three"
+    },
+    "V6Notifications.dc.html": {
+      "x": 940,
+      "y": 7584,
+      "w": 390,
+      "h": 844,
+      "title": "V6 · Notifications"
+    },
+    "V6Ask.dc.html": {
+      "x": 1410,
+      "y": 7584,
+      "w": 390,
+      "h": 844,
+      "title": "V6 · Back from the chat"
+    },
+    "V6Done.dc.html": {
+      "x": 1880,
+      "y": 7584,
+      "w": 390,
+      "h": 844,
+      "title": "V6 · After 'Yes, I wrote'"
+    },
+    "V6Upcoming.dc.html": {
+      "x": 2350,
+      "y": 7584,
+      "w": 390,
+      "h": 844,
+      "title": "V6 · Upcoming"
+    },
+    "V6People.dc.html": {
+      "x": 0,
+      "y": 8848,
+      "w": 390,
+      "h": 844,
+      "title": "V6 · People"
+    },
+    "V6Person.dc.html": {
+      "x": 470,
+      "y": 8848,
+      "w": 390,
+      "h": 844,
+      "title": "V6 · One person"
+    },
+    "V6PersonMore.dc.html": {
+      "x": 940,
+      "y": 8848,
+      "w": 390,
+      "h": 844,
+      "title": "V6 · One person, scrolled down: upcoming and history"
+    },
+    "V6Setup.dc.html": {
+      "x": 1410,
+      "y": 8848,
+      "w": 390,
+      "h": 844,
+      "title": "V6 · First start"
+    },
+    "V6Progress.dc.html": {
+      "x": 1880,
+      "y": 8848,
+      "w": 390,
+      "h": 844,
+      "title": "V6 · Progress and stamp card"
+    },
+    "V6Settings.dc.html": {
+      "x": 2350,
+      "y": 8848,
+      "w": 390,
+      "h": 844,
+      "title": "V6 · Settings"
+    },
+    "V6LightHome.dc.html": {
+      "x": 0,
+      "y": 10112,
+      "w": 390,
+      "h": 844,
+      "title": "V6 light · Home"
+    },
+    "V6LightUpcoming.dc.html": {
+      "x": 470,
+      "y": 10112,
+      "w": 390,
+      "h": 844,
+      "title": "V6 light · Upcoming"
+    },
+    "V6LightPersonMore.dc.html": {
+      "x": 940,
+      "y": 10112,
+      "w": 390,
+      "h": 844,
+      "title": "V6 light · Friend timeline, with who reached out"
+    },
+    "V6LightProgress.dc.html": {
+      "x": 1410,
+      "y": 10112,
+      "w": 390,
+      "h": 844,
+      "title": "V6 light · Progress and stamp card"
+    },
+    "V6bHome.dc.html": {
+      "x": 0,
+      "y": 11376,
+      "w": 390,
+      "h": 844,
+      "title": "V6b · Home"
+    },
+    "V6bCapture.dc.html": {
+      "x": 470,
+      "y": 11376,
+      "w": 390,
+      "h": 844,
+      "title": "V6b · Capturing"
+    },
+    "V6bPeople.dc.html": {
+      "x": 940,
+      "y": 11376,
+      "w": 390,
+      "h": 844,
+      "title": "V6b · People"
+    },
+    "IconCompare.dc.html": {
+      "x": 0,
+      "y": 12640,
+      "w": 1180,
+      "h": 1080,
+      "title": "Icon sets compared: ours and six candidates, dark and light"
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-14T22:00:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "t1": {
+      "kind": "title1",
+      "maxW": 1800,
+      "text": "Every day",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "t2": {
+      "kind": "title1",
+      "maxW": 2270,
+      "text": "People, setup and settings",
+      "w": 240,
+      "x": 0,
+      "y": 964
+    },
+    "t3": {
+      "kind": "title1",
+      "maxW": 2740,
+      "text": "V2: warmer and more playful, with an upcoming timeline",
+      "w": 240,
+      "x": 0,
+      "y": 2228
+    },
+    "t4": {
+      "kind": "title1",
+      "maxW": 2740,
+      "text": "V3 tryout: V2 ideas in Material 3 Expressive, dark and light, no emoji",
+      "w": 240,
+      "x": 0,
+      "y": 3492
+    },
+    "t5": {
+      "x": 0,
+      "y": 4756,
+      "w": 240,
+      "text": "V4 tryout: V3 with shadows, tilted notes, confetti and colourful icons (dark)",
+      "kind": "title1",
+      "maxW": 2740
+    },
+    "t6": {
+      "x": 0,
+      "y": 6020,
+      "w": 240,
+      "text": "V5: colourful icons everywhere, large cards straight, imperfect stamps, messenger icon on Open chat",
+      "kind": "title1",
+      "maxW": 2740
+    },
+    "t7": {
+      "x": 0,
+      "y": 7284,
+      "w": 240,
+      "text": "V6 full set, every day",
+      "kind": "title1",
+      "maxW": 2740
+    },
+    "t8": {
+      "x": 0,
+      "y": 8548,
+      "w": 240,
+      "text": "V6 full set, people, setup and settings (stamps only tilted)",
+      "kind": "title1",
+      "maxW": 2740
+    },
+    "t9": {
+      "x": 0,
+      "y": 9812,
+      "w": 240,
+      "text": "V6 in light mode (the friend timeline here also shows who reached out)",
+      "kind": "title1",
+      "maxW": 2740
+    },
+    "t10": {
+      "x": 0,
+      "y": 11076,
+      "w": 240,
+      "text": "V6b tweaks: shadows under people blobs and grey buttons, 'More' blob instead of the magnifier",
+      "kind": "title1",
+      "maxW": 2740
+    },
+    "t11": {
+      "x": 0,
+      "y": 12340,
+      "w": 240,
+      "text": "Icon sets: ours against candidates (samples picked by search, so some matches are off)",
+      "kind": "title1",
+      "maxW": 2740
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Capture.dc.html",
+    "Notifications.dc.html",
+    "AfterContact.dc.html",
+    "People.dc.html",
+    "Person.dc.html",
+    "Setup.dc.html",
+    "Progress.dc.html",
+    "Settings.dc.html",
+    "V2Home.dc.html",
+    "V2Upcoming.dc.html",
+    "V2Done.dc.html",
+    "V2People.dc.html",
+    "V2Person.dc.html",
+    "V2Progress.dc.html",
+    "V3HomeDark.dc.html",
+    "V3UpcomingDark.dc.html",
+    "V3ProgressDark.dc.html",
+    "V3HomeLight.dc.html",
+    "V3UpcomingLight.dc.html",
+    "V3ProgressLight.dc.html",
+    "V4HomeA.dc.html",
+    "V4HomeB.dc.html",
+    "V4Upcoming.dc.html",
+    "V4Done.dc.html",
+    "V4Person.dc.html",
+    "V4Progress.dc.html",
+    "V5Home.dc.html",
+    "V5Upcoming.dc.html",
+    "V5Done.dc.html",
+    "V5Person.dc.html",
+    "V5Progress.dc.html",
+    "V6Home.dc.html",
+    "V6Capture.dc.html",
+    "V6Notifications.dc.html",
+    "V6Ask.dc.html",
+    "V6Done.dc.html",
+    "V6Upcoming.dc.html",
+    "V6People.dc.html",
+    "V6Person.dc.html",
+    "V6PersonMore.dc.html",
+    "V6Setup.dc.html",
+    "V6Progress.dc.html",
+    "V6Settings.dc.html",
+    "V6LightHome.dc.html",
+    "V6LightUpcoming.dc.html",
+    "V6LightPersonMore.dc.html",
+    "V6LightProgress.dc.html",
+    "V6bHome.dc.html",
+    "V6bCapture.dc.html",
+    "V6bPeople.dc.html",
+    "IconCompare.dc.html"
+  ],
+  "pages": [],
+  "title": "Friends app concept screens"
+}

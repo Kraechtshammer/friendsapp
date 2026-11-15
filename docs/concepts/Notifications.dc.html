@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Notifications</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.s{width:390px;height:844px;box-sizing:border-box;background:#1C2A26;color:#1C2A26;font-family:'Nunito',system-ui,sans-serif;display:flex;flex-direction:column;gap:14px;padding:32px 16px;font-size:16px;line-height:1.35}
+.n{background:#F3F5F1;border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.app{font-size:13px;font-weight:700;color:#55635E}
+.t{font-size:18px;font-weight:800;margin:0}
+.a{display:flex;gap:8px}
+.a button{flex:1;height:44px;border:0;border-radius:12px;background:#DCE6E0;color:#1C2A26;font:700 15px 'Nunito',sans-serif;padding:0 8px}
+.a button.p{background:#1F6F5C;color:#fff}
+.cap{font-size:13px;font-weight:700;color:#C9D6CF;letter-spacing:.04em;text-transform:uppercase;margin:10px 4px 0}
+p{margin:0}
+</style>
+</helmet>
+<div class="s">
+<p class="cap" style="margin-top: 0">Every evening, at a time you set</p>
+<div class="n">
+<p class="app">Friends</p>
+<p class="t">Got ten minutes for someone today?</p>
+<div class="a">
+<button class="p">Yes</button>
+<button>Not today</button>
+</div>
+</div>
+<p class="cap">On the evening of a birthday</p>
+<div class="n">
+<p class="app">Friends</p>
+<p class="t">Congratulated Anna yet?</p>
+<div class="a">
+<button>Yes</button>
+<button class="p">Open chat</button>
+<button>Later</button>
+</div>
+</div>
+<p class="cap">Two days after someone wrote</p>
+<div class="n">
+<p class="app">Friends</p>
+<p class="t">Still owe Jonas a reply?</p>
+<p style="font-size: 15px; color: #55635E">He wrote on Tuesday.</p>
+<div class="a">
+<button class="p">Open chat</button>
+<button>Already answered</button>
+</div>
+</div>
+<p class="cap">When reconnecting, once a week</p>
+<div class="n">
+<p class="app">Friends</p>
+<p class="t">This week: Jonas</p>
+<p style="font-size: 15px; color: #55635E">You wanted to get back in touch.</p>
+<div class="a">
+<button class="p">Open chat</button>
+<button>Someone else</button>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

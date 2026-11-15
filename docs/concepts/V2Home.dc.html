@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>V2 · 1 Home: capture, tonight's pick, coming up</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.s{width:390px;height:844px;box-sizing:border-box;background:#FFF4E4;color:#2A1B3D;font-family:'Nunito',system-ui,sans-serif;display:flex;flex-direction:column;font-size:16px;line-height:1.35;position:relative;overflow:hidden}
+.c{flex:1;padding:22px 18px 12px;display:flex;flex-direction:column;gap:14px;overflow:hidden}
+h1,h2,.f{font-family:'Fredoka','Nunito',sans-serif}
+h1{margin:0;font-size:28px;font-weight:700;line-height:1.15}
+h2{margin:0;font-size:20px;font-weight:600;line-height:1.2}
+p{margin:0}
+a{color:inherit}
+.card{background:#fff;border:2.5px solid #2A1B3D;border-radius:24px;box-shadow:0 5px 0 #2A1B3D;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.sun{background:#FFD45C}.coral{background:#FF7A6B}.mint{background:#8FE3C8}.lilac{background:#CFC2FF}.sky{background:#A9D8FF}.pink{background:#FFB8D4}.cream{background:#FFF4E4}.white{background:#fff}
+.b{height:48px;box-sizing:border-box;border:2.5px solid #2A1B3D;border-radius:16px;box-shadow:0 4px 0 #2A1B3D;font:600 17px 'Fredoka','Nunito',sans-serif;padding:0 14px;background:#FF7A6B;color:#2A1B3D}
+.b2{background:#fff}
+.chip{height:44px;box-sizing:border-box;border-radius:22px;border:2px solid #2A1B3D;background:#fff;color:#2A1B3D;font:700 14px 'Nunito',sans-serif;padding:0 14px}
+.tag{align-self:flex-start;font:600 13px 'Fredoka','Nunito',sans-serif;padding:3px 10px;border-radius:12px;border:2px solid #2A1B3D}
+.m{color:#6B5A7A;font-size:14px}
+.l{font:600 13px 'Fredoka','Nunito',sans-serif;letter-spacing:.06em;text-transform:uppercase}
+.av{width:48px;height:48px;box-sizing:border-box;border-radius:50%;border:2.5px solid #2A1B3D;display:flex;align-items:center;justify-content:center;font-size:24px;line-height:1;flex:none;text-decoration:none}
+.who{display:flex;flex-direction:column;align-items:center;gap:3px;font-weight:700;font-size:13px;background:none;border:0;padding:0;color:#2A1B3D;font-family:inherit;min-width:56px}
+.in{box-sizing:border-box;width:100%;height:48px;border:2.5px solid #2A1B3D;border-radius:16px;padding:0 14px;font:600 16px 'Nunito',sans-serif;color:#2A1B3D;background:#fff}
+.in::placeholder{color:#6B5A7A}
+.row{display:flex;gap:10px;align-items:center}
+.nav{display:flex;background:#fff;border-top:2.5px solid #2A1B3D}
+.nav a{flex:1;height:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:600 13px 'Fredoka','Nunito',sans-serif;color:#6B5A7A;text-decoration:none}
+.nav a span{font-size:22px;line-height:1}
+.nav a.cur{color:#2A1B3D;background:#FFD45C}
+.tl{position:relative;display:flex;flex-direction:column;gap:9px}
+.tl::before{content:"";position:absolute;left:25px;top:8px;bottom:8px;border-left:3px dashed #2A1B3D;opacity:.35}
+.tl .l{position:relative;align-self:flex-start;background:#FFF4E4;padding:2px 8px 2px 0}
+.ev{position:relative;display:flex;gap:12px;align-items:center}
+.dt{width:54px;height:56px;box-sizing:border-box;flex:none;border:2.5px solid #2A1B3D;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;font:600 11px 'Fredoka','Nunito',sans-serif;letter-spacing:.06em;line-height:1.1}
+.dt b{font-size:22px;letter-spacing:0}
+.evc{flex:1;background:#fff;border:2.5px solid #2A1B3D;border-radius:18px;padding:7px 12px;font-weight:700}
+.evc .m{font-weight:400;font-size:13px}
+.note{width:100px;height:84px;box-sizing:border-box;border:2.5px solid #2A1B3D;border-radius:6px 6px 18px 6px;padding:8px;font-weight:700;font-size:14px;line-height:1.2;box-shadow:0 4px 0 #2A1B3D}
+.st{width:52px;height:52px;box-sizing:border-box;border-radius:50%;border:2.5px solid #2A1B3D;display:flex;align-items:center;justify-content:center;font:700 22px 'Fredoka',sans-serif}
+.st.e{border-style:dashed;background:rgba(255,255,255,.6)}
+.dy{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#6B5A7A}
+.dy i{width:34px;height:34px;box-sizing:border-box;border-radius:50%;border:2.5px solid #2A1B3D;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:16px;background:#FFF4E4}
+.dy i.y{background:#8FE3C8}
+.dy i.f{border-style:dashed;background:#fff}
+</style>
+</helmet>
+<div class="s">
+<div class="c">
+<div class="row" style="justify-content:space-between"><h1>Hey you 👋</h1><a class="av" style="width:44px;height:44px;background:#fff;font-size:20px" href="Settings.dc.html" aria-label="Settings">⚙️</a></div>
+<div class="card sun">
+<h2>Who's on your mind?</h2>
+<div class="row"><input class="in" aria-label="What came to mind" placeholder="saw a bouldering video…"><button class="b" style="background:#2A1B3D;color:#fff;box-shadow:none;flex:none" aria-label="Save">＋</button></div>
+<div class="row" style="justify-content:space-between">
+<button class="who"><span class="av mint" style="width:48px;height:48px" aria-hidden="true">🧗</span>Tom</button><button class="who"><span class="av pink" style="width:48px;height:48px" aria-hidden="true">🎨</span>Anna</button><button class="who"><span class="av lilac" style="width:48px;height:48px" aria-hidden="true">🛹</span>Jonas</button><button class="who"><span class="av sky" style="width:48px;height:48px" aria-hidden="true">🏡</span>Maria</button><button class="who"><span class="av white" style="width:48px;height:48px" aria-hidden="true">🔍</span>More</button>
+</div>
+</div>
+<div class="card">
+<span class="tag coral" style="transform:rotate(-3deg);margin:-26px 0 0 -6px">Tonight's pick</span>
+<div class="row"><span class="av mint" style="width:56px;height:56px;font-size:28px" aria-hidden="true">🧗</span><div><h2>Tom</h2><p class="m">Close friend · WhatsApp</p></div></div>
+<p class="cream" style="border-radius:4px 18px 18px 18px;padding:10px 12px;font-weight:700">“Saw a bouldering video. Ask if he's up for Saturday.”</p>
+<div class="row"><button class="b" style="flex:1">Open chat 💬</button><button class="b b2" aria-label="Another one">🎲</button><button class="b b2">Done ✓</button></div>
+</div>
+<div class="row" style="justify-content:space-between"><p class="l">Coming up</p><a class="f" style="font-weight:600;font-size:14px" href="V2Upcoming.dc.html">See all →</a></div>
+<div class="row" style="align-items:stretch">
+<div class="card pink" style="flex:1;padding:10px 12px;gap:2px;border-radius:18px;box-shadow:0 4px 0 #2A1B3D"><p class="l">Thu 19</p><p style="font-weight:700">Anna's birthday 🎂</p></div>
+<div class="card mint" style="flex:1;padding:10px 12px;gap:2px;border-radius:18px;box-shadow:0 4px 0 #2A1B3D"><p class="l">Sat 21</p><p style="font-weight:700">Bouldering with Tom</p></div>
+</div>
+</div>
+<nav class="nav">
+<a class="cur" aria-current="page" href="V2Home.dc.html"><span aria-hidden="true">🏠</span>Home</a>
+<a href="V2Upcoming.dc.html"><span aria-hidden="true">📅</span>Upcoming</a>
+<a href="V2People.dc.html"><span aria-hidden="true">🫶</span>People</a>
+<a href="V2Progress.dc.html"><span aria-hidden="true">🌱</span>Progress</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

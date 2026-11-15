@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>V6 · Capturing, and the list of three</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<style>
+body{margin:0}
+.s{width:390px;height:844px;box-sizing:border-box;background:var(--bg);color:var(--on);font-family:'Roboto',system-ui,sans-serif;display:flex;flex-direction:column;font-size:16px;line-height:1.35;position:relative;overflow:hidden;
+--coral:#FF8A7A;--corald:#C4564A;--sun:#FFCF5C;--sund:#C4962A;--mint:#7EDDBE;--lilac:#C3B4FF;--sky:#8CCBFF;--pink:#FF9EC6;--onacc:#1F1326}
+.light{--bg:#FFF6EA;--s1:#FFFFFF;--s2:#F3E6D6;--s2d:#D9C7B2;--shd:rgba(42,27,61,.2);--on:#2A1B3D;--mut:#6B5A7A;--line:#CDBBA8;
+--sunc:#FFE08A;--onsunc:#2A1B3D;--mintc:#BDEFDD;--onmintc:#2A1B3D;--lilacc:#DDD4FF;--onlilacc:#2A1B3D;--pinkc:#FFD0E2;--onpinkc:#2A1B3D;--skyc:#C6E5FF;--onskyc:#2A1B3D;--coralc:#FFC9C0;--oncoralc:#2A1B3D}
+.dark{--bg:#17121C;--s1:#231C2A;--s2:#30273A;--s2d:#1A141F;--shd:rgba(0,0,0,.5);--on:#EFE3F2;--mut:#BBADC2;--line:#54475E;
+--sunc:#46380F;--onsunc:#FFE29A;--mintc:#12433A;--onmintc:#A6F0D8;--lilacc:#352B63;--onlilacc:#DCD3FF;--pinkc:#54213A;--onpinkc:#FFC4DC;--skyc:#173F5E;--onskyc:#BFE2FF;--coralc:#5A231C;--oncoralc:#FFC2B8}
+.c{flex:1;padding:22px 16px 12px;display:flex;flex-direction:column;gap:14px;overflow:hidden}
+h1,h2,.f{font-family:'Outfit','Roboto',sans-serif}
+h1{margin:0;font-size:30px;font-weight:700;line-height:1.15}
+h2{margin:0;font-size:21px;font-weight:600;line-height:1.2}
+p{margin:0}
+a{color:inherit}
+.ic{font-family:'Material Symbols Rounded';font-weight:normal;font-style:normal;font-size:24px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;font-feature-settings:'liga';-webkit-font-smoothing:antialiased;font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 24;flex:none}
+.ci{flex:none;display:block;filter:drop-shadow(0 2px 0 rgba(0,0,0,.3))}
+.card{background:var(--s1);border-radius:28px;padding:16px;display:flex;flex-direction:column;gap:12px;box-shadow:0 5px 0 var(--shd)}
+.t-sun{background:var(--sunc);color:var(--onsunc)}.t-mint{background:var(--mintc);color:var(--onmintc)}.t-lilac{background:var(--lilacc);color:var(--onlilacc)}.t-pink{background:var(--pinkc);color:var(--onpinkc)}.t-sky{background:var(--skyc);color:var(--onskyc)}.t-coral{background:var(--coralc);color:var(--oncoralc)}
+.a-sun{background:var(--sun);color:var(--onacc)}.a-mint{background:var(--mint);color:var(--onacc)}.a-lilac{background:var(--lilac);color:var(--onacc)}.a-pink{background:var(--pink);color:var(--onacc)}.a-sky{background:var(--sky);color:var(--onacc)}.a-coral{background:var(--coral);color:var(--onacc)}
+.b{height:52px;box-sizing:border-box;border:0;border-radius:26px;font:600 17px 'Outfit','Roboto',sans-serif;padding:0 20px;background:var(--coral);color:var(--onacc);display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;box-shadow:0 4px 0 var(--corald)}
+.b2{background:var(--s2);color:var(--on);box-shadow:0 4px 0 var(--s2d)}
+.b.a-sun{box-shadow:0 4px 0 var(--sund)}
+.ib{width:52px;height:52px;padding:0;border-radius:18px;flex:none}
+.chip{height:44px;box-sizing:border-box;border-radius:14px;border:1.5px solid currentColor;background:transparent;color:inherit;font:500 14px 'Roboto',sans-serif;padding:0 12px;display:inline-flex;align-items:center;gap:6px}
+.tag{align-self:flex-start;font:600 13px 'Outfit','Roboto',sans-serif;padding:4px 12px;border-radius:14px;box-shadow:0 3px 0 var(--shd);display:inline-flex;align-items:center;gap:4px}
+.m{color:var(--mut);font-size:14px}
+[class*="t-"] .m{color:inherit;opacity:.82}
+.l{font:600 13px 'Outfit','Roboto',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.av{width:48px;height:48px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font:700 20px 'Outfit','Roboto',sans-serif;flex:none;text-decoration:none;border-radius:50%}
+.sh1{clip-path:polygon(100.0% 50.0%,99.2% 53.2%,97.1% 56.2%,94.1% 58.8%,91.1% 61.0%,88.5% 63.1%,87.0% 65.3%,86.5% 68.0%,86.8% 71.2%,87.4% 75.0%,87.7% 78.9%,87.1% 82.5%,85.4% 85.4%,82.5% 87.1%,78.9% 87.7%,75.0% 87.4%,71.3% 86.8%,68.0% 86.5%,65.3% 87.0%,63.1% 88.5%,61.0% 91.1%,58.8% 94.1%,56.2% 97.1%,53.2% 99.2%,50.0% 100.0%,46.8% 99.2%,43.8% 97.1%,41.2% 94.1%,39.0% 91.1%,36.9% 88.5%,34.7% 87.0%,32.0% 86.5%,28.8% 86.8%,25.0% 87.4%,21.1% 87.7%,17.5% 87.1%,14.6% 85.4%,12.9% 82.5%,12.3% 78.9%,12.6% 75.0%,13.2% 71.2%,13.5% 68.0%,13.0% 65.3%,11.5% 63.1%,8.9% 61.0%,5.9% 58.8%,2.9% 56.2%,0.8% 53.2%,0.0% 50.0%,0.8% 46.8%,2.9% 43.8%,5.9% 41.2%,8.9% 39.0%,11.5% 36.9%,13.0% 34.7%,13.5% 32.0%,13.2% 28.8%,12.6% 25.0%,12.3% 21.1%,12.9% 17.5%,14.6% 14.6%,17.5% 12.9%,21.1% 12.3%,25.0% 12.6%,28.7% 13.2%,32.0% 13.5%,34.7% 13.0%,36.9% 11.5%,39.0% 8.9%,41.2% 5.9%,43.8% 2.9%,46.8% 0.8%,50.0% 0.0%,53.2% 0.8%,56.2% 2.9%,58.8% 5.9%,61.0% 8.9%,63.1% 11.5%,65.3% 13.0%,68.0% 13.5%,71.3% 13.2%,75.0% 12.6%,78.9% 12.3%,82.5% 12.9%,85.4% 14.6%,87.1% 17.5%,87.7% 21.1%,87.4% 25.0%,86.8% 28.7%,86.5% 32.0%,87.0% 34.7%,88.5% 36.9%,91.1% 39.0%,94.1% 41.2%,97.1% 43.8%,99.2% 46.8%);border-radius:0}
+.sh2{border-radius:34%}
+.sh3{border-radius:50% 50% 50% 22%}
+.sh4{border-radius:50% 50% 24% 24%}
+.ds{display:inline-flex;filter:drop-shadow(0 3px 0 rgba(0,0,0,.4))}
+.who{display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:500;font-size:13px;background:none;border:0;padding:0;color:inherit;font-family:inherit;min-width:54px}
+.in{box-sizing:border-box;width:100%;height:52px;border:0;border-radius:26px;padding:0 18px;font:400 16px 'Roboto',sans-serif;color:var(--on);background:var(--bg)}
+.in::placeholder{color:var(--mut)}
+.row{display:flex;gap:10px;align-items:center}
+.nav{display:flex;background:var(--s1);padding:0 4px}
+.nav a{flex:1;height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:500 12px 'Roboto',sans-serif;color:var(--mut);text-decoration:none}
+.nav a i{width:64px;height:36px;border-radius:18px;display:flex;align-items:center;justify-content:center}
+.nav a.cur{color:var(--on);font-weight:700}
+.nav a.cur i{background:var(--s2);box-shadow:0 3px 0 var(--s2d)}
+.tl{position:relative;display:flex;flex-direction:column;gap:12px}
+.tl::before{content:"";position:absolute;left:27px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.tl .l{position:relative;align-self:flex-start;background:var(--bg);padding:3px 8px 3px 0;color:var(--mut)}
+.ev{position:relative;display:flex;gap:10px;align-items:center}
+.dt{width:56px;height:58px;box-sizing:border-box;flex:none;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;font:600 11px 'Outfit','Roboto',sans-serif;letter-spacing:.08em;line-height:1.1;box-shadow:0 4px 0 var(--shd)}
+.dt b{font-size:23px;letter-spacing:0}
+.evc{flex:1;background:var(--s1);border-radius:20px;padding:9px 14px;font-weight:500;display:flex;align-items:center;gap:10px;min-height:58px;box-sizing:border-box;box-shadow:0 4px 0 var(--shd)}
+.evc div{flex:1}
+.evc .m{font-size:13px}
+.slot{width:58px;height:58px;box-sizing:border-box;flex:none;border-radius:50%;border:2px dashed color-mix(in srgb,currentColor 50%,transparent);display:flex;align-items:center;justify-content:center}
+.st{width:52px;height:52px;display:flex;align-items:center;justify-content:center;flex:none}
+.ste{box-sizing:border-box;border:2px dashed currentColor;border-radius:50%;opacity:.6;width:50px;height:50px;margin:3px;flex:none}
+.note{width:106px;height:88px;box-sizing:border-box;border:0;border-radius:6px 6px 22px 6px;padding:10px;font:500 14px 'Roboto',sans-serif;line-height:1.25;text-align:left;box-shadow:0 5px 0 var(--shd);display:flex;align-items:flex-start}
+.dy{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--mut)}
+.dy i{width:36px;height:36px;box-sizing:border-box;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal;background:var(--s2)}
+.dy i.y{background:var(--mintc)}
+.dy i.f{background:transparent;border:2px dashed var(--line)}
+
+.r{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:40px;font-weight:500}
+.sw{width:52px;height:32px;border:0;padding:0;border-radius:16px;background:var(--mint);position:relative;flex:none}
+.sw::after{content:"";position:absolute;top:4px;left:24px;width:24px;height:24px;border-radius:50%;background:var(--onacc)}
+.sw.off{background:var(--s2)}
+.sw.off::after{left:4px;background:var(--mut)}
+.seg{display:flex;background:var(--bg);border-radius:14px;padding:3px;flex:none}
+.seg button{height:38px;padding:0 12px;border:0;border-radius:11px;background:transparent;color:var(--mut);font:500 14px 'Roboto',sans-serif}
+.seg button.on{background:var(--sun);color:var(--onacc);font-weight:700}
+.dc{width:40px;height:40px;border:0;padding:0;border-radius:50%;background:var(--s2);color:var(--mut);font:500 13px 'Roboto',sans-serif;flex:none}
+.dc.on{background:var(--sun);color:var(--onacc);font-weight:700}
+.cb{width:26px;height:26px;border-radius:9px;border:2px solid var(--line);box-sizing:border-box;display:flex;align-items:center;justify-content:center;flex:none}
+.cb.on{background:var(--mint);border-color:var(--mint);color:var(--onacc)}
+.li{background:var(--s1);border-radius:20px;padding:8px 12px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 0 var(--shd);min-height:52px;box-sizing:border-box}
+.nt{background:var(--s1);border-radius:26px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;box-shadow:0 5px 0 var(--shd)}
+.ct{position:relative;display:flex;flex-direction:column;gap:12px}
+.ct::before{content:"";position:absolute;left:87px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.cr{display:flex;gap:8px;align-items:flex-start;position:relative}
+.cr .d{width:66px;white-space:nowrap;flex:none;text-align:right;font:600 12px 'Outfit','Roboto',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);padding-top:7px;box-sizing:border-box}
+.cr .d span{display:inline-block;padding:2px 7px;border-radius:9px;box-shadow:0 2px 0 var(--shd)}
+.cr .n{width:28px;height:30px;flex:none;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative}
+.cr .x{flex:1;padding-top:4px;font-weight:500}
+.cr .x .m{font-weight:400;font-size:13px}
+.ct .l{position:relative;background:var(--bg);align-self:flex-start;margin-left:70px;padding:2px 8px;color:var(--mut)}
+.nt .ac{display:flex;gap:22px;padding-top:6px;font:600 14px 'Outfit','Roboto',sans-serif;color:var(--sun)}
+</style>
+</helmet>
+<div class="s dark">
+<div class="c">
+<div class="row" style="justify-content:space-between"><h1>Good evening</h1><a class="b b2 ib" href="V6Settings.dc.html" aria-label="Settings"><svg class="ci" width="28" height="28" viewBox="0 0 48 48" aria-hidden="true" style=""><polygon points="48.0,24.0 47.4,25.5 45.7,26.9 43.3,27.8 40.9,28.5 39.1,29.1 38.2,29.9 38.3,31.0 39.2,32.8 40.4,34.9 41.3,37.3 41.6,39.4 41.0,41.0 39.4,41.6 37.3,41.3 34.9,40.4 32.8,39.2 31.0,38.3 29.9,38.2 29.1,39.1 28.5,40.9 27.8,43.3 26.9,45.7 25.5,47.4 24.0,48.0 22.5,47.4 21.1,45.7 20.2,43.3 19.5,40.9 18.9,39.1 18.1,38.2 17.0,38.3 15.2,39.2 13.1,40.4 10.7,41.3 8.6,41.6 7.0,41.0 6.4,39.4 6.7,37.3 7.6,34.9 8.8,32.8 9.7,31.0 9.8,29.9 8.9,29.1 7.1,28.5 4.7,27.8 2.3,26.9 0.6,25.5 0.0,24.0 0.6,22.5 2.3,21.1 4.7,20.2 7.1,19.5 8.9,18.9 9.8,18.1 9.7,17.0 8.8,15.2 7.6,13.1 6.7,10.7 6.4,8.6 7.0,7.0 8.6,6.4 10.7,6.7 13.1,7.6 15.2,8.8 17.0,9.7 18.1,9.8 18.9,8.9 19.5,7.1 20.2,4.7 21.1,2.3 22.5,0.6 24.0,0.0 25.5,0.6 26.9,2.3 27.8,4.7 28.5,7.1 29.1,8.9 29.9,9.8 31.0,9.7 32.8,8.8 34.9,7.6 37.3,6.7 39.4,6.4 41.0,7.0 41.6,8.6 41.3,10.7 40.4,13.1 39.2,15.2 38.3,17.0 38.2,18.1 39.1,18.9 40.9,19.5 43.3,20.2 45.7,21.1 47.4,22.5" fill="#A9B6E8"/><circle cx="24" cy="24" r="8" fill="#4A5578"/></svg></a></div>
+<div class="card t-sun">
+<h2>Who's on your mind?</h2>
+<div class="row"><input class="in" aria-label="What came to mind" value="saw a bouldering video"><button class="b ib" aria-label="Save"><span class="ic" aria-hidden="true" style="font-size:28px;">add</span></button></div>
+<div class="row" style="justify-content:space-between">
+<button class="who" aria-pressed="true" style="background:var(--bg);border-radius:20px;padding:6px 4px;margin:-6px -4px;font-weight:700"><span class="av a-mint sh1" aria-hidden="true">T</span>Tom</button>
+<button class="who" style="opacity:.45"><span class="av a-pink sh2" style="width:48px;height:48px" aria-hidden="true">A</span>Anna</button><button class="who" style="opacity:.45"><span class="av a-lilac sh3" style="width:48px;height:48px" aria-hidden="true">J</span>Jonas</button><button class="who" style="opacity:.45"><span class="av a-sky sh4" style="width:48px;height:48px" aria-hidden="true">M</span>Maria</button>
+<button class="who" style="opacity:.45"><span class="av" style="background:var(--bg)"><svg class="ci" width="26" height="26" viewBox="0 0 48 48" aria-hidden="true" style=""><path d="M32 32l9 9" stroke="#FFC61A" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><circle cx="21" cy="21" r="12" fill="#8CC4FF" stroke="#2F7BFF" stroke-width="6"/></svg></span>More</button>
+</div>
+<div class="row" style="gap:8px"><button class="chip" aria-pressed="true" style="background:var(--sun);color:var(--onacc);border-color:transparent;font-weight:700"><svg class="ci" width="22" height="22" viewBox="0 0 48 48" aria-hidden="true" style=""><path d="M15 7h18a10 10 0 0 1 10 10v8a10 10 0 0 1-10 10H23l-9 8v-8.2A10 10 0 0 1 5 25v-8A10 10 0 0 1 15 7z" fill="#1FD67A"/><path d="M24 7h9a10 10 0 0 1 10 10v8a10 10 0 0 1-10 10h-9z" fill="#0FA85C"/><circle cx="15.5" cy="21" r="3" fill="#fff"/><circle cx="24" cy="21" r="3" fill="#fff"/><circle cx="32.5" cy="21" r="3" fill="#fff"/></svg>Write</button><button class="chip"><svg class="ci" width="22" height="22" viewBox="0 0 48 48" aria-hidden="true" style=""><path d="M13 11c0 14 10 24 24 24" fill="none" stroke="#2F7BFF" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/><circle cx="13" cy="11" r="6.5" fill="#8CC4FF"/><circle cx="37" cy="35" r="6.5" fill="#8CC4FF"/></svg>Call</button><button class="chip"><svg class="ci" width="22" height="22" viewBox="0 0 48 48" aria-hidden="true" style=""><circle cx="31" cy="16" r="7" fill="#8A3FFC"/><path d="M20 40a11 11 0 0 1 22 0v1a2 2 0 0 1-2 2H22a2 2 0 0 1-2-2z" fill="#6325C9"/><circle cx="18" cy="18" r="8" fill="#FFC61A"/><path d="M5 40a13 13 0 0 1 26 0v1a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z" fill="#FF8A1F"/></svg>Meet</button></div>
+<button class="b">Save for Tom</button>
+</div>
+<div class="row" style="justify-content:space-between"><p class="l" style="color:var(--mut)">For tonight</p><p class="m" style="font-size:13px">Showing three · change in settings</p></div>
+<div class="li"><span class="av a-mint sh1" style="width:44px;height:44px;font-size:18px" aria-hidden="true">T</span><div style="flex:1;min-width:0"><p style="font-weight:700">Tom</p><p class="m">Saw a bouldering video</p></div><button class="b ib" style="width:46px;height:46px;border-radius:16px" aria-label="Open chat with Tom"><svg class="ci" width="28" height="28" viewBox="0 0 48 48" aria-hidden="true" style=""><rect x="2" y="2" width="44" height="44" rx="14" fill="#25D366"/><circle cx="24.5" cy="22.5" r="12" fill="none" stroke="#fff" stroke-width="3.5"/><path d="M15 30l-3.5 8.5 9-3z" fill="#fff"/><path d="M20 18.5c0 5.5 3.5 9 9 9" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/></svg></button></div><div class="li"><span class="av a-pink sh2" style="width:44px;height:44px;font-size:18px" aria-hidden="true">A</span><div style="flex:1;min-width:0"><p style="font-weight:700">Anna</p><p class="m">Ask about the new flat</p></div><button class="b ib" style="width:46px;height:46px;border-radius:16px" aria-label="Open chat with Anna"><svg class="ci" width="28" height="28" viewBox="0 0 48 48" aria-hidden="true" style=""><rect x="2" y="2" width="44" height="44" rx="14" fill="#25D366"/><circle cx="24.5" cy="22.5" r="12" fill="none" stroke="#fff" stroke-width="3.5"/><path d="M15 30l-3.5 8.5 9-3z" fill="#fff"/><path d="M20 18.5c0 5.5 3.5 9 9 9" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/></svg></button></div><div class="li"><span class="av a-lilac sh3" style="width:44px;height:44px;font-size:18px" aria-hidden="true">J</span><div style="flex:1;min-width:0"><p style="font-weight:700">Jonas</p><p class="m">Getting back in touch</p></div><button class="b ib" style="width:46px;height:46px;border-radius:16px" aria-label="Open chat with Jonas"><svg class="ci" width="28" height="28" viewBox="0 0 48 48" aria-hidden="true" style=""><rect x="2" y="2" width="44" height="44" rx="14" fill="#2AABEE"/><polygon points="9,23 38,11 33,37 24,30 20,35 19,27" fill="#fff" stroke="#fff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M19 27 32 17" stroke="#2AABEE" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/></svg></button></div>
+</div>
+<nav class="nav">
+<a class="cur" aria-current="page" href="V6Home.dc.html"><i><svg class="ci" width="26" height="26" viewBox="0 0 48 48" aria-hidden="true" style=""><path d="M10 22h28v16a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4z" fill="#FFC61A"/><path d="M24 22h14v16a4 4 0 0 1-4 4H24z" fill="#F59A0B"/><path d="M24 7 43 23H5z" fill="#FF3D5A" stroke="#FF3D5A" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><rect x="19" y="30" width="10" height="12" rx="3" fill="#4A5578"/></svg></i>Home</a>
+<a href="V6Upcoming.dc.html"><i><svg class="ci" width="26" height="26" viewBox="0 0 48 48" aria-hidden="true" style=""><rect x="6" y="9" width="36" height="33" rx="8" fill="#F1F3FF"/><path d="M24 20h18v14a8 8 0 0 1-8 8H24z" fill="#D5DAF0"/><path d="M14 9h20a8 8 0 0 1 8 8v5H6v-5a8 8 0 0 1 8-8z" fill="#FF3D5A"/><rect x="13" y="4" width="5" height="10" rx="2.5" fill="#4A5578"/><rect x="30" y="4" width="5" height="10" rx="2.5" fill="#4A5578"/><circle cx="15" cy="30" r="3" fill="#2F7BFF"/><circle cx="24" cy="30" r="3" fill="#2F7BFF"/><circle cx="33" cy="30" r="3" fill="#FFC61A"/><circle cx="15" cy="37" r="3" fill="#2F7BFF"/></svg></i>Upcoming</a>
+<a href="V6People.dc.html"><i><svg class="ci" width="26" height="26" viewBox="0 0 48 48" aria-hidden="true" style=""><circle cx="31" cy="16" r="7" fill="#8A3FFC"/><path d="M20 40a11 11 0 0 1 22 0v1a2 2 0 0 1-2 2H22a2 2 0 0 1-2-2z" fill="#6325C9"/><circle cx="18" cy="18" r="8" fill="#FFC61A"/><path d="M5 40a13 13 0 0 1 26 0v1a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z" fill="#FF8A1F"/></svg></i>People</a>
+<a href="V6Progress.dc.html"><i><svg class="ci" width="26" height="26" viewBox="0 0 48 48" aria-hidden="true" style=""><polygon points="48.0,24.0 47.6,25.5 46.6,27.0 45.2,28.2 43.7,29.3 42.5,30.3 41.7,31.3 41.5,32.6 41.7,34.2 42.0,36.0 42.1,37.9 41.8,39.6 41.0,41.0 39.6,41.8 37.9,42.1 36.0,42.0 34.2,41.7 32.6,41.5 31.3,41.7 30.3,42.5 29.3,43.7 28.2,45.2 27.0,46.6 25.5,47.6 24.0,48.0 22.5,47.6 21.0,46.6 19.8,45.2 18.7,43.7 17.7,42.5 16.7,41.7 15.4,41.5 13.8,41.7 12.0,42.0 10.1,42.1 8.4,41.8 7.0,41.0 6.2,39.6 5.9,37.9 6.0,36.0 6.3,34.2 6.5,32.6 6.3,31.3 5.5,30.3 4.3,29.3 2.8,28.2 1.4,27.0 0.4,25.5 0.0,24.0 0.4,22.5 1.4,21.0 2.8,19.8 4.3,18.7 5.5,17.7 6.3,16.7 6.5,15.4 6.3,13.8 6.0,12.0 5.9,10.1 6.2,8.4 7.0,7.0 8.4,6.2 10.1,5.9 12.0,6.0 13.8,6.3 15.4,6.5 16.7,6.3 17.7,5.5 18.7,4.3 19.8,2.8 21.0,1.4 22.5,0.4 24.0,0.0 25.5,0.4 27.0,1.4 28.2,2.8 29.3,4.3 30.3,5.5 31.3,6.3 32.6,6.5 34.2,6.3 36.0,6.0 37.9,5.9 39.6,6.2 41.0,7.0 41.8,8.4 42.1,10.1 42.0,12.0 41.7,13.8 41.5,15.4 41.7,16.7 42.5,17.7 43.7,18.7 45.2,19.8 46.6,21.0 47.6,22.5" fill="#1FD67A"/><circle cx="24" cy="24" r="13" fill="#0FA85C"/><path d="M16.5 24.5l5.5 5.5 10-11" fill="none" stroke="#fff" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/></svg></i>Progress</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
