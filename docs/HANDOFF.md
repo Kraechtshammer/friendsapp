@@ -5,7 +5,7 @@ The first thing a new session reads. Rewritten on 2026-11-15 at the end of the d
 ## 1. Where things stand
 
 - Phase: **implement**. Research closed 2026-11-14, design closed 2026-11-15, both by the developer.
-- The app is called **Kept**. App ID `de.gartenpa.kept` (final). The repository and folder are `friendsapp`.
+- The app is called **Kept.** with the full stop, which is also the app label; running text may write Kept. Version 0.1.0+1; Claude chooses the steps up to 1.0.0, which is the first real release. App ID `de.gartenpa.kept` (final). The repository and folder are `friendsapp`.
 - **M0 has started.** The Flutter project exists but is still Flutter's counter template. Nothing of Kept is built.
 - Everything is committed and pushed. The repository on GitHub is public.
 
@@ -89,9 +89,7 @@ Next, in this order. One small commit per step.
 
 ## 5. Open questions for the developer
 
-- The developer wrote the name as "Kept." in the dev container title. Is the full stop part of the name? The app label is "Kept" for now.
-- Version number: the project has Flutter's default 1.0.0+1. Claude suggests 0.1.0+1 until the first real release.
-- A debug-only "demo data" switch that fills the app with invented people, for README screenshots. Claude's proposal, not confirmed.
+- None new. Settled on 2026-11-15 (02-design.md §8): the name is "Kept.", the version starts at 0.1.0, and development builds get demo data. The demo data is built in M1, when there is a people table to fill.
 - The repository is public and 01-research.md describes the developer's own situation (§5, §9.7, §9.8). The developer was told before the first push and pushed. Mention it once more if the repository gets promoted.
 
 ## 6. Not tested yet

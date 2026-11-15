@@ -1,4 +1,4 @@
-# Kept
+# Kept.
 
 An Android app that helps a person with ADHD stay in touch with friends and get back in touch with old ones.
 

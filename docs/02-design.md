@@ -415,4 +415,8 @@ Claude's assessment: only Fluent Emoji Flat is a real alternative. It would save
 
 ## 8. Changes made during implementation
 
-None yet.
+| Date | Change |
+|---|---|
+| 2026-11-15 | **Name (the developer):** the app is called "Kept." with the full stop. The app label carries it. Running text may write Kept. The app ID and file names stay without it. |
+| 2026-11-15 | **Version (the developer):** starts at 0.1.0+1 instead of Flutter's 1.0.0+1. Claude chooses the steps on the way; 1.0.0 is the first real release. Plan (Claude): the minor number follows the milestones, so M3, the first version in daily use, is 0.3.0. |
+| 2026-11-15 | **Demo data (the developer):** development builds can fill the app with invented people and history, to work with and for screenshots. Not in release builds. Built in M1 with the people table. |

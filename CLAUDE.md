@@ -1,7 +1,7 @@
-# Kept (repository: friendsapp)
+# Kept. (repository: friendsapp)
 
 An app that helps a person with ADHD stay in touch with friends and reconnect with old ones.
-The app is called **Kept** (decided 2026-11-15); the repository and folder keep the name friendsapp. Current phase: **implement** (research closed 2026-11-14, design closed 2026-11-15). Milestones M0 to M10 are in docs/02-design.md §5.
+The app is called **Kept.** with the full stop (decided 2026-11-15; running text may write Kept without it); the repository and folder keep the name friendsapp. Current phase: **implement** (research closed 2026-11-14, design closed 2026-11-15). Milestones M0 to M10 are in docs/02-design.md §5.
 
 **Read [docs/HANDOFF.md](docs/HANDOFF.md) first.** It says where things stand and what is open.
 
