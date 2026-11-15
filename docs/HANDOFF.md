@@ -90,10 +90,11 @@ Next, in this order. One small commit per step.
    - the notification listener sees an incoming WhatsApp message and a WhatsApp call notification;
    - the installed messenger's app icon can be read (needs a `<queries>` entry, no permission; unverified).
    Interim results from the developer on the Pixel 7 Pro (2026-11-15), through the throwaway "Phone checks" screen (Settings, bottom entry; `lib/ui/checks/`, `lib/platform/phone_checks.dart`, `KeptNotificationListener.kt`):
-   - Chats. WhatsApp: https link, own scheme and intent with package all open the chat. Telegram: the https link opens the browser; `tg://` and the intent with package work. Signal: all three work, but only for a person who has a phone number in Signal. Discord: tried with a user name, not a user ID; https and the intent work, `discord://` does not. So the intent with the package set (`android_intent_plus`) is the one way that worked for all four. Not yet decided.
-   - Scheduled notification: the 2 minute one arrived 2 minutes after the time in its text, so 4 minutes after the tap. The text is the target time (checked in the code). The 15 and 60 minute ones and the restart are still running.
+   - Chats. WhatsApp: https link, own scheme and intent with package all open the chat. Telegram: the https link opens the browser; `tg://` and the intent with package work. Signal: all three work, but only for a person who has a phone number in Signal. Discord: tried with a user name, not a user ID; https and the intent work, `discord://` does not. Discord with a user name only opens the app. Decided: `android_intent_plus` (02-design.md §8).
+   - Scheduled notification: two 2 minute ones arrived about 2 and 1.6 minutes after the time in their text. The text is the target time (checked in the code). The 15 and 60 minute ones and the restart are still running.
    - Listener: sees WhatsApp messages. The call notification and the field values are not reported yet.
-   - Not reported yet: buttons while the app is closed, app icons.
+   - Buttons: work with the app closed and open. Done.
+   - App icons: all four can be read. Done, and not needed: the developer wants our own drawn messenger icons. Signal and Discord are to be drawn.
 6. Write `docs/04-architecture.md` once the structure stands, and record the results of the checks in 02-design.md §8.
 
 ## 5. Open questions for the developer
