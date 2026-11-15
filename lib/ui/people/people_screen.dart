@@ -106,7 +106,12 @@ class _PersonBlob extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           spacing: 4,
           children: [
-            Avatar.person(person, size: 54),
+            // Throwaway badge preview, see [badgePreview].
+            ValueListenableBuilder(
+              valueListenable: badgePreview,
+              builder: (context, badge, _) =>
+                  Avatar.person(person, size: 54, badge: badge),
+            ),
             Text(
               firstName,
               maxLines: 1,

@@ -80,6 +80,11 @@ Path _scallop(double side, {int lobes = 8, double depth = .05}) {
 /// open; the developer decides on pictures.
 enum AvatarBadge { none, dots, icon }
 
+/// Throwaway: which badge the People tab shows, set under "Development" in
+/// Settings, so the developer can pick a badge style on the phone. Remove
+/// once the style is decided (02-design.md §8).
+final badgePreview = ValueNotifier<AvatarBadge>(AvatarBadge.none);
+
 /// A person's initial on their accent, in their shape, with a hard drop
 /// shadow that follows the shape (ui-style.md §5 and §6).
 class Avatar extends StatelessWidget {
