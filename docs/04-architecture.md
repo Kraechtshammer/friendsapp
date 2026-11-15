@@ -1,6 +1,6 @@
 # Architecture and code style
 
-Status: first written on 2026-11-15, at the end of M0. The app is a skeleton: four empty tabs, a settings screen with a theme choice, the theme, the icons and the texts. §1 describes what exists, checked against the code. §2 lists what is planned and not built. Behaviour lives in [02-design.md](02-design.md), the look in [style/ui-style.md](style/ui-style.md). The layering follows akai-timetrack (`/home/paga/Projects/akai-timetrack/docs/04-architecture.md`, same developer) unless stated otherwise. Update this file in the same step as every structural change.
+Status: first written on 2026-11-15, at the end of M0. The app is a skeleton: four empty tabs, a settings screen with a theme choice, the theme, the icons and the texts. §1 describes what exists, checked against the code. §2 describes the data layer added in M1 and what is still planned. Behaviour lives in [02-design.md](02-design.md), the look in [style/ui-style.md](style/ui-style.md). The layering follows akai-timetrack (`/home/paga/Projects/akai-timetrack/docs/04-architecture.md`, same developer) unless stated otherwise. Update this file in the same step as every structural change.
 
 ## 1. What exists now
 
@@ -82,21 +82,38 @@ Used for one thing: the theme mode, in memory. There are no stream providers yet
 - Version is 0.1.0+1.
 - Dependencies are in `pubspec.yaml`. Several (drift, notifications, contacts, `android_intent_plus`, `quick_actions`, `uuid`, `permission_handler`) are declared but not used by the code yet.
 
-## 2. Planned, not built
+## 2. Data and domain (since M1)
 
-Nothing here exists yet. It follows akai-timetrack and the technology list in 02-design.md §4. The milestones are in 02-design.md §5.
+Written on 2026-11-16 with the first data code. §1 above describes the state at the end of M0; where it says there is no database and the theme mode is in memory, this section is right.
 
-| Layer | Will hold | May import |
+### 2.1 Layers
+
+| Folder | Holds | May import |
 |---|---|---|
-| `core/` | Time helpers (day keys, calendar arithmetic) and small shared helpers | nothing of ours |
-| `data/` | The drift database, repositories, settings in the database (M1) | `core` |
-| `domain/` | Pure rules with unit tests: the pick order, the stamp rule, rhythms and due dates. Functions take the current time as a parameter. | `core`, `data` |
-| `platform/` | Notifications, contacts and birthdays, opening chats with `android_intent_plus`, our own Kotlin notification listener, icon long-press | `core`, `data`, `domain`, `l10n` |
+| `domain/` | `person.dart` (the enums `Closeness`, `Messenger`, `AvatarShape`, `AvatarColor`, no drift import), `avatar_pick.dart` (which shape and colour a new person gets), `demo_data.dart` (the invented people) | `data` for the row classes |
+| `data/` | `database.dart` (drift tables `Settings` and `People`, schema version 1), `database_connection.dart` (opens the files), `app_settings.dart`, `settings_repository.dart`, `people_repository.dart` | `domain` for the enums |
+| `app/services.dart` | `AppServices`: created in `main()`, holds the databases and repositories, injected through `servicesProvider` | `data`, `domain` |
 
-- Screens will read repository streams through Riverpod providers and write through repositories or services, never to tables.
-- Whether domain models are the drift row classes (as in akai) is not decided. Ask first.
-- Demo data for development builds (02-design.md §8) comes with the people table in M1.
-- Decide the folder for the notification listener's Kotlin code when it is built.
+- **Row classes are the models**, as in akai: `Person` is drift's generated row class. Decided by Claude following akai; the developer has not objected. Enums are stored as text by name.
+- **Settings** are a key and value table, read as one immutable `AppSettings` (`themeMode`, `demoMode`) through `settingsProvider`. `ref.settings` gives the current value or the defaults.
+- **People:** `PeopleRepository` gives streams (`watchAll`, `watch`) and `add`, `update`, `delete`. `add` makes the UUID and picks the avatar. Screens read `peopleProvider` and `personProvider(id)` and write through `peopleRepositoryProvider`.
+- **Generated code** (`database.g.dart`) is committed. After changing a table run `dart run build_runner build --delete-conflicting-outputs`. `drift_schemas/` holds a snapshot of schema version 1 for later migration tests; there are no migrations yet.
+
+### 2.2 Demo database
+
+Two files: `kept.sqlite` (real) and `kept_demo.sqlite`. Settings always come from the real one. People, and later all content, come from the demo one while `demoMode` is on. Switching on refills the demo database from `demoPeople(today)` and the providers move over without a restart. Switching off moves back; the demo file is deleted at the next start. `AppServices.allowDemo` is `kDebugMode`, so a stored `demoMode` does nothing in a release build. The switch is in Settings under "Development", in debug builds only.
+
+### 2.3 Tests
+
+In-memory drift databases. `test/demo_mode_test.dart` shows how to build `AppServices` for a test. In widget tests the database must be closed inside `tester.runAsync` after pumping an empty widget (see the note in `test/widget_test.dart`); closing it under the test clock hangs.
+
+### 2.4 Planned, not built
+
+| Layer | Will hold |
+|---|---|
+| `core/` | Time helpers (day keys, calendar arithmetic) |
+| `domain/` | The pick order, the stamp rule, rhythms and due dates, as pure functions that take the current time as a parameter |
+| `platform/` | Notifications, contacts and birthdays, opening chats with `android_intent_plus`, our own Kotlin notification listener, icon long-press |
 
 ## 3. Code style
 
@@ -116,7 +133,6 @@ Taken from the code as it is, and from akai's doc where it applies.
 
 Remove an item when it is fixed.
 
-- The theme mode is not stored. It resets to "System" on every start. It moves to the settings table in M1.
 - The navigation indicator pill is 64 x 32 (Material's default); ui-style.md §6 says 64 x 36.
 - `KeptColors.lerp` does not blend: it switches at the half-way point. A theme change has no colour animation.
 - The contrast of muted text on tonal containers has not been measured (also open in ui-style.md §8).

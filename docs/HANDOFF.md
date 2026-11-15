@@ -6,7 +6,7 @@ The first thing a new session reads. Rewritten on 2026-11-15 at the end of the d
 
 - Phase: **implement**. Research closed 2026-11-14, design closed 2026-11-15, both by the developer.
 - The app is called **Kept.** with the full stop, which is also the app label; running text may write Kept. Version 0.1.0+1; Claude chooses the steps up to 1.0.0, which is the first real release. App ID `de.gartenpa.kept` (final). The repository and folder are `friendsapp`.
-- **M0 is done** (2026-11-15). The app skeleton stands: theme, four empty tabs, settings with a theme choice. No feature of Kept is built. M1 is next.
+- **M0 is done** (2026-11-15). **M1 (People) is in progress**: the database and the demo data stand, the screens are next (section 4a).
 - Everything up to the end of M0 is pushed and CI passed on it. The repository on GitHub is public.
 
 ## 2. What to read, and how much
@@ -81,7 +81,23 @@ Done:
 
 **M0 is done**, as far as Claude can tell; the developer has not said so yet. Left over from it: the Gift, Signal and Discord icons are to be drawn, and the developer has not yet looked at the light theme on the phone.
 
-Next: **M1, People** (02-design.md §5). It starts with the database (drift), the settings table (the theme choice moves there) and the people table with one handle per messenger (02-design.md §8), then demo data for development builds, then contact import, the People screen and the top of the person page. Ask the developer before fixing the data model.
+## 4a. M1, People: in progress
+
+The data model was settled with the developer on 2026-11-15 (02-design.md §8: messengers, phone contacts, demo database, avatars).
+
+Done:
+
+- Data layer (2026-11-16, built by an Opus subagent, reviewed by Claude): drift database with stored settings and the people table, and the separate demo database with 16 invented people behind a switch in Settings (debug builds only). See 04-architecture.md §2. Checked: analyze clean, 25 tests pass, debug APK builds. Not checked: anything on the phone, including the demo switch and the deletion of the demo file.
+
+Next, in this order:
+
+1. People tab and the top of the person page, read-only, with the avatar, card and tag widgets.
+2. Decide the class badge on avatars with the developer, on pictures (an open idea of theirs, 02-design.md §8).
+3. Add and edit a person: class, main messenger, handles, avatar.
+4. Contact import on first start (`flutter_contacts`, contacts permission, approved).
+5. Draw the Signal and Discord icons, and Gift.
+
+Phone numbers are stored with a leading plus; links such as `wa.me` need the digits only.
 
 ## 5. Open questions for the developer
 
