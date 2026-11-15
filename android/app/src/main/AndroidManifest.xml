@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Notifications (Phone checks 1 and 2). No exact-alarm permission on purpose. -->
+    <!-- Notifications. No exact-alarm permission on purpose (02-design.md §8). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- Re-schedules notifications after a reboot (flutter_local_notifications) -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -41,16 +41,6 @@
             </intent-filter>
         </receiver>
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver" />
-        <!-- Throwaway (Phone checks 4): reads messenger notifications into a local log. -->
-        <service
-            android:name=".KeptNotificationListener"
-            android:label="Kept. (phone checks)"
-            android:exported="true"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
-            <intent-filter>
-                <action android:name="android.service.notification.NotificationListenerService" />
-            </intent-filter>
-        </service>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
@@ -67,7 +57,7 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
-        <!-- Phone checks 3 and 5: see and open the messengers. -->
+        <!-- The messengers "Open chat" may open (02-design.md §8). No permission needed. -->
         <package android:name="com.whatsapp" />
         <package android:name="com.whatsapp.w4b" />
         <package android:name="org.telegram.messenger" />
@@ -76,22 +66,6 @@
         <intent>
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="https" />
-        </intent>
-        <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="whatsapp" />
-        </intent>
-        <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="tg" />
-        </intent>
-        <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="sgnl" />
-        </intent>
-        <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="discord" />
         </intent>
     </queries>
 </manifest>
