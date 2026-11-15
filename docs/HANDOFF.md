@@ -14,6 +14,8 @@ Done:
 - Checked in the container: `flutter analyze` clean, the template test passes, a debug APK builds.
 - F5 launch configurations added.
 
+- CI and release workflows, build and install scripts and release signing set up after akai-timetrack (03-dev-setup.md §8). Not run on GitHub yet. The developer still has to create the signing key and the three repository secrets.
+
 Not done yet, in this order:
 
 1. Add the approved packages (02-design.md §4) and the app skeleton: theme in dark and light after `docs/style/ui-style.md`, the colourful icons as SVG assets, German and English.
