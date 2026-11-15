@@ -160,7 +160,7 @@ Later: groups and shared events (F12), small things to do soon such as voice mes
 | D11 | Record both directions: who reached out, and birthday wishes given and received | Asked for by the developer 2026-11-15. How birthdays show is **decided** (§6.8). How incoming contact is recorded is open, see §6.7. |
 | D10 | Per-friend timeline (history and upcoming on the person page) | **Decided** (the developer, 2026-11-15): compact timeline as in V6. See §6.6, §6.8. |
 | D9 | Timeline of upcoming events | Asked for by the developer 2026-11-15. Shown in V2 as its own tab. Details open, see §6.2. |
-| D8 | App name | Open |
+| D8 | App name | **Decided** (the developer, 2026-11-15): **Kept**. The name shown to the user can change later without touching stored data, as long as the app ID stays the same. The app ID is still to be chosen. |
 
 ### 6.1 Concept screens
 
