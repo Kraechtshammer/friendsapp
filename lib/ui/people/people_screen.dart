@@ -8,10 +8,12 @@ import '../common.dart';
 import '../kept_icon.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
+import '../widgets/grey_button.dart';
 import '../widgets/grey_icon_button.dart';
 import '../widgets/main_button.dart';
 import '../widgets/section_label.dart';
 import 'edit_person_screen.dart';
+import 'import_contacts_screen.dart';
 import 'person_screen.dart';
 
 /// Everyone, grouped by class in the order of [Closeness]. Groups with
@@ -33,7 +35,7 @@ class PeopleScreen extends ConsumerWidget {
         GreyIconButton(
           icon: Icons.add_rounded,
           tooltip: context.l10n.addPersonTitle,
-          onPressed: () => openEditPerson(context),
+          onPressed: () => _openAddMenu(context),
         ),
       ],
     );
@@ -43,7 +45,11 @@ class PeopleScreen extends ConsumerWidget {
         children: [
           _Hint(context.l10n.peopleEmpty),
           MainButton(
-            label: context.l10n.addPersonTitle,
+            label: context.l10n.addFromContacts,
+            onPressed: () => openImportContacts(context),
+          ),
+          GreyButton(
+            label: context.l10n.addByHand,
             onPressed: () => openEditPerson(context),
           ),
         ],
@@ -68,6 +74,36 @@ class PeopleScreen extends ConsumerWidget {
       children: [title, const SizedBox(height: 14), body],
     );
   }
+}
+
+/// The "+" menu: contacts or by hand.
+void _openAddMenu(BuildContext context) {
+  showModalBottomSheet<void>(
+    context: context,
+    builder: (sheet) => SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.contacts_rounded),
+            title: Text(context.l10n.addMenuContacts),
+            onTap: () {
+              Navigator.of(sheet).pop();
+              openImportContacts(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.edit_rounded),
+            title: Text(context.l10n.addMenuByHand),
+            onTap: () {
+              Navigator.of(sheet).pop();
+              openEditPerson(context);
+            },
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 class _Hint extends StatelessWidget {

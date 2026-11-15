@@ -82,5 +82,20 @@
   },
   "removeBody": "Der Eintrag und die Notizen werden gelöscht. Das lässt sich nicht rückgängig machen.",
   "cancel": "Abbrechen",
-  "remove": "Entfernen"
+  "remove": "Entfernen",
+  "addMenuContacts": "Aus deinen Kontakten",
+  "addMenuByHand": "Von Hand",
+  "addFromContacts": "Aus Kontakten hinzufügen",
+  "addByHand": "Von Hand hinzufügen",
+  "importPickTitle": "Mit wem willst du in Kontakt bleiben?",
+  "importPickHint": "Ein paar reichen. Mehr kannst du später hinzufügen.",
+  "importSearchHint": "Suchen",
+  "importDenied": "Kept muss deine Kontakte lesen, um sie hier anzubieten. Nichts verlässt dein Handy.",
+  "importNoContacts": "Keine Kontakte zum Anzeigen.",
+  "importLoadError": "Deine Kontakte konnten nicht gelesen werden.",
+  "openSettings": "Einstellungen öffnen",
+  "importNext": "Weiter ({count})",
+  "importClassTitle": "Wie nah seid ihr euch?",
+  "importMessengerAll": "Haupt-Messenger für alle",
+  "importAdd": "{count, plural, =1{1 Person hinzufügen} other{{count} Personen hinzufügen}}"
 }

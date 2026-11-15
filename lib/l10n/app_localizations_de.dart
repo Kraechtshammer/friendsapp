@@ -205,4 +205,61 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get remove => 'Entfernen';
+
+  @override
+  String get addMenuContacts => 'Aus deinen Kontakten';
+
+  @override
+  String get addMenuByHand => 'Von Hand';
+
+  @override
+  String get addFromContacts => 'Aus Kontakten hinzufügen';
+
+  @override
+  String get addByHand => 'Von Hand hinzufügen';
+
+  @override
+  String get importPickTitle => 'Mit wem willst du in Kontakt bleiben?';
+
+  @override
+  String get importPickHint =>
+      'Ein paar reichen. Mehr kannst du später hinzufügen.';
+
+  @override
+  String get importSearchHint => 'Suchen';
+
+  @override
+  String get importDenied =>
+      'Kept muss deine Kontakte lesen, um sie hier anzubieten. Nichts verlässt dein Handy.';
+
+  @override
+  String get importNoContacts => 'Keine Kontakte zum Anzeigen.';
+
+  @override
+  String get importLoadError => 'Deine Kontakte konnten nicht gelesen werden.';
+
+  @override
+  String get openSettings => 'Einstellungen öffnen';
+
+  @override
+  String importNext(int count) {
+    return 'Weiter ($count)';
+  }
+
+  @override
+  String get importClassTitle => 'Wie nah seid ihr euch?';
+
+  @override
+  String get importMessengerAll => 'Haupt-Messenger für alle';
+
+  @override
+  String importAdd(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Personen hinzufügen',
+      one: '1 Person hinzufügen',
+    );
+    return '$_temp0';
+  }
 }

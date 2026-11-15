@@ -445,6 +445,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove'**
   String get remove;
+
+  /// No description provided for @addMenuContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'From your contacts'**
+  String get addMenuContacts;
+
+  /// No description provided for @addMenuByHand.
+  ///
+  /// In en, this message translates to:
+  /// **'By hand'**
+  String get addMenuByHand;
+
+  /// No description provided for @addFromContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Add from contacts'**
+  String get addFromContacts;
+
+  /// No description provided for @addByHand.
+  ///
+  /// In en, this message translates to:
+  /// **'Add by hand'**
+  String get addByHand;
+
+  /// No description provided for @importPickTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Who do you want to keep in touch with?'**
+  String get importPickTitle;
+
+  /// No description provided for @importPickHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Picking a few is enough. You can add more later.'**
+  String get importPickHint;
+
+  /// No description provided for @importSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get importSearchHint;
+
+  /// No description provided for @importDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept needs to read your contacts to offer them here. Nothing leaves your phone.'**
+  String get importDenied;
+
+  /// No description provided for @importNoContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'No contacts to show.'**
+  String get importNoContacts;
+
+  /// No description provided for @importLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Your contacts could not be read.'**
+  String get importLoadError;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get openSettings;
+
+  /// No description provided for @importNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next ({count})'**
+  String importNext(int count);
+
+  /// No description provided for @importClassTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How close are you?'**
+  String get importClassTitle;
+
+  /// No description provided for @importMessengerAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Main messenger for all'**
+  String get importMessengerAll;
+
+  /// No description provided for @importAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Add 1 person} other{Add {count} people}}'**
+  String importAdd(int count);
 }
 
 class _AppLocalizationsDelegate

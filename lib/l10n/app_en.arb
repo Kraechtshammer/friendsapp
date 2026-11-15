@@ -89,5 +89,22 @@
   },
   "removeBody": "Their entry and notes will be deleted. This cannot be undone.",
   "cancel": "Cancel",
-  "remove": "Remove"
+  "remove": "Remove",
+  "addMenuContacts": "From your contacts",
+  "addMenuByHand": "By hand",
+  "addFromContacts": "Add from contacts",
+  "addByHand": "Add by hand",
+  "importPickTitle": "Who do you want to keep in touch with?",
+  "importPickHint": "Picking a few is enough. You can add more later.",
+  "importSearchHint": "Search",
+  "importDenied": "Kept needs to read your contacts to offer them here. Nothing leaves your phone.",
+  "importNoContacts": "No contacts to show.",
+  "importLoadError": "Your contacts could not be read.",
+  "openSettings": "Open settings",
+  "importNext": "Next ({count})",
+  "@importNext": {"placeholders": {"count": {"type": "int"}}},
+  "importClassTitle": "How close are you?",
+  "importMessengerAll": "Main messenger for all",
+  "importAdd": "{count, plural, =1{Add 1 person} other{Add {count} people}}",
+  "@importAdd": {"placeholders": {"count": {"type": "int"}}}
 }

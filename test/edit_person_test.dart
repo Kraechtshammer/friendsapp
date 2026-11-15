@@ -42,6 +42,8 @@ void main() {
   Future<void> openForm(WidgetTester tester) async {
     await tester.tap(find.byTooltip('Add a person'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('By hand'));
+    await tester.pumpAndSettle();
   }
 
   /// The form is a lazy list: scroll until the widget is built.
