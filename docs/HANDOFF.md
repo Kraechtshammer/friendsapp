@@ -70,7 +70,7 @@ Done:
 
 - Dev container (copied from akai-timetrack). The developer has opened it in VS Code.
 - Flutter project: Android only, label "Kept". In the container `flutter analyze` is clean, the template test passes, debug and release APKs build.
-- CI and release workflows, build and install scripts, F5 launch configurations, commit hook.
+- CI and release workflows, build and install scripts, F5 launch configurations, commit hook. The first CI run on GitHub passed (2026-11-15).
 - Release signing: the developer created a key for Kept on 2026-11-15 (`android/kept-release.jks`, `android/key.properties`, both git-ignored) and says the three GitHub secrets are entered. Checked by Claude: a local release APK is signed with a non-debug key. Not checked: the secrets and the release workflow, which has never run.
 
 Next, in this order. One small commit per step.
@@ -99,7 +99,6 @@ Next, in this order. One small commit per step.
 - The shared emulator from this container (volume and device are akai-timetrack's).
 - The phone connection from this container.
 - The release workflow on GitHub.
-- The first CI run was still in progress when this was written. Check its result: `https://github.com/Kraechtshammer/friendsapp/actions`.
 - Nothing of the look has been built in Flutter or seen on a phone.
 
 ## 7. How to work here
