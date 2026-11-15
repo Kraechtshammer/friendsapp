@@ -18,7 +18,7 @@ The app is called **Kept.** with the full stop (decided 2026-11-15; running text
 | [docs/style/icon-style.md](docs/style/icon-style.md) | How the app's own colourful icons are drawn. Follow it for every new icon. |
 | docs/concepts/ | Concept screens (canvas sources, generators, rendered pictures). New concept versions get a new row; do not overwrite one the developer has seen. |
 | [docs/03-dev-setup.md](docs/03-dev-setup.md) | Dev container, phone, emulator, git. Builds and releases follow with the app. |
-| docs/04-architecture.md | Layers, code style, known weaknesses. Not started. |
+| [docs/04-architecture.md](docs/04-architecture.md) | Layers, code style, known weaknesses. Updated with every structural change. |
 
 The working mode is taken from `/home/paga/Projects/akai-timetrack` (same developer, Flutter). Look there for examples of finished docs.
 
