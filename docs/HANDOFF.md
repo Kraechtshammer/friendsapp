@@ -6,6 +6,25 @@ The first thing a new session reads.
 
 Phase: **implement**. Research was closed on 2026-11-14, design on 2026-11-15, both by the developer. The app is called **Kept**, app ID `de.gartenpa.kept`; the repository is friendsapp. What to build is in [02-design.md](02-design.md): behaviour §2, data §3, technology §4, milestones §5 (M0 to M10). The look is in [style/ui-style.md](style/ui-style.md) and [style/icon-style.md](style/icon-style.md), with concept V6 plus V6b as the reference (`docs/concepts/`). The dev container is described in [03-dev-setup.md](03-dev-setup.md).
 
+## M0 in progress (started 2026-11-15)
+
+Done:
+
+- Flutter project created in the dev container: Android only, app ID `de.gartenpa.kept`, label "Kept". It is still Flutter's counter template.
+- Checked in the container: `flutter analyze` clean, the template test passes, a debug APK builds.
+- F5 launch configurations added.
+
+Not done yet, in this order:
+
+1. Add the approved packages (02-design.md §4) and the app skeleton: theme in dark and light after `docs/style/ui-style.md`, the colourful icons as SVG assets, German and English.
+2. Run it on the developer's phone.
+3. The phone checks listed under M0 in 02-design.md §5 (notification timing and buttons, opening chats, listener, messenger icon).
+4. Write `docs/04-architecture.md` as the structure takes shape.
+
+Open small question: the developer named the dev container "Kept." with a full stop. Ask whether the full stop is part of the name.
+
+Not tested yet: the shared emulator and the phone connection from this container.
+
 The sections below are the log of the research and design sessions. They are history; where they say "open", check 02-design.md for the final state.
 
 The idea: an app for a person with ADHD who loses touch with friends and wants to reconnect with childhood friends. The developer has ADHD and is the first user. The developer has built one Flutter app with Claude before (akai-timetrack).

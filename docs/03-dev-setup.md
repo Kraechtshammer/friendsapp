@@ -2,7 +2,7 @@
 
 How to get from a fresh clone to a working editor. The setup is taken from akai-timetrack, where it has been in use; the parts that differ here are marked.
 
-Status (2026-11-15): the container files exist. There is no Flutter project yet (it is created in milestone M0), so run, build and test are not possible yet. What was checked is listed in section 8.
+Status (2026-11-15): the developer has opened the container once. The Flutter project exists since the same day; analyze, test and a debug build work in the container. What was checked is listed in section 8.
 
 ```
 Windows                                   WSL 2 Ubuntu → dev container
@@ -98,10 +98,11 @@ Checked on 2026-11-15:
 - `.devcontainer/.env` is matched by `.gitignore`.
 - A plain `docker build` of `.devcontainer` succeeds (10 minutes, image about 16 GB). In the image, `flutter --version` reports 3.47.9 and `adb version` runs.
 - The Docker volume `timetrack-emulator` exists on this PC.
+- The developer opened the folder in the container from VS Code.
+- In that container: `flutter analyze`, `flutter test` and `flutter build apk --debug` succeed on the new project.
 
 Not checked yet:
 
-- Opening the folder in VS Code and "Reopen in Container" end to end.
 - That the shared emulator volume works from this container.
 - Phone connection from this container.
 
