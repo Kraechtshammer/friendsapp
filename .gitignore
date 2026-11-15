@@ -1,0 +1,21 @@
+# Papers the developer supplied: copyrighted, stay local
+docs/papers/
+
+# Icon comparison board: embeds third-party icons (MIT and CC BY sets). Kept local.
+docs/concepts/IconCompare.dc.html
+docs/concepts/previews/icon-compare.png
+
+# Secrets: never commit
+.devcontainer/.env
+*.jks
+*.keystore
+key.properties
+
+# Miscellaneous
+*.log
+*.pyc
+__pycache__/
+*.swp
+.DS_Store
+.idea/
+*.iml
