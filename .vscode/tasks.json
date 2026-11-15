@@ -1,5 +1,5 @@
 {
-  // Run with Ctrl+Shift+P → "Tasks: Run Task".
+  // Run with Ctrl+Shift+P → "Tasks: Run Task". Ctrl+Shift+B runs the default build task.
   // All tasks run inside the dev container. Device tasks need the adb server on Windows
   // (scripts/windows/start-adb-server.cmd), see docs/03-dev-setup.md.
   // The Flutter tasks work once the app project exists (milestone M0).
@@ -22,6 +22,37 @@
       "type": "shell",
       "command": "flutter test",
       "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build: Release APK",
+      "detail": "Builds the release APK and copies it to dist/",
+      "type": "shell",
+      "command": "bash scripts/build-apk.sh release",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build: Debug APK",
+      "detail": "Builds the debug APK and copies it to dist/",
+      "type": "shell",
+      "command": "bash scripts/build-apk.sh debug",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Device: Build and install release APK",
+      "detail": "Builds the release APK and installs it on the connected device (keeps app data)",
+      "type": "shell",
+      "command": "bash scripts/install-apk.sh release",
+      "dependsOn": "Build: Release APK",
+      "problemMatcher": []
+    },
+    {
+      "label": "Device: Install latest release APK",
+      "detail": "Installs the newest release APK from dist/ without rebuilding",
+      "type": "shell",
+      "command": "bash scripts/install-apk.sh release",
       "problemMatcher": []
     },
     {
