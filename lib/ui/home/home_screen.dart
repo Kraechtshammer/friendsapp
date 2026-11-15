@@ -1,4 +1,5 @@
 import '../common.dart';
+import '../kept_icon.dart';
 import '../material.dart';
 import '../settings/settings_screen.dart';
 
@@ -11,7 +12,7 @@ class HomeScreen extends StatelessWidget {
     actions: [
       IconButton(
         tooltip: context.l10n.settings,
-        icon: const Icon(Icons.settings_rounded),
+        icon: const KeptIcon(KeptIcons.gear, size: 28),
         onPressed: () => Navigator.of(
           context,
         ).push(MaterialPageRoute<void>(builder: (_) => const SettingsScreen())),

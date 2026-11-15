@@ -1,5 +1,6 @@
 import 'common.dart';
 import 'home/home_screen.dart';
+import 'kept_icon.dart';
 import 'material.dart';
 import 'people/people_screen.dart';
 import 'progress/progress_screen.dart';
@@ -33,25 +34,24 @@ class _HomeShellState extends State<HomeShell> {
           ],
         ),
       ),
-      // Plain icons for now; the app's own colourful ones follow.
       bottomNavigationBar: NavigationBar(
         selectedIndex: _tab,
         onDestinationSelected: (next) => setState(() => _tab = next),
         destinations: [
           NavigationDestination(
-            icon: const Icon(Icons.home_rounded),
+            icon: const KeptIcon(KeptIcons.home, size: 26),
             label: l10n.tabHome,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.event_rounded),
+            icon: const KeptIcon(KeptIcons.calendar, size: 26),
             label: l10n.tabUpcoming,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.group_rounded),
+            icon: const KeptIcon(KeptIcons.people, size: 26),
             label: l10n.tabPeople,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.star_rounded),
+            icon: const KeptIcon(KeptIcons.stamp, size: 26),
             label: l10n.tabProgress,
           ),
         ],

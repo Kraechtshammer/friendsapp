@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kept/app/app.dart';
 import 'package:kept/app/theme.dart';
+import 'package:kept/ui/kept_icon.dart';
 import 'package:kept/ui/material.dart';
 
 void main() {
@@ -16,13 +17,16 @@ void main() {
       expect(find.text(tab), findsWidgets);
     }
 
+    // The four tab icons and the gear are the app's own.
+    expect(find.byType(KeptIcon), findsNWidgets(5));
+
     await tester.tap(find.text('People'));
     await tester.pumpAndSettle();
     expect(find.text('Kept.'), findsNothing);
 
     await tester.tap(find.text('Home'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byIcon(Icons.settings_rounded));
+    await tester.tap(find.byTooltip('Settings'));
     await tester.pumpAndSettle();
     expect(find.text('Settings'), findsOneWidget);
 

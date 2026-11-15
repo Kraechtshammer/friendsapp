@@ -75,6 +75,10 @@ flutter:
   uses-material-design: true
   generate: true
 
+  assets:
+    # The app's own colourful icons (docs/style/icon-style.md).
+    - assets/icons/
+
   fonts:
     # Headings, buttons, labels and numbers (docs/style/ui-style.md §4).
     # A variable font; licence in assets/fonts/Outfit-OFL.txt.
