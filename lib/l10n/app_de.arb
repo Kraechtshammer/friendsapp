@@ -10,5 +10,42 @@
   "themeSystem": "System",
   "themeLight": "Hell",
   "themeDark": "Dunkel",
-  "nothingHereYet": "Hier ist noch nichts."
+  "nothingHereYet": "Hier ist noch nichts.",
+  "peopleTitle": "Deine Leute",
+  "peopleEmpty": "Hier erscheinen bald deine Leute.",
+  "peopleError": "Deine Leute konnten nicht geladen werden.",
+  "personError": "Diese Person konnte nicht geladen werden.",
+  "closenessClose": "Eng befreundet",
+  "closenessCloseGroup": "Eng befreundet",
+  "closenessNowAndThen": "Ab und zu",
+  "closenessFewTimesAYear": "Ein paar Mal im Jahr",
+  "closenessFamily": "Familie",
+  "reconnecting": "Wieder in Kontakt kommen",
+  "messengerWhatsapp": "WhatsApp",
+  "messengerTelegram": "Telegram",
+  "messengerSignal": "Signal",
+  "messengerDiscord": "Discord",
+  "openMessenger": "{messenger} öffnen",
+  "birthdayDayMonth": "{date}",
+  "@birthdayDayMonth": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "d. MMMM",
+        "isCustomDateFormat": "true"
+      }
+    }
+  },
+  "birthdayFull": "{date}",
+  "@birthdayFull": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "d. MMMM y",
+        "isCustomDateFormat": "true"
+      }
+    }
+  },
+  "notes": "Notizen",
+  "comingSoon": "Kommt bald"
 }

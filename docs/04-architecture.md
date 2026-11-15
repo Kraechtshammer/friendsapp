@@ -107,7 +107,14 @@ Two files: `kept.sqlite` (real) and `kept_demo.sqlite`. Settings always come fro
 
 In-memory drift databases. `test/demo_mode_test.dart` shows how to build `AppServices` for a test. In widget tests the database must be closed inside `tester.runAsync` after pumping an empty widget (see the note in `test/widget_test.dart`); closing it under the test clock hangs.
 
-### 2.4 Planned, not built
+### 2.4 Screens and widgets (M1)
+
+- `ui/widgets/`: the building blocks of ui-style.md §6, one per file: `Avatar` (initial in one of four shapes, drawn as a path so the hard shadow follows it; optional class badge, still to be decided), `KeptCard`, `Tag`, `SectionLabel`, `MainButton`. Hard shadows are a solid offset copy: a `BoxShadow` with blur 0, or the shape's path drawn twice.
+- `ui/people/people_screen.dart`: people grouped by class, read from `peopleProvider`. `person_screen.dart`: the tonal header with avatar, name and tags, the "Open <messenger>" button (shows "Coming soon" for now) and the notes card. The person page is pushed on the root navigator, so it covers the tab bar; the concept shows the bar there.
+- `l10n/labels.dart` turns enums into texts and formats birthdays. It imports `ui/kept_icon.dart` for the messenger icon, as akai's does.
+- Looking at screens without a phone: a throwaway widget test can load the real fonts (`FontLoader`, Roboto from Flutter's cache and `assets/fonts/Outfit.ttf`), pump the app with in-memory services in demo mode and write pictures with `matchesGoldenFile` and `--update-goldens`. Material icons show as boxes there. Delete the test afterwards.
+
+### 2.5 Planned, not built
 
 | Layer | Will hold |
 |---|---|

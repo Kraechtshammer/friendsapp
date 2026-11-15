@@ -163,6 +163,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing here yet.'**
   String get nothingHereYet;
+
+  /// No description provided for @peopleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your people'**
+  String get peopleTitle;
+
+  /// No description provided for @peopleEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Your people will show up here.'**
+  String get peopleEmpty;
+
+  /// No description provided for @peopleError.
+  ///
+  /// In en, this message translates to:
+  /// **'Your people could not be loaded.'**
+  String get peopleError;
+
+  /// No description provided for @personError.
+  ///
+  /// In en, this message translates to:
+  /// **'This person could not be loaded.'**
+  String get personError;
+
+  /// No description provided for @closenessClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close friend'**
+  String get closenessClose;
+
+  /// No description provided for @closenessCloseGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Close friends'**
+  String get closenessCloseGroup;
+
+  /// No description provided for @closenessNowAndThen.
+  ///
+  /// In en, this message translates to:
+  /// **'Now and then'**
+  String get closenessNowAndThen;
+
+  /// No description provided for @closenessFewTimesAYear.
+  ///
+  /// In en, this message translates to:
+  /// **'A few times a year'**
+  String get closenessFewTimesAYear;
+
+  /// No description provided for @closenessFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get closenessFamily;
+
+  /// No description provided for @reconnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting back in touch'**
+  String get reconnecting;
+
+  /// No description provided for @messengerWhatsapp.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp'**
+  String get messengerWhatsapp;
+
+  /// No description provided for @messengerTelegram.
+  ///
+  /// In en, this message translates to:
+  /// **'Telegram'**
+  String get messengerTelegram;
+
+  /// No description provided for @messengerSignal.
+  ///
+  /// In en, this message translates to:
+  /// **'Signal'**
+  String get messengerSignal;
+
+  /// No description provided for @messengerDiscord.
+  ///
+  /// In en, this message translates to:
+  /// **'Discord'**
+  String get messengerDiscord;
+
+  /// No description provided for @openMessenger.
+  ///
+  /// In en, this message translates to:
+  /// **'Open {messenger}'**
+  String openMessenger(String messenger);
+
+  /// No description provided for @birthdayDayMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}'**
+  String birthdayDayMonth(DateTime date);
+
+  /// No description provided for @birthdayFull.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}'**
+  String birthdayFull(DateTime date);
+
+  /// No description provided for @notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notes;
+
+  /// No description provided for @comingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get comingSoon;
 }
 
 class _AppLocalizationsDelegate

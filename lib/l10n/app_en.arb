@@ -10,5 +10,49 @@
   "themeSystem": "System",
   "themeLight": "Light",
   "themeDark": "Dark",
-  "nothingHereYet": "Nothing here yet."
+  "nothingHereYet": "Nothing here yet.",
+  "peopleTitle": "Your people",
+  "peopleEmpty": "Your people will show up here.",
+  "peopleError": "Your people could not be loaded.",
+  "personError": "This person could not be loaded.",
+  "closenessClose": "Close friend",
+  "closenessCloseGroup": "Close friends",
+  "closenessNowAndThen": "Now and then",
+  "closenessFewTimesAYear": "A few times a year",
+  "closenessFamily": "Family",
+  "reconnecting": "Getting back in touch",
+  "messengerWhatsapp": "WhatsApp",
+  "messengerTelegram": "Telegram",
+  "messengerSignal": "Signal",
+  "messengerDiscord": "Discord",
+  "openMessenger": "Open {messenger}",
+  "@openMessenger": {
+    "placeholders": {
+      "messenger": {
+        "type": "String"
+      }
+    }
+  },
+  "birthdayDayMonth": "{date}",
+  "@birthdayDayMonth": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "d MMMM",
+        "isCustomDateFormat": "true"
+      }
+    }
+  },
+  "birthdayFull": "{date}",
+  "@birthdayFull": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "d MMMM y",
+        "isCustomDateFormat": "true"
+      }
+    }
+  },
+  "notes": "Notes",
+  "comingSoon": "Coming soon"
 }

@@ -45,6 +45,10 @@ class KeptColors extends ThemeExtension<KeptColors> {
   /// Text and icons on any accent, in both themes.
   static const onAccent = Color(0xFF1F1326);
 
+  /// The drop shadow that follows an avatar's shape (black at 40 %, the
+  /// same in both themes; ui-style.md §5).
+  static const avatarShadow = Color(0x66000000);
+
   /// Screen background, and input fields inside cards.
   final Color ground;
 

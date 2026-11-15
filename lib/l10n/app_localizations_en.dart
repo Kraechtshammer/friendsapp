@@ -41,4 +41,79 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nothingHereYet => 'Nothing here yet.';
+
+  @override
+  String get peopleTitle => 'Your people';
+
+  @override
+  String get peopleEmpty => 'Your people will show up here.';
+
+  @override
+  String get peopleError => 'Your people could not be loaded.';
+
+  @override
+  String get personError => 'This person could not be loaded.';
+
+  @override
+  String get closenessClose => 'Close friend';
+
+  @override
+  String get closenessCloseGroup => 'Close friends';
+
+  @override
+  String get closenessNowAndThen => 'Now and then';
+
+  @override
+  String get closenessFewTimesAYear => 'A few times a year';
+
+  @override
+  String get closenessFamily => 'Family';
+
+  @override
+  String get reconnecting => 'Getting back in touch';
+
+  @override
+  String get messengerWhatsapp => 'WhatsApp';
+
+  @override
+  String get messengerTelegram => 'Telegram';
+
+  @override
+  String get messengerSignal => 'Signal';
+
+  @override
+  String get messengerDiscord => 'Discord';
+
+  @override
+  String openMessenger(String messenger) {
+    return 'Open $messenger';
+  }
+
+  @override
+  String birthdayDayMonth(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat(
+      'd MMMM',
+      localeName,
+    );
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
+  }
+
+  @override
+  String birthdayFull(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat(
+      'd MMMM y',
+      localeName,
+    );
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
+  }
+
+  @override
+  String get notes => 'Notes';
+
+  @override
+  String get comingSoon => 'Coming soon';
 }
