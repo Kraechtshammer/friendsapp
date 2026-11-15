@@ -73,7 +73,7 @@ Also decided: personal tool for now with Play compatibility kept in mind (Q2), s
 
 - Own icons decided; style guides written: `docs/style/ui-style.md`, `docs/style/icon-style.md` (02-design.md §6.14).
 
-- App name decided: **Kept** (D8). V6b tweaks accepted. Open before M0: the app ID. After that the developer can close the design phase.
+- App name decided: **Kept** (D8). V6b tweaks accepted. App ID: `de.gartenpa.kept`. No design question is open; the developer can close the design phase.
 
 ## Checking concept screens
 
