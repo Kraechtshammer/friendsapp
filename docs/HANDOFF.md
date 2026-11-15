@@ -7,7 +7,7 @@ The first thing a new session reads. Rewritten on 2026-11-15 at the end of the d
 - Phase: **implement**. Research closed 2026-11-14, design closed 2026-11-15, both by the developer.
 - The app is called **Kept.** with the full stop, which is also the app label; running text may write Kept. Version 0.1.0+1; Claude chooses the steps up to 1.0.0, which is the first real release. App ID `de.gartenpa.kept` (final). The repository and folder are `friendsapp`.
 - **M0 is done** (2026-11-15). The app skeleton stands: theme, four empty tabs, settings with a theme choice. No feature of Kept is built. M1 is next.
-- Everything is committed and pushed. The repository on GitHub is public.
+- Everything up to the end of M0 is pushed and CI passed on it. The repository on GitHub is public.
 
 ## 2. What to read, and how much
 
@@ -71,7 +71,7 @@ Done:
 - Dev container (copied from akai-timetrack). The developer has opened it in VS Code.
 - Flutter project: Android only, label "Kept.". In the container `flutter analyze` is clean, the template test passes, debug and release APKs build.
 - CI and release workflows, build and install scripts, F5 launch configurations, commit hook. The first CI run on GitHub passed (2026-11-15).
-- Packages (2026-11-15): all packages from 02-design.md §4 are in pubspec.yaml (`url_launcher` was removed again after the phone test). `compileSdk` is 37 and core library desugaring is on, as the plugins need. Checked: analyze clean, debug APK builds in the container. Not checked: CI with the new packages.
+- Packages (2026-11-15): all packages from 02-design.md §4 are in pubspec.yaml (`url_launcher` was removed again after the phone test). `compileSdk` is 37 and core library desugaring is on, as the plugins need. Checked: analyze clean, debug APK builds in the container, and CI passed on GitHub with them (2026-11-15, commit 2528756).
 - App skeleton (2026-11-15): layers as in akai-timetrack (`lib/app`, `lib/ui`, `lib/l10n`). `app/theme.dart` holds every colour of the style guide (`KeptColors`, read with `context.kept`) and builds the dark and the light theme. Outfit is bundled as a variable font (`assets/fonts`, OFL licence beside it). Four tabs with empty screens, the gear on Home opens Settings, which has only the theme choice (system, light, dark; kept in memory until the database exists). English and German texts; English is the template. Checked: analyze clean, one widget test passes, and Claude looked at pictures of the Home tab in dark and light, rendered by a throwaway test with the real fonts: title, gear, tab bar and icons with shadows look as intended. Not checked: anything on a phone. Known difference: the pill behind the active tab icon is Flutter's 64 × 32, the style guide says 64 × 36.
 - Icons (2026-11-15): the eighteen icons of `gen_v6.py` (sixteen plus WhatsApp and Telegram) are in `assets/icons/`, extracted by script, not retyped. `KeptIcon(KeptIcons.home)` in `ui/kept_icon.dart` shows one with its hard shadow, which is the same picture in black at 30 % placed 2 below, because `flutter_svg` has no drop-shadow filter. The tabs and the gear use them. Checked: analyze, tests, and the five used ones in the rendered pictures. Not checked: the other thirteen, and all of them on a phone. Gift is still to be drawn.
 - On the phone (2026-11-15): the debug build runs on the developer's Pixel 7 Pro. Claude saw a screenshot of Home in dark: title, gear, tab bar and icons are right. The developer has not yet said how it looks to them, and light was not looked at on the phone.
