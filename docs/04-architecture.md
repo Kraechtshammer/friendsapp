@@ -111,6 +111,7 @@ In-memory drift databases. `test/demo_mode_test.dart` shows how to build `AppSer
 
 - `ui/widgets/`: the building blocks of ui-style.md §6, one per file: `Avatar` (initial in one of four shapes, drawn as a path so the hard shadow follows it; optional class badge, a growing plant, `classBadge: true`), `KeptCard`, `Tag`, `SectionLabel`, `MainButton`. Hard shadows are a solid offset copy: a `BoxShadow` with blur 0, or the shape's path drawn twice.
 - `ui/people/people_screen.dart`: people grouped by class, read from `peopleProvider`. `person_screen.dart`: the tonal header with avatar, name and tags, the "Open <messenger>" button (shows "Coming soon" for now) and the notes card. The person page is pushed on the root navigator, so it covers the tab bar; the concept shows the bar there.
+- `ui/people/edit_person_screen.dart`: one form for adding and editing a person. It writes through `peopleRepositoryProvider`. Form widgets it brought: `GreyIconButton`, `choice_chips.dart`, `KeptSwitch`, `KeptTextField`, all in `ui/widgets/`.
 - `l10n/labels.dart` turns enums into texts and formats birthdays. It imports `ui/kept_icon.dart` for the messenger icon, as akai's does.
 - Looking at screens without a phone: a throwaway widget test can load the real fonts (`FontLoader`, Roboto from Flutter's cache and `assets/fonts/Outfit.ttf`), pump the app with in-memory services in demo mode and write pictures with `matchesGoldenFile` and `--update-goldens`. Material icons show as boxes there. Delete the test afterwards.
 
