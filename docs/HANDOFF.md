@@ -71,11 +71,12 @@ Done:
 - Dev container (copied from akai-timetrack). The developer has opened it in VS Code.
 - Flutter project: Android only, label "Kept". In the container `flutter analyze` is clean, the template test passes, debug and release APKs build.
 - CI and release workflows, build and install scripts, F5 launch configurations, commit hook. The first CI run on GitHub passed (2026-11-15).
+- Packages (2026-11-15): all packages from 02-design.md §4 are in pubspec.yaml, both `url_launcher` and `android_intent_plus` until the phone test picks one. `compileSdk` is 37 and core library desugaring is on, as the plugins need. Checked: analyze clean, debug APK builds in the container. Not checked: CI with the new packages.
 - Release signing: the developer created a key for Kept on 2026-11-15 (`android/kept-release.jks`, `android/key.properties`, both git-ignored) and says the three GitHub secrets are entered. Checked by Claude: a local release APK is signed with a non-debug key. Not checked: the secrets and the release workflow, which has never run.
 
 Next, in this order. One small commit per step.
 
-1. Add the approved packages (02-design.md §4). Check on pub.dev that `flutter_contacts`, `quick_actions` and `flutter_svg` are current.
+1. Done: packages.
 2. App skeleton after akai-timetrack's layering: theme for dark and light from the style guide (through `material_3_expressive`, wrapped as akai does in `ui/material.dart`), the four tabs with empty screens, the gear to an empty settings screen, German and English.
 3. Icons: write the sixteen SVGs from `gen_v6.py` into asset files and show them through `flutter_svg`. Gift is still to be drawn.
 4. Run it on the developer's phone. This needs the developer.
