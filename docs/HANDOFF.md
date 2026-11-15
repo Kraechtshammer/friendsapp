@@ -74,6 +74,7 @@ Done:
 - Packages (2026-11-15): all packages from 02-design.md §4 are in pubspec.yaml, both `url_launcher` and `android_intent_plus` until the phone test picks one. `compileSdk` is 37 and core library desugaring is on, as the plugins need. Checked: analyze clean, debug APK builds in the container. Not checked: CI with the new packages.
 - App skeleton (2026-11-15): layers as in akai-timetrack (`lib/app`, `lib/ui`, `lib/l10n`). `app/theme.dart` holds every colour of the style guide (`KeptColors`, read with `context.kept`) and builds the dark and the light theme. Outfit is bundled as a variable font (`assets/fonts`, OFL licence beside it). Four tabs with empty screens, the gear on Home opens Settings, which has only the theme choice (system, light, dark; kept in memory until the database exists). English and German texts; English is the template. Checked: analyze clean, one widget test passes, and Claude looked at pictures of the Home tab in dark and light, rendered by a throwaway test with the real fonts: title, gear, tab bar and icons with shadows look as intended. Not checked: anything on a phone. Known difference: the pill behind the active tab icon is Flutter's 64 × 32, the style guide says 64 × 36.
 - Icons (2026-11-15): the eighteen icons of `gen_v6.py` (sixteen plus WhatsApp and Telegram) are in `assets/icons/`, extracted by script, not retyped. `KeptIcon(KeptIcons.home)` in `ui/kept_icon.dart` shows one with its hard shadow, which is the same picture in black at 30 % placed 2 below, because `flutter_svg` has no drop-shadow filter. The tabs and the gear use them. Checked: analyze, tests, and the five used ones in the rendered pictures. Not checked: the other thirteen, and all of them on a phone. Gift is still to be drawn.
+- On the phone (2026-11-15): the debug build runs on the developer's Pixel 7 Pro. Claude saw a screenshot of Home in dark: title, gear, tab bar and icons are right. The developer has not yet said how it looks to them, and light was not looked at on the phone.
 - Release signing: the developer created a key for Kept on 2026-11-15 (`android/kept-release.jks`, `android/key.properties`, both git-ignored) and says the three GitHub secrets are entered. Checked by Claude: a local release APK is signed with a non-debug key. Not checked: the secrets and the release workflow, which has never run.
 
 Next, in this order. One small commit per step.
@@ -81,7 +82,7 @@ Next, in this order. One small commit per step.
 1. Done: packages.
 2. Done: app skeleton.
 3. Done: icons, except Gift, which is still to be drawn.
-4. Run it on the developer's phone. This needs the developer.
+4. Done: runs on the developer's phone.
 5. Phone checks, each as a small throwaway screen or debug action, with the developer:
    - a scheduled notification arrives close to its time, also after a restart, without the exact-alarm permission;
    - notification buttons work while the app is closed;
@@ -98,9 +99,8 @@ Next, in this order. One small commit per step.
 ## 6. Not tested yet
 
 - The shared emulator from this container (volume and device are akai-timetrack's).
-- The phone connection from this container.
+- The phone connection from this container. On 2026-11-15 the container saw no phone: an adb server was running on Windows, but listening on 127.0.0.1 only, so not started by `start-adb-server.cmd`. The app was installed from WSL through the Windows adb instead (copy the APK to a Windows folder, then `cmd.exe /c "adb install -r <apk>"`). F5 with hot reload needs the script.
 - The release workflow on GitHub.
-- Nothing of the look has been built in Flutter or seen on a phone.
 
 ## 7. How to work here
 
