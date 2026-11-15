@@ -6,7 +6,7 @@ The first thing a new session reads. Rewritten on 2026-11-15 at the end of the d
 
 - Phase: **implement**. Research closed 2026-11-14, design closed 2026-11-15, both by the developer.
 - The app is called **Kept.** with the full stop, which is also the app label; running text may write Kept. Version 0.1.0+1; Claude chooses the steps up to 1.0.0, which is the first real release. App ID `de.gartenpa.kept` (final). The repository and folder are `friendsapp`.
-- **M0 has started.** The app skeleton stands: theme, four empty tabs, settings with a theme choice. No feature of Kept is built.
+- **M0 is done** (2026-11-15). The app skeleton stands: theme, four empty tabs, settings with a theme choice. No feature of Kept is built. M1 is next.
 - Everything is committed and pushed. The repository on GitHub is public.
 
 ## 2. What to read, and how much
@@ -16,7 +16,7 @@ The first thing a new session reads. Rewritten on 2026-11-15 at the end of the d
 3. [02-design.md](02-design.md): §3 data, §4 technology, §5 milestones. Section 6 is the long history of how each point was settled; section 3 of this handoff sums up its results, so read §6 only when a detail is needed.
 4. [style/ui-style.md](style/ui-style.md) and [style/icon-style.md](style/icon-style.md) before building any screen.
 5. [03-dev-setup.md](03-dev-setup.md) for the container, phone, emulator, CI and releases.
-6. For how code is laid out, look at `/home/paga/Projects/akai-timetrack/docs/04-architecture.md`. This project follows it unless there is a reason not to. Our own `docs/04-architecture.md` does not exist yet.
+6. [04-architecture.md](04-architecture.md) for how the code is laid out. It follows `/home/paga/Projects/akai-timetrack/docs/04-architecture.md`; look there for the layers that are not built yet.
 
 The reference for the look is concept V6 with the V6b tweaks: pictures in `docs/concepts/previews/v6-*.png` and `v6b-*.png`, every value in `docs/concepts/gen_v6.py`.
 
@@ -64,38 +64,24 @@ The reference for the look is concept V6 with the V6b tweaks: pictures in `docs/
 
 **Later, not in the milestones:** groups and shared events, quick "do soon" items such as a voice message to listen to (§6.12), doctor appointments, iOS.
 
-## 4. M0: what is done and what is next
+## 4. M0: what was done, and what is next
 
 Done:
 
 - Dev container (copied from akai-timetrack). The developer has opened it in VS Code.
-- Flutter project: Android only, label "Kept". In the container `flutter analyze` is clean, the template test passes, debug and release APKs build.
+- Flutter project: Android only, label "Kept.". In the container `flutter analyze` is clean, the template test passes, debug and release APKs build.
 - CI and release workflows, build and install scripts, F5 launch configurations, commit hook. The first CI run on GitHub passed (2026-11-15).
-- Packages (2026-11-15): all packages from 02-design.md §4 are in pubspec.yaml, both `url_launcher` and `android_intent_plus` until the phone test picks one. `compileSdk` is 37 and core library desugaring is on, as the plugins need. Checked: analyze clean, debug APK builds in the container. Not checked: CI with the new packages.
+- Packages (2026-11-15): all packages from 02-design.md §4 are in pubspec.yaml (`url_launcher` was removed again after the phone test). `compileSdk` is 37 and core library desugaring is on, as the plugins need. Checked: analyze clean, debug APK builds in the container. Not checked: CI with the new packages.
 - App skeleton (2026-11-15): layers as in akai-timetrack (`lib/app`, `lib/ui`, `lib/l10n`). `app/theme.dart` holds every colour of the style guide (`KeptColors`, read with `context.kept`) and builds the dark and the light theme. Outfit is bundled as a variable font (`assets/fonts`, OFL licence beside it). Four tabs with empty screens, the gear on Home opens Settings, which has only the theme choice (system, light, dark; kept in memory until the database exists). English and German texts; English is the template. Checked: analyze clean, one widget test passes, and Claude looked at pictures of the Home tab in dark and light, rendered by a throwaway test with the real fonts: title, gear, tab bar and icons with shadows look as intended. Not checked: anything on a phone. Known difference: the pill behind the active tab icon is Flutter's 64 × 32, the style guide says 64 × 36.
 - Icons (2026-11-15): the eighteen icons of `gen_v6.py` (sixteen plus WhatsApp and Telegram) are in `assets/icons/`, extracted by script, not retyped. `KeptIcon(KeptIcons.home)` in `ui/kept_icon.dart` shows one with its hard shadow, which is the same picture in black at 30 % placed 2 below, because `flutter_svg` has no drop-shadow filter. The tabs and the gear use them. Checked: analyze, tests, and the five used ones in the rendered pictures. Not checked: the other thirteen, and all of them on a phone. Gift is still to be drawn.
 - On the phone (2026-11-15): the debug build runs on the developer's Pixel 7 Pro. Claude saw a screenshot of Home in dark: title, gear, tab bar and icons are right. The developer has not yet said how it looks to them, and light was not looked at on the phone.
 - Release signing: the developer created a key for Kept on 2026-11-15 (`android/kept-release.jks`, `android/key.properties`, both git-ignored) and says the three GitHub secrets are entered. Checked by Claude: a local release APK is signed with a non-debug key. Not checked: the secrets and the release workflow, which has never run.
+- Phone checks (2026-11-15): all five done with the developer on the Pixel 7 Pro. Results are in 02-design.md §8: no exact-alarm permission needed, buttons work with the app closed, chats open through `android_intent_plus`, the listener sees WhatsApp messages and calls, own drawn messenger icons. The throwaway check screen is removed again; it is in git history (commit "Dev: Add throwaway phone checks for M0") as a starting point for M3 and M7.
+- [04-architecture.md](04-architecture.md) is written.
 
-Next, in this order. One small commit per step.
+**M0 is done**, as far as Claude can tell; the developer has not said so yet. Left over from it: the Gift, Signal and Discord icons are to be drawn, and the developer has not yet looked at the light theme on the phone.
 
-1. Done: packages.
-2. Done: app skeleton.
-3. Done: icons, except Gift, which is still to be drawn.
-4. Done: runs on the developer's phone.
-5. Phone checks, each as a small throwaway screen or debug action, with the developer:
-   - a scheduled notification arrives close to its time, also after a restart, without the exact-alarm permission;
-   - notification buttons work while the app is closed;
-   - chats open in WhatsApp, Telegram, Signal and Discord; this decides between `url_launcher` and `android_intent_plus`;
-   - the notification listener sees an incoming WhatsApp message and a WhatsApp call notification;
-   - the installed messenger's app icon can be read (needs a `<queries>` entry, no permission; unverified).
-   Interim results from the developer on the Pixel 7 Pro (2026-11-15), through the throwaway "Phone checks" screen (Settings, bottom entry; `lib/ui/checks/`, `lib/platform/phone_checks.dart`, `KeptNotificationListener.kt`):
-   - Chats. WhatsApp: https link, own scheme and intent with package all open the chat. Telegram: the https link opens the browser; `tg://` and the intent with package work. Signal: all three work, but only for a person who has a phone number in Signal. Discord: tried with a user name, not a user ID; https and the intent work, `discord://` does not. Discord with a user name only opens the app. Decided: `android_intent_plus` (02-design.md §8).
-   - Scheduled notification: two 2 minute ones arrived about 2 and 1.6 minutes after the time in their text. The text is the target time (checked in the code). The 15 and 60 minute ones and the restart are still running.
-   - Listener: sees WhatsApp messages. The call notification and the field values are not reported yet.
-   - Buttons: work with the app closed and open. Done.
-   - App icons: all four can be read. Done, and not needed: the developer wants our own drawn messenger icons. Signal and Discord are to be drawn.
-6. Write `docs/04-architecture.md` once the structure stands, and record the results of the checks in 02-design.md §8.
+Next: **M1, People** (02-design.md §5). It starts with the database (drift), the settings table (the theme choice moves there) and the people table with one handle per messenger (02-design.md §8), then demo data for development builds, then contact import, the People screen and the top of the person page. Ask the developer before fixing the data model.
 
 ## 5. Open questions for the developer
 

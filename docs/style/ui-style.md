@@ -2,7 +2,7 @@
 
 The look of the app, written so it can be rebuilt in code and reused for another app. It describes concept V6 with the V6b tweaks (see [02-design.md](../02-design.md) §6.6 and §6.11). Reference pictures: `docs/concepts/previews/v6-*.png`, `v6b-*.png`. Reference source with every value: `docs/concepts/gen_v6.py`.
 
-Status: taken from the concept screens. Not yet built in Flutter, not yet checked on a phone.
+Status: taken from the concept screens. Colours and type are built in Flutter (`lib/app/theme.dart`) and were seen on a phone in dark; the components are not built yet.
 
 ## 1. The idea in one paragraph
 
@@ -133,6 +133,6 @@ Keep sections 2, 4, 5 and the shadow table as they are. Swap the six accents and
 
 ## 8. Open
 
-- How this maps onto `material_3_expressive` widgets and Flutter's `ThemeData`. To be worked out in M0 and written into 04-architecture.md.
+- The mapping onto Flutter's `ThemeData` is in 04-architecture.md §1.3. The components of section 6 (cards, buttons, tags and so on) are not built yet.
 - Motion (how the confetti, stamps and buttons move) is not designed.
 - Contrast of muted text on tonal containers has not been measured.
