@@ -16,7 +16,7 @@ Working name only. Current phase: **design** (research closed 2026-11-14).
 | [docs/style/ui-style.md](docs/style/ui-style.md) | The look: colours, type, shadows, components. Written to be reusable for other apps. |
 | [docs/style/icon-style.md](docs/style/icon-style.md) | How the app's own colourful icons are drawn. Follow it for every new icon. |
 | docs/concepts/ | Concept screens (canvas sources, generators, rendered pictures). New concept versions get a new row; do not overwrite one the developer has seen. |
-| docs/03-dev-setup.md | Builds, tooling, releases. Not started. |
+| [docs/03-dev-setup.md](docs/03-dev-setup.md) | Dev container, phone, emulator, git. Builds and releases follow with the app. |
 | docs/04-architecture.md | Layers, code style, known weaknesses. Not started. |
 
 The working mode is taken from `/home/paga/Projects/akai-timetrack` (same developer, Flutter). Look there for examples of finished docs.
