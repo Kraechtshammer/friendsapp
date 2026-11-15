@@ -104,6 +104,8 @@ Taken from akai-timetrack.
 
 ### One-time setup by the developer: signing key and secrets
 
+Done by the developer on 2026-11-15 with a key of its own for Kept (not akai-timetrack's). Checked: a local release APK is signed with a non-debug key. The steps stay here for another PC or a lost setup.
+
 The key decides who may update the installed app. If it is lost, updates are no longer possible without uninstalling. Keep a backup outside the repository. The password never goes into git, chat or docs.
 
 1. In the dev container terminal, create the key (it asks for a password and a few name fields):

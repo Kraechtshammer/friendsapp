@@ -10,6 +10,7 @@ The app is called **Kept** (decided 2026-11-15); the repository and folder keep 
 | Path | Purpose |
 |---|---|
 | [docs/HANDOFF.md](docs/HANDOFF.md) | State, per-session log, open points. Updated every session. |
+| [docs/history-research-and-design.md](docs/history-research-and-design.md) | Log of the research and design sessions. History only. |
 | [docs/01-research.md](docs/01-research.md) | Problem, market, features (F#), decisions (Q#). The record of why. |
 | [docs/02-design.md](docs/02-design.md) | Behaviour, data model, screens, milestones (M#). Closed; later changes go into its §8. |
 | docs/papers/ | PDFs the developer supplied. Copyrighted: local only, git-ignored, never commit. Reading PDFs needs `poppler-utils`. |
