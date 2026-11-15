@@ -1,4 +1,4 @@
-# friendsapp
+# Kept (repository: friendsapp)
 
 An app that helps a person with ADHD stay in touch with friends and reconnect with old ones.
 The app is called **Kept** (decided 2026-11-15); the repository and folder keep the name friendsapp. Current phase: **design** (research closed 2026-11-14).

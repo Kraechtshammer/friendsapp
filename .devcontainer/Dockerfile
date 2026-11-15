@@ -1,4 +1,4 @@
-# Dev container for the Friends app: Flutter SDK + Android SDK. The emulator itself lives in a Docker
+# Dev container for Kept: Flutter SDK + Android SDK. The emulator itself lives in a Docker
 # volume, see docs/03-dev-setup.md. Kept identical to akai-timetrack's Dockerfile (apart from comments)
 # so both projects share the same cached image layers.
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04

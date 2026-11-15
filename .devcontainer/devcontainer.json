@@ -1,5 +1,5 @@
 {
-  "name": "Friends (Flutter + Android)",
+  "name": "Kept. (Flutter + Android)",
   "build": { "dockerfile": "Dockerfile" },
 
   "features": {
