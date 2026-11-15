@@ -370,7 +370,7 @@ A tenth row on the canvas shows Home, Capturing and People with three changes (`
 - People blobs get the same small hard shadow as the large avatars.
 - "More" is a grey round blob with three dots instead of the magnifier.
 
-Rendered and looked at by Claude. Not yet reviewed by the developer.
+Rendered and looked at by Claude. **Accepted by the developer on 2026-11-15** ("tweaks look good").
 
 ### 6.12 Future idea: small things to do soon (the developer, 2026-11-15)
 
@@ -405,7 +405,7 @@ Claude's assessment: only Fluent Emoji Flat is a real alternative. It would save
 - **Decided (the developer):** the app uses its own drawn icons. "Our icons are by far the best." More have to be drawn as the app grows.
 - The icon style is written up in [style/icon-style.md](style/icon-style.md), with a view to a later skill for drawing new icons.
 - The UI style is written up in [style/ui-style.md](style/ui-style.md), in a form that can be adapted for other apps.
-- The V6b tweaks (§6.11) are part of the style guide. The developer has not commented on them yet.
+- The V6b tweaks (§6.11) are part of the style guide and accepted.
 
 ## 7. Changes to earlier decisions
 
