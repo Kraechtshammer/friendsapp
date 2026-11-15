@@ -92,7 +92,7 @@ Done:
 Next, in this order:
 
 1. Done (2026-11-16, Opus subagent, reviewed by Claude): People tab and the top of the person page, read-only, with the avatar, card, tag and button widgets. Checked: analyze, 30 tests, and rendered pictures of both screens in dark with the demo people. Not checked: light by eye, and the German texts by the developer ("Eng befreundet", "Wieder in Kontakt kommen", "Kommt bald").
-2. Decide the class badge on avatars with the developer (an open idea of theirs, 02-design.md §8). `Avatar` has both styles built in (`AvatarBadge.dots`, `.icon`); a picture was shown to the developer. Remove the style not chosen.
+2. Done (2026-11-16): the class badge is a growing plant (02-design.md §8). `Avatar(classBadge: true)` shows it; the People tab shows the same icons beside its group headings. A throwaway switch under "Development" in Settings (`badgePreview` in `ui/widgets/avatar.dart`) puts the badge on the People tab so the developer can see it; remove it once Home or Upcoming shows people.
 3. Add and edit a person: class, main messenger, handles, avatar.
 4. Contact import on first start (`flutter_contacts`, contacts permission, approved).
 5. Draw the Signal and Discord icons, and Gift.

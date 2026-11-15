@@ -22,7 +22,12 @@ enum KeptIcons {
   popcorn,
   star,
   leaf,
-  telegram;
+  telegram,
+
+  // The class badge on an avatar: a plant that grows with the class.
+  sprout,
+  bud,
+  flower;
 
   String get asset => 'assets/icons/$name.svg';
 }

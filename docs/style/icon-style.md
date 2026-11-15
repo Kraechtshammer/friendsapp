@@ -92,4 +92,6 @@ Messenger stand-ins (WhatsApp, Telegram) on the concept are placeholders. In the
 
 Input: the concept ("gift", "coffee"), optionally a colour. Output: one SVG, viewBox `0 0 48 48`, no `width` or `height`, no `<defs>`, no ids, no text, fills from the palette. Then render it at 26 px beside the existing set on both grounds and check it against section 7 before adding it to the set.
 
-Still to draw for the app: gift, plus the icons for anything new that milestones bring (idea or note, treat types, "they wrote", voice message).
+Added on 2026-11-16 for the class badge: sprout (green stem, two leaves, the right one darker), bud (the same lower down, with a pink bud split into a darker right half), flower (six pink petals, the right ones darker, yellow centre, stem with one leaf).
+
+Still to draw for the app: gift, Signal, Discord, plus the icons for anything new that milestones bring (idea or note, treat types, "they wrote", voice message).

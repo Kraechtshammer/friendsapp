@@ -32,8 +32,8 @@ void main() {
     }
   });
 
-  testWidgets('every badge builds for every class', (tester) async {
-    for (final badge in AvatarBadge.values) {
+  testWidgets('the class badge builds for every class', (tester) async {
+    for (final classBadge in [false, true]) {
       for (final closeness in Closeness.values) {
         for (final size in [44.0, 84.0]) {
           await pump(
@@ -43,20 +43,13 @@ void main() {
               shape: AvatarShape.scallop,
               color: AvatarColor.mint,
               size: size,
-              badge: badge,
+              classBadge: classBadge,
               closeness: closeness,
             ),
           );
           expect(find.text('T'), findsOneWidget);
           expect(tester.takeException(), isNull);
-          // Icons on the badge: always for the icon badge, and the cottage
-          // for family on the dots badge.
-          final icons = switch (badge) {
-            AvatarBadge.none => 0,
-            AvatarBadge.icon => 1,
-            AvatarBadge.dots => closeness == Closeness.family ? 1 : 0,
-          };
-          expect(find.byType(KeptIcon), findsNWidgets(icons));
+          expect(find.byType(KeptIcon), findsNWidgets(classBadge ? 1 : 0));
         }
       }
     }

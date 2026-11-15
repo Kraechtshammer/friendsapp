@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import '../../app/theme.dart';
 import '../../data/database.dart';
 import '../../domain/person.dart';
+import '../../l10n/labels.dart';
 import '../common.dart';
 import '../kept_icon.dart';
 import '../material.dart';
@@ -76,14 +77,10 @@ Path _scallop(double side, {int lobes = 8, double depth = .05}) {
   return path..close();
 }
 
-/// The class shown on an avatar, if at all. Which one is used is still
-/// open; the developer decides on pictures.
-enum AvatarBadge { none, dots, icon }
-
-/// Throwaway: which badge the People tab shows, set under "Development" in
-/// Settings, so the developer can pick a badge style on the phone. Remove
-/// once the style is decided (02-design.md §8).
-final badgePreview = ValueNotifier<AvatarBadge>(AvatarBadge.none);
+/// Throwaway: whether the People tab shows the class badge, set under
+/// "Development" in Settings, so the developer can see it on the phone.
+/// Remove once a screen with mixed people shows the badge.
+final badgePreview = ValueNotifier<bool>(false);
 
 /// A person's initial on their accent, in their shape, with a hard drop
 /// shadow that follows the shape (ui-style.md §5 and §6).
@@ -94,22 +91,22 @@ class Avatar extends StatelessWidget {
     required this.shape,
     required this.color,
     this.size = 48,
-    this.badge = AvatarBadge.none,
+    this.classBadge = false,
     this.closeness,
-  }) : assert(badge == AvatarBadge.none || closeness != null);
+  }) : assert(!classBadge || closeness != null);
 
   Avatar.person(
     Person person, {
     Key? key,
     double size = 48,
-    AvatarBadge badge = AvatarBadge.none,
+    bool classBadge = false,
   }) : this(
          key: key,
          name: person.name,
          shape: person.avatarShape,
          color: person.avatarColor,
          size: size,
-         badge: badge,
+         classBadge: classBadge,
          closeness: person.closeness,
        );
 
@@ -117,9 +114,14 @@ class Avatar extends StatelessWidget {
   final AvatarShape shape;
   final AvatarColor color;
   final double size;
-  final AvatarBadge badge;
 
-  /// Needed for a badge.
+  /// Shows the class as a small plant at the bottom right: a sprout for a
+  /// few times a year, a bud for now and then, a flower for close friends,
+  /// and a house for family (02-design.md §8). For places where people of
+  /// different classes are mixed.
+  final bool classBadge;
+
+  /// Needed for the badge.
   final Closeness? closeness;
 
   /// The first letter of the name, upper case.
@@ -150,7 +152,7 @@ class Avatar extends StatelessWidget {
         ),
       ),
     );
-    if (badge == AvatarBadge.none) return face;
+    if (!classBadge) return face;
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -158,7 +160,7 @@ class Avatar extends StatelessWidget {
         Positioned(
           right: -size * .06,
           bottom: -size * .06,
-          child: _Badge(badge, closeness!, size * .38),
+          child: _Badge(closeness!, size * .38),
         ),
       ],
     );
@@ -191,64 +193,28 @@ class _ShapePainter extends CustomPainter {
       old.color != color || old.shadow != shadow || old.path != path;
 }
 
-/// The class as a small surface-coloured pill (dots) or circle (icon).
+/// The class as a small plant in a surface-coloured circle.
 class _Badge extends StatelessWidget {
-  const _Badge(this.badge, this.closeness, this.height);
+  const _Badge(this.closeness, this.height);
 
-  final AvatarBadge badge;
   final Closeness closeness;
   final double height;
 
   @override
   Widget build(BuildContext context) {
-    final kept = context.kept;
-    final Widget content;
-    var pill = false;
-    if (badge == AvatarBadge.icon || closeness == Closeness.family) {
-      final icon = switch (closeness) {
-        Closeness.close => KeptIcons.star,
-        Closeness.nowAndThen => KeptIcons.chat,
-        Closeness.fewTimesAYear => KeptIcons.leaf,
-        Closeness.family => KeptIcons.cottage,
-      };
-      content = KeptIcon(icon, size: height * .66, shadow: false);
-    } else {
-      pill = true;
-      final count = switch (closeness) {
-        Closeness.close => 3,
-        Closeness.nowAndThen => 2,
-        _ => 1,
-      };
-      final dot = height * .22;
-      content = Row(
-        mainAxisSize: MainAxisSize.min,
-        spacing: dot * .6,
-        children: [
-          for (var i = 0; i < count; i++)
-            Container(
-              width: dot,
-              height: dot,
-              decoration: BoxDecoration(
-                color: kept.text,
-                shape: BoxShape.circle,
-              ),
-            ),
-        ],
-      );
-    }
+    final icon = closenessIcon(closeness);
     return Container(
+      width: height,
       height: height,
-      constraints: BoxConstraints(minWidth: height),
-      padding: pill ? EdgeInsets.symmetric(horizontal: height * .28) : null,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: kept.surface,
-        borderRadius: BorderRadius.circular(height / 2),
+        color: context.kept.surface,
+        shape: BoxShape.circle,
         boxShadow: const [
           BoxShadow(color: KeptColors.avatarShadow, offset: Offset(0, 2)),
         ],
       ),
-      child: content,
+      child: KeptIcon(icon, size: height * .68, shadow: false),
     );
   }
 }

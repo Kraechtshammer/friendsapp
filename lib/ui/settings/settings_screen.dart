@@ -80,21 +80,15 @@ class _Development extends ConsumerWidget {
           value: demoMode,
           onChanged: (on) => unawaited(ref.services.setDemoMode(on)),
         ),
-        const SizedBox(height: 12),
         // Throwaway, see [badgePreview].
-        const Text('Class badge on the People tab (preview)'),
-        const SizedBox(height: 8),
         ValueListenableBuilder(
           valueListenable: badgePreview,
-          builder: (context, badge, _) => SegmentedButton<AvatarBadge>(
-            showSelectedIcon: false,
-            segments: const [
-              ButtonSegment(value: AvatarBadge.none, label: Text('None')),
-              ButtonSegment(value: AvatarBadge.dots, label: Text('Dots')),
-              ButtonSegment(value: AvatarBadge.icon, label: Text('Icon')),
-            ],
-            selected: {badge},
-            onSelectionChanged: (chosen) => badgePreview.value = chosen.single,
+          builder: (context, on, _) => SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Class badge on the People tab'),
+            subtitle: const Text('Preview only.'),
+            value: on,
+            onChanged: (value) => badgePreview.value = value,
           ),
         ),
       ],

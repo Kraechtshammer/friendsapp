@@ -5,6 +5,7 @@ import '../../data/database.dart';
 import '../../domain/person.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
+import '../kept_icon.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
 import '../widgets/section_label.dart';
@@ -76,7 +77,13 @@ class _Group extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.start,
     spacing: 10,
     children: [
-      SectionLabel(closenessGroupLabel(closeness, context.l10n)),
+      Row(
+        spacing: 8,
+        children: [
+          KeptIcon(closenessIcon(closeness), size: 22),
+          SectionLabel(closenessGroupLabel(closeness, context.l10n)),
+        ],
+      ),
       Wrap(
         spacing: 16,
         runSpacing: 16,
@@ -110,7 +117,7 @@ class _PersonBlob extends StatelessWidget {
             ValueListenableBuilder(
               valueListenable: badgePreview,
               builder: (context, badge, _) =>
-                  Avatar.person(person, size: 54, badge: badge),
+                  Avatar.person(person, size: 54, classBadge: badge),
             ),
             Text(
               firstName,

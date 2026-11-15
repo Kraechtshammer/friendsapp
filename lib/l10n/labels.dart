@@ -28,6 +28,15 @@ String messengerLabel(Messenger messenger, AppLocalizations l10n) =>
       Messenger.discord => l10n.messengerDiscord,
     };
 
+/// The class as an icon: a plant that grows with the class, and a house for
+/// family (02-design.md §8). Used on the avatar badge and the group headers.
+KeptIcons closenessIcon(Closeness closeness) => switch (closeness) {
+  Closeness.close => KeptIcons.flower,
+  Closeness.nowAndThen => KeptIcons.bud,
+  Closeness.fewTimesAYear => KeptIcons.sprout,
+  Closeness.family => KeptIcons.cottage,
+};
+
 /// Signal and Discord have no drawn icon yet; they use the chat bubble.
 KeptIcons messengerIcon(Messenger messenger) => switch (messenger) {
   Messenger.whatsapp => KeptIcons.whatsapp,
