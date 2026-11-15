@@ -19,3 +19,27 @@ __pycache__/
 .DS_Store
 .idea/
 *.iml
+
+# .vscode is committed on purpose (tasks and launch configurations).
+
+# Flutter/Dart/Pub related
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Symbolication and obfuscation related
+app.*.symbols
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Core dumps (e.g. from a crashed emulator)
+core.[0-9]*
