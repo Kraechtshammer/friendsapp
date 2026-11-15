@@ -47,5 +47,40 @@
     }
   },
   "notes": "Notizen",
-  "comingSoon": "Kommt bald"
+  "comingSoon": "Kommt bald",
+  "addPersonTitle": "Person hinzufügen",
+  "editPersonTitle": "Person bearbeiten",
+  "edit": "Bearbeiten",
+  "save": "Speichern",
+  "editLook": "Aussehen",
+  "editName": "Name",
+  "nameHint": "Wie heißt die Person?",
+  "editClass": "Gruppe",
+  "reconnectingHint": "Für Leute, bei denen du dich wieder melden möchtest.",
+  "editMessenger": "Haupt-Messenger",
+  "messengerNone": "Keiner",
+  "editReach": "So erreichst du sie",
+  "phoneNumber": "Telefonnummer",
+  "phoneHint": "+49…",
+  "telegramUsername": "Telegram-Nutzername",
+  "signalLink": "Signal-Link",
+  "discordUserId": "Discord-Nutzer-ID",
+  "birthday": "Geburtstag",
+  "birthdayDay": "Tag",
+  "birthdayMonthField": "Monat",
+  "birthdayYearOptional": "Jahr (optional)",
+  "birthdayError": "Gib einen echten Tag und Monat ein oder lass alle drei leer.",
+  "notesHint": "Alles, was du dir merken willst",
+  "removePerson": "Diese Person entfernen",
+  "removeTitle": "{name} entfernen?",
+  "@removeTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "removeBody": "Der Eintrag und die Notizen werden gelöscht. Das lässt sich nicht rückgängig machen.",
+  "cancel": "Abbrechen",
+  "remove": "Entfernen"
 }

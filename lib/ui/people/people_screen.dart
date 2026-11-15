@@ -8,7 +8,10 @@ import '../common.dart';
 import '../kept_icon.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
+import '../widgets/grey_icon_button.dart';
+import '../widgets/main_button.dart';
 import '../widgets/section_label.dart';
+import 'edit_person_screen.dart';
 import 'person_screen.dart';
 
 /// Everyone, grouped by class in the order of [Closeness]. Groups with
@@ -19,13 +22,31 @@ class PeopleScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final people = ref.watch(peopleProvider);
-    final title = Text(
-      context.l10n.peopleTitle,
-      style: context.text.headlineLarge,
+    final title = Row(
+      children: [
+        Expanded(
+          child: Text(
+            context.l10n.peopleTitle,
+            style: context.text.headlineLarge,
+          ),
+        ),
+        GreyIconButton(
+          icon: Icons.add_rounded,
+          tooltip: context.l10n.addPersonTitle,
+          onPressed: () => openEditPerson(context),
+        ),
+      ],
     );
     final Widget body = switch (people) {
-      AsyncValue(value: final list?) when list.isEmpty => _Hint(
-        context.l10n.peopleEmpty,
+      AsyncValue(value: final list?) when list.isEmpty => Column(
+        spacing: 16,
+        children: [
+          _Hint(context.l10n.peopleEmpty),
+          MainButton(
+            label: context.l10n.addPersonTitle,
+            onPressed: () => openEditPerson(context),
+          ),
+        ],
       ),
       AsyncValue(value: final list?) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,

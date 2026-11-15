@@ -54,5 +54,40 @@
     }
   },
   "notes": "Notes",
-  "comingSoon": "Coming soon"
+  "comingSoon": "Coming soon",
+  "addPersonTitle": "Add a person",
+  "editPersonTitle": "Edit person",
+  "edit": "Edit",
+  "save": "Save",
+  "editLook": "Look",
+  "editName": "Name",
+  "nameHint": "Their name",
+  "editClass": "Class",
+  "reconnectingHint": "For people you want to get back in touch with.",
+  "editMessenger": "Main messenger",
+  "messengerNone": "None",
+  "editReach": "How to reach them",
+  "phoneNumber": "Phone number",
+  "phoneHint": "+49…",
+  "telegramUsername": "Telegram user name",
+  "signalLink": "Signal link",
+  "discordUserId": "Discord user ID",
+  "birthday": "Birthday",
+  "birthdayDay": "Day",
+  "birthdayMonthField": "Month",
+  "birthdayYearOptional": "Year (optional)",
+  "birthdayError": "Enter a real day and month, or leave all three empty.",
+  "notesHint": "Anything worth remembering",
+  "removePerson": "Remove this person",
+  "removeTitle": "Remove {name}?",
+  "@removeTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "removeBody": "Their entry and notes will be deleted. This cannot be undone.",
+  "cancel": "Cancel",
+  "remove": "Remove"
 }

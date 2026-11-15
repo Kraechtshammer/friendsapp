@@ -277,6 +277,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Coming soon'**
   String get comingSoon;
+
+  /// No description provided for @addPersonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a person'**
+  String get addPersonTitle;
+
+  /// No description provided for @editPersonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit person'**
+  String get editPersonTitle;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @editLook.
+  ///
+  /// In en, this message translates to:
+  /// **'Look'**
+  String get editLook;
+
+  /// No description provided for @editName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get editName;
+
+  /// No description provided for @nameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Their name'**
+  String get nameHint;
+
+  /// No description provided for @editClass.
+  ///
+  /// In en, this message translates to:
+  /// **'Class'**
+  String get editClass;
+
+  /// No description provided for @reconnectingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'For people you want to get back in touch with.'**
+  String get reconnectingHint;
+
+  /// No description provided for @editMessenger.
+  ///
+  /// In en, this message translates to:
+  /// **'Main messenger'**
+  String get editMessenger;
+
+  /// No description provided for @messengerNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get messengerNone;
+
+  /// No description provided for @editReach.
+  ///
+  /// In en, this message translates to:
+  /// **'How to reach them'**
+  String get editReach;
+
+  /// No description provided for @phoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get phoneNumber;
+
+  /// No description provided for @phoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'+49…'**
+  String get phoneHint;
+
+  /// No description provided for @telegramUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'Telegram user name'**
+  String get telegramUsername;
+
+  /// No description provided for @signalLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Signal link'**
+  String get signalLink;
+
+  /// No description provided for @discordUserId.
+  ///
+  /// In en, this message translates to:
+  /// **'Discord user ID'**
+  String get discordUserId;
+
+  /// No description provided for @birthday.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday'**
+  String get birthday;
+
+  /// No description provided for @birthdayDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get birthdayDay;
+
+  /// No description provided for @birthdayMonthField.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get birthdayMonthField;
+
+  /// No description provided for @birthdayYearOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Year (optional)'**
+  String get birthdayYearOptional;
+
+  /// No description provided for @birthdayError.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a real day and month, or leave all three empty.'**
+  String get birthdayError;
+
+  /// No description provided for @notesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Anything worth remembering'**
+  String get notesHint;
+
+  /// No description provided for @removePerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this person'**
+  String get removePerson;
+
+  /// No description provided for @removeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name}?'**
+  String removeTitle(String name);
+
+  /// No description provided for @removeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Their entry and notes will be deleted. This cannot be undone.'**
+  String get removeBody;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
 }
 
 class _AppLocalizationsDelegate

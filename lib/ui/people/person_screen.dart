@@ -8,10 +8,12 @@ import '../../l10n/labels.dart';
 import '../common.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
+import '../widgets/grey_icon_button.dart';
 import '../widgets/kept_card.dart';
 import '../widgets/main_button.dart';
 import '../widgets/section_label.dart';
 import '../widgets/tag.dart';
+import 'edit_person_screen.dart';
 
 /// One person: the tonal header, the button that opens their chat, and
 /// their notes. See concept V6 · One person (docs/concepts/gen_v6.py).
@@ -162,43 +164,34 @@ class _Header extends StatelessWidget {
               ),
             ],
           ),
-          const Positioned(left: 0, top: 0, child: _BackButton()),
-        ],
-      ),
-    );
-  }
-}
-
-/// Grey rounded square with the plain back arrow (concept: 44, radius 16).
-class _BackButton extends StatelessWidget {
-  const _BackButton();
-
-  static const _radius = BorderRadius.all(Radius.circular(16));
-
-  @override
-  Widget build(BuildContext context) {
-    final kept = context.kept;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: _radius,
-        boxShadow: [
-          BoxShadow(color: kept.greyEdge, offset: const Offset(0, 4)),
-        ],
-      ),
-      child: Material(
-        color: kept.surfaceHigh,
-        borderRadius: _radius,
-        child: InkWell(
-          borderRadius: _radius,
-          onTap: () => Navigator.of(context).maybePop(),
-          child: Tooltip(
-            message: MaterialLocalizations.of(context).backButtonTooltip,
-            child: SizedBox.square(
-              dimension: 44,
-              child: Icon(Icons.arrow_back_rounded, color: kept.text),
+          Positioned(
+            left: 0,
+            top: 0,
+            // The concept's smaller back button: 44, radius 16.
+            child: GreyIconButton(
+              icon: Icons.arrow_back_rounded,
+              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+              size: 44,
+              radius: 16,
+              onPressed: () => Navigator.of(context).maybePop(),
             ),
           ),
-        ),
+          Positioned(
+            right: 0,
+            top: 0,
+            child: GreyIconButton(
+              icon: Icons.edit_rounded,
+              tooltip: l10n.edit,
+              size: 44,
+              radius: 16,
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => EditPersonScreen(id: person.id),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

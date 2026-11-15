@@ -116,4 +116,93 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get comingSoon => 'Kommt bald';
+
+  @override
+  String get addPersonTitle => 'Person hinzufügen';
+
+  @override
+  String get editPersonTitle => 'Person bearbeiten';
+
+  @override
+  String get edit => 'Bearbeiten';
+
+  @override
+  String get save => 'Speichern';
+
+  @override
+  String get editLook => 'Aussehen';
+
+  @override
+  String get editName => 'Name';
+
+  @override
+  String get nameHint => 'Wie heißt die Person?';
+
+  @override
+  String get editClass => 'Gruppe';
+
+  @override
+  String get reconnectingHint =>
+      'Für Leute, bei denen du dich wieder melden möchtest.';
+
+  @override
+  String get editMessenger => 'Haupt-Messenger';
+
+  @override
+  String get messengerNone => 'Keiner';
+
+  @override
+  String get editReach => 'So erreichst du sie';
+
+  @override
+  String get phoneNumber => 'Telefonnummer';
+
+  @override
+  String get phoneHint => '+49…';
+
+  @override
+  String get telegramUsername => 'Telegram-Nutzername';
+
+  @override
+  String get signalLink => 'Signal-Link';
+
+  @override
+  String get discordUserId => 'Discord-Nutzer-ID';
+
+  @override
+  String get birthday => 'Geburtstag';
+
+  @override
+  String get birthdayDay => 'Tag';
+
+  @override
+  String get birthdayMonthField => 'Monat';
+
+  @override
+  String get birthdayYearOptional => 'Jahr (optional)';
+
+  @override
+  String get birthdayError =>
+      'Gib einen echten Tag und Monat ein oder lass alle drei leer.';
+
+  @override
+  String get notesHint => 'Alles, was du dir merken willst';
+
+  @override
+  String get removePerson => 'Diese Person entfernen';
+
+  @override
+  String removeTitle(String name) {
+    return '$name entfernen?';
+  }
+
+  @override
+  String get removeBody =>
+      'Der Eintrag und die Notizen werden gelöscht. Das lässt sich nicht rückgängig machen.';
+
+  @override
+  String get cancel => 'Abbrechen';
+
+  @override
+  String get remove => 'Entfernen';
 }
