@@ -642,4 +642,105 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get setADate => 'Datum festlegen';
+
+  @override
+  String get timelineToday => 'Heute';
+
+  @override
+  String get youWrote => 'Du hast geschrieben';
+
+  @override
+  String theyWrote(String name) {
+    return '$name hat geschrieben';
+  }
+
+  @override
+  String get youCalled => 'Du hast angerufen';
+
+  @override
+  String theyCalled(String name) {
+    return '$name hat angerufen';
+  }
+
+  @override
+  String get youMet => 'Ihr habt euch getroffen';
+
+  @override
+  String get youGamed => 'Ihr habt zusammen gezockt';
+
+  @override
+  String get addedToYourPeople => 'Zu deinen Leuten hinzugefügt';
+
+  @override
+  String get youCongratulated => 'Du hast gratuliert';
+
+  @override
+  String get yourBirthday => 'Dein Geburtstag';
+
+  @override
+  String congratulatedYou(String name) {
+    return '$name hat dir gratuliert';
+  }
+
+  @override
+  String get buttonTheyWrote => 'Hat geschrieben';
+
+  @override
+  String get buttonTheyCalled => 'Hat angerufen';
+
+  @override
+  String notedTheyWrote(String name) {
+    return 'Notiert: $name hat geschrieben';
+  }
+
+  @override
+  String notedTheyCalled(String name) {
+    return 'Notiert: $name hat angerufen';
+  }
+
+  @override
+  String get alreadyNoted => 'Heute schon notiert';
+
+  @override
+  String get undo => 'Rückgängig';
+
+  @override
+  String get editEntry => 'Eintrag bearbeiten';
+
+  @override
+  String get entryActivity => 'Aktivität';
+
+  @override
+  String get entryNote => 'Notiz fürs nächste Mal';
+
+  @override
+  String get deleteEntry => 'Diesen Eintrag löschen';
+
+  @override
+  String get deleteEntryTitle => 'Diesen Eintrag löschen?';
+
+  @override
+  String get deleteEntryBody => 'Er verschwindet aus dem Verlauf.';
+
+  @override
+  String get delete => 'Löschen';
+
+  @override
+  String dateDayMonth(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat('d MMM', localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
+  }
+
+  @override
+  String dateDayMonthYear(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat(
+      'd MMM yy',
+      localeName,
+    );
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
+  }
 }

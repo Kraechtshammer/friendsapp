@@ -1,5 +1,7 @@
 import '../data/database.dart';
 import 'avatar_pick.dart';
+import 'birthdays.dart';
+import 'contact_event.dart';
 import 'intention.dart';
 import 'person.dart';
 
@@ -287,6 +289,97 @@ List<Intention> demoIntentions(DateTime today) {
         createdAt: at(back, 15),
       ),
   ];
+}
+
+/// The invented contact history of the demo database (M6, the friend
+/// timeline): about 20 events for five people, in both directions, with
+/// activities and notes, and birthday wishes both ways (Paulina's birthday
+/// and a birthday of the user). Deterministic for a given [today]: every
+/// event lies a fixed number of days back, at a fixed hour.
+List<ContactEvent> demoContactEvents(DateTime today) {
+  final day = DateTime(today.year, today.month, today.day);
+  final ids = {for (final p in demoPeople(today)) p.name: p.id};
+  DateTime back(int days, int hour, [int minute = 0]) =>
+      DateTime(day.year, day.month, day.day - days, hour, minute);
+  const w = ContactKind.wrote,
+      c = ContactKind.called,
+      m = ContactKind.met,
+      g = ContactKind.gamed,
+      b = ContactKind.birthdayWish;
+  const us = ContactDirection.byUser,
+      them = ContactDirection.byThem,
+      both = ContactDirection.together;
+  // Name, days back, hour, kind, direction, activity, note.
+  final rows =
+      <(String, int, int, ContactKind, ContactDirection, String?, String?)>[
+        ('Paulina Brandt', 2, 20, w, us, null, 'Show the pottery pieces.'),
+        (
+          'Paulina Brandt',
+          9,
+          18,
+          w,
+          them,
+          null,
+          'Sent a photo of the new bowl.',
+        ),
+        (
+          'Paulina Brandt',
+          21,
+          11,
+          m,
+          both,
+          'pottery market',
+          'Bring her the book.',
+        ),
+        ('Paulina Brandt', 40, 19, c, us, null, null),
+        ('Paulina Brandt', 52, 21, c, them, null, 'Moving in the spring.'),
+        ('Malik Osei', 3, 22, w, them, null, 'Sent a climbing video.'),
+        ('Malik Osei', 6, 19, w, us, null, 'New job is going well.'),
+        ('Malik Osei', 17, 15, m, both, 'bouldering', 'Ramen afterwards.'),
+        ('Malik Osei', 33, 20, c, us, null, null),
+        ('Malik Osei', 70, 12, m, both, 'barbecue at Anna\'s', null),
+        ('Lena Hartwig', 5, 17, w, us, null, 'Ask about the dinner.'),
+        ('Lena Hartwig', 12, 21, g, both, 'Mario Kart', null),
+        ('Lena Hartwig', 30, 10, c, them, null, 'Back from Lisbon in May.'),
+        (
+          'Kenji Moreau',
+          44,
+          18,
+          w,
+          us,
+          null,
+          'Wants to hear about the ramen place.',
+        ),
+        ('Kenji Moreau', 61, 9, w, them, null, null),
+        ('Sofia Lindqvist', 8, 20, c, us, null, 'Return the book.'),
+        ('Sofia Lindqvist', 27, 16, m, both, 'coffee', null),
+        // Birthday wishes: the user to Paulina, and Malik and Paulina to the
+        // user on a birthday of the user's 80 days back.
+        ('Paulina Brandt', _daysSince(day, 8, 22), 22, b, us, null, null),
+        ('Malik Osei', 80, 9, b, them, null, null),
+        ('Paulina Brandt', 80, 12, b, them, null, null),
+      ];
+  return [
+    for (final (i, (name, back_, hour, kind, dir, activity, note))
+        in rows.indexed)
+      ContactEvent(
+        id: 'demo-c${(i + 1).toString().padLeft(2, '0')}',
+        personId: ids[name]!,
+        at: back(back_, hour),
+        kind: kind,
+        direction: dir,
+        source: ContactSource.manual,
+        activity: activity,
+        note: note,
+        createdAt: back(back_, hour, 5),
+      ),
+  ];
+}
+
+/// Days from the last 22 August (or any month and day) up to [day].
+int _daysSince(DateTime day, int month, int dayOfMonth) {
+  final last = lastBirthday(month, dayOfMonth, day);
+  return day.difference(last).inDays;
 }
 
 class _Demo {

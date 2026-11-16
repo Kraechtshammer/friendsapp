@@ -42,6 +42,28 @@ void main() {
     }
   }
 
+  test('demo mode fills the demo contact history only', () async {
+    final today = DateTime(2026, 11, 16);
+    final anna = await services
+        .peopleFor(demo: false)
+        .add(name: 'Anna Real', closeness: Closeness.close);
+    await services.setDemoMode(true, today: today);
+    final demo = await services
+        .contactEventsFor(demo: true)
+        .watchForPerson(
+          demoPeople(today).singleWhere((p) => p.name == 'Paulina Brandt').id,
+        )
+        .first;
+    expect(demo, isNotEmpty);
+    expect(
+      await services
+          .contactEventsFor(demo: false)
+          .watchForPerson(anna.id)
+          .first,
+      isEmpty,
+    );
+  });
+
   test('demo mode shows the demo set and leaves the real people', () async {
     final real = services.peopleFor(demo: false);
     final anna = await real.add(name: 'Anna Real', closeness: Closeness.close);

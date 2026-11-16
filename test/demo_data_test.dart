@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/demo_data.dart';
 import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
@@ -106,6 +107,33 @@ void main() {
 
     test('is the same for the same day', () {
       expect(demoIntentions(DateTime(2026, 12, 30, 8)), intentions);
+    });
+  });
+
+  group('contact events', () {
+    final events = demoContactEvents(today);
+
+    test('both directions, several kinds, for a few people', () {
+      expect(events, hasLength(greaterThan(15)));
+      expect(events.map((e) => e.personId).toSet(), hasLength(5));
+      expect(
+        events.map((e) => e.direction).toSet(),
+        ContactDirection.values.toSet(),
+      );
+      expect(events.map((e) => e.kind).toSet(), ContactKind.values.toSet());
+      expect(events.map((e) => e.id).toSet(), hasLength(events.length));
+    });
+
+    test('refer to demo people and lie in the past', () {
+      final ids = people.map((p) => p.id).toSet();
+      for (final e in events) {
+        expect(ids, contains(e.personId));
+        expect(e.at.isBefore(today), isTrue);
+      }
+    });
+
+    test('is the same for the same day', () {
+      expect(demoContactEvents(DateTime(2026, 12, 30, 8)), events);
     });
   });
 }

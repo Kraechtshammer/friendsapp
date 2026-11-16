@@ -14,12 +14,15 @@ import '../material.dart';
 /// The badge colour: pink for a birthday, else by kind.
 Color entryAccent(UpcomingEntry e) => switch (e) {
   BirthdayEntry() => KeptColors.pink,
-  ThoughtEntry(:final intention) => switch (intention.kind) {
-    IntentionKind.write => KeptColors.sun,
-    IntentionKind.call => KeptColors.sky,
-    IntentionKind.meet => KeptColors.mint,
-    IntentionKind.game => KeptColors.lilac,
-  },
+  ThoughtEntry(:final intention) => kindAccent(intention.kind),
+};
+
+/// The badge colour of a thought of [kind].
+Color kindAccent(IntentionKind kind) => switch (kind) {
+  IntentionKind.write => KeptColors.sun,
+  IntentionKind.call => KeptColors.sky,
+  IntentionKind.meet => KeptColors.mint,
+  IntentionKind.game => KeptColors.lilac,
 };
 
 KeptIcons entryIcon(UpcomingEntry e) => switch (e) {

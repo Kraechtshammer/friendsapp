@@ -1129,6 +1129,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Set a date'**
   String get setADate;
+
+  /// No description provided for @timelineToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get timelineToday;
+
+  /// No description provided for @youWrote.
+  ///
+  /// In en, this message translates to:
+  /// **'You wrote'**
+  String get youWrote;
+
+  /// No description provided for @theyWrote.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} wrote'**
+  String theyWrote(String name);
+
+  /// No description provided for @youCalled.
+  ///
+  /// In en, this message translates to:
+  /// **'You called'**
+  String get youCalled;
+
+  /// No description provided for @theyCalled.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} called'**
+  String theyCalled(String name);
+
+  /// No description provided for @youMet.
+  ///
+  /// In en, this message translates to:
+  /// **'You met'**
+  String get youMet;
+
+  /// No description provided for @youGamed.
+  ///
+  /// In en, this message translates to:
+  /// **'You gamed together'**
+  String get youGamed;
+
+  /// No description provided for @addedToYourPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to your people'**
+  String get addedToYourPeople;
+
+  /// No description provided for @youCongratulated.
+  ///
+  /// In en, this message translates to:
+  /// **'You congratulated'**
+  String get youCongratulated;
+
+  /// No description provided for @yourBirthday.
+  ///
+  /// In en, this message translates to:
+  /// **'Your birthday'**
+  String get yourBirthday;
+
+  /// No description provided for @congratulatedYou.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} congratulated you'**
+  String congratulatedYou(String name);
+
+  /// No description provided for @buttonTheyWrote.
+  ///
+  /// In en, this message translates to:
+  /// **'They wrote'**
+  String get buttonTheyWrote;
+
+  /// No description provided for @buttonTheyCalled.
+  ///
+  /// In en, this message translates to:
+  /// **'They called'**
+  String get buttonTheyCalled;
+
+  /// No description provided for @notedTheyWrote.
+  ///
+  /// In en, this message translates to:
+  /// **'Noted: {name} wrote'**
+  String notedTheyWrote(String name);
+
+  /// No description provided for @notedTheyCalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Noted: {name} called'**
+  String notedTheyCalled(String name);
+
+  /// No description provided for @alreadyNoted.
+  ///
+  /// In en, this message translates to:
+  /// **'Already noted for today'**
+  String get alreadyNoted;
+
+  /// No description provided for @undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// No description provided for @editEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit entry'**
+  String get editEntry;
+
+  /// No description provided for @entryActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get entryActivity;
+
+  /// No description provided for @entryNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note for next time'**
+  String get entryNote;
+
+  /// No description provided for @deleteEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this entry'**
+  String get deleteEntry;
+
+  /// No description provided for @deleteEntryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this entry?'**
+  String get deleteEntryTitle;
+
+  /// No description provided for @deleteEntryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It disappears from the timeline.'**
+  String get deleteEntryBody;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @dateDayMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}'**
+  String dateDayMonth(DateTime date);
+
+  /// No description provided for @dateDayMonthYear.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}'**
+  String dateDayMonthYear(DateTime date);
 }
 
 class _AppLocalizationsDelegate

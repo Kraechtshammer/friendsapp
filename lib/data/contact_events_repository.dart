@@ -165,6 +165,41 @@ class ContactEventsRepository {
     });
   }
 
+  /// "They wrote" or "They called": adds an event of [kind] from the
+  /// person (direction byThem, source manual) at [at], unless one of that
+  /// kind is already stored from them on the same local day; then null is
+  /// returned and nothing is added. So a second tap on a day does nothing.
+  Future<ContactEvent?> addByThemOnce({
+    required String personId,
+    required ContactKind kind,
+    required DateTime at,
+    DateTime? now,
+  }) {
+    final start = DateTime(at.year, at.month, at.day);
+    final end = DateTime(at.year, at.month, at.day + 1);
+    return _db.transaction(() async {
+      final existing =
+          await (_db.select(_db.contactEvents)..where(
+                (t) =>
+                    t.personId.equals(personId) &
+                    t.kind.equalsValue(kind) &
+                    t.direction.equalsValue(ContactDirection.byThem) &
+                    t.at.isBiggerOrEqualValue(start) &
+                    t.at.isSmallerThanValue(end),
+              ))
+              .get();
+      if (existing.isNotEmpty) return null;
+      return add(
+        personId: personId,
+        at: at,
+        kind: kind,
+        direction: ContactDirection.byThem,
+        source: ContactSource.manual,
+        now: now,
+      );
+    });
+  }
+
   /// Marks the intention [intentionId] done and adds the contact event that
   /// did it, linked to it, in one transaction. Kind and direction follow
   /// from the intention's kind (contactKindFor, contactDirectionFor).
@@ -213,6 +248,14 @@ class ContactEventsRepository {
 
   Future<void> delete(String id) =>
       (_db.delete(_db.contactEvents)..where((t) => t.id.equals(id))).go();
+
+  /// Replaces all events with [events] in one step. For the demo database;
+  /// the people they refer to must be there already.
+  Future<void> replaceAll(List<ContactEvent> events) =>
+      _db.transaction(() async {
+        await _db.delete(_db.contactEvents).go();
+        await _db.batch((b) => b.insertAll(_db.contactEvents, events));
+      });
 
   static final _newestFirst = <OrderClauseGenerator<$ContactEventsTable>>[
     (t) => OrderingTerm.desc(t.at),

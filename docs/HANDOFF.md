@@ -100,7 +100,11 @@ Details of what was built are in [04-architecture.md](04-architecture.md); decis
 
 - Done: "when" on a thought (date with optional time, Soon, Later, When... with a condition) on the capture card and in a new edit sheet (tap a thought); the Upcoming tab (birthdays and dated thoughts for 12 months, "No date yet" in three groups); "Coming up" cards on Home; "Did it happen?" once after a date (Yes records the contact, No moves it back to Soon); due plans as picks ("Want to set a date with ...?"). Checked: analyze, 224 tests, Claude looked at rendered pictures (`build/screens/m5-*.png`). **Not checked: on the phone.**
 - Claude's choices, not confirmed: see 02-design.md §8. Notable: tapping a thought on Home now opens the edit sheet, not the person page.
-- Next: M6, friend timeline.
+**M6, friend timeline: built, not tried** (2026-11-16). No schema change.
+
+- Done: the compact timeline on the person page (upcoming, a Today mark, history with who did what, activity and note, birthdays in both directions, "Added to your people"); "They wrote" and "They called" buttons (once per day, with Undo); a sheet to edit or delete a history entry. Checked: analyze, 248 tests, Claude looked at the dark render (`build/screens/m6-timeline-dark.png`). **Not checked: on the phone. The small direction arrows show as empty boxes in the test render (the test font lacks them); whether they show on the phone is open.**
+- M5 and M6 are released together as 0.4.0.
+- Next: one migration to schema 4 for everything M7 to M10 need, then M7.
 
 ## 5. Open questions for the developer
 

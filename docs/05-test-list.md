@@ -31,7 +31,7 @@ Tests that run by themselves (`flutter analyze`, `flutter test`, the migration t
 - [ ] "Birthdays" shows as its own channel in the app's Android notification settings.
 - [ ] Your own birthday: the "Who congratulated you?" card and its toggles.
 
-## M5, Upcoming and plans (not released yet)
+## M5, Upcoming and plans (in 0.4.0)
 
 - [ ] Capture with a date, with a date and time, with Soon, Later and When...: still quick enough?
 - [ ] The system date and time pickers look and behave right in the app's theme.
@@ -39,6 +39,13 @@ Tests that run by themselves (`flutter analyze`, `flutter test`, the migration t
 - [ ] Upcoming tab: your real birthdays are all there, in the right order, with the right age.
 - [ ] The day after a dated plan: "Did it happen?" appears once on Home; try Yes and No.
 - [ ] Is it right that tapping a thought on Home opens the edit sheet instead of the person page?
+
+## M6, friend timeline (in 0.4.0)
+
+- [ ] Person page, scrolled down: the timeline shows your real history since M3 and the next birthday.
+- [ ] The small arrows before "You wrote" and "<Name> wrote" show as arrows, not as empty boxes.
+- [ ] "They wrote" and "They called": the entry appears, Undo removes it, a second tap the same day says it is already noted.
+- [ ] Tap a history entry: edit the note, delete the entry.
 
 ## Release builds
 

@@ -638,4 +638,105 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get setADate => 'Set a date';
+
+  @override
+  String get timelineToday => 'Today';
+
+  @override
+  String get youWrote => 'You wrote';
+
+  @override
+  String theyWrote(String name) {
+    return '$name wrote';
+  }
+
+  @override
+  String get youCalled => 'You called';
+
+  @override
+  String theyCalled(String name) {
+    return '$name called';
+  }
+
+  @override
+  String get youMet => 'You met';
+
+  @override
+  String get youGamed => 'You gamed together';
+
+  @override
+  String get addedToYourPeople => 'Added to your people';
+
+  @override
+  String get youCongratulated => 'You congratulated';
+
+  @override
+  String get yourBirthday => 'Your birthday';
+
+  @override
+  String congratulatedYou(String name) {
+    return '$name congratulated you';
+  }
+
+  @override
+  String get buttonTheyWrote => 'They wrote';
+
+  @override
+  String get buttonTheyCalled => 'They called';
+
+  @override
+  String notedTheyWrote(String name) {
+    return 'Noted: $name wrote';
+  }
+
+  @override
+  String notedTheyCalled(String name) {
+    return 'Noted: $name called';
+  }
+
+  @override
+  String get alreadyNoted => 'Already noted for today';
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String get editEntry => 'Edit entry';
+
+  @override
+  String get entryActivity => 'Activity';
+
+  @override
+  String get entryNote => 'Note for next time';
+
+  @override
+  String get deleteEntry => 'Delete this entry';
+
+  @override
+  String get deleteEntryTitle => 'Delete this entry?';
+
+  @override
+  String get deleteEntryBody => 'It disappears from the timeline.';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String dateDayMonth(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat('d MMM', localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
+  }
+
+  @override
+  String dateDayMonthYear(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat(
+      'd MMM yy',
+      localeName,
+    );
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
+  }
 }

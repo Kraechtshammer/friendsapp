@@ -102,6 +102,7 @@ class AppServices {
         // Replacing the people removes their old intentions (cascade).
         await _demoRepository().replaceAll(demoPeople(day));
         await _demoIntentionsRepository().replaceAll(demoIntentions(day));
+        await contactEventsFor(demo: true).replaceAll(demoContactEvents(day));
       });
     }
     await settings.update((s) => s.copyWith(demoMode: on));
