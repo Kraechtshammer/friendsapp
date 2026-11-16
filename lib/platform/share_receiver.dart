@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter/services.dart';
 
-/// Something another app shared into Kept (M10, Android ACTION_SEND).
+/// Something another app shared into Kept (Android ACTION_SEND).
 sealed class SharedItem {
   const SharedItem();
 }

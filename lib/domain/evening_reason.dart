@@ -1,6 +1,6 @@
 import '../data/database.dart';
 import 'owed_reply.dart';
-import 'reconnect_week.dart';
+import 'reconnect_span.dart';
 
 /// The reason the evening question names (02-design.md §8, review of
 /// 2026-11-16, point 1). There is one evening notification per day; it

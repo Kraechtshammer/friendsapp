@@ -208,7 +208,7 @@ List<Intention> demoIntentions(DateTime today) {
     ('Amira Haddad', 'congrats on the flat', IntentionKind.write, 10, 9, 7),
     ('Malik Osei', 'match on Saturday', IntentionKind.call, 12, 22, 11),
   ];
-  // Dated and undated plans (M5), for people with no other thought. Days
+  // Dated and undated plans, for people with no other thought. Days
   // ahead are counted from [day]; a negative number is a date that has
   // passed, so Home asks "Did it happen?".
   DateTime ahead(int days, [int hour = 0, int minute = 0]) =>
@@ -292,7 +292,7 @@ List<Intention> demoIntentions(DateTime today) {
   ];
 }
 
-/// The invented ideas of the demo database (M10): things to do and to talk
+/// The invented ideas of the demo database: things to do and to talk
 /// about for four people, one with a link, one ticked off. No pictures.
 /// Deterministic for a given [today].
 List<Idea> demoIdeas(DateTime today) {
@@ -345,7 +345,7 @@ List<Idea> demoIdeas(DateTime today) {
   ];
 }
 
-/// The invented contact history of the demo database (M6, the friend
+/// The invented contact history of the demo database (for the friend
 /// timeline): about 20 events for five people, in both directions, with
 /// activities and notes, and birthday wishes both ways (Paulina's birthday
 /// and a birthday of the user). Deterministic for a given [today]: every

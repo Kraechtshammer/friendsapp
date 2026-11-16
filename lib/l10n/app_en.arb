@@ -358,7 +358,6 @@
   "treatsTitle": "Treats",
   "treatStamps": "{count, plural, =1{1 stamp} other{{count} stamps}}",
   "@treatStamps": {"placeholders": {"count": {"type": "int"}}},
-  "treatCurrentTag": "Current card",
   "treatsWaiting": "Waiting",
   "treatsEarned": "Earned",
   "treatsEnjoyed": "Enjoyed",

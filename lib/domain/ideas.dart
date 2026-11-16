@@ -3,9 +3,9 @@ import 'idea.dart';
 import 'intention.dart';
 import 'pick_order.dart';
 
-/// Rules for ideas per person (F11, M10) as pure functions.
+/// Rules for ideas per person (F11) as pure functions.
 
-/// Shared text split into a link and the rest (M10, sharing in): the first
+/// Shared text split into a link and the rest (sharing in): the first
 /// http(s) URL becomes the link, the text around it the note. Plain text
 /// has no link.
 class SplitText {
@@ -68,7 +68,7 @@ List<Idea> openIdeas(Iterable<Idea> ideas, IdeaKind kind) =>
       return c != 0 ? c : b.id.compareTo(a.id);
     });
 
-/// Which kind of idea helps with [pick] (M10): something to do for a
+/// Which kind of idea helps with [pick]: something to do for a
 /// meet-up, a game and a due plan; something to talk about for writing and
 /// calling, the reconnect person and the gentle hint. Null for a birthday
 /// and an owed reply, which have their own reason.

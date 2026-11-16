@@ -6,7 +6,7 @@ import 'treat.dart';
 
 /// What the Progress tab shows, worked out as pure functions. Everything
 /// here only grows or is a plain count of what happened; nothing compares
-/// with a target (02-design.md §8, M9).
+/// with a target (02-design.md §8).
 
 /// The user's stamp count: all stamp values added up. Only ever grows.
 int stampTotal(Iterable<Stamp> stamps) =>

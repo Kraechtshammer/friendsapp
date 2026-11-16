@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../data/database.dart';
 import '../../domain/person_name.dart';
-import '../../domain/reconnect_week.dart';
+import '../../domain/reconnect_span.dart';
 import '../common.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';

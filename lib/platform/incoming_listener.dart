@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 
 import '../domain/incoming_contact.dart';
 
-/// Incoming contact (M7, 02-design.md §2.6 and §6.9): the app's own
+/// Incoming contact (02-design.md §2.6 and §6.9): the app's own
 /// notification listener, behind an interface so tests can fake it.
 ///
 /// Optional part, off by default. For a build without it (Play Store),

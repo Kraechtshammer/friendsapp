@@ -32,7 +32,7 @@ String _targetLabel(ShareTarget t, AppLocalizations l10n) => switch (t) {
   ShareTarget.thought => l10n.shareThought,
 };
 
-/// "Keep this for…" (M10, sharing in): shows what another app shared, lets
+/// "Keep this for…" (sharing in): shows what another app shared, lets
 /// the user pick a person and what it becomes (an idea to do, an idea to
 /// talk about, or a thought; a picture only an idea), and saves it. A short
 /// note confirms it; the screen behind stays as it was. Cancelling deletes a

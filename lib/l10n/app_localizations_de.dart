@@ -963,9 +963,6 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get treatCurrentTag => 'Aktuelle Karte';
-
-  @override
   String get treatsWaiting => 'Warten';
 
   @override

@@ -62,7 +62,7 @@ class People extends Table {
   DateTimeColumn get createdAt => dateTime()();
 
   /// When the user last said an owed reply to this person is settled
-  /// (milestone M7). Added in schema version 4.
+  /// Added in schema version 4.
   DateTimeColumn get replyClearedAt => dateTime().nullable()();
 
   @override
@@ -90,11 +90,11 @@ class Intentions extends Table {
     Constant(IntentionState.open.name),
   )();
 
-  /// An attached link (a later milestone).
+  /// An attached link.
   TextColumn get link => text().nullable()();
 
   /// When: a date, or a horizon (with [condition] for "when ..."), or
-  /// nothing. Used from milestone M5; here now to spare a migration.
+  /// nothing.
   DateTimeColumn get date => dateTime().nullable()();
   TextColumn get horizon => textEnum<Horizon>().nullable()();
   TextColumn get condition => text().nullable()();
@@ -267,16 +267,16 @@ class AppDatabase extends _$AppDatabase {
   MigrationStrategy get migration => MigrationStrategy(
     onUpgrade: stepByStep(
       from1To2: (m, schema) async {
-        // Intentions (M2, capture).
+        // Intentions (capture).
         await m.createTable(schema.intentions);
       },
       from2To3: (m, schema) async {
-        // Contact events and day answers (M3).
+        // Contact events and day answers.
         await m.createTable(schema.contactEvents);
         await m.createTable(schema.dayAnswers);
       },
       from3To4: (m, schema) async {
-        // One step for M7 to M10: two nullable columns, three new tables.
+        // One step: two nullable columns, three new tables.
         await m.addColumn(schema.people, schema.people.replyClearedAt);
         await m.addColumn(
           schema.contactEvents,

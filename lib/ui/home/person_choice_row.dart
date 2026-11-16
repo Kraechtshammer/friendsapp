@@ -10,7 +10,7 @@ import 'person_picker.dart';
 /// The row of faces to pick a person from: the recent people
 /// ([recentPeople]) and "More", which opens the searchable picker. The
 /// picked person always shows in the row. Used by the capture card and the
-/// share sheet (M10). Tapping the picked face again unpicks it.
+/// share sheet. Tapping the picked face again unpicks it.
 class PersonChoiceRow extends StatelessWidget {
   const PersonChoiceRow({
     super.key,

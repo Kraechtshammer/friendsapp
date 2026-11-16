@@ -9,7 +9,7 @@ enum IntentionKind { write, call, meet, game }
 /// Open until the user does it or lets it go.
 enum IntentionState { open, done, dropped }
 
-/// A rough "when" instead of a date (used from milestone M5).
+/// A rough "when" instead of a date.
 /// [whenCondition] goes with the intention's condition text.
 enum Horizon { soon, later, whenCondition }
 

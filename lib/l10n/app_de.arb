@@ -287,7 +287,6 @@
   "weeksNone": "Noch keine Wochen. Dein erster Kontakt startet sie.",
   "treatsTitle": "Belohnungen",
   "treatStamps": "{count, plural, =1{1 Stempel} other{{count} Stempel}}",
-  "treatCurrentTag": "Aktuelle Karte",
   "treatsWaiting": "Warten",
   "treatsEarned": "Verdient",
   "treatsEnjoyed": "Genossen",

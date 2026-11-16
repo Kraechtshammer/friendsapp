@@ -7,6 +7,7 @@ import 'app_settings.dart';
 import 'database.dart';
 import 'settings_repository.dart';
 import 'treats_repository.dart';
+import 'whole_seconds.dart';
 
 /// Reads and writes the contact events of one database: the real one or,
 /// in demo mode, the demo one (AppServices.contactEventsFor). See
@@ -46,14 +47,14 @@ class ContactEventsRepository {
     final event = ContactEvent(
       id: _uuid.v4(),
       personId: personId,
-      at: _wholeSeconds(at),
+      at: wholeSeconds(at),
       kind: kind,
       direction: direction,
       source: source,
       activity: activity,
       note: note,
       intentionId: intentionId,
-      createdAt: _wholeSeconds(now ?? DateTime.now()),
+      createdAt: wholeSeconds(now ?? DateTime.now()),
     );
     final settings = await _loadSettings();
     await _db.transaction(() async {
@@ -251,7 +252,7 @@ class ContactEventsRepository {
       )..where((t) => t.id.equals(intentionId))).write(
         IntentionsCompanion(
           state: const Value(IntentionState.done),
-          closedAt: Value(_wholeSeconds(time)),
+          closedAt: Value(wholeSeconds(time)),
         ),
       );
       return add(
@@ -292,10 +293,4 @@ class ContactEventsRepository {
     // drift stores whole seconds; the id keeps the order stable.
     (t) => OrderingTerm.desc(t.id),
   ];
-
-  /// drift stores whole seconds; cut here so a returned row equals the
-  /// stored one.
-  static DateTime _wholeSeconds(DateTime t) => t.subtract(
-    Duration(milliseconds: t.millisecond, microseconds: t.microsecond),
-  );
 }

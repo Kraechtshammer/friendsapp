@@ -165,7 +165,7 @@ class AppServices {
     await treats.setCurrent(all[5].id, now: day);
   }
 
-  /// Prepares the stamps of the real database once (M9), in one
+  /// Prepares the stamps of the real database once, in one
   /// transaction with the two flags in the settings, so it cannot run
   /// twice: first the default treats ([defaultTreats], names in the
   /// language of the app now; all waiting), then the stamp rule over the

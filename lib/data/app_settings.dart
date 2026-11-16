@@ -4,7 +4,7 @@ import '../domain/birthdays.dart';
 import '../domain/owed_reply.dart';
 import '../domain/person.dart';
 import '../domain/progress.dart' show StreakMode;
-import '../domain/reconnect_week.dart' show ReconnectSpan;
+import '../domain/reconnect_span.dart' show ReconnectSpan;
 import '../domain/rhythm.dart';
 import '../domain/stamps.dart';
 
@@ -73,12 +73,12 @@ class AppSettings {
   /// One item with "Another one" (the start value) or a list of three.
   final OpenItemsMode openItems;
 
-  /// The user's own birthday (02-design.md §8, birthdays M4); null when not
+  /// The user's own birthday (02-design.md §8, birthdays); null when not
   /// set. Stored as `MM-DD` or `YYYY-MM-DD` under `ownBirthday`.
   final Birthday? ownBirthday;
 
   /// The optional notification listener records who wrote or called
-  /// (02-design.md §2.6, M7). Off at start.
+  /// (02-design.md §2.6). Off at start.
   final bool incomingOn;
 
   /// Days after an incoming message before a reply counts as owed.
@@ -112,14 +112,14 @@ class AppSettings {
   final Set<String> backInTouchAnswered;
 
   /// The weights of the stamp rule and the default card size (02-design.md
-  /// §6.10, M9). Stored as `stamp*` keys.
+  /// §6.10). Stored as `stamp*` keys.
   final StampWeights stampWeights;
 
-  /// The default treats were put into the real database once (M9). Never
+  /// The default treats were put into the real database once. Never
   /// put back, so a treat the user deleted stays gone.
   final bool defaultTreatsInserted;
 
-  /// The stamp rule was run over the existing contact events once (M9).
+  /// The stamp rule was run over the existing contact events once.
   final bool stampsBackfilled;
 
   /// The first-start flow was finished or skipped, or the install already

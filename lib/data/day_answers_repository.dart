@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 
 import '../domain/contact_event.dart';
 import 'database.dart';
+import 'whole_seconds.dart';
 
 /// Reads and writes the user's answer per local day, in one database: the
 /// real one or, in demo mode, the demo one (AppServices.dayAnswersFor).
@@ -13,7 +14,7 @@ class DayAnswersRepository {
   /// Sets the answer for today (the local day of [now]), replacing an
   /// earlier one. `answeredAt` is [now]. [now] is for tests.
   Future<DayAnswer> setToday(DayAnswerValue answer, {DateTime? now}) async {
-    final time = _wholeSeconds(now ?? DateTime.now());
+    final time = wholeSeconds(now ?? DateTime.now());
     final row = DayAnswer(day: dayKey(time), answer: answer, answeredAt: time);
     await _db.into(_db.dayAnswers).insertOnConflictUpdate(row);
     return row;
@@ -35,10 +36,4 @@ class DayAnswersRepository {
     await _db.delete(_db.dayAnswers).go();
     await _db.batch((b) => b.insertAll(_db.dayAnswers, answers));
   });
-
-  /// drift stores whole seconds; cut here so a returned row equals the
-  /// stored one.
-  static DateTime _wholeSeconds(DateTime t) => t.subtract(
-    Duration(milliseconds: t.millisecond, microseconds: t.microsecond),
-  );
 }

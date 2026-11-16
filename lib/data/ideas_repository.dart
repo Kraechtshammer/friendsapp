@@ -6,10 +6,11 @@ import 'package:uuid/uuid.dart';
 
 import '../domain/idea.dart';
 import 'database.dart';
+import 'whole_seconds.dart';
 
 /// Reads and writes the ideas of one database: the real one or, in demo
 /// mode, the demo one (AppServices.ideasFor). An idea is something to do
-/// or to talk about with a person (02-design.md §3, F11, M10).
+/// or to talk about with a person (02-design.md §3, F11).
 ///
 /// A picture is a file in the app's own `shared/` folder (copied there by
 /// the share channel); the row keeps its path. Deleting the idea deletes
@@ -57,7 +58,7 @@ class IdeasRepository {
       kind: kind,
       link: _orNull(link),
       imagePath: _orNull(imagePath),
-      createdAt: _wholeSeconds(now ?? DateTime.now()),
+      createdAt: wholeSeconds(now ?? DateTime.now()),
     );
     await _db.into(_db.ideas).insert(idea);
     return idea;
@@ -81,7 +82,7 @@ class IdeasRepository {
   Future<void> setDone(String id, bool done, {DateTime? now}) =>
       (_db.update(_db.ideas)..where((t) => t.id.equals(id))).write(
         IdeasCompanion(
-          doneAt: Value(done ? _wholeSeconds(now ?? DateTime.now()) : null),
+          doneAt: Value(done ? wholeSeconds(now ?? DateTime.now()) : null),
         ),
       );
 
@@ -106,10 +107,6 @@ class IdeasRepository {
     final t = text?.trim();
     return t == null || t.isEmpty ? null : t;
   }
-
-  static DateTime _wholeSeconds(DateTime t) => t.subtract(
-    Duration(milliseconds: t.millisecond, microseconds: t.microsecond),
-  );
 }
 
 /// Deletes a picture file; a missing file or a failure is only logged.

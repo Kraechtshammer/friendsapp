@@ -11,7 +11,7 @@ import '../domain/incoming_contact.dart';
 import '../platform/contacts.dart';
 import 'providers.dart';
 
-/// Incoming contact (M7, 02-design.md §2.6 and §6.9): keeps the optional
+/// Incoming contact (02-design.md §2.6 and §6.9): keeps the optional
 /// notification listener in step with the app. Optional part; see
 /// lib/platform/incoming_listener.dart for removing it.
 ///

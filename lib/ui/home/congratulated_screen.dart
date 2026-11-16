@@ -20,7 +20,7 @@ void openCongratulated(BuildContext context, Birthday birthday) => unawaited(
   ),
 );
 
-/// "Who congratulated you?" (02-design.md §6.8 and §8, birthdays M4): all
+/// "Who congratulated you?" (02-design.md §6.8 and §8, birthdays): all
 /// people with a switch each, for the user's most recent birthday (today on
 /// the day). On stores a birthday wish from that person (source manual)
 /// dated that day; off deletes it again. Nobody is listed as missing and

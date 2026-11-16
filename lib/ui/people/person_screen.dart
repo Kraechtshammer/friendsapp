@@ -27,7 +27,7 @@ import 'incoming_buttons.dart';
 import 'person_timeline_view.dart';
 
 /// One person: the tonal header, the button that opens their chat, their
-/// notes, open thoughts and ideas (M10), then the friend timeline with the "They wrote" and "They
+/// notes, open thoughts and ideas, then the friend timeline with the "They wrote" and "They
 /// called" buttons. The page scrolls as one. See concept V6 · One person
 /// (docs/concepts/gen_v6.py).
 class PersonScreen extends ConsumerWidget {

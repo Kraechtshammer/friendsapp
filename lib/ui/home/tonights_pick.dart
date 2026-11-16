@@ -13,7 +13,7 @@ import '../../domain/intention.dart';
 import '../../domain/owed_reply.dart';
 import '../../domain/person_name.dart';
 import '../../domain/pick_order.dart';
-import '../../domain/reconnect_week.dart';
+import '../../domain/reconnect_span.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
@@ -464,7 +464,7 @@ class WhenLineOf extends StatelessWidget {
   };
 }
 
-/// One calm line with an idea that helps with [pick] (M10): "Idea:
+/// One calm line with an idea that helps with [pick]: "Idea:
 /// bouldering hall in Altona" ([ideaForPick]). Nothing when there is none.
 class IdeaLine extends ConsumerWidget {
   const IdeaLine(this.pick, {super.key});

@@ -2,7 +2,7 @@ import 'contact_event.dart';
 import 'person.dart';
 import 'rhythm.dart';
 
-/// The stamp rule (02-design.md §6.9, §6.10, milestone M9). Pure: no
+/// The stamp rule (02-design.md §6.9, §6.10). Pure: no
 /// database, the times are parameters. Only numbers that grow: nothing in
 /// here takes a stamp away.
 

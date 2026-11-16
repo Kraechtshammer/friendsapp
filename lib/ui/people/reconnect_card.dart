@@ -6,7 +6,7 @@ import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/database.dart';
 import '../../domain/person_name.dart';
-import '../../domain/reconnect_week.dart';
+import '../../domain/reconnect_span.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../home/open_chat.dart';
@@ -252,7 +252,7 @@ class _Chosen extends ConsumerWidget {
   }
 }
 
-/// The calm state: the user got in touch this week. No buttons.
+/// The calm state: the user got in touch in the current span. No buttons.
 class _Done extends StatelessWidget {
   const _Done(this.person);
 

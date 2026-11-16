@@ -18,7 +18,7 @@ import '../widgets/tag.dart';
 import 'stamp_card.dart';
 import 'treats_screen.dart';
 
-/// The Progress tab (02-design.md §8, M9; concept V6 · Progress and stamp
+/// The Progress tab (02-design.md §8; concept V6 · Progress and stamp
 /// card): the stamp count that only grows, the current stamp card, treats
 /// that are earned, this week, "weeks in a row" (calm when a run ends),
 /// and a few numbers for the user's own use. Nothing here is a target, and

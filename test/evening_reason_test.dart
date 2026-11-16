@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/evening_question.dart';
 import 'package:kept/domain/evening_reason.dart';
-import 'package:kept/domain/reconnect_week.dart';
+import 'package:kept/domain/reconnect_span.dart';
 
 import 'owed_reply_test.dart' show event, person;
 

@@ -79,7 +79,7 @@ class ReconnectChosen extends ReconnectState {
 }
 
 /// [person] is the one for this span and the user got in touch: calm, for
-/// the rest of the week.
+/// the rest of the span.
 class ReconnectDone extends ReconnectState {
   const ReconnectDone(this.person);
 

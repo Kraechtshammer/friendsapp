@@ -1,7 +1,7 @@
 import '../data/database.dart';
 import 'contact_event.dart';
 
-/// Birthdays (02-design.md §2.5 and the M4 decisions in §8) as pure
+/// Birthdays (02-design.md §2.5 and the birthday decisions in §8) as pure
 /// functions. Days are local calendar days; nothing here reads the clock.
 ///
 /// A birthday on 29 February counts on 28 February in years without a

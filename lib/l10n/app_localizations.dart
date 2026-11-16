@@ -1562,12 +1562,6 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 stamp} other{{count} stamps}}'**
   String treatStamps(int count);
 
-  /// No description provided for @treatCurrentTag.
-  ///
-  /// In en, this message translates to:
-  /// **'Current card'**
-  String get treatCurrentTag;
-
   /// No description provided for @treatsWaiting.
   ///
   /// In en, this message translates to:

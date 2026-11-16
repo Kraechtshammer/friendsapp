@@ -43,17 +43,17 @@ import 'upcoming/upcoming_screen.dart';
 /// read from the queue), and when the language changes. A burst of changes
 /// schedules once ([eveningDebounce]). And it handles "Yes" on it.
 ///
-/// The same goes for the birthday notifications (02-design.md §8, birthdays
-/// M4): planned again at every start, when the real people, the evening
+/// The same goes for the birthday notifications (02-design.md §8, birthdays):
+/// planned again at every start, when the real people, the evening
 /// settings, the language or today's wishes change, and when the app comes
 /// back on a new day. "Open chat" and a tap open Home at the birthday
 /// pick.
 ///
-/// And it keeps the optional notification listener in step ([IncomingSync],
-/// M7): at start, on every return to the app and when the settings or the
+/// And it keeps the optional notification listener in step ([IncomingSync]):
+/// at start, on every return to the app and when the settings or the
 /// real people change.
 ///
-/// Shares from other apps (M10) open "Keep this for…" over whatever is on
+/// Shares from other apps open "Keep this for…" over whatever is on
 /// screen ([showShareSheet]). Once per start, pictures in `shared/` that no
 /// idea refers to are removed ([removeOrphanPictures]).
 ///
@@ -296,7 +296,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   }
 
   /// Once per start: the default treats and the stamp backfill of the real
-  /// database, if they were not done before (M9). The treat names are in the
+  /// database, if they were not done before. The treat names are in the
   /// language of the app now.
   void _prepareStamps() {
     if (_stampsPrepared) return;

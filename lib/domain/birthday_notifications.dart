@@ -4,7 +4,7 @@ import '../data/database.dart';
 import 'birthdays.dart';
 import 'contact_event.dart';
 
-/// The birthday notifications (02-design.md §8, birthdays M4) as pure
+/// The birthday notifications (02-design.md §8, birthdays) as pure
 /// functions: which ones, when, with which id and payload, and what a
 /// response means.
 ///

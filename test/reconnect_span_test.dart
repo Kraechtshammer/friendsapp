@@ -3,7 +3,7 @@ import 'package:kept/data/app_settings.dart';
 import 'package:kept/data/database.dart';
 import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/person.dart';
-import 'package:kept/domain/reconnect_week.dart';
+import 'package:kept/domain/reconnect_span.dart';
 
 Person person(String id, {bool reconnecting = true}) => Person(
   id: id,

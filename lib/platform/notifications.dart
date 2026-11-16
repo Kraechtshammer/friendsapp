@@ -18,7 +18,7 @@ import '../domain/person_name.dart';
 
 /// The app's notifications, behind an interface so tests can fake them:
 /// the evening question (02-design.md §2.2) and the birthday notifications
-/// (§8, birthdays M4; ids in `domain/birthday_notifications.dart`).
+/// (§8, birthdays; ids in `domain/birthday_notifications.dart`).
 abstract class Notifications {
   /// Sets the plugin up. [onAnswer] gets the evening answers that reach the
   /// running app: "Yes" and a tap on the notification, also when one of

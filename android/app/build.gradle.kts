@@ -16,7 +16,7 @@ val hasReleaseKey = releaseKey.getProperty("storeFile") != null
 
 android {
     namespace = "de.gartenpa.kept"
-    // 37: required by the plugins (permission_handler and others).
+    // 37: required by the plugins.
     compileSdk = 37
     ndkVersion = flutter.ndkVersion
 

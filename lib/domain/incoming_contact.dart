@@ -2,7 +2,7 @@ import '../data/database.dart';
 import 'contact_event.dart';
 
 /// Incoming contact through the notification listener (02-design.md §2.6
-/// and §6.9; M7). Optional part: the pure rules for the watch list and the
+/// and §6.9). Optional part: the pure rules for the watch list and the
 /// queue. See lib/platform/incoming_listener.dart for what to delete for a
 /// build without the listener.
 

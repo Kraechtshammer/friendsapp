@@ -2,7 +2,7 @@ import '../domain/greeting.dart';
 import '../domain/idea.dart';
 import '../domain/intention.dart';
 import '../domain/person.dart';
-import '../domain/reconnect_week.dart';
+import '../domain/reconnect_span.dart';
 import '../domain/rhythm.dart';
 import '../domain/treat.dart';
 import '../ui/kept_icon.dart';

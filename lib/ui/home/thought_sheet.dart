@@ -20,7 +20,7 @@ import '../widgets/when_picker.dart';
 import 'nice_one_screen.dart';
 
 /// Opens the sheet that edits an open thought: text, kind, "when" and an
-/// optional link (M10, opened from the sheet), with
+/// optional link, with
 /// Save, Done and Drop. The three-dot button on a Home row, a tap on a
 /// thought on the person page and on the Upcoming tab opens it. Done stores the changes first and then
 /// goes on as the Done button does ([completeThought]).

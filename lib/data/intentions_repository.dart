@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 
 import '../domain/intention.dart';
 import 'database.dart';
+import 'whole_seconds.dart';
 
 /// Reads and writes the intentions of one database: the real one or, in
 /// demo mode, the demo one (AppServices.intentionsFor). See
@@ -48,11 +49,11 @@ class IntentionsRepository {
       note: note,
       kind: kind,
       state: IntentionState.open,
-      date: when.date == null ? null : _wholeSeconds(when.date!),
+      date: when.date == null ? null : wholeSeconds(when.date!),
       horizon: when.horizon,
       condition: _condition(when),
       link: _link(link),
-      createdAt: _wholeSeconds(now ?? DateTime.now()),
+      createdAt: wholeSeconds(now ?? DateTime.now()),
     );
     await _db.into(_db.intentions).insert(intention);
     return intention;
@@ -73,7 +74,7 @@ class IntentionsRepository {
       note: Value(note),
       kind: Value(kind),
       link: Value(_link(link)),
-      date: Value(when.date == null ? null : _wholeSeconds(when.date!)),
+      date: Value(when.date == null ? null : wholeSeconds(when.date!)),
       horizon: Value(when.horizon),
       condition: Value(_condition(when)),
     ),
@@ -83,7 +84,7 @@ class IntentionsRepository {
   Future<void> setWhen(String id, When when) =>
       (_db.update(_db.intentions)..where((t) => t.id.equals(id))).write(
         IntentionsCompanion(
-          date: Value(when.date == null ? null : _wholeSeconds(when.date!)),
+          date: Value(when.date == null ? null : wholeSeconds(when.date!)),
           horizon: Value(when.horizon),
           condition: Value(_condition(when)),
         ),
@@ -117,7 +118,7 @@ class IntentionsRepository {
           closedAt: Value(
             state == IntentionState.open
                 ? null
-                : _wholeSeconds(now ?? DateTime.now()),
+                : wholeSeconds(now ?? DateTime.now()),
           ),
         ),
       );
@@ -132,10 +133,4 @@ class IntentionsRepository {
         await _db.delete(_db.intentions).go();
         await _db.batch((b) => b.insertAll(_db.intentions, intentions));
       });
-
-  /// drift stores whole seconds; cut here so a returned row equals the
-  /// stored one.
-  static DateTime _wholeSeconds(DateTime t) => t.subtract(
-    Duration(milliseconds: t.millisecond, microseconds: t.microsecond),
-  );
 }

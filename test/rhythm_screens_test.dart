@@ -7,7 +7,7 @@ import 'package:kept/data/database.dart';
 import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
-import 'package:kept/domain/reconnect_week.dart';
+import 'package:kept/domain/reconnect_span.dart';
 import 'package:kept/l10n/app_localizations.dart';
 import 'package:kept/l10n/app_localizations_de.dart';
 import 'package:kept/l10n/app_localizations_en.dart';

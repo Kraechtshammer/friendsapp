@@ -3,7 +3,7 @@ import 'dart:io';
 import '../common.dart';
 import '../material.dart';
 
-/// A small rounded picture (M10, an idea's picture): radius 12, hard
+/// A small rounded picture (an idea's picture): radius 12, hard
 /// shadow 3 as for small things (ui-style.md §5). Tapping it shows the
 /// picture larger in a dialog; a tap there closes it. A missing file shows
 /// an empty tile.

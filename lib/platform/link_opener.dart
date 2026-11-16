@@ -1,7 +1,7 @@
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
 
-/// Opens a link in the browser (an idea's or a thought's link, M10),
+/// Opens a link in the browser (an idea's or a thought's link),
 /// behind an interface so tests can fake it.
 abstract class LinkOpener {
   /// True if something opened it.

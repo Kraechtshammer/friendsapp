@@ -49,7 +49,7 @@ final linkOpenerProvider = Provider<LinkOpener>(
   (ref) => const AndroidLinkOpener(),
 );
 
-/// Shares from other apps (M10). Tests override it with a fake.
+/// Shares from other apps. Tests override it with a fake.
 final shareReceiverProvider = Provider<ShareReceiver>(
   (ref) => const AndroidShareReceiver(),
 );
@@ -65,7 +65,7 @@ final notificationsProvider = Provider<Notifications>(
   (ref) => LocalNotifications(),
 );
 
-/// The optional notification listener for incoming contact (M7). Tests
+/// The optional notification listener for incoming contact. Tests
 /// override it with a fake. See incoming_listener.dart for removing it.
 final incomingListenerProvider = Provider<IncomingListener>(
   (ref) => const AndroidIncomingListener(),

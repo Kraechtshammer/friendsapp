@@ -19,7 +19,7 @@ Future<void> openLink(BuildContext context, WidgetRef ref, String link) async {
   }
 }
 
-/// A small tappable row with a link (M10): the link symbol and the link
+/// A small tappable row with a link: the link symbol and the link
 /// without its scheme, muted, one line. Opens it in the browser.
 class LinkRow extends ConsumerWidget {
   const LinkRow(this.link, {super.key, this.color});
@@ -64,7 +64,7 @@ class LinkRow extends ConsumerWidget {
   }
 }
 
-/// The small link mark on a thought that has a link (M10). The thought
+/// The small link mark on a thought that has a link. The thought
 /// sheet opens the link.
 class LinkMark extends StatelessWidget {
   const LinkMark({super.key});

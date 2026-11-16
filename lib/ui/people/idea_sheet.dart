@@ -31,7 +31,7 @@ List<ChipOption<IdeaKind>> ideaKindOptions(AppLocalizations l10n) => [
 ];
 
 /// Opens the sheet that edits an idea: text, kind and link, with Save and
-/// Delete (M10). The picture, if any, is shown and can be opened larger.
+/// Delete. The picture, if any, is shown and can be opened larger.
 Future<void> showIdeaSheet(BuildContext context, Idea idea) =>
     showModalBottomSheet<void>(
       context: context,

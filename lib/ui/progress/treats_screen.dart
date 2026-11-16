@@ -21,7 +21,7 @@ Future<void> openTreats(BuildContext context) =>
     Navigator.of(context)
         .push(MaterialPageRoute<void>(builder: (_) => const TreatsScreen()));
 
-/// The treats (02-design.md §6.9, §6.10, M9): the current card, earned
+/// The treats (02-design.md §6.9, §6.10): the current card, earned
 /// treats with "Enjoyed", the waiting queue (start a card, rename, change
 /// the stamp number, move, delete, add) and the enjoyed ones. A card can
 /// only be started when no other is current.

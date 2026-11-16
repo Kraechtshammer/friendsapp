@@ -41,8 +41,8 @@ class ReplyPick extends Pick {
   PickKind get kind => PickKind.reply;
 }
 
-/// The reconnect person of the week (§2.4, step 3): the card says "This
-/// week: NAME" until the user has been in touch that week.
+/// The reconnect person of the current span (§2.4, step 3): the card says "This
+/// week: NAME" until the user has been in touch in that span.
 class ReconnectPick extends Pick {
   const ReconnectPick(super.person);
 
@@ -83,7 +83,7 @@ class PlanPick extends IntentionPick {
 /// Tonight's picks, in order: birthdays on the local day of [today] of
 /// people not in [congratulated] (in the order of [people]), then the owed
 /// replies [owed] (from [owedReplies], longest owed first), then the
-/// [reconnect] person of the week, then the plain thoughts and the due
+/// [reconnect] person of the span, then the plain thoughts and the due
 /// plans ([intentionPicks]), and last at most one [HintPick].
 ///
 /// The hint is chosen only when [classRhythms] is given: from the people

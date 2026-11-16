@@ -20,7 +20,7 @@ import '../widgets/picture_thumb.dart';
 import '../widgets/section_label.dart';
 import 'idea_sheet.dart';
 
-/// "Ideas" on the person page (M10, F11; 01-research.md §9.8): one card
+/// "Ideas" on the person page (F11; 01-research.md §9.8): one card
 /// with the open ideas grouped by kind, the ticked ones folded into a
 /// "n done" line, and a quick add row: one text field and the kind as two
 /// chips. Tapping an idea opens [showIdeaSheet].

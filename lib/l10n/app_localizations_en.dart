@@ -956,9 +956,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get treatCurrentTag => 'Current card';
-
-  @override
   String get treatsWaiting => 'Waiting';
 
   @override
