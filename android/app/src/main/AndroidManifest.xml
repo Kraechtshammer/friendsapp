@@ -6,7 +6,7 @@
     <!-- Reads the phone contacts for "Add from contacts". Read-only. -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <application
-        android:label="Kept."
+        android:label="${appLabel}"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -59,7 +59,7 @@
              Remove for a build without it (see IncomingRules.kt). -->
         <service
             android:name=".KeptNotificationListener"
-            android:label="Kept."
+            android:label="${appLabel}"
             android:exported="true"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>

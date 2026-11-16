@@ -40,6 +40,8 @@ android {
         // flag during build.
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        // The name under the icon; the debug build type overrides it.
+        manifestPlaceholders["appLabel"] = "Kept."
     }
 
     signingConfigs {
@@ -54,6 +56,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            // A separate app on the phone (de.gartenpa.kept.debug, "Kept. debug"), so a debug
+            // build can sit beside the release and never touches its data.
+            applicationIdSuffix = ".debug"
+            manifestPlaceholders["appLabel"] = "Kept. debug"
+        }
         release {
             // The release key when android/key.properties exists, otherwise the debug key
             // (fine for local testing, but such an APK can't update one signed with the release key).
