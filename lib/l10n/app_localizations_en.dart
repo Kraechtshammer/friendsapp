@@ -56,7 +56,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsCatLook => 'Look';
 
   @override
-  String get settingsCatLookLine => 'Dark, light or system';
+  String get settingsCatLookLine => 'Theme and language';
 
   @override
   String get settingsCatUpdatesLine => 'Update check, what\'s new';
@@ -72,6 +72,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get themeLight => 'Light';
+
+  @override
+  String get settingsLanguage => 'Language';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageGerman => 'Deutsch';
 
   @override
   String get themeDark => 'Dark';

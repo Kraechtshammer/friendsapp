@@ -67,6 +67,12 @@ void main() {
     // The choice is stored in the database.
     expect((await services.settings.load()).themeMode, AppThemeMode.light);
 
+    // The language choice switches the texts to German.
+    await tester.tap(find.text('Deutsch'));
+    await tester.pumpAndSettle();
+    expect(find.text('SPRACHE'), findsOneWidget);
+    expect((await services.settings.load()).language, AppLanguage.de);
+
     // Drift closes its streams with a timer; let it run before the end.
     // Closing the database needs real async, not the test's fake clock.
     await tester.pumpWidget(const SizedBox());

@@ -58,7 +58,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsCatLook => 'Design';
 
   @override
-  String get settingsCatLookLine => 'Dunkel, hell oder System';
+  String get settingsCatLookLine => 'Design und Sprache';
 
   @override
   String get settingsCatUpdatesLine => 'Update-Suche, Was ist neu?';
@@ -74,6 +74,15 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get themeLight => 'Hell';
+
+  @override
+  String get settingsLanguage => 'Sprache';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageGerman => 'Deutsch';
 
   @override
   String get themeDark => 'Dunkel';

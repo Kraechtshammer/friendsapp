@@ -103,7 +103,7 @@ class StampsPage extends ConsumerWidget {
   }
 }
 
-/// Settings › Look: the theme choice.
+/// Settings › Look: the theme and language choices.
 class LookPage extends StatelessWidget {
   const LookPage({super.key});
 

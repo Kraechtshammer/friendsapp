@@ -21,6 +21,7 @@ class KeptApp extends ConsumerWidget {
       theme: buildTheme(Brightness.light),
       darkTheme: buildTheme(Brightness.dark),
       themeMode: themeModeFor(ref.settings.themeMode),
+      locale: localeFor(ref.settings.language),
       // Material 3 Expressive components take their colours and type from
       // the current Material theme.
       builder: (context, child) => M3ETheme(
@@ -42,4 +43,13 @@ ThemeMode themeModeFor(AppThemeMode mode) => switch (mode) {
   AppThemeMode.system => ThemeMode.system,
   AppThemeMode.light => ThemeMode.light,
   AppThemeMode.dark => ThemeMode.dark,
+};
+
+/// The stored language choice as a [Locale]; null follows the phone.
+/// Android's own per-app language (locales_config.xml) is separate: the
+/// in-app setting is not synced with it.
+Locale? localeFor(AppLanguage language) => switch (language) {
+  AppLanguage.system => null,
+  AppLanguage.en => const Locale('en'),
+  AppLanguage.de => const Locale('de'),
 };

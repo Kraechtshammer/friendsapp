@@ -11,6 +11,10 @@ import '../domain/stamps.dart';
 /// Dark, light or as the phone says.
 enum AppThemeMode { system, light, dark }
 
+/// The app language: the phone's, or one of the two we translate.
+/// Separate from Android's per-app language (we do not sync them).
+enum AppLanguage { system, en, de }
+
 /// How many open items Home offers for tonight (02-design.md §2.3).
 enum OpenItemsMode { one, three }
 
@@ -19,6 +23,7 @@ enum OpenItemsMode { one, three }
 class AppSettings {
   const AppSettings({
     this.themeMode = AppThemeMode.system,
+    this.language = AppLanguage.system,
     this.demoMode = false,
     this.eveningOn = true,
     this.eveningMinute = defaultEveningMinute,
@@ -51,6 +56,7 @@ class AppSettings {
   static const defaultEveningMinute = 19 * 60;
 
   final AppThemeMode themeMode;
+  final AppLanguage language;
 
   /// Development builds only: people come from the demo database
   /// (02-design.md §8). The real data is not touched.
@@ -157,6 +163,7 @@ class AppSettings {
         };
     return AppSettings(
       themeMode: pick(AppThemeMode.values, 'themeMode', d.themeMode),
+      language: pick(AppLanguage.values, 'language', d.language),
       demoMode: m['demoMode'] == 'true',
       eveningOn: flag('eveningOn', d.eveningOn),
       eveningMinute: _parseTime(m['eveningTime']) ?? d.eveningMinute,
@@ -265,6 +272,7 @@ class AppSettings {
   /// The stored form. A null value removes the key.
   Map<String, String?> toMap() => {
     'themeMode': themeMode.name,
+    'language': language.name,
     'demoMode': '$demoMode',
     'eveningOn': '$eveningOn',
     'eveningTime': _formatTime(eveningMinute),
@@ -294,6 +302,7 @@ class AppSettings {
 
   AppSettings copyWith({
     AppThemeMode? themeMode,
+    AppLanguage? language,
     bool? demoMode,
     bool? eveningOn,
     int? eveningMinute,
@@ -315,6 +324,7 @@ class AppSettings {
     bool? updateCheckAsked,
   }) => _copy(
     themeMode: themeMode,
+    language: language,
     demoMode: demoMode,
     eveningOn: eveningOn,
     eveningMinute: eveningMinute,
@@ -353,6 +363,7 @@ class AppSettings {
   /// unless left out ([_keep]).
   AppSettings _copy({
     AppThemeMode? themeMode,
+    AppLanguage? language,
     bool? demoMode,
     bool? eveningOn,
     int? eveningMinute,
@@ -377,6 +388,7 @@ class AppSettings {
     bool? updateCheckAsked,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
+    language: language ?? this.language,
     demoMode: demoMode ?? this.demoMode,
     eveningOn: eveningOn ?? this.eveningOn,
     eveningMinute: eveningMinute ?? this.eveningMinute,
@@ -412,6 +424,7 @@ class AppSettings {
   bool operator ==(Object other) =>
       other is AppSettings &&
       other.themeMode == themeMode &&
+      other.language == language &&
       other.demoMode == demoMode &&
       other.eveningOn == eveningOn &&
       other.eveningMinute == eveningMinute &&
@@ -438,6 +451,7 @@ class AppSettings {
   @override
   int get hashCode => Object.hashAll([
     themeMode,
+    language,
     demoMode,
     eveningOn,
     eveningMinute,

@@ -36,6 +36,16 @@ void main() {
     expect(await repo.load(), const AppSettings(themeMode: AppThemeMode.light));
   });
 
+  test('the language is stored and unknown values mean System', () async {
+    expect((await repo.load()).language, AppLanguage.system);
+    await repo.update((s) => s.copyWith(language: AppLanguage.de));
+    expect((await repo.load()).language, AppLanguage.de);
+    expect(
+      AppSettings.fromMap({'language': 'fr'}).language,
+      AppLanguage.system,
+    );
+  });
+
   test('broken values fall back to the defaults', () {
     final settings = AppSettings.fromMap({
       'themeMode': 'purple',

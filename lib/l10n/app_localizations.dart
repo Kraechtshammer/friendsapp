@@ -191,7 +191,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsCatLookLine.
   ///
   /// In en, this message translates to:
-  /// **'Dark, light or system'**
+  /// **'Theme and language'**
   String get settingsCatLookLine;
 
   /// No description provided for @settingsCatUpdatesLine.
@@ -223,6 +223,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Light'**
   String get themeLight;
+
+  /// No description provided for @settingsLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguage;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// No description provided for @languageGerman.
+  ///
+  /// In en, this message translates to:
+  /// **'Deutsch'**
+  String get languageGerman;
 
   /// No description provided for @themeDark.
   ///

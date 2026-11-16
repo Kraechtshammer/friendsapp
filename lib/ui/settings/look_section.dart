@@ -7,7 +7,7 @@ import '../../data/app_settings.dart';
 import '../common.dart';
 import '../material.dart';
 
-/// The theme choice: system, light or dark (ui-style.md §2).
+/// The theme choice (system, light or dark, ui-style.md §2) and the language.
 class LookSection extends ConsumerWidget {
   const LookSection({super.key});
 
@@ -39,6 +39,35 @@ class LookSection extends ConsumerWidget {
           onSelectionChanged: (chosen) => unawaited(
             ref.services.settings.update(
               (s) => s.copyWith(themeMode: chosen.single),
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+        Text(
+          l10n.settingsLanguage.toUpperCase(),
+          style: context.text.labelMedium,
+        ),
+        const SizedBox(height: 12),
+        SegmentedButton<AppLanguage>(
+          showSelectedIcon: false,
+          segments: [
+            ButtonSegment(
+              value: AppLanguage.system,
+              label: Text(l10n.themeSystem),
+            ),
+            ButtonSegment(
+              value: AppLanguage.en,
+              label: Text(l10n.languageEnglish),
+            ),
+            ButtonSegment(
+              value: AppLanguage.de,
+              label: Text(l10n.languageGerman),
+            ),
+          ],
+          selected: {ref.settings.language},
+          onSelectionChanged: (chosen) => unawaited(
+            ref.services.settings.update(
+              (s) => s.copyWith(language: chosen.single),
             ),
           ),
         ),
