@@ -1,19 +1,20 @@
 # Handoff
 
-The first thing a new session reads. Rewritten on 2026-11-15 at the end of the design sessions, so that implementation can start in a fresh session. The log of the research and design sessions is in [history-research-and-design.md](history-research-and-design.md).
+The first thing a new session reads. Last rewritten on 2026-11-16, at the end of the session that built M0, M1 and most of M2. The log of the research and design sessions is in [history-research-and-design.md](history-research-and-design.md).
 
 ## 1. Where things stand
 
-- Phase: **implement**. Research closed 2026-11-14, design closed 2026-11-15, both by the developer.
-- The app is called **Kept.** with the full stop, which is also the app label; running text may write Kept. Version 0.1.0+1; Claude chooses the steps up to 1.0.0, which is the first real release. App ID `de.gartenpa.kept` (final). The repository and folder are `friendsapp`.
-- **M0 is done** (2026-11-15). **M1 (People) is done** (2026-11-16, section 4a). M2 (Capture) is next.
-- Everything up to the end of M0 is pushed and CI passed on it. The repository on GitHub is public.
+- Phase: **implement**. The app is called **Kept.** with the full stop (app label and titles; running text may write Kept). App ID `de.gartenpa.kept` (final). Repository and folder are `friendsapp`.
+- **M0 and M1 are done. M2 (Capture) is built but not yet tried by the developer.** See section 4.
+- **Released: 0.1.0** (tag `v0.1.0`, the state at the end of M1). The release workflow ran for the first time and passed: signed APK `kept-0.1.0.apk` on the public GitHub release.
+- Pushed up to the M2 data layer. The capture UI and this handoff are committed locally and not pushed.
+- The developer uses the app with real people on their Pixel 7 Pro since 2026-11-16. **Every database change needs a tested migration.**
 
 ## 2. What to read, and how much
 
 1. [CLAUDE.md](../CLAUDE.md): the working rules. Short.
 2. This file.
-3. [02-design.md](02-design.md): §3 data, §4 technology, §5 milestones. Section 6 is the long history of how each point was settled; section 3 of this handoff sums up its results, so read §6 only when a detail is needed.
+3. [02-design.md](02-design.md): §3 data, §4 technology, §5 milestones, §8 everything decided or tested during implementation. Section 6 is the long history of how each point was settled; section 3 of this handoff sums up its results, so read §6 only when a detail is needed.
 4. [style/ui-style.md](style/ui-style.md) and [style/icon-style.md](style/icon-style.md) before building any screen.
 5. [03-dev-setup.md](03-dev-setup.md) for the container, phone, emulator, CI and releases.
 6. [04-architecture.md](04-architecture.md) for how the code is laid out. It follows `/home/paga/Projects/akai-timetrack/docs/04-architecture.md`; look there for the layers that are not built yet.
@@ -64,71 +65,46 @@ The reference for the look is concept V6 with the V6b tweaks: pictures in `docs/
 
 **Later, not in the milestones:** groups and shared events, quick "do soon" items such as a voice message to listen to (§6.12), doctor appointments, iOS.
 
-## 4. M0: what was done, and what is next
+## 4. Milestones: state and next steps
 
-Done:
+Details of what was built are in [04-architecture.md](04-architecture.md); decisions and phone test results are in 02-design.md §8.
 
-- Dev container (copied from akai-timetrack). The developer has opened it in VS Code.
-- Flutter project: Android only, label "Kept.". In the container `flutter analyze` is clean, the template test passes, debug and release APKs build.
-- CI and release workflows, build and install scripts, F5 launch configurations, commit hook. The first CI run on GitHub passed (2026-11-15).
-- Packages (2026-11-15): all packages from 02-design.md §4 are in pubspec.yaml (`url_launcher` was removed again after the phone test). `compileSdk` is 37 and core library desugaring is on, as the plugins need. Checked: analyze clean, debug APK builds in the container, and CI passed on GitHub with them (2026-11-15, commit 2528756).
-- App skeleton (2026-11-15): layers as in akai-timetrack (`lib/app`, `lib/ui`, `lib/l10n`). `app/theme.dart` holds every colour of the style guide (`KeptColors`, read with `context.kept`) and builds the dark and the light theme. Outfit is bundled as a variable font (`assets/fonts`, OFL licence beside it). Four tabs with empty screens, the gear on Home opens Settings, which has only the theme choice (system, light, dark; kept in memory until the database exists). English and German texts; English is the template. Checked: analyze clean, one widget test passes, and Claude looked at pictures of the Home tab in dark and light, rendered by a throwaway test with the real fonts: title, gear, tab bar and icons with shadows look as intended. Not checked: anything on a phone. Known difference: the pill behind the active tab icon is Flutter's 64 × 32, the style guide says 64 × 36.
-- Icons (2026-11-15): the eighteen icons of `gen_v6.py` (sixteen plus WhatsApp and Telegram) are in `assets/icons/`, extracted by script, not retyped. `KeptIcon(KeptIcons.home)` in `ui/kept_icon.dart` shows one with its hard shadow, which is the same picture in black at 30 % placed 2 below, because `flutter_svg` has no drop-shadow filter. The tabs and the gear use them. Checked: analyze, tests, and the five used ones in the rendered pictures. Not checked: the other thirteen, and all of them on a phone. Gift is still to be drawn.
-- On the phone (2026-11-15): the debug build runs on the developer's Pixel 7 Pro. Claude saw a screenshot of Home in dark: title, gear, tab bar and icons are right. The developer has not yet said how it looks to them, and light was not looked at on the phone.
-- Release signing: the developer created a key for Kept on 2026-11-15 (`android/kept-release.jks`, `android/key.properties`, both git-ignored) and says the three GitHub secrets are entered. Checked by Claude: a local release APK is signed with a non-debug key. Not checked: the secrets and the release workflow, which has never run.
-- Phone checks (2026-11-15): all five done with the developer on the Pixel 7 Pro. Results are in 02-design.md §8: no exact-alarm permission needed, buttons work with the app closed, chats open through `android_intent_plus`, the listener sees WhatsApp messages and calls, own drawn messenger icons. The throwaway check screen is removed again; it is in git history (commit "Dev: Add throwaway phone checks for M0") as a starting point for M3 and M7.
-- [04-architecture.md](04-architecture.md) is written.
+**M0, setup and risk checks: done** (2026-11-15). All five phone checks passed: no exact-alarm permission needed, notification buttons work with the app closed, chats open through `android_intent_plus`, the own listener sees WhatsApp messages and calls, own drawn messenger icons. The throwaway check code is in git history (commit "Dev: Add throwaway phone checks for M0"), a starting point for M3 and M7.
 
-**M0 is done**, as far as Claude can tell; the developer has not said so yet. Left over from it: the Gift, Signal and Discord icons are to be drawn, and the developer has not yet looked at the light theme on the phone.
+**M1, People: done** (2026-11-16). Database with settings and people, demo database behind a debug switch, People tab, person page top, add and edit, import from contacts, "Open chat", class shown as a growing plant. The developer tried it on the phone: "all worked well". Not confirmed by the developer: that "Open <messenger>" lands in the right chat from the final code.
 
-## 4a. M1, People: done
+**M2, Capture: built, to be tried** (2026-11-16).
 
-The data model was settled with the developer on 2026-11-15 (02-design.md §8: messengers, phone contacts, demo database, avatars).
+- Done: `intentions` table with the migration from schema 1 to 2; capture card on Home (text, person from the recent four or through "More", kind, Save); open thoughts listed on Home and on the person page with Done and Drop; greeting by time of day; long-press shortcut "Capture a thought" (`quick_actions`); the class badge on avatars on Home. Checked: analyze, 73 tests, debug build installed on the phone. **Not checked: Claude has not looked at the capture screens, in a picture or on the phone; the developer has not tried them; the long-press shortcut and the database upgrade on the phone are untested.**
+- Next: the developer tries capture on the phone. Fix what they find. Then raise the version to 0.2.0+2 in pubspec.yaml, commit ("Release: 0.2.0"), tag `v0.2.0` and push, if the developer agrees.
+- Known gaps: recent people are ordered by open intentions only; German texts in M1 and M2 were written by subagents and not all reviewed by the developer.
 
-Done:
-
-- Data layer (2026-11-16, built by an Opus subagent, reviewed by Claude): drift database with stored settings and the people table, and the separate demo database with 16 invented people behind a switch in Settings (debug builds only). See 04-architecture.md §2. Checked: analyze clean, 25 tests pass, debug APK builds. Not checked: anything on the phone, including the demo switch and the deletion of the demo file.
-
-Next, in this order:
-
-1. Done (2026-11-16, Opus subagent, reviewed by Claude): People tab and the top of the person page, read-only, with the avatar, card, tag and button widgets. Checked: analyze, 30 tests, and rendered pictures of both screens in dark with the demo people. Not checked: light by eye, and the German texts by the developer ("Eng befreundet", "Wieder in Kontakt kommen", "Kommt bald").
-2. Done (2026-11-16): the class badge is a growing plant (02-design.md §8). `Avatar(classBadge: true)` shows it; the People tab shows the same icons beside its group headings. A throwaway switch under "Development" in Settings (`badgePreview` in `ui/widgets/avatar.dart`) puts the badge on the People tab so the developer can see it; remove it once Home or Upcoming shows people.
-3. Done (2026-11-16, Sonnet subagent): add and edit a person (`lib/ui/people/edit_person_screen.dart`): name, class, "getting back in touch", main messenger, handles, birthday, notes, avatar shape and colour when editing, and removing a person after a confirmation. Opened by the "+" on the People tab and the pencil on the person page. Checked: analyze, 35 tests, debug APK builds. Not checked: Claude did not look at the screen, neither in a picture nor on the phone.
-4. Done (2026-11-16, Sonnet subagent): import from the phone's contacts (`lib/ui/people/import_contacts_screen.dart`, `lib/platform/contacts.dart`): pick contacts, then set the class per person and one main messenger for all. Name, first phone number (normalised, German country code assumed for numbers starting with 0) and birthday are copied. Opened from the "+" on the People tab ("From your contacts" or "By hand") and from the empty People tab. There is no separate first-start flow; the empty People tab is the first start (Claude's choice). `READ_CONTACTS` is in the manifest. Checked: analyze, 42 tests with a fake contact source, debug APK builds. Not checked: the real permission dialog and real contacts on the phone.
-5. Done (2026-11-16, Sonnet subagent): the Signal, Discord and Gift icons are drawn (Claude looked at them rendered on both grounds), and "Open <messenger>" on the person page opens the chat (`domain/chat_link.dart`, `platform/chat_opener.dart`, `android_intent_plus`). Without a usable handle, or if the link cannot be opened, it opens the messenger itself. Checked: analyze, 47 tests with a fake opener. Not checked: opening real chats from this code on the phone.
-
-The developer tried the People tab, add, edit and the contact import on the phone on 2026-11-16: "all worked well". **M1 is done** apart from the phone check of "Open chat". Next: **M2, Capture** (02-design.md §2.1 and §5).
-
-Phone numbers are stored with a leading plus; links such as `wa.me` need the digits only.
-
-## 4b. M2, Capture: in progress
-
-Done:
-
-- Data (2026-11-16, Opus subagent, reviewed by Claude): the `intentions` table with a tested upgrade from schema 1 to 2 that keeps existing people, repository, providers, demo intentions, and `recentPeople` for the person picker. Checked: analyze, 67 tests. Not checked: the upgrade on the developer's phone.
-
-Next:
-
-1. The capture card on Home (text, person, kind, Save), the open thoughts listed below it and on the person page.
-2. Long-press on the app icon jumps to capture (`quick_actions`).
+**Next milestone: M3, evening question and open items** (02-design.md §5): the daily notification, Yes leads to the open items, "Did you write?" and the "Nice one" screen, contact events stored. Needs a contact events table (migration to schema 3) and the notification code. Ask the developer before fixing the data model. M3 is the first version for daily use and becomes 0.3.0.
 
 ## 5. Open questions for the developer
 
-- None new. Settled on 2026-11-15 (02-design.md §8): the name is "Kept.", the version starts at 0.1.0, and development builds get demo data. The demo data is built in M1, when there is a people table to fill.
-- The repository is public and 01-research.md describes the developer's own situation (§5, §9.7, §9.8). The developer was told before the first push and pushed. Mention it once more if the repository gets promoted.
+- A first-start welcome screen: there is none; the empty People tab offers "Add from contacts" and "Add by hand" (Claude's choice). Wanted?
+- The person page covers the tab bar; the concept shows the bar. Keep?
+- Row classes of the database are used as models, as in akai (Claude's choice).
+- Other companies' logos (messenger icons) in a published app touch their brand rules. Look at this before a Play release.
+- The repository is public and 01-research.md describes the developer's own situation (§5, §9.7, §9.8). Mention it once more if the repository gets promoted.
 
 ## 6. Not tested yet
 
-- The shared emulator from this container (volume and device are akai-timetrack's).
-- The phone connection from this container. On 2026-11-15 the container saw no phone: an adb server was running on Windows, but listening on 127.0.0.1 only, so not started by `start-adb-server.cmd`. The app was installed from WSL through the Windows adb instead (copy the APK to a Windows folder, then `cmd.exe /c "adb install -r <apk>"`). F5 with hot reload needs the script.
-- The release workflow on GitHub.
+- The light theme on a phone.
+- The shared emulator from this container.
+- Long delays of the evening notification in deep sleep (the M0 test ran on charge).
+- Signal with a user-name link, Discord with a user ID.
 
 ## 7. How to work here
 
 - **Flutter runs in the dev container, not in WSL.** From a Claude session in WSL: find the container with `docker ps` (its image name starts with `vsc-friendsapp`), then `docker exec -u vscode <name> bash -lc 'cd /workspaces/friendsapp && flutter analyze'`. The container only runs while the developer has the folder open in VS Code.
+- **Installing on the phone:** the container does not see the phone unless the developer runs `scripts\windows\start-adb-server.cmd`. What works from WSL: build in the container (`flutter build apk --debug --target-platform android-arm64`, smaller), copy `build/app/outputs/flutter-apk/app-debug.apk` to `/mnt/c/Windows/Temp/`, then from that folder `cmd.exe /c "adb install -r <file>"`. The phone is often nearly full; an install then fails with "not enough space" and the developer has to free about 1 GB.
+- **Looking at a screen without the phone:** see 04-architecture.md §2.4 (throwaway widget test that writes pictures).
 - **Git runs in WSL** in `/home/paga/Projects/friendsapp`. Push works through the Windows Git Credential Manager (set per repository). Push only when the developer asks.
 - **Commits:** small, one finished step each, subject with prefix (the hook checks it), short messages. End each message with the attribution line the session gives.
-- **Token use:** keep it low. Hand bulky or mechanical work to Haiku or Sonnet subagents with a narrow brief and check their results. Never let two agents edit the same files.
+- **Token use:** keep it low, and keep messages to the developer short. The main session plans, writes the briefs, reviews and decides. Building goes to subagents, the smallest model that keeps the quality: Sonnet for screens and edits with a precise brief, Opus only for work where a mistake is costly (database and migrations, native code), Haiku for mechanical doc edits with the exact text given. One agent per set of files; each brief names what must not be touched and asks for a short report. Check every result yourself: rerun analyze and tests, read the risky parts.
+- **Tags are releases.** Every tag is `v<version>` matching pubspec.yaml; pushing it runs the release workflow (signed APK, public GitHub release). No other tags. The minor number follows the milestones (M3 is 0.3.0); 1.0.0 is the first real release. The build number after the `+` goes up with every release.
 - **Ask first** before design trade-offs, new dependencies, names, and anything touching permissions or Play.
 - **Secrets:** never read `android/key.properties` beyond single non-secret lines, never print the keystore, never put secrets into git, chat or docs.
 - **Papers** in `docs/papers/` are local only.
