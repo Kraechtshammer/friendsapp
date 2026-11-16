@@ -167,4 +167,5 @@ Remove an item when it is fixed.
 - Release builds do not shrink code or resources (no `minifyEnabled`). The APK is about 65 MB.
 - `minSdk` and `targetSdk` follow Flutter's defaults and are not pinned. Check the target against Play's rules before a Play release.
 - Test renders use a test font: some glyphs (small arrows, Material icons) show as boxes there. Whether they show on a phone is on the test list.
-- Loading and error states are minimal: a failed database read shows nothing instead of a message.
+- Loading and error states are minimal (unverified in detail: no screen was checked for what it shows when a database read fails).
+- `permission_handler` and `cupertino_icons` are declared in pubspec.yaml but nothing in lib/ imports them (checked by grep on 2026-11-16). Removing them is a dependency change; ask the developer.
