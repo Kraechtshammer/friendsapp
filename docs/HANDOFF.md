@@ -5,9 +5,9 @@ The first thing a new session reads. Last rewritten on 2026-11-16, at the end of
 ## 1. Where things stand
 
 - Phase: **implement**. The app is called **Kept.** with the full stop (app label and titles; running text may write Kept). App ID `de.gartenpa.kept` (final). Repository and folder are `friendsapp`.
-- **M0, M1 and M2 are done. M3 is built but not yet tried by the developer.** See section 4.
-- **Released: 0.1.0** (tag `v0.1.0`, the state at the end of M1). The release workflow ran for the first time and passed: signed APK `kept-0.1.0.apk` on the public GitHub release.
-- Everything up to the M2 capture UI is pushed (2026-11-16).
+- **M0 to M3 are done.** M3 was tried by the developer except the evening notification. See section 4.
+- **Released: 0.3.0** (tag `v0.3.0`, 2026-11-16, the state at the end of M3; 0.2.0 was skipped because M2 was not released by itself). Before it: 0.1.0 at the end of M1.
+- Everything up to the 0.3.0 release commit is pushed (2026-11-16).
 - The developer uses the app with real people on their Pixel 7 Pro since 2026-11-16. **Every database change needs a tested migration.**
 
 ## 2. What to read, and how much
@@ -76,20 +76,22 @@ Details of what was built are in [04-architecture.md](04-architecture.md); decis
 **M2, Capture: done, not released** (2026-11-16).
 
 - Done: `intentions` table with the migration from schema 1 to 2; capture card on Home (text, person from the recent four or through "More", kind, Save); open thoughts listed on Home and on the person page with Done and Drop; greeting by time of day; long-press shortcut "Capture a thought" (`quick_actions`); the class badge on avatars on Home. Checked: analyze, 73 tests, debug build installed on the phone. **Not checked: Claude has not looked at the capture screens, in a picture or on the phone; the developer has not tried them; the long-press shortcut and the database upgrade on the phone are untested.**
-- Next: the developer tries capture on the phone. Fix what they find. Then raise the version to 0.2.0+2 in pubspec.yaml, commit ("Release: 0.2.0"), tag `v0.2.0` and push, if the developer agrees.
+- M2 was not released by itself; it went out with 0.3.0.
 - Known gaps: recent people are ordered by open intentions only; German texts in M1 and M2 were written by subagents and not all reviewed by the developer.
 
 - Tried by the developer on 2026-11-16: "all worked". The developer chose not to release 0.2.0 yet.
 
-**M3, evening question and open items: built, to be tried** (2026-11-16). 02-design.md §5; decisions of the day in §8 (kind "game", activity text, line for next time with a "Remind me" switch, Done records a contact).
+**M3, evening question and open items: done, released as 0.3.0** (2026-11-16). 02-design.md §5; decisions of the day in §8 (kind "game", activity text, line for next time with a "Remind me" switch, Done records a contact).
 
 - Done: schema 3 with `contact_events` and `day_answers`, their repositories, the kind `game` (label Game / Zocken, shown with the meet icon for now). Checked: analyze, 92 tests, among them the upgrade from 2 to 3 with people, intentions and settings compared row by row. **Not checked: the upgrade on the phone; no screen uses the new tables yet.**
 - Done: Done on an open thought (Home and person page) stores a contact with source "by hand" and opens the "Nice one" screen: activity for meet and game (prefilled from the thought's text), line for next time, "Remind me" switch; "Last time: ..." under open thoughts. The controller is the Game icon (`assets/icons/controller.svg`). Checked: analyze, 100 tests, Claude looked at a rendered picture of the screen (`build/screens/`). **Not checked: on the phone; the developer has not seen the screen.** Left out against the concept: the "High five!" tag, "Planning to meet up?" (M5), stamps (M9), motion. The button reads "Close" (Claude's choice). German texts by a subagent, not reviewed.
-- Icons: Meet shows the two people icon for now (the People tab uses the same one). The developer wants simple icons of few plain shapes; a cheap model or Claude's own small SVG edits are enough. In the set since 2026-11-16: `controller` (Game), `cups`, `wasd` (not used yet) and the new `phone` (half-rounded-rectangle ends, from the developer's sketch). Open: the bench with tree, draft `docs/concepts/icons-round4/bench-c.svg` (tree behind a full-width bench, backrest taller than the seat), waits for the developer. Do not delete drafts the developer has seen: the bench had to be redrawn from a screenshot.
+- Icons: Meet shows the two people icon for now (the People tab uses the same one). The developer wants simple icons of few plain shapes; a cheap model or Claude's own small SVG edits are enough. In the set since 2026-11-16: `controller` (Game), `cups`, `wasd`, `bench` (the last three not used yet) and the new `phone` (half-rounded-rectangle ends, from the developer's sketch). Open: the bench with tree, the bench with tree is in the set as `bench` (the developer may still edit it by hand). Do not delete drafts the developer has seen: the bench had to be redrawn from a screenshot.
 - On the phone: the M3 debug build was installed on 2026-11-16 (`adb install -r`, Success), so the real database is at schema 3 once the app was opened. The developer tried it the same day: "everything else looks good"; the evening notification was not tried ("let's assume it works"), so every notification point above stays unchecked.
 - Done: the evening question. Daily notification "Got ten minutes for someone today?" with Yes and Not today, settings section with on/off, time (start 19:00) and excluded weekdays (start none, Claude's start values), permission asked on first start and when switched on. Checked: analyze, 119 tests, debug APK builds. **Not checked, all on the phone:** the permission dialog on first start; arrival on allowed days only and after a restart (weekly repeating notifications are new, M0 tested single ones); Not today with the app closed stores the answer and leaves the app closed; Yes from cold and from running opens Home at the open thoughts; the line and button after refusing the permission; the sprout status icon; a release build (the icon is kept through `res/raw/keep.xml`).
 - Done: "Tonight's pick" on Home (one item with Open chat, Another one, Done; or three, by setting) from the open thoughts, oldest first, one per person (Claude's order until other sources exist); "Did you write to Tom?" after any Open chat (pick or person page), worded by kind, Yes leads to "Nice one". Checked: analyze, 133 tests, Claude looked at rendered pictures (`build/screens/home-one.png`, `chat-question.png`). **Not checked: on the phone, above all that the question appears when coming back from the messenger.** Against the concept: Another one and Done are text buttons under a full-width Open button; Yes says "Yes"; no "High five!" tag.
-- All of M3 is built. Next: the developer tries it on the phone (list above and under the evening question), fixes, then 0.3.0 if the developer agrees. German texts of M3 are by subagents and not reviewed. M3 becomes 0.3.0.
+- Still open in M3: the evening notification is untried on the phone, in debug and in the release build (points above). German texts of M3 are by subagents and not reviewed.
+
+**Next milestone: M4, birthdays** (02-design.md §5): evening follow-up on birthdays, "You congratulated" recorded, the user's own birthday in settings and who congratulated. Becomes 0.4.0. Ask the developer before fixing anything in the data model.
 
 ## 5. Open questions for the developer
 
