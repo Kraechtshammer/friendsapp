@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kept/app/app.dart';
 import 'package:kept/app/providers.dart';
 import 'package:kept/app/services.dart';
+import 'package:kept/domain/chat_link.dart';
+import 'package:kept/platform/chat_opener.dart';
 import 'package:kept/data/database.dart';
 import 'package:kept/domain/person.dart';
 import 'package:kept/ui/material.dart';
@@ -12,7 +14,12 @@ import 'package:kept/ui/people/person_screen.dart';
 void main() {
   late AppServices services;
 
+  final opener = _FakeOpener();
+
   setUp(() {
+    opener
+      ..opened.clear()
+      ..result = true;
     services = AppServices(
       db: AppDatabase(NativeDatabase.memory()),
       openDemo: () => AppDatabase(NativeDatabase.memory()),
@@ -22,7 +29,10 @@ void main() {
   Future<void> openPeopleTab(WidgetTester tester) async {
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [servicesProvider.overrideWithValue(services)],
+        overrides: [
+          servicesProvider.overrideWithValue(services),
+          chatOpenerProvider.overrideWithValue(opener),
+        ],
         child: const KeptApp(),
       ),
     );
@@ -46,6 +56,7 @@ void main() {
         name: 'Tom Berger',
         closeness: Closeness.close,
         mainMessenger: Messenger.whatsapp,
+        phone: '+491701234567',
         birthdayMonth: 3,
         birthdayDay: 3,
         reconnecting: true,
@@ -90,7 +101,18 @@ void main() {
 
     await tester.tap(find.text('Open WhatsApp'));
     await tester.pump();
-    expect(find.text('Coming soon'), findsOneWidget);
+    expect(opener.opened, [
+      const ChatLink(
+        package: 'com.whatsapp',
+        uri: 'https://wa.me/491701234567',
+      ),
+    ]);
+    expect(find.text('WhatsApp could not be opened.'), findsNothing);
+
+    opener.result = false;
+    await tester.tap(find.text('Open WhatsApp'));
+    await tester.pump();
+    expect(find.text('WhatsApp could not be opened.'), findsOneWidget);
 
     await tester.tap(find.byTooltip('Back'));
     await tester.pumpAndSettle();
@@ -111,4 +133,15 @@ void main() {
     expect(find.text('Your people will show up here.'), findsOneWidget);
     await closeDown(tester);
   });
+}
+
+class _FakeOpener implements ChatOpener {
+  final opened = <ChatLink>[];
+  bool result = true;
+
+  @override
+  Future<bool> open(ChatLink link) async {
+    opened.add(link);
+    return result;
+  }
 }

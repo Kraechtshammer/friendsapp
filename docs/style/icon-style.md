@@ -94,4 +94,6 @@ Input: the concept ("gift", "coffee"), optionally a colour. Output: one SVG, vie
 
 Added on 2026-11-16 for the class badge: sprout (green stem, two leaves, the right one darker), bud (the same lower down, with a pink bud split into a darker right half), flower (six pink petals, the right ones darker, yellow centre, stem with one leaf).
 
-Still to draw for the app: gift, Signal, Discord, plus the icons for anything new that milestones bring (idea or note, treat types, "they wrote", voice message).
+Added on 2026-11-16: signal, discord (messenger stand-ins) and gift.
+
+Still to draw for the app: plus the icons for anything new that milestones bring (idea or note, treat types, "they wrote", voice message).

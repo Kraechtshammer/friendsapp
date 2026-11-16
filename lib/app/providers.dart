@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/app_settings.dart';
 import '../data/database.dart';
 import '../data/people_repository.dart';
+import '../platform/chat_opener.dart';
 import '../platform/contacts.dart';
 import 'services.dart';
 
@@ -14,6 +15,11 @@ final servicesProvider = Provider<AppServices>(
 /// The phone's contacts. Tests override it with a fake.
 final contactsSourceProvider = Provider<ContactsSource>(
   (ref) => const DeviceContacts(),
+);
+
+/// Opens chats in the messenger apps. Tests override it with a fake.
+final chatOpenerProvider = Provider<ChatOpener>(
+  (ref) => const AndroidChatOpener(),
 );
 
 /// All settings, from the real database.

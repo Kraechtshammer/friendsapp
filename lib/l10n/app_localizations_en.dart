@@ -115,7 +115,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notes => 'Notes';
 
   @override
-  String get comingSoon => 'Coming soon';
+  String messengerNotOpened(String messenger) {
+    return '$messenger could not be opened.';
+  }
 
   @override
   String get addPersonTitle => 'Add a person';

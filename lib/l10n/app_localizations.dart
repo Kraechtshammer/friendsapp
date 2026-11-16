@@ -272,11 +272,11 @@ abstract class AppLocalizations {
   /// **'Notes'**
   String get notes;
 
-  /// No description provided for @comingSoon.
+  /// No description provided for @messengerNotOpened.
   ///
   /// In en, this message translates to:
-  /// **'Coming soon'**
-  String get comingSoon;
+  /// **'{messenger} could not be opened.'**
+  String messengerNotOpened(String messenger);
 
   /// No description provided for @addPersonTitle.
   ///

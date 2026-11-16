@@ -37,11 +37,11 @@ KeptIcons closenessIcon(Closeness closeness) => switch (closeness) {
   Closeness.family => KeptIcons.cottage,
 };
 
-/// Signal and Discord have no drawn icon yet; they use the chat bubble.
 KeptIcons messengerIcon(Messenger messenger) => switch (messenger) {
   Messenger.whatsapp => KeptIcons.whatsapp,
   Messenger.telegram => KeptIcons.telegram,
-  Messenger.signal || Messenger.discord => KeptIcons.chat,
+  Messenger.signal => KeptIcons.signal,
+  Messenger.discord => KeptIcons.discord,
 };
 
 /// A birthday as day and month, with the year only when it is known.

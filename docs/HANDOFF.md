@@ -6,7 +6,7 @@ The first thing a new session reads. Rewritten on 2026-11-15 at the end of the d
 
 - Phase: **implement**. Research closed 2026-11-14, design closed 2026-11-15, both by the developer.
 - The app is called **Kept.** with the full stop, which is also the app label; running text may write Kept. Version 0.1.0+1; Claude chooses the steps up to 1.0.0, which is the first real release. App ID `de.gartenpa.kept` (final). The repository and folder are `friendsapp`.
-- **M0 is done** (2026-11-15). **M1 (People) is in progress**: the database and the demo data stand, the screens are next (section 4a).
+- **M0 is done** (2026-11-15). **M1 (People) is done** (2026-11-16, section 4a). M2 (Capture) is next.
 - Everything up to the end of M0 is pushed and CI passed on it. The repository on GitHub is public.
 
 ## 2. What to read, and how much
@@ -81,7 +81,7 @@ Done:
 
 **M0 is done**, as far as Claude can tell; the developer has not said so yet. Left over from it: the Gift, Signal and Discord icons are to be drawn, and the developer has not yet looked at the light theme on the phone.
 
-## 4a. M1, People: in progress
+## 4a. M1, People: done
 
 The data model was settled with the developer on 2026-11-15 (02-design.md §8: messengers, phone contacts, demo database, avatars).
 
@@ -95,7 +95,9 @@ Next, in this order:
 2. Done (2026-11-16): the class badge is a growing plant (02-design.md §8). `Avatar(classBadge: true)` shows it; the People tab shows the same icons beside its group headings. A throwaway switch under "Development" in Settings (`badgePreview` in `ui/widgets/avatar.dart`) puts the badge on the People tab so the developer can see it; remove it once Home or Upcoming shows people.
 3. Done (2026-11-16, Sonnet subagent): add and edit a person (`lib/ui/people/edit_person_screen.dart`): name, class, "getting back in touch", main messenger, handles, birthday, notes, avatar shape and colour when editing, and removing a person after a confirmation. Opened by the "+" on the People tab and the pencil on the person page. Checked: analyze, 35 tests, debug APK builds. Not checked: Claude did not look at the screen, neither in a picture nor on the phone.
 4. Done (2026-11-16, Sonnet subagent): import from the phone's contacts (`lib/ui/people/import_contacts_screen.dart`, `lib/platform/contacts.dart`): pick contacts, then set the class per person and one main messenger for all. Name, first phone number (normalised, German country code assumed for numbers starting with 0) and birthday are copied. Opened from the "+" on the People tab ("From your contacts" or "By hand") and from the empty People tab. There is no separate first-start flow; the empty People tab is the first start (Claude's choice). `READ_CONTACTS` is in the manifest. Checked: analyze, 42 tests with a fake contact source, debug APK builds. Not checked: the real permission dialog and real contacts on the phone.
-5. Draw the Signal and Discord icons, and Gift.
+5. Done (2026-11-16, Sonnet subagent): the Signal, Discord and Gift icons are drawn (Claude looked at them rendered on both grounds), and "Open <messenger>" on the person page opens the chat (`domain/chat_link.dart`, `platform/chat_opener.dart`, `android_intent_plus`). Without a usable handle, or if the link cannot be opened, it opens the messenger itself. Checked: analyze, 47 tests with a fake opener. Not checked: opening real chats from this code on the phone.
+
+The developer tried the People tab, add, edit and the contact import on the phone on 2026-11-16: "all worked well". **M1 is done** apart from the phone check of "Open chat". Next: **M2, Capture** (02-design.md §2.1 and §5).
 
 Phone numbers are stored with a leading plus; links such as `wa.me` need the digits only.
 

@@ -47,7 +47,7 @@
     }
   },
   "notes": "Notizen",
-  "comingSoon": "Kommt bald",
+  "messengerNotOpened": "{messenger} konnte nicht geöffnet werden.",
   "addPersonTitle": "Person hinzufügen",
   "editPersonTitle": "Person bearbeiten",
   "edit": "Bearbeiten",

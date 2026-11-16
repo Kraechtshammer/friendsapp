@@ -54,7 +54,14 @@
     }
   },
   "notes": "Notes",
-  "comingSoon": "Coming soon",
+  "messengerNotOpened": "{messenger} could not be opened.",
+  "@messengerNotOpened": {
+    "placeholders": {
+      "messenger": {
+        "type": "String"
+      }
+    }
+  },
   "addPersonTitle": "Add a person",
   "editPersonTitle": "Edit person",
   "edit": "Edit",

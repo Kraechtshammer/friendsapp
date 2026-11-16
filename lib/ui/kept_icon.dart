@@ -23,6 +23,9 @@ enum KeptIcons {
   star,
   leaf,
   telegram,
+  signal,
+  discord,
+  gift,
 
   // The class badge on an avatar: a plant that grows with the class.
   sprout,
