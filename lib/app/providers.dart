@@ -253,6 +253,44 @@ final personIntentionsProvider = StreamProvider.family<List<Intention>, String>(
   },
 );
 
+/// The couples by group id. Empty until they are loaded.
+final couplesByIdProvider = Provider<Map<String, GroupWithMembers>>((ref) {
+  final couples = ref.watch(couplesProvider).value ?? const [];
+  return {for (final c in couples) c.group.id: c};
+});
+
+/// Who a thought is for (a person or a couple); null when not known.
+/// The lists that show thoughts call it for each row.
+final thoughtSubjectProvider = Provider<ThoughtSubject? Function(Intention)>((
+  ref,
+) {
+  final byId = {
+    for (final p in ref.watch(peopleProvider).value ?? const <Person>[])
+      p.id: p,
+  };
+  final couples = ref.watch(couplesByIdProvider);
+  return (i) => subjectOf(i, byId, couples);
+});
+
+/// A person's own thoughts in every state plus the open thoughts of the
+/// couple they are in (shown on both members' pages), newest first.
+final personThoughtsProvider = Provider.family<List<Intention>, String>((
+  ref,
+  personId,
+) {
+  final own = ref.watch(personIntentionsProvider(personId)).value ?? const [];
+  final groupId = ref.watch(personCoupleProvider(personId)).value?.group.id;
+  if (groupId == null) return own;
+  final shared = [
+    for (final i in ref.watch(openIntentionsProvider).value ?? const [])
+      if (i.groupId == groupId) i,
+  ];
+  return [...own, ...shared]..sort((a, b) {
+    final c = b.createdAt.compareTo(a.createdAt);
+    return c != 0 ? c : b.id.compareTo(a.id);
+  });
+});
+
 /// Where contact events are written: the demo or the real database,
 /// following `demoMode`, like [peopleRepositoryProvider].
 final contactEventsRepositoryProvider = Provider<ContactEventsRepository>((

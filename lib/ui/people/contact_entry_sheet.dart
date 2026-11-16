@@ -92,6 +92,20 @@ class _EntrySheetState extends ConsumerState<_EntrySheet> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final kept = context.kept;
+    // A shared event (a meeting with a couple) is also on the other
+    // person's timeline; changing or deleting it changes both.
+    final sharedId = widget.event.sharedId;
+    final names = ref.watch(displayNamesProvider);
+    final others = sharedId == null
+        ? const <String>[]
+        : [
+            for (final e
+                in ref.watch(allContactEventsProvider).value ?? const [])
+              if (e.sharedId == sharedId &&
+                  e.id != widget.event.id &&
+                  names[e.personId] != null)
+                names[e.personId]!,
+          ];
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
         16,
@@ -107,6 +121,11 @@ class _EntrySheetState extends ConsumerState<_EntrySheet> {
             l10n.editEntry,
             style: context.text.titleLarge?.copyWith(color: kept.text),
           ),
+          if (others.isNotEmpty)
+            Text(
+              l10n.coupleAlsoChanges(others.join(' & ')),
+              style: context.text.bodySmall?.copyWith(color: kept.muted),
+            ),
           KeptTextField(
             controller: _activity,
             label: l10n.entryActivity,

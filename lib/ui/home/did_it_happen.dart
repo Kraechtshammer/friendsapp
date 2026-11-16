@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../data/database.dart';
 import '../../domain/contact_event.dart';
+import '../../domain/group.dart';
 import '../../domain/intention.dart';
 import '../../domain/plans.dart';
 import '../../l10n/labels.dart';
@@ -34,25 +35,32 @@ class DidItHappen extends ConsumerWidget {
     final people = ref.watch(peopleProvider).value ?? const <Person>[];
     final intentions = ref.watch(openIntentionsProvider).value ?? const [];
     final now = ref.watch(clockProvider)();
-    final byId = {for (final p in people) p.id: p};
-    final asked = didItHappen(people, intentions, now).take(visible);
+    final resolve = ref.watch(thoughtSubjectProvider);
+    final asked = didItHappen(
+      people,
+      intentions,
+      now,
+      couples: ref.watch(couplesByIdProvider),
+    ).take(visible);
     if (asked.isEmpty) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.only(top: 22),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 14,
-        children: [for (final i in asked) _Card(byId[i.personId]!, i)],
+        children: [for (final i in asked) _Card(resolve(i)!, i)],
       ),
     );
   }
 }
 
 class _Card extends ConsumerWidget {
-  const _Card(this.person, this.intention);
+  const _Card(this.subject, this.intention);
 
-  final Person person;
+  final ThoughtSubject subject;
   final Intention intention;
+
+  Person get person => subject.person;
 
   /// "New date": the date picker, then an optional time (closing the time
   /// picker keeps the day without one). The thought gets the new date and
@@ -89,7 +97,7 @@ class _Card extends ConsumerWidget {
           ),
           Text(
             [
-              ref.shortName(person),
+              subject.label(ref.watch(displayNamesProvider)),
               thoughtText(intention, l10n),
               whenText(whenOf(intention), l10n),
             ].join(' · '),

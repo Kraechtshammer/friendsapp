@@ -1,5 +1,6 @@
 import '../data/database.dart';
 import 'birthdays.dart';
+import 'group.dart';
 import 'intention.dart';
 import 'plans.dart';
 
@@ -32,7 +33,9 @@ class BirthdayEntry extends UpcomingEntry {
 
 /// A thought with a date.
 class ThoughtEntry extends UpcomingEntry {
-  ThoughtEntry(Person person, this.intention)
+  /// For a couple's thought [person] is the first member and [couple] is
+  /// set.
+  ThoughtEntry(Person person, this.intention, {this.couple})
     : super(
         person,
         DateTime(
@@ -43,6 +46,7 @@ class ThoughtEntry extends UpcomingEntry {
       );
 
   final Intention intention;
+  final GroupWithMembers? couple;
 
   @override
   DateTime? get time => dateHasTime(intention.date!) ? intention.date : null;
@@ -59,12 +63,14 @@ DateTime upcomingEnd(DateTime now) =>
 /// in years without it), and every open thought with a date that has not
 /// passed yet ([hasPassed]; those are asked about as "Did it happen?").
 /// Inside a day birthdays come first, then thoughts without a time, then
-/// by time; the rest goes by name and id so the order is stable.
+/// by time; the rest goes by name and id so the order is stable. A
+/// couple's thought ([couples]: group id to couple) is one entry.
 List<UpcomingEntry> upcomingEntries(
   List<Person> people,
   List<Intention> intentions,
-  DateTime now,
-) {
+  DateTime now, {
+  Map<String, GroupWithMembers> couples = const {},
+}) {
   final today = DateTime(now.year, now.month, now.day);
   final end = upcomingEnd(now);
   final byId = {for (final p in people) p.id: p};
@@ -77,10 +83,14 @@ List<UpcomingEntry> upcomingEntries(
     for (final i in intentions)
       if (i.state == IntentionState.open &&
           i.date != null &&
-          byId.containsKey(i.personId) &&
+          subjectOf(i, byId, couples) != null &&
           !hasPassed(i.date!, now))
-        if (ThoughtEntry(byId[i.personId]!, i) case final e
-            when !e.day.isBefore(today) && e.day.isBefore(end))
+        if (ThoughtEntry(
+              subjectOf(i, byId, couples)!.person,
+              i,
+              couple: subjectOf(i, byId, couples)!.couple,
+            )
+            case final e when !e.day.isBefore(today) && e.day.isBefore(end))
           e,
   ];
   int rank(UpcomingEntry e) => switch (e) {

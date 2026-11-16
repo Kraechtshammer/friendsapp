@@ -284,14 +284,17 @@ class ContactEventsRepository {
   /// did it, linked to it, in one transaction. Kind and direction follow
   /// from the intention's kind (contactKindFor, contactDirectionFor). A
   /// couple's intention adds the event for the group ([addForGroup]) and
-  /// returns the first member's row. [at] defaults to now; [now] is for
-  /// tests.
+  /// returns the first member's row, unless [onlyPersonId] is given: then
+  /// one plain event for that member only (writing or calling one of the
+  /// two; ui rule in 04-architecture.md, "Couples"). [at] defaults to now;
+  /// [now] is for tests.
   Future<ContactEvent> completeIntention(
     String intentionId, {
     ContactSource source = ContactSource.confirmed,
     DateTime? at,
     String? activity,
     String? note,
+    String? onlyPersonId,
     DateTime? now,
   }) {
     final time = now ?? DateTime.now();
@@ -308,7 +311,7 @@ class ContactEventsRepository {
         ),
       );
       final groupId = intention.groupId;
-      if (groupId != null) {
+      if (groupId != null && onlyPersonId == null) {
         final rows = await addForGroup(
           groupId: groupId,
           at: at ?? time,
@@ -323,7 +326,7 @@ class ContactEventsRepository {
         return rows.first;
       }
       return add(
-        personId: intention.personId!,
+        personId: onlyPersonId ?? intention.personId!,
         at: at ?? time,
         kind: contactKindFor(intention.kind),
         direction: contactDirectionFor(intention.kind),

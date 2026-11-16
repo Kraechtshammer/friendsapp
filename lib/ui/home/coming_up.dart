@@ -28,7 +28,12 @@ class ComingUp extends ConsumerWidget {
     final people = ref.watch(peopleProvider).value ?? const <Person>[];
     final intentions = ref.watch(openIntentionsProvider).value ?? const [];
     final now = ref.watch(clockProvider)();
-    final next = upcomingEntries(people, intentions, now).take(2).toList();
+    final next = upcomingEntries(
+      people,
+      intentions,
+      now,
+      couples: ref.watch(couplesByIdProvider),
+    ).take(2).toList();
     if (next.isEmpty) return const SizedBox.shrink();
     final l10n = context.l10n;
     return Padding(
@@ -98,8 +103,9 @@ class _Card extends ConsumerWidget {
     // Concept: "Bouldering, Tom".
     final title = switch (e) {
       BirthdayEntry() => entryTitle(e, l10n, names),
-      ThoughtEntry(:final intention, :final person) =>
-        '${thoughtText(intention, l10n)}, ${shortNameIn(names, person)}',
+      ThoughtEntry(:final intention, :final person, :final couple) =>
+        '${thoughtText(intention, l10n)}, '
+            '${couple?.label(names) ?? shortNameIn(names, person)}',
     };
     return KeptCard(
       small: true,

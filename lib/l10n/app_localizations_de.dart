@@ -1880,4 +1880,64 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get shareDoneTag => 'Neu!';
+
+  @override
+  String get partnerLabel => 'Partner';
+
+  @override
+  String get partnerLink => 'Partner verknüpfen';
+
+  @override
+  String get partnerHelp =>
+      'Wer verknüpft ist, erscheint als Paar. Beide bleiben eigene Personen.';
+
+  @override
+  String get partnerUnlink => 'Trennen';
+
+  @override
+  String partnerUnlinkTitle(String a, String b) {
+    return 'Verknüpfung von $a und $b lösen?';
+  }
+
+  @override
+  String partnerUnlinkBody(String first) {
+    return 'Beide erscheinen wieder einzeln. Offene Gedanken an beide gehen an $first. Gemeinsame Treffen bleiben in beiden Verläufen.';
+  }
+
+  @override
+  String coupleWith(String name) {
+    return 'mit $name';
+  }
+
+  @override
+  String coupleAlsoChanges(String name) {
+    return 'Ändert auch den Verlauf von $name';
+  }
+
+  @override
+  String get coupleThoughtForBoth => 'Gedanke an beide';
+
+  @override
+  String get coupleWeMet => 'Wir haben uns getroffen';
+
+  @override
+  String get coupleTogether => 'Gemeinsame Zeit';
+
+  @override
+  String get coupleNothingTogether => 'Noch nichts gemeinsam.';
+
+  @override
+  String get coupleOpenChat => 'Chat öffnen';
+
+  @override
+  String get coupleChatWho => 'Wen möchtest du anschreiben?';
+
+  @override
+  String get removeCoupleLine =>
+      'Die Verknüpfung als Paar wird ebenfalls gelöst.';
+
+  @override
+  String niceOneStampsOf(String name, int count) {
+    return '$name +$count';
+  }
 }

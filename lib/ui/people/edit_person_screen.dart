@@ -8,12 +8,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/contact_refresh.dart';
 import '../../app/providers.dart';
 import '../../data/database.dart';
+import '../../domain/display_name.dart';
+import '../../domain/group.dart';
 import '../../domain/rhythm.dart';
 import '../../domain/person.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
+import '../home/person_picker.dart';
 import '../widgets/choice_chips.dart';
 import '../widgets/grey_button.dart';
 import '../widgets/kept_card.dart';
@@ -308,11 +311,18 @@ class _FormState extends ConsumerState<_Form> {
     final navigator = Navigator.of(context);
     final repo = ref.read(peopleRepositoryProvider);
     final l10n = context.l10n;
+    final inCouple =
+        await ref.read(groupsRepositoryProvider).coupleOf(person.id) != null;
+    if (!mounted) return;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.removeTitle(person.name)),
-        content: Text(l10n.removeBody),
+        content: Text(
+          inCouple
+              ? '${l10n.removeBody}\n\n${l10n.removeCoupleLine}'
+              : l10n.removeBody,
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -453,6 +463,10 @@ class _FormState extends ConsumerState<_Form> {
                     ),
                   ),
                 ]),
+                if (_editing) ...[
+                  const SizedBox(height: 18),
+                  _group(l10n.partnerLabel, [_PartnerRow(widget.person!)]),
+                ],
                 const SizedBox(height: 18),
                 _group(l10n.editClass, [
                   ChoiceChips<Closeness>(
@@ -750,6 +764,119 @@ class _ReconnectingSwitch extends StatelessWidget {
           KeptSwitch(value: value, onChanged: onChanged),
         ],
       ),
+    );
+  }
+}
+
+/// The "Partner" row of the edit page, the only way to link two people as
+/// a couple (02-design.md §8, 2026-11-16). Empty: a short line and "Link a
+/// partner", which opens the person picker with everyone who is not in a
+/// couple yet. Linked: the partner's face and name and "Unlink", after a
+/// confirm. Both act at once, not on Save.
+class _PartnerRow extends ConsumerWidget {
+  const _PartnerRow(this.person);
+
+  final Person person;
+
+  Future<void> _link(BuildContext context, WidgetRef ref) async {
+    final inCouple = {
+      for (final c
+          in ref.read(couplesProvider).value ?? const <GroupWithMembers>[])
+        for (final p in c.members) p.id,
+    };
+    final candidates = [
+      for (final p in ref.read(peopleProvider).value ?? const <Person>[])
+        if (p.id != person.id && !inCouple.contains(p.id)) p,
+    ];
+    final picked = await showPersonPicker(context, candidates);
+    if (picked == null) return;
+    try {
+      await ref
+          .read(groupsRepositoryProvider)
+          .createCouple(person.id, picked.id);
+    } on AlreadyInCoupleException {
+      // Linked meanwhile: the row shows the current state.
+    }
+  }
+
+  Future<void> _unlink(
+    BuildContext context,
+    WidgetRef ref,
+    GroupWithMembers couple,
+  ) async {
+    final l10n = context.l10n;
+    final names = ref.read(displayNamesProvider);
+    final repo = ref.read(groupsRepositoryProvider);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          l10n.partnerUnlinkTitle(
+            shortNameIn(names, couple.members[0]),
+            shortNameIn(names, couple.members[1]),
+          ),
+        ),
+        // Dissolving moves the couple's thoughts to the first member.
+        content: Text(
+          l10n.partnerUnlinkBody(shortNameIn(names, couple.members.first)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(l10n.partnerUnlink),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) await repo.dissolve(couple.group.id);
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final couple = ref.watch(personCoupleProvider(person.id)).value;
+    final partner = couple?.members.where((p) => p.id != person.id).firstOrNull;
+    return KeptCard(
+      small: true,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      child: partner == null
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 10,
+              children: [
+                Text(l10n.partnerHelp, style: context.text.bodyMedium),
+                GreyButton(
+                  small: true,
+                  label: l10n.partnerLink,
+                  onPressed: () => _link(context, ref),
+                ),
+              ],
+            )
+          : Row(
+              spacing: 12,
+              children: [
+                Avatar.person(partner, size: 44),
+                Expanded(
+                  child: Text(
+                    ref.shortName(partner),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.text.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                GreyButton(
+                  small: true,
+                  label: l10n.partnerUnlink,
+                  onPressed: () => _unlink(context, ref, couple!),
+                ),
+              ],
+            ),
     );
   }
 }

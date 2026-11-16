@@ -6,6 +6,7 @@ import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/database.dart';
 import '../../domain/contact_event.dart';
+import '../../domain/group.dart';
 import '../../domain/intention.dart';
 import '../../domain/progress.dart';
 import '../../domain/treat.dart';
@@ -13,6 +14,7 @@ import '../common.dart';
 import '../material.dart';
 import '../kept_icon.dart';
 import '../widgets/avatar.dart';
+import '../widgets/couple_avatar.dart';
 import '../widgets/kept_switch.dart';
 import '../widgets/grey_button.dart';
 import '../widgets/kept_card.dart';
@@ -28,6 +30,11 @@ import '../widgets/when_picker.dart';
 /// "Did you write?". With [replace] the Nice one screen takes the place of
 /// the current one (the question). [at] is the time of the contact if it
 /// is not now ("Did it happen?" uses the planned date).
+///
+/// For a couple's thought the contact is stored for both members (one
+/// shared event), unless [only] is given: then for that person alone. The
+/// chat question passes [only] when the user wrote to or called one of the
+/// two (04-architecture.md, "Couples").
 Future<void> completeThought(
   BuildContext context,
   WidgetRef ref,
@@ -36,15 +43,25 @@ Future<void> completeThought(
   ContactSource source = ContactSource.manual,
   DateTime? at,
   bool replace = false,
-}) => _storeAndCelebrate(
-  context,
-  person: person,
-  thought: intention.note.trim(),
-  replace: replace,
-  store: () => ref
-      .read(contactEventsRepositoryProvider)
-      .completeIntention(intention.id, source: source, at: at),
-);
+  Person? only,
+}) {
+  final groupId = intention.groupId;
+  return _storeAndCelebrate(
+    context,
+    person: only ?? person,
+    couple: groupId == null ? null : ref.read(couplesByIdProvider)[groupId],
+    thought: intention.note.trim(),
+    replace: replace,
+    store: () => ref
+        .read(contactEventsRepositoryProvider)
+        .completeIntention(
+          intention.id,
+          source: source,
+          at: at,
+          onlyPersonId: only?.id,
+        ),
+  );
+}
 
 /// "Yes" on "Did you write?" for a chat that was not opened for a thought:
 /// stores a `wrote` event ([source] `confirmed` for that question,
@@ -70,6 +87,34 @@ Future<void> completeWrite(
         direction: ContactDirection.byUser,
         source: source,
       ),
+);
+
+/// "We met" on the couple page: stores a meeting with both members as one
+/// shared event ([ContactEventsRepository.addForGroup], source `manual`,
+/// kind `met`, together), then shows the "Nice one" screen with both faces
+/// and both stamps.
+Future<void> completeMeeting(
+  BuildContext context,
+  WidgetRef ref,
+  GroupWithMembers couple,
+) => _storeAndCelebrate(
+  context,
+  person: couple.members.first,
+  couple: couple,
+  thought: '',
+  replace: false,
+  store: () async {
+    final rows = await ref
+        .read(contactEventsRepositoryProvider)
+        .addForGroup(
+          groupId: couple.group.id,
+          at: DateTime.now(),
+          kind: ContactKind.met,
+          direction: ContactDirection.together,
+          source: ContactSource.manual,
+        );
+    return rows.first;
+  },
 );
 
 /// "Congratulated" on a birthday pick ([source] `manual`) or "Yes" on "Did
@@ -109,6 +154,7 @@ Future<void> completeBirthday(
 Future<void> _storeAndCelebrate(
   BuildContext context, {
   required Person person,
+  GroupWithMembers? couple,
   required String thought,
   required bool replace,
   required Future<ContactEvent> Function() store,
@@ -119,8 +165,12 @@ Future<void> _storeAndCelebrate(
   ScaffoldMessenger.of(context).clearSnackBars();
   final event = await store();
   final route = MaterialPageRoute<void>(
-    builder: (_) =>
-        NiceOneScreen(person: person, event: event, thought: thought),
+    builder: (_) => NiceOneScreen(
+      person: person,
+      event: event,
+      thought: thought,
+      couple: couple,
+    ),
   );
   unawaited(replace ? navigator.pushReplacement(route) : navigator.push(route));
 }
@@ -135,16 +185,28 @@ Future<void> _storeAndCelebrate(
 /// Closing, by the button or back, saves the activity and the line to the
 /// event; with "Remind me" on, the line also becomes a new open thought,
 /// and a meet-up planned in the row becomes a meet thought with its "when".
+///
+/// For a couple ([couple]) the event is the shared one when it has a
+/// `groupId`: the screen shows both faces and the stamps of both. A
+/// "Remind me" line then becomes a thought for the couple. Whatever
+/// was recorded, the meet-up planned in the row is for the couple when
+/// the screen comes from a couple's thought.
 class NiceOneScreen extends ConsumerStatefulWidget {
   const NiceOneScreen({
     super.key,
     required this.person,
     required this.event,
     this.thought = '',
+    this.couple,
   });
 
+  /// The person the contact was stored for (the first member when it was
+  /// stored for the couple).
   final Person person;
   final ContactEvent event;
+
+  /// The couple the thought was for, if any.
+  final GroupWithMembers? couple;
 
   /// The text of the thought that was done; prefills the activity.
   final String thought;
@@ -160,6 +222,9 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
   var _planWhen = const When.none();
   var _remind = false;
   var _saved = false;
+
+  /// The contact is the couple's: stored for both members.
+  bool get _forBoth => widget.couple != null && widget.event.groupId != null;
 
   bool get _asksActivity =>
       widget.event.kind == ContactKind.met ||
@@ -197,7 +262,8 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
         ref
             .read(intentionsRepositoryProvider)
             .add(
-              personId: widget.person.id,
+              personId: _forBoth ? null : widget.person.id,
+              groupId: _forBoth ? widget.couple!.group.id : null,
               note: line,
               kind: IntentionKind.write,
             ),
@@ -212,7 +278,8 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
       ref
           .read(intentionsRepositoryProvider)
           .add(
-            personId: widget.person.id,
+            personId: widget.couple == null ? widget.person.id : null,
+            groupId: widget.couple?.group.id,
             note: note ?? '',
             kind: IntentionKind.meet,
             when: _planWhen,
@@ -225,7 +292,10 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
     final l10n = context.l10n;
     final kept = context.kept;
     final openMeet = (ref.watch(openIntentionsProvider).value ?? const []).any(
-      (i) => i.personId == widget.person.id && i.kind == IntentionKind.meet,
+      (i) =>
+          i.kind == IntentionKind.meet &&
+          (i.personId == widget.person.id ||
+              (widget.couple != null && i.groupId == widget.couple!.group.id)),
     );
     return PopScope(
       onPopInvokedWithResult: (didPop, _) {
@@ -246,7 +316,14 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         spacing: 12,
                         children: [
-                          Center(child: Avatar.person(widget.person, size: 96)),
+                          Center(
+                            child: _forBoth
+                                ? CoupleAvatar(
+                                    widget.couple!.members,
+                                    size: 112,
+                                  )
+                                : Avatar.person(widget.person, size: 96),
+                          ),
                           Text(
                             l10n.niceOneTitle,
                             textAlign: TextAlign.center,
@@ -316,7 +393,7 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
                               when: _planWhen,
                               onWhen: (w) => setState(() => _planWhen = w),
                             ),
-                          _StampsCard(event: widget.event),
+                          _StampsCard(event: widget.event, shared: _forBoth),
                         ],
                       ),
                     ),
@@ -416,13 +493,30 @@ class _PlanRowState extends State<_PlanRow> {
 /// became full, the treat is celebrated. Nothing when the contact earned no
 /// stamp (incoming, or the person already had one this week).
 class _StampsCard extends ConsumerWidget {
-  const _StampsCard({required this.event});
+  const _StampsCard({required this.event, this.shared = false});
 
   final ContactEvent event;
 
+  /// The event is a couple's: the stamps of every row of it are added up,
+  /// with each person's share named.
+  final bool shared;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final earned = ref.watch(eventStampsProvider(event.id)).value ?? const [];
+    final sharedId = event.sharedId;
+    final rows = shared && sharedId != null
+        ? [
+            for (final e
+                in ref.watch(allContactEventsProvider).value ?? const [])
+              if (e.sharedId == sharedId) e,
+          ]
+        : <ContactEvent>[];
+    final perRow = [
+      for (final e in rows.isEmpty ? [event] : rows)
+        (e, ref.watch(eventStampsProvider(e.id)).value ?? const <Stamp>[]),
+    ];
+    final earned = [for (final r in perRow) ...r.$2];
+    final names = ref.watch(displayNamesProvider);
     final value = stampTotal(earned);
     if (value == 0) return const SizedBox.shrink();
     final treats = ref.watch(treatsProvider).value ?? const <Treat>[];
@@ -474,6 +568,23 @@ class _StampsCard extends ConsumerWidget {
                     ),
                   ),
                 ),
+              ],
+            )
+          else if (perRow.length > 1)
+            Wrap(
+              spacing: 14,
+              children: [
+                for (final (e, stamps) in perRow)
+                  if (stampTotal(stamps) > 0)
+                    Text(
+                      l10n.niceOneStampsOf(
+                        names[e.personId] ?? '',
+                        stampTotal(stamps),
+                      ),
+                      style: context.text.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
               ],
             )
           else if (onlyLoose || current == null)

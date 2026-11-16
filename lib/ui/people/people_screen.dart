@@ -2,16 +2,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../data/database.dart';
+import '../../domain/group.dart';
 import '../../domain/person.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../kept_icon.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
+import '../widgets/couple_avatar.dart';
 import '../widgets/grey_button.dart';
 import '../widgets/grey_icon_button.dart';
 import '../widgets/main_button.dart';
 import '../widgets/section_label.dart';
+import 'couple_screen.dart';
 import 'edit_person_screen.dart';
 import 'import_contacts_screen.dart';
 import 'person_screen.dart';
@@ -56,18 +59,7 @@ class PeopleScreen extends ConsumerWidget {
           ),
         ],
       ),
-      AsyncValue(value: final list?) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 14,
-        children: [
-          for (final closeness in Closeness.values)
-            if (list.any((p) => p.closeness == closeness))
-              _Group(
-                closeness,
-                list.where((p) => p.closeness == closeness).toList(),
-              ),
-        ],
-      ),
+      AsyncValue(value: final list?) => _Groups(list),
       AsyncValue(hasError: true) => _Hint(context.l10n.peopleError),
       _ => const SizedBox.shrink(),
     };
@@ -81,6 +73,45 @@ class PeopleScreen extends ConsumerWidget {
           ReconnectCard(list),
         ],
         body,
+      ],
+    );
+  }
+}
+
+/// The classes with their people. A linked couple is one entry, in the
+/// class of the closer member ([closestClass]); inside a class everything
+/// is sorted by name, a couple by its first member's.
+class _Groups extends ConsumerWidget {
+  const _Groups(this.people);
+
+  final List<Person> people;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final couples = ref.watch(couplesProvider).value ?? const [];
+    final coupled = {
+      for (final c in couples)
+        for (final p in c.members) p.id,
+    };
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 14,
+      children: [
+        for (final closeness in Closeness.values)
+          ...() {
+            final items = <(String, Widget)>[
+              for (final p in people)
+                if (p.closeness == closeness && !coupled.contains(p.id))
+                  (p.name.toLowerCase(), _PersonBlob(p)),
+              for (final c in couples)
+                if (closestClass(c.members) == closeness)
+                  (c.members.first.name.toLowerCase(), _CoupleBlob(c)),
+            ]..sort((a, b) => a.$1.compareTo(b.$1));
+            return [
+              if (items.isNotEmpty)
+                _Group(closeness, [for (final i in items) i.$2]),
+            ];
+          }(),
       ],
     );
   }
@@ -134,10 +165,10 @@ class _Hint extends StatelessWidget {
 
 /// One class: its label and its people, wrapping onto more lines.
 class _Group extends StatelessWidget {
-  const _Group(this.closeness, this.people);
+  const _Group(this.closeness, this.items);
 
   final Closeness closeness;
-  final List<Person> people;
+  final List<Widget> items;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -151,11 +182,7 @@ class _Group extends StatelessWidget {
           SectionLabel(closenessGroupLabel(closeness, context.l10n)),
         ],
       ),
-      Wrap(
-        spacing: 16,
-        runSpacing: 16,
-        children: [for (final p in people) _PersonBlob(p)],
-      ),
+      Wrap(spacing: 16, runSpacing: 16, children: items),
     ],
   );
 }
@@ -183,6 +210,45 @@ class _PersonBlob extends ConsumerWidget {
             Avatar.person(person, size: 54),
             Text(
               firstName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: context.kept.text,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Both faces over "Anna & Tom"; opens the couple page.
+class _CoupleBlob extends ConsumerWidget {
+  const _CoupleBlob(this.couple);
+
+  final GroupWithMembers couple;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => CoupleScreen(id: couple.group.id),
+        ),
+      ),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 54, maxWidth: 104),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 4,
+          children: [
+            CoupleAvatar(couple.members, size: 54),
+            Text(
+              couple.label(ref.watch(displayNamesProvider)),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(

@@ -9,6 +9,7 @@ import '../../l10n/labels.dart';
 import '../common.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
+import '../widgets/couple_avatar.dart';
 import '../widgets/choice_chips.dart';
 import '../widgets/grey_button.dart';
 import '../widgets/kept_text_field.dart';
@@ -119,6 +120,10 @@ class _ThoughtSheetState extends ConsumerState<_ThoughtSheet> {
     final l10n = context.l10n;
     final kept = context.kept;
     final person = widget.person;
+    final groupId = widget.intention.groupId;
+    final couple = groupId == null
+        ? null
+        : ref.watch(couplesByIdProvider)[groupId];
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
         16,
@@ -133,13 +138,17 @@ class _ThoughtSheetState extends ConsumerState<_ThoughtSheet> {
           Row(
             spacing: 12,
             children: [
-              Avatar.person(person, size: 44, classBadge: true),
+              if (couple != null)
+                CoupleAvatar(couple.members, size: 44, ringColor: kept.surface)
+              else
+                Avatar.person(person, size: 44, classBadge: true),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      ref.shortName(person),
+                      couple?.label(ref.watch(displayNamesProvider)) ??
+                          ref.shortName(person),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: context.text.titleLarge?.copyWith(

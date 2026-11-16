@@ -102,6 +102,7 @@ class PersonTimeline {
 
 /// Builds the timeline of [person] at [now] from their [events] (every
 /// kind and direction) and their [intentions] (only the open ones count).
+/// Open thoughts of the couple [groupId] the person is in count as theirs.
 ///
 /// - Upcoming: the next birthday, open thoughts with a date that has not
 ///   passed ([hasPassed]), and open plans with a horizon.
@@ -115,8 +116,9 @@ PersonTimeline personTimeline(
   Person person,
   Iterable<ContactEvent> events,
   Iterable<Intention> intentions,
-  DateTime now,
-) {
+  DateTime now, {
+  String? groupId,
+}) {
   final today = DateTime(now.year, now.month, now.day);
   DateTime dayOf(DateTime t) => DateTime(t.year, t.month, t.day);
   final mine = [
@@ -125,7 +127,10 @@ PersonTimeline personTimeline(
   ];
   final open = [
     for (final i in intentions)
-      if (i.personId == person.id && i.state == IntentionState.open) i,
+      if ((i.personId == person.id ||
+              (groupId != null && i.groupId == groupId)) &&
+          i.state == IntentionState.open)
+        i,
   ];
 
   // Upcoming, soonest first at first; reversed below.

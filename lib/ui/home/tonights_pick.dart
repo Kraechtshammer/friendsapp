@@ -12,6 +12,7 @@ import '../../domain/ideas.dart';
 import '../../domain/intention.dart';
 import '../../domain/owed_reply.dart';
 import '../../domain/display_name.dart';
+import '../../domain/group.dart';
 import '../../domain/pick_order.dart';
 import '../../domain/reconnect_span.dart';
 import '../../l10n/app_localizations.dart';
@@ -20,8 +21,10 @@ import '../common.dart';
 import '../kept_icon.dart';
 import '../material.dart';
 import '../people/idea_sheet.dart';
+import '../people/couple_screen.dart';
 import '../people/person_screen.dart';
 import '../widgets/avatar.dart';
+import '../widgets/couple_avatar.dart';
 import '../widgets/grey_button.dart';
 import '../widgets/kept_card.dart';
 import '../widgets/main_button.dart';
@@ -167,6 +170,7 @@ class _PickCard extends ConsumerWidget {
     final kept = context.kept;
     final pick = this.pick;
     final person = pick.person;
+    final couple = _coupleOf(pick);
     final messenger = person.mainMessenger;
     return Stack(
       clipBehavior: Clip.none,
@@ -180,7 +184,10 @@ class _PickCard extends ConsumerWidget {
               Row(
                 spacing: 14,
                 children: [
-                  Avatar.person(person, size: 60, classBadge: true),
+                  if (couple != null)
+                    CoupleAvatar(couple, size: 60, ringColor: kept.surface)
+                  else
+                    Avatar.person(person, size: 60, classBadge: true),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,12 +212,14 @@ class _PickCard extends ConsumerWidget {
                           ],
                         ),
                         Text(
-                          [
-                            closenessLabel(person.closeness, l10n),
-                            ?(messenger == null
-                                ? null
-                                : messengerLabel(messenger, l10n)),
-                          ].join(' · '),
+                          couple != null
+                              ? closenessLabel(closestClass(couple), l10n)
+                              : [
+                                  closenessLabel(person.closeness, l10n),
+                                  ?(messenger == null
+                                      ? null
+                                      : messengerLabel(messenger, l10n)),
+                                ].join(' · '),
                           style: context.text.bodyMedium,
                         ),
                       ],
@@ -255,12 +264,20 @@ class _PickCard extends ConsumerWidget {
                       style: context.text.bodyLarge?.copyWith(color: kept.text),
                     ),
                     WhenLineOf(pick),
-                    LastTimeLine(person.id),
-                    IdeaLine(pick),
+                    if (couple == null) ...[
+                      LastTimeLine(person.id),
+                      IdeaLine(pick),
+                    ],
                   ],
                 ),
               ),
-              if (messenger != null)
+              if (couple != null && anyHasMessenger(couple))
+                MainButton(
+                  label: l10n.coupleOpenChat,
+                  icon: KeptIcons.chat,
+                  onPressed: () => _openChat(context, ref, pick),
+                )
+              else if (couple == null && messenger != null)
                 MainButton(
                   label: l10n.openMessenger(messengerLabel(messenger, l10n)),
                   icon: messengerIcon(messenger),
@@ -319,17 +336,25 @@ class _CompactPick extends ConsumerWidget {
     final pick = this.pick;
     final l10n = context.l10n;
     final person = pick.person;
+    final couple = _coupleOf(pick);
     final messenger = person.mainMessenger;
     return KeptCard(
       small: true,
       padding: const EdgeInsets.all(12),
       onTap: () => Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => PersonScreen(id: person.id)),
+        MaterialPageRoute<void>(
+          builder: (_) => pick is IntentionPick && couple != null
+              ? CoupleScreen(id: pick.intention.groupId!)
+              : PersonScreen(id: person.id),
+        ),
       ),
       child: Row(
         spacing: 12,
         children: [
-          Avatar.person(person, size: 44, classBadge: true),
+          if (couple != null)
+            CoupleAvatar(couple, size: 44, ringColor: context.kept.surface)
+          else
+            Avatar.person(person, size: 44, classBadge: true),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -380,11 +405,19 @@ class _CompactPick extends ConsumerWidget {
                       color: context.kept.muted,
                     ),
                   ),
-                LastTimeLine(person.id),
+                if (couple == null) LastTimeLine(person.id),
               ],
             ),
           ),
-          if (messenger != null)
+          if (couple != null && anyHasMessenger(couple))
+            _SquareButton(
+              size: 48,
+              coral: true,
+              tooltip: l10n.coupleOpenChat,
+              icon: KeptIcons.chat,
+              onPressed: () => _openChat(context, ref, pick),
+            )
+          else if (couple == null && messenger != null)
             _SquareButton(
               size: 48,
               coral: true,
@@ -413,13 +446,17 @@ class _CompactPick extends ConsumerWidget {
 }
 
 /// The name on a pick: the person's short name, or for a couple's thought
-/// the members' short names joined with " & " (a plain fallback until the
-/// couple UI comes). [names] are `displayNamesProvider`.
+/// the members' short names joined with " & ". [names] are
+/// `displayNamesProvider`.
 String _pickName(Pick pick, Map<String, String> names) => switch (pick) {
   IntentionPick(:final members) when members.length > 1 =>
     members.map((p) => shortNameIn(names, p)).join(' & '),
   _ => shortNameIn(names, pick.person),
 };
+
+/// The members of a couple's pick; null for everything else.
+List<Person>? _coupleOf(Pick pick) =>
+    pick is IntentionPick && pick.members.length > 1 ? pick.members : null;
 
 /// The icon next to the name: the cake for a birthday, the chat bubble for
 /// an owed reply, else the kind.
@@ -467,6 +504,8 @@ void _openChat(BuildContext context, WidgetRef ref, Pick pick) =>
       ReplyPick(:final person) => openChat(context, ref, person),
       ReconnectPick(:final person) => openChat(context, ref, person),
       HintPick(:final person) => openChat(context, ref, person),
+      IntentionPick(:final members, :final intention) when members.length > 1 =>
+        openCoupleChat(context, ref, members, intention: intention),
       IntentionPick(:final person, :final intention) => openChat(
         context,
         ref,

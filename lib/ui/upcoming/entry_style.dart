@@ -54,8 +54,8 @@ String entrySubtitle(
 ) => switch (e) {
   BirthdayEntry(:final age?) => l10n.turnsAge(age),
   BirthdayEntry(:final person) => closenessLabel(person.closeness, l10n),
-  ThoughtEntry(:final person, :final intention, :final time) => [
-    shortNameIn(names, person),
+  ThoughtEntry(:final person, :final intention, :final time, :final couple) => [
+    couple?.label(names) ?? shortNameIn(names, person),
     kindLabel(intention.kind, l10n),
     if (time != null) l10n.timeShort(time),
   ].join(' · '),

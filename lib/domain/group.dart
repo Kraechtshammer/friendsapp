@@ -5,6 +5,7 @@ library;
 
 import '../data/database.dart';
 import 'display_name.dart';
+import 'person.dart';
 
 /// What kind of group it is. Friend circles may follow.
 enum GroupKind {
@@ -43,3 +44,46 @@ class AlreadyInCoupleException implements Exception {
       'AlreadyInCoupleException: person $personId is already in couple '
       '$groupId';
 }
+
+/// Who a thought is for, as the screens need it: one person, or a couple
+/// ([couple] set). [person] is the person, or the couple's first member.
+class ThoughtSubject {
+  const ThoughtSubject(this.person, {this.couple});
+
+  final Person person;
+  final GroupWithMembers? couple;
+
+  bool get isCouple => couple != null;
+
+  /// The person, or both members in order.
+  List<Person> get members => couple?.members ?? [person];
+
+  /// The short name, or the couple's label ("Anna & Tom").
+  String label(Map<String, String> names) =>
+      couple?.label(names) ?? shortNameIn(names, person);
+}
+
+/// Who [intention] is for, or null when that person or couple is not
+/// known (not in [byId], or no such couple in [couples], group id to
+/// couple). Used by the lists that show thoughts.
+ThoughtSubject? subjectOf(
+  Intention intention,
+  Map<String, Person> byId,
+  Map<String, GroupWithMembers> couples,
+) {
+  final personId = intention.personId;
+  if (personId != null) {
+    final person = byId[personId];
+    return person == null ? null : ThoughtSubject(person);
+  }
+  final couple = couples[intention.groupId];
+  if (couple == null || couple.members.isEmpty) return null;
+  if (!couple.members.any((p) => byId.containsKey(p.id))) return null;
+  return ThoughtSubject(couple.members.first, couple: couple);
+}
+
+/// The class of the closer one of [members], by the order of [Closeness]
+/// (close first). Where a couple is placed on the People tab.
+Closeness closestClass(Iterable<Person> members) => members
+    .map((p) => p.closeness)
+    .reduce((a, b) => a.index <= b.index ? a : b);

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../data/database.dart';
+import '../../domain/group.dart';
 import '../../domain/intention.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
@@ -16,7 +17,9 @@ import 'person_choice_row.dart';
 
 /// The capture card: a note, a person, a kind, Save (02-design.md §2.1;
 /// concept V6b · Capturing). The kind chips and Save show once a person is
-/// chosen. The note may be empty, the person is required.
+/// chosen. The note may be empty, the person is required. A linked couple
+/// is one more choice: the thought is then saved for the couple
+/// (`groupId`) and the kind starts as meet.
 class CaptureCard extends ConsumerStatefulWidget {
   const CaptureCard({super.key, required this.onAddPeople});
 
@@ -42,14 +45,22 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
     super.dispose();
   }
 
-  Future<void> _save(Person person) async {
+  Future<void> _save(ThoughtSubject subject) async {
     final messenger = ScaffoldMessenger.of(context);
-    final saved = context.l10n.captureSaved(ref.readShortName(person));
+    final saved = context.l10n.captureSaved(
+      subject.label(ref.read(displayNamesProvider)),
+    );
     final note = _note.text.trim();
     FocusScope.of(context).unfocus();
     await ref
         .read(intentionsRepositoryProvider)
-        .add(personId: person.id, note: note, kind: _kind, when: _when);
+        .add(
+          personId: subject.isCouple ? null : subject.person.id,
+          groupId: subject.couple?.group.id,
+          note: note,
+          kind: _kind,
+          when: _when,
+        );
     if (!mounted) return;
     _note.clear();
     setState(() {
@@ -75,9 +86,15 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
     final peopleState = ref.watch(peopleProvider);
     final people = peopleState.value ?? const <Person>[];
     final open = ref.watch(openIntentionsProvider).value ?? const [];
-    Person? selected;
+    final couples = ref.watch(couplesProvider).value ?? const [];
+    ThoughtSubject? selected;
     for (final p in people) {
-      if (p.id == _personId) selected = p;
+      if (p.id == _personId) selected = ThoughtSubject(p);
+    }
+    for (final c in couples) {
+      if (c.group.id == _personId) {
+        selected = ThoughtSubject(c.members.first, couple: c);
+      }
     }
     final tone = kept.sunTone;
     return KeptCard(
@@ -109,11 +126,20 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
           ] else if (people.isNotEmpty) ...[
             PersonChoiceRow(
               people: people,
+              couples: couples,
               intentions: open,
               selectedId: _personId,
               textColor: tone.onContainer,
               fieldColor: kept.ground,
-              onChanged: (id) => setState(() => _personId = id),
+              onChanged: (id) => setState(() {
+                final wasCouple = selected?.isCouple ?? false;
+                final isCouple = couples.any((c) => c.group.id == id);
+                // A couple is met together; the kind follows the choice
+                // until the user picks one.
+                if (isCouple && !wasCouple) _kind = IntentionKind.meet;
+                if (!isCouple && wasCouple) _kind = IntentionKind.write;
+                _personId = id;
+              }),
             ),
             if (selected != null) ...[
               ChoiceChips<IntentionKind>(
@@ -130,7 +156,9 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
                 onChanged: (w) => setState(() => _when = w),
               ),
               MainButton(
-                label: l10n.captureSave(ref.shortName(selected)),
+                label: l10n.captureSave(
+                  selected.label(ref.watch(displayNamesProvider)),
+                ),
                 onPressed: () => _save(selected!),
               ),
             ],

@@ -136,19 +136,19 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Uninstall the old debug build that still carries the release's name (your decision of 2026-11-16: start fresh), then install the APK from the GitHub release. From then on debug builds install beside it as "Kept. debug".
 - [ ] The notification icon shows in the release build.
 
-## Settings as categories (not released yet)
+## Settings as categories (in 0.9.0)
 
 - [ ] Settings shows eight rows (nine in a debug build), each with its icon and one line; every row opens its own page and Back returns to the list.
 - [ ] Changes on the pages still work and stick: evening time and days, rhythms, stamp values, theme (Look), your birthday.
 - [ ] When an update is found, the "App update" row says so, and tapping it opens the update page.
 
-## Language and back gesture (not released yet)
+## Language and back gesture (in 0.9.0)
 
 - [ ] Settings, Look, Language: switch System, English, Deutsch; all texts change at once and the choice survives a restart.
 - [ ] Android System settings > Apps > Kept. > Language lists English and Deutsch. (This is separate from the in-app setting.)
 - [ ] Swipe back slowly from the screen edge on a settings page: the page peeks away and the one below shows; release to cancel or finish.
 
-## Share a photo as a picture (not released yet)
+## Share a photo as a picture (in 0.9.0)
 
 - [ ] In Immich, open a photo of a friend, Share, Kept.: the screen "What's this picture for?" shows the photo big, with "Use as someone's picture" first.
 - [ ] The same from Google Photos (and one more gallery if you have it).
@@ -163,7 +163,7 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Doing five in a row is quick: share, tap person, Use picture, Done.
 - [ ] The tip card at the bottom of Settings > Friends and the line on the last first-start page read well.
 
-## Names and pictures (not released yet)
+## Names and pictures (in 0.9.0)
 
 - [ ] After installing over the old build: all 54 people, thoughts, events and settings are still there (schema 5 migration), and the app opens without a delay.
 - [ ] People who share a first name show as "Max M" and "Max F" on Home, Upcoming, the People tab and in notifications; a nickname replaces the name everywhere; the person page shows the short name large and the full name small under it. The contact lists and the edit page still show full names.
@@ -174,3 +174,13 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Pictures look sharp on the People tab, the person page and Home, in every avatar shape, with the plant badge on top.
 - [ ] The People tab scrolls smoothly with 54 people and pictures (also on 120 Hz); no avatar flashes its initial while scrolling.
 - [ ] Delete a person who has a picture; after a restart the app's storage did not keep the file (check Settings > Apps > Kept. > Storage if you want).
+
+## Couples (not released yet)
+
+- [ ] Edit a person, "Link a partner", pick the partner: the row shows their face and "Unlink". Nothing about couples shows anywhere before two people are linked.
+- [ ] People tab: the two show once as "Anna & Tom" with both faces overlapping (also with pictures), in the class of the closer one. Tap it: the couple page opens; tap one face: their own page.
+- [ ] Capture a thought: "Anna & Tom" is a choice beside the people (also under "More"); it saves as meet by default and shows on Home, under Coming up when dated, on the Upcoming tab, and on both person pages with "with Tom".
+- [ ] Couple page "We met": Nice one shows both faces and a stamp for each; both timelines have one "You met" entry; editing it from one page says it also changes the other, and changes both.
+- [ ] "Open chat" on a couple thought asks whom first; after a write thought "Did you write to Tom?" Yes records for Tom only, after a meet thought "Did you meet Anna & Tom?" records for both.
+- [ ] "Did it happen?" for a dated couple thought, and Done on it, record for both.
+- [ ] Unlink: the confirm says what happens to shared thoughts; afterwards they are two people again, the thoughts belong to the first one and the shared meetings stay on both timelines. Deleting one of the two says the link goes too.

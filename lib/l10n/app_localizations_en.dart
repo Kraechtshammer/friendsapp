@@ -1867,4 +1867,63 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareDoneTag => 'New!';
+
+  @override
+  String get partnerLabel => 'Partner';
+
+  @override
+  String get partnerLink => 'Link a partner';
+
+  @override
+  String get partnerHelp =>
+      'Two people who are linked show as a couple. Both stay separate people.';
+
+  @override
+  String get partnerUnlink => 'Unlink';
+
+  @override
+  String partnerUnlinkTitle(String a, String b) {
+    return 'Unlink $a and $b?';
+  }
+
+  @override
+  String partnerUnlinkBody(String first) {
+    return 'They show as two people again. Open thoughts for both of them move to $first. Meetings you logged together stay on both timelines.';
+  }
+
+  @override
+  String coupleWith(String name) {
+    return 'with $name';
+  }
+
+  @override
+  String coupleAlsoChanges(String name) {
+    return 'Also changes $name\'s timeline';
+  }
+
+  @override
+  String get coupleThoughtForBoth => 'Thought for both';
+
+  @override
+  String get coupleWeMet => 'We met';
+
+  @override
+  String get coupleTogether => 'Time together';
+
+  @override
+  String get coupleNothingTogether => 'Nothing together yet.';
+
+  @override
+  String get coupleOpenChat => 'Open chat';
+
+  @override
+  String get coupleChatWho => 'Who do you want to message?';
+
+  @override
+  String get removeCoupleLine => 'Their link as a couple goes too.';
+
+  @override
+  String niceOneStampsOf(String name, int count) {
+    return '$name +$count';
+  }
 }

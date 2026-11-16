@@ -35,10 +35,28 @@ class PersonTimelineView extends ConsumerWidget {
     final now = ref.watch(clockProvider)();
     final events =
         ref.watch(personContactEventsProvider(person.id)).value ?? const [];
-    final intentions =
-        ref.watch(personIntentionsProvider(person.id)).value ?? const [];
-    final timeline = personTimeline(person, events, intentions, now);
+    final intentions = ref.watch(personThoughtsProvider(person.id));
+    final couple = ref.watch(personCoupleProvider(person.id)).value;
+    final timeline = personTimeline(
+      person,
+      events,
+      intentions,
+      now,
+      groupId: couple?.group.id,
+    );
     final name = ref.shortName(person);
+    // Shared things say "with Tom" (the partner's short name).
+    final partner = couple?.members.where((p) => p.id != person.id).firstOrNull;
+    final withText = partner == null
+        ? null
+        : l10n.coupleWith(ref.shortName(partner));
+    String? withPartner(String? groupId) =>
+        groupId != null && groupId == couple?.group.id ? withText : null;
+    String? join(Iterable<String?> parts) {
+      final text = parts.where((t) => t != null && t.isNotEmpty).join(' · ');
+      return text.isEmpty ? null : text;
+    }
+
     var dated = 0;
     return Stack(
       children: [
@@ -71,10 +89,11 @@ class PersonTimelineView extends ConsumerWidget {
                   ),
                   icon: kindIcon(intention.kind),
                   title: thoughtText(intention, l10n),
-                  note: [
+                  note: join([
                     kindLabel(intention.kind, l10n),
                     if (time != null) l10n.timeShort(time),
-                  ].join(' · '),
+                    withPartner(intention.groupId),
+                  ]),
                 ),
                 // One compact line: no date, so no pill.
                 UpcomingPlan(:final intention) => _Row(
@@ -83,6 +102,7 @@ class PersonTimelineView extends ConsumerWidget {
                   title: [
                     thoughtText(intention, l10n),
                     whenText(whenOf(intention), l10n),
+                    ?withPartner(intention.groupId),
                   ].where((t) => t.isNotEmpty).join(' · '),
                 ),
                 _ => const SizedBox.shrink(),
@@ -95,7 +115,7 @@ class PersonTimelineView extends ConsumerWidget {
                   icon: _contactIcon(event.kind),
                   arrow: _arrow(event.direction),
                   title: contactTitle(event, name, l10n),
-                  note: _note(event.note),
+                  note: join([withPartner(event.groupId), _note(event.note)]),
                   onTap: () => showContactEntrySheet(context, ref, event),
                 ),
                 PastBirthday(:final congratulated) => _Row(

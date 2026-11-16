@@ -8,6 +8,7 @@ import '../../l10n/labels.dart';
 import '../common.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
+import '../widgets/couple_avatar.dart';
 import '../widgets/grey_button.dart';
 import '../widgets/main_button.dart';
 import 'nice_one_screen.dart';
@@ -31,7 +32,19 @@ class ChatQuestionScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final person = question.person;
     final intention = question.intention;
-    final name = ref.shortName(person);
+    final names = ref.watch(displayNamesProvider);
+    // A couple's thought: meeting or gaming is about both of them, writing
+    // or calling about the one the chat was opened with.
+    final couple = intention?.groupId == null
+        ? null
+        : ref.watch(couplesByIdProvider)[intention!.groupId];
+    final together =
+        intention?.groupId != null &&
+        (intention!.kind == IntentionKind.meet ||
+            intention.kind == IntentionKind.game);
+    final name = together && couple != null
+        ? couple.label(names)
+        : ref.shortName(person);
     final title = question.birthday
         ? l10n.chatQuestionBirthday(name)
         : switch (intention?.kind ?? IntentionKind.write) {
@@ -54,7 +67,10 @@ class ChatQuestionScreen extends ConsumerWidget {
                 Column(
                   spacing: 10,
                   children: [
-                    Avatar.person(person, size: 96),
+                    if (together && couple != null)
+                      CoupleAvatar(couple.members, size: 112)
+                    else
+                      Avatar.person(person, size: 96),
                     Text(
                       title,
                       textAlign: TextAlign.center,
@@ -89,6 +105,11 @@ class ChatQuestionScreen extends ConsumerWidget {
                           intention,
                           source: ContactSource.confirmed,
                           replace: true,
+                          // Writing or calling one of the two stores the
+                          // contact for that person only.
+                          only: intention.groupId != null && !together
+                              ? person
+                              : null,
                         ),
                 ),
                 GreyButton(

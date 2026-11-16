@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../data/database.dart';
+import '../../domain/group.dart';
 import '../../domain/intention.dart';
 import '../../domain/plans.dart';
 import '../../domain/timeline.dart';
@@ -33,9 +34,13 @@ class UpcomingScreen extends ConsumerWidget {
     final people = ref.watch(peopleProvider).value ?? const <Person>[];
     final intentions = ref.watch(openIntentionsProvider).value ?? const [];
     final now = ref.watch(clockProvider)();
-    final groups = groupUpcoming(upcomingEntries(people, intentions, now), now);
-    final plans = undatedPlans(people, intentions);
-    final byId = {for (final p in people) p.id: p};
+    final couples = ref.watch(couplesByIdProvider);
+    final groups = groupUpcoming(
+      upcomingEntries(people, intentions, now, couples: couples),
+      now,
+    );
+    final plans = undatedPlans(people, intentions, couples: couples);
+    final resolve = ref.watch(thoughtSubjectProvider);
     return TabPage(
       title: l10n.upcomingTitle,
       child: ListView(
@@ -52,7 +57,7 @@ class UpcomingScreen extends ConsumerWidget {
             _Timeline(groups, now.year),
           if (plans.isNotEmpty) ...[
             const SizedBox(height: 14),
-            _NoDateYet(plans, byId),
+            _NoDateYet(plans, resolve),
           ],
         ],
       ),
@@ -189,10 +194,10 @@ class _EntryRow extends ConsumerWidget {
 
 /// The plans without a date, in three groups: Soon, Later, When…
 class _NoDateYet extends StatelessWidget {
-  const _NoDateYet(this.plans, this.people);
+  const _NoDateYet(this.plans, this.resolve);
 
   final Map<Horizon, List<Intention>> plans;
-  final Map<String, Person> people;
+  final ThoughtSubject? Function(Intention) resolve;
 
   @override
   Widget build(BuildContext context) {
@@ -211,7 +216,7 @@ class _NoDateYet extends StatelessWidget {
                 color: context.kept.text,
               ),
             ),
-            for (final i in entry.value) _PlanRow(people[i.personId]!, i),
+            for (final i in entry.value) _PlanRow(resolve(i)!, i),
           ],
         ],
       ),
@@ -220,10 +225,12 @@ class _NoDateYet extends StatelessWidget {
 }
 
 class _PlanRow extends ConsumerWidget {
-  const _PlanRow(this.person, this.intention);
+  const _PlanRow(this.subject, this.intention);
 
-  final Person person;
+  final ThoughtSubject subject;
   final Intention intention;
+
+  Person get person => subject.person;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -252,7 +259,10 @@ class _PlanRow extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  [ref.shortName(person), ?condition].join(' · '),
+                  [
+                    subject.label(ref.watch(displayNamesProvider)),
+                    ?condition,
+                  ].join(' · '),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: context.text.bodyMedium?.copyWith(fontSize: 13),

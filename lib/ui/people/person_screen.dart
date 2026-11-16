@@ -116,21 +116,43 @@ class _Body extends ConsumerWidget {
 }
 
 /// This person's open intentions, each with Done and Drop (02-design.md
-/// §2.3). Tapping one opens the edit sheet. Nothing is shown as late.
+/// §2.3), and the open thoughts of the couple they are in, marked "with
+/// Tom". Tapping one opens the edit sheet. Nothing is shown as late.
 class _OpenIntentions extends ConsumerWidget {
   const _OpenIntentions(this.person);
 
   final Person person;
 
-  String get personId => person.id;
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final all = ref.watch(personThoughtsProvider(person.id));
+    final partner = ref
+        .watch(personCoupleProvider(person.id))
+        .value
+        ?.members
+        .where((p) => p.id != person.id)
+        .firstOrNull;
+    return OpenIntentionCards(person, [
+      for (final i in all)
+        if (i.state == IntentionState.open) i,
+    ], withName: partner == null ? null : ref.shortName(partner));
+  }
+}
+
+/// The cards of open thoughts with Done and Drop, under "On your mind";
+/// nothing when [open] is empty. [person] is who Done is for (for a
+/// couple's thought the first member is enough). A couple's thought shows
+/// "with [withName]" when that is given; the couple page leaves it out. The
+/// last contact line shows only for one person's thoughts.
+class OpenIntentionCards extends ConsumerWidget {
+  const OpenIntentionCards(this.person, this.open, {super.key, this.withName});
+
+  final Person person;
+  final List<Intention> open;
+  final String? withName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final all = ref.watch(personIntentionsProvider(personId)).value ?? const [];
-    final open = [
-      for (final i in all)
-        if (i.state == IntentionState.open) i,
-    ];
     if (open.isEmpty) return const SizedBox.shrink();
     final l10n = context.l10n;
     final repo = ref.read(intentionsRepositoryProvider);
@@ -165,7 +187,14 @@ class _OpenIntentions extends ConsumerWidget {
                             style: context.text.bodyLarge,
                           ),
                           WhenLine(i),
-                          LastTimeLine(personId),
+                          if (i.groupId != null && withName != null)
+                            Text(
+                              l10n.coupleWith(withName!),
+                              style: context.text.bodySmall?.copyWith(
+                                color: context.kept.muted,
+                              ),
+                            ),
+                          if (i.groupId == null) LastTimeLine(person.id),
                         ],
                       ),
                     ),

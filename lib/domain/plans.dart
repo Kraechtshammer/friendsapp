@@ -1,4 +1,5 @@
 import '../data/database.dart';
+import 'group.dart';
 import 'intention.dart';
 
 /// Dates and plans of intentions (02-design.md §6.9 and §6.10) as pure
@@ -62,18 +63,20 @@ bool hasPassed(DateTime date, DateTime now) => !now.isBefore(passedFrom(date));
 
 /// The open, dated intentions of people in [people] whose date has passed
 /// at [now], oldest date first: the ones to ask "Did it happen?" about.
-/// Ties go by id, so the order is stable.
+/// Ties go by id, so the order is stable. A couple's thought ([couples]:
+/// group id to couple) counts when one of its members is in [people].
 List<Intention> didItHappen(
   List<Person> people,
   List<Intention> intentions,
-  DateTime now,
-) {
-  final known = {for (final p in people) p.id};
+  DateTime now, {
+  Map<String, GroupWithMembers> couples = const {},
+}) {
+  final byId = {for (final p in people) p.id: p};
   return [
     for (final i in intentions)
       if (i.state == IntentionState.open &&
           i.date != null &&
-          known.contains(i.personId) &&
+          subjectOf(i, byId, couples) != null &&
           hasPassed(i.date!, now))
         i,
   ]..sort((a, b) {
@@ -83,16 +86,18 @@ List<Intention> didItHappen(
 }
 
 /// The open undated plans of people in [people], by horizon, oldest first
-/// inside each group. Empty groups are left out.
+/// inside each group. Empty groups are left out. Couples as in
+/// [didItHappen].
 Map<Horizon, List<Intention>> undatedPlans(
   List<Person> people,
-  List<Intention> intentions,
-) {
-  final known = {for (final p in people) p.id};
+  List<Intention> intentions, {
+  Map<String, GroupWithMembers> couples = const {},
+}) {
+  final byId = {for (final p in people) p.id: p};
   final sorted =
       [
         for (final i in intentions)
-          if (isUndatedPlan(i) && known.contains(i.personId)) i,
+          if (isUndatedPlan(i) && subjectOf(i, byId, couples) != null) i,
       ]..sort((a, b) {
         final c = a.createdAt.compareTo(b.createdAt);
         return c != 0 ? c : a.id.compareTo(b.id);

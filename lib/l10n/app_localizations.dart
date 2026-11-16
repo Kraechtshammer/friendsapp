@@ -3091,6 +3091,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New!'**
   String get shareDoneTag;
+
+  /// No description provided for @partnerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Partner'**
+  String get partnerLabel;
+
+  /// No description provided for @partnerLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Link a partner'**
+  String get partnerLink;
+
+  /// No description provided for @partnerHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Two people who are linked show as a couple. Both stay separate people.'**
+  String get partnerHelp;
+
+  /// No description provided for @partnerUnlink.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlink'**
+  String get partnerUnlink;
+
+  /// No description provided for @partnerUnlinkTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlink {a} and {b}?'**
+  String partnerUnlinkTitle(String a, String b);
+
+  /// No description provided for @partnerUnlinkBody.
+  ///
+  /// In en, this message translates to:
+  /// **'They show as two people again. Open thoughts for both of them move to {first}. Meetings you logged together stay on both timelines.'**
+  String partnerUnlinkBody(String first);
+
+  /// No description provided for @coupleWith.
+  ///
+  /// In en, this message translates to:
+  /// **'with {name}'**
+  String coupleWith(String name);
+
+  /// No description provided for @coupleAlsoChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Also changes {name}\'s timeline'**
+  String coupleAlsoChanges(String name);
+
+  /// No description provided for @coupleThoughtForBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'Thought for both'**
+  String get coupleThoughtForBoth;
+
+  /// No description provided for @coupleWeMet.
+  ///
+  /// In en, this message translates to:
+  /// **'We met'**
+  String get coupleWeMet;
+
+  /// No description provided for @coupleTogether.
+  ///
+  /// In en, this message translates to:
+  /// **'Time together'**
+  String get coupleTogether;
+
+  /// No description provided for @coupleNothingTogether.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing together yet.'**
+  String get coupleNothingTogether;
+
+  /// No description provided for @coupleOpenChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Open chat'**
+  String get coupleOpenChat;
+
+  /// No description provided for @coupleChatWho.
+  ///
+  /// In en, this message translates to:
+  /// **'Who do you want to message?'**
+  String get coupleChatWho;
+
+  /// No description provided for @removeCoupleLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Their link as a couple goes too.'**
+  String get removeCoupleLine;
+
+  /// No description provided for @niceOneStampsOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} +{count}'**
+  String niceOneStampsOf(String name, int count);
 }
 
 class _AppLocalizationsDelegate

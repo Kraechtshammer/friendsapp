@@ -2,12 +2,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../data/database.dart';
+import '../../domain/group.dart';
 import '../../domain/plans.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../kept_icon.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
+import '../widgets/couple_avatar.dart';
+import '../people/couple_screen.dart';
 import '../people/person_screen.dart';
 import '../widgets/grey_button.dart';
 import '../widgets/grey_icon_button.dart';
@@ -18,7 +21,8 @@ import '../widgets/link_row.dart';
 import '../widgets/section_label.dart';
 
 /// The open intentions, newest first, under "On your mind". Tapping a row
-/// opens the person; the three-dot button edits the thought. Nothing is
+/// opens the person, or the couple page for a couple's thought; the
+/// three-dot button edits the thought. Nothing is
 /// shown as late and there are no dates (02-design.md §2.3). With none,
 /// nothing is shown at all. The pick above it ([TonightsPick]) is the one
 /// the evening question scrolls to.
@@ -28,13 +32,10 @@ class OpenThoughts extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final intentions = ref.watch(openIntentionsProvider).value ?? const [];
-    final people = {
-      for (final p in ref.watch(peopleProvider).value ?? const <Person>[])
-        p.id: p,
-    };
+    final resolve = ref.watch(thoughtSubjectProvider);
     final rows = [
       for (final i in intentions)
-        if (people[i.personId] != null) _Row(people[i.personId]!, i),
+        if (resolve(i) case final subject?) _Row(subject, i),
     ];
     if (rows.isEmpty) return const SizedBox.shrink();
     return Padding(
@@ -49,24 +50,38 @@ class OpenThoughts extends ConsumerWidget {
 }
 
 class _Row extends ConsumerWidget {
-  const _Row(this.person, this.intention);
+  const _Row(this.subject, this.intention);
 
-  final Person person;
+  final ThoughtSubject subject;
   final Intention intention;
+
+  Person get person => subject.person;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final note = intention.note.trim();
+    final couple = subject.couple;
     return KeptCard(
       small: true,
       padding: const EdgeInsets.all(12),
       onTap: () => Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => PersonScreen(id: person.id)),
+        MaterialPageRoute<void>(
+          builder: (_) => couple == null
+              ? PersonScreen(id: person.id)
+              : CoupleScreen(id: couple.group.id),
+        ),
       ),
       child: Row(
         spacing: 12,
         children: [
-          Avatar.person(person, size: 44, classBadge: true),
+          if (couple == null)
+            Avatar.person(person, size: 44, classBadge: true)
+          else
+            CoupleAvatar(
+              couple.members,
+              size: 44,
+              ringColor: context.kept.surface,
+            ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,7 +92,7 @@ class _Row extends ConsumerWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        ref.shortName(person),
+                        subject.label(ref.watch(displayNamesProvider)),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: context.text.labelLarge?.copyWith(
@@ -97,7 +112,7 @@ class _Row extends ConsumerWidget {
                     style: context.text.bodyMedium,
                   ),
                 WhenLine(intention),
-                LastTimeLine(person.id),
+                if (couple == null) LastTimeLine(person.id),
               ],
             ),
           ),
