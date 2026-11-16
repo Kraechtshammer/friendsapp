@@ -5,8 +5,8 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
 ## 1. Where things stand
 
 - Phase: **implement**. The app is called **Kept.** with the full stop (running text may write Kept). App ID `de.gartenpa.kept`; debug builds use `de.gartenpa.kept.debug`. Repository and folder are `friendsapp`.
-- **M0 to M10 are all built.** Everything is released; the newest release is 0.7.0.
-- **Released** (tags `v0.1.0` to `v0.7.0`, all 2026-11-16, no version skipped):
+- **M0 to M10 are all built.** Everything is released; the newest release is 0.8.0.
+- **Released** (tags `v0.1.0` to `v0.8.0`, all 2026-11-16, no version skipped):
   - 0.1.0: M1, people, contacts import, "Open chat".
   - 0.2.0: M2 and M3, capture, the evening question, Tonight's pick, "Nice one".
   - 0.3.0: M4, birthdays.
@@ -14,7 +14,8 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
   - 0.5.0: schema 4, M7 to M9, owed replies, rhythm and reconnect, stamps and treats.
   - 0.6.0: M10, ideas and sharing into the app.
   - 0.7.0: the review changes, the first-start flow, the permissions page, refresh from contacts, the licences row, the K. launcher icon, the in-app update, the evening ping naming its reason, a clean-up of unused code.
-- **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.8.0 next).
+  - 0.8.0: incoming messages as a build flag; two APKs per release (plain, and `-listener`), the updater keeps each build on its kind.
+- **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.9.0 next).
 - **The developer's phone** (2026-11-16): `de.gartenpa.kept.debug` ("Kept. debug", 0.7.0, test data). The old 0.6.0 debug build under `de.gartenpa.kept` is left only in the Private space (user 11), never opened there; it blocks the release install (signature) and the developer removes it by hand (Claude's uninstall was refused). Then the listener build of the release goes on over adb.
 - **Play Protect blocks sideloaded APKs with a notification listener** (found 2026-11-16 on the Pixel 7 Pro: "The app can request access to sensitive data..."). Since then the listener is the build flag `KEPT_INCOMING` (03-dev-setup.md). Each release publishes `kept-<v>.apk` (no listener, installs from the browser) and `kept-<v>-listener.apk` (for the developer, installed over adb); the updater keeps each build on its own kind. Whether Play Protect lets the app's own updater install the listener APK is unverified. A Play internal testing track would be the legal way to ship the listener to others.
 - Pushed: everything up to the 0.7.0 release commit. Later docs commits are local until the developer asks for a push or the next release.
@@ -105,7 +106,7 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 - Review of the German texts (written by subagents).
 - The light theme on a phone.
 - Open questions (section 5).
-- Releases take the next number each time (the next after 0.7.0 is 0.8.0).
+- Releases take the next number each time (the next after 0.8.0 is 0.9.0).
 
 **Ideas for after 1.0.0**
 

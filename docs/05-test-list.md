@@ -127,7 +127,7 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] "Releases on GitHub" in Settings opens the browser.
 - [ ] A "Kept. debug" build does not try to replace the release.
 
-## Release builds
+## Release builds (listener build since 0.8.0)
 
 - [ ] `kept-<v>.apk` from the GitHub release installs from the browser without the Play Protect block, and shows nothing about incoming messages.
 - [ ] `kept-<v>-listener.apk` installed over adb: incoming messages work as before (the M7 points).
