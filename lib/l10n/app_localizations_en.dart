@@ -875,4 +875,235 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backInTouchKeep => 'Keep as getting back in touch';
+
+  @override
+  String get progressStampsLine =>
+      'Stamps so far. This number only ever grows.';
+
+  @override
+  String get stampCardTitle => 'Treat stamp card';
+
+  @override
+  String get myTreats => 'My treats';
+
+  @override
+  String get stampCardChoose => 'Choose your next treat';
+
+  @override
+  String get stampCardChooseHint =>
+      'Stamps you earn now wait for the card you start.';
+
+  @override
+  String stampCardLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more stamps and it is yours.',
+      one: 'One more stamp and it is yours.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String stampCardSemantics(int filled, int total) {
+    return '$filled of $total stamps';
+  }
+
+  @override
+  String get progressThisWeek => 'This week';
+
+  @override
+  String get progressThisWeekEmpty =>
+      'Nobody yet this week. The week is still long.';
+
+  @override
+  String weeksInARow(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count weeks in a row',
+      one: '1 week in a row',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get weeksNote => 'A quiet week pauses it, it never resets.';
+
+  @override
+  String get weeksPaused => 'Paused this week so far. Nothing is lost.';
+
+  @override
+  String get weeksNone => 'No weeks yet. Your first contact starts them.';
+
+  @override
+  String get treatsTitle => 'Treats';
+
+  @override
+  String treatStamps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count stamps',
+      one: '1 stamp',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get treatCurrentTag => 'Current card';
+
+  @override
+  String get treatsWaiting => 'Waiting';
+
+  @override
+  String get treatsEarned => 'Earned';
+
+  @override
+  String get treatsEnjoyed => 'Enjoyed';
+
+  @override
+  String get treatStart => 'Start this card';
+
+  @override
+  String get treatEnjoyedButton => 'Enjoyed';
+
+  @override
+  String treatEarnedTitle(String name) {
+    return '$name is yours!';
+  }
+
+  @override
+  String get treatEarnedBody => 'You filled the card. Go and enjoy it.';
+
+  @override
+  String get treatFull => 'Full!';
+
+  @override
+  String get treatAdd => 'Add a treat';
+
+  @override
+  String get treatEdit => 'Edit treat';
+
+  @override
+  String get treatNameLabel => 'Name';
+
+  @override
+  String get treatStampsLabel => 'Stamps needed';
+
+  @override
+  String get treatMoveUp => 'Move up';
+
+  @override
+  String get treatMoveDown => 'Move down';
+
+  @override
+  String get treatDelete => 'Delete treat';
+
+  @override
+  String get yourNumbers => 'Your numbers';
+
+  @override
+  String numberEveningsYes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'evenings answered Yes',
+      one: 'evening answered Yes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String numberContacts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'contacts by you this month',
+      one: 'contact by you this month',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String numberPeople(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'different people this month',
+      one: 'person this month',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get niceOneStampsCard => 'Stamps for the card';
+
+  @override
+  String get niceOneStampsLoose => 'They wait for your next treat.';
+
+  @override
+  String get settingsStamps => 'Stamps';
+
+  @override
+  String get settingsStampsHelp =>
+      'What a contact is worth. You can rebalance these any time.';
+
+  @override
+  String get stampBackInTouch => 'Getting back in touch, extra';
+
+  @override
+  String get stampLongGap => 'After a longer gap, extra';
+
+  @override
+  String get stampMeetUp => 'Meet-up, times';
+
+  @override
+  String get stampGaming => 'Gaming together, times';
+
+  @override
+  String get stampCardSize => 'Default card size';
+
+  @override
+  String get stampLess => 'Less';
+
+  @override
+  String get stampMore => 'More';
+
+  @override
+  String get defaultTreat1 => 'Favourite takeaway';
+
+  @override
+  String get defaultTreat2 => 'Cinema evening';
+
+  @override
+  String get defaultTreat3 => 'Cake from the good bakery';
+
+  @override
+  String get defaultTreat4 => 'A new book or game';
+
+  @override
+  String get defaultTreat5 => 'A lazy morning with nothing planned';
+
+  @override
+  String get defaultTreat6 => 'A day trip';
+
+  @override
+  String get defaultTreat7 => 'A concert or event ticket';
+
+  @override
+  String get defaultTreat8 => 'Cook something really fancy';
+
+  @override
+  String get defaultTreat9 => 'Bake something new';
+
+  @override
+  String get defaultTreat10 => 'A new plant or something for the flat';
+
+  @override
+  String get defaultTreat11 =>
+      'Start a small project you have been putting off';
+
+  @override
+  String get defaultTreat12 => 'A class or workshop';
 }

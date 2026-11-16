@@ -2,6 +2,7 @@ import '../domain/greeting.dart';
 import '../domain/intention.dart';
 import '../domain/person.dart';
 import '../domain/rhythm.dart';
+import '../domain/treat.dart';
 import '../ui/kept_icon.dart';
 import 'app_localizations.dart';
 
@@ -113,4 +114,25 @@ String rhythmLabel(int days, AppLocalizations l10n) {
         : l10n.rhythmWeeks(days ~/ 7);
   }
   return l10n.rhythmDaysCount(days);
+}
+
+/// The twelve default treats with their stamp numbers, named in the
+/// language of [l10n]. They are stored that way when first inserted
+/// (02-design.md §6.9, §6.10).
+List<(String, int)> defaultTreatNames(AppLocalizations l10n) {
+  final names = [
+    l10n.defaultTreat1,
+    l10n.defaultTreat2,
+    l10n.defaultTreat3,
+    l10n.defaultTreat4,
+    l10n.defaultTreat5,
+    l10n.defaultTreat6,
+    l10n.defaultTreat7,
+    l10n.defaultTreat8,
+    l10n.defaultTreat9,
+    l10n.defaultTreat10,
+    l10n.defaultTreat11,
+    l10n.defaultTreat12,
+  ];
+  return [for (final (i, n) in names.indexed) (n, defaultTreatStamps[i])];
 }

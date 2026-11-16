@@ -7,13 +7,18 @@ import '../../app/theme.dart';
 import '../../data/database.dart';
 import '../../domain/contact_event.dart';
 import '../../domain/intention.dart';
+import '../../domain/progress.dart';
+import '../../domain/treat.dart';
 import '../common.dart';
 import '../material.dart';
+import '../kept_icon.dart';
 import '../widgets/avatar.dart';
 import '../widgets/kept_switch.dart';
 import '../widgets/kept_card.dart';
 import '../widgets/kept_text_field.dart';
 import '../widgets/main_button.dart';
+import '../widgets/section_label.dart';
+import '../widgets/stamps.dart';
 
 /// Done on an open thought: stores the contact at once, then shows the
 /// "Nice one" screen for it. Leaving that screen early loses nothing.
@@ -120,7 +125,9 @@ Future<void> _storeAndCelebrate(
 
 /// The screen after a contact is confirmed. See concept V6 · After 'Yes, I
 /// wrote' (docs/concepts/gen_v6.py). The "Planning to meet up?" part
-/// (M5) and the stamps (M9) are not built.
+/// (M5) is not built. The stamps the contact earned are shown under the
+/// card ([_StampsCard]); a contact that earned none shows nothing about
+/// stamps.
 ///
 /// Closing, by the button or back, saves the activity and the line to the
 /// event; with "Remind me" on, the line also becomes a new open thought.
@@ -277,6 +284,7 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
                               ],
                             ),
                           ),
+                          _StampsCard(event: widget.event),
                         ],
                       ),
                     ),
@@ -293,6 +301,98 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// The stamps this contact earned or raised: a sun tonal card with tilted
+/// stamps and "+2" (concept V6 · After 'Yes, I wrote'). When the card
+/// became full, the treat is celebrated. Nothing when the contact earned no
+/// stamp (incoming, or the person already had one this week).
+class _StampsCard extends ConsumerWidget {
+  const _StampsCard({required this.event});
+
+  final ContactEvent event;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final earned = ref.watch(eventStampsProvider(event.id)).value ?? const [];
+    final value = stampTotal(earned);
+    if (value == 0) return const SizedBox.shrink();
+    final treats = ref.watch(treatsProvider).value ?? const <Treat>[];
+    final l10n = context.l10n;
+    final tone = context.kept.sunTone;
+    // The card these stamps filled, if it is full now.
+    Treat? full;
+    for (final s in earned) {
+      for (final t in treats) {
+        if (t.id == s.treatId &&
+            (t.state == TreatState.earned || t.state == TreatState.enjoyed)) {
+          full = t;
+        }
+      }
+    }
+    final current = currentTreat(treats);
+    final onlyLoose = earned.every((s) => s.treatId == null);
+    return KeptCard(
+      tone: tone,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 10,
+        children: [
+          SectionLabel(l10n.niceOneStampsCard, color: tone.onContainer),
+          Row(
+            spacing: 6,
+            children: [
+              for (var i = 0; i < value && i < 5; i++)
+                StampMark(size: 48, index: i),
+              const SizedBox(width: 6),
+              Text(
+                full != null ? l10n.treatFull : '+$value',
+                style: context.text.headlineLarge?.copyWith(
+                  color: tone.onContainer,
+                ),
+              ),
+            ],
+          ),
+          if (full != null)
+            Row(
+              spacing: 12,
+              children: [
+                const KeptIcon(KeptIcons.gift, size: 30),
+                Expanded(
+                  child: Text(
+                    '${l10n.treatEarnedTitle(full.name)} ${l10n.treatEarnedBody}',
+                    style: context.text.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            )
+          else if (onlyLoose || current == null)
+            Text(
+              l10n.niceOneStampsLoose,
+              style: context.text.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+            )
+          else
+            Text(
+              l10n.stampCardLeft(
+                (current.stampsNeeded -
+                        stampsOnCard(
+                          ref.watch(stampsProvider).value ?? const [],
+                          current.id,
+                        ))
+                    .clamp(1, current.stampsNeeded),
+              ),
+              style: context.text.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+        ],
       ),
     );
   }

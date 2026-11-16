@@ -6,6 +6,7 @@ import '../data/database.dart';
 import '../data/day_answers_repository.dart';
 import '../data/intentions_repository.dart';
 import '../data/people_repository.dart';
+import '../data/treats_repository.dart';
 import '../domain/chat_question.dart';
 import '../domain/contact_event.dart';
 import '../platform/app_shortcuts.dart';
@@ -246,6 +247,48 @@ final dayAnswersRepositoryProvider = Provider<DayAnswersRepository>((ref) {
     settingsProvider.select((s) => s.value?.demoMode ?? false),
   );
   return ref.watch(servicesProvider).dayAnswersFor(demo: demo);
+});
+
+/// All day answers, from the content database (demo or real). For "Your
+/// numbers" on the Progress tab.
+final dayAnswersProvider = StreamProvider<List<DayAnswer>>((ref) async* {
+  final demo = ref.watch(settingsProvider.selectAsync((s) => s.demoMode));
+  final services = ref.watch(servicesProvider);
+  yield* services.dayAnswersFor(demo: await demo).watchAll();
+});
+
+/// Where treats are changed: the demo or the real database, following
+/// `demoMode`, like [peopleRepositoryProvider].
+final treatsRepositoryProvider = Provider<TreatsRepository>((ref) {
+  final demo = ref.watch(
+    settingsProvider.select((s) => s.value?.demoMode ?? false),
+  );
+  return ref.watch(servicesProvider).treatsFor(demo: demo);
+});
+
+/// All treats, in queue order, from the content database.
+final treatsProvider = StreamProvider<List<Treat>>((ref) async* {
+  final demo = ref.watch(settingsProvider.selectAsync((s) => s.demoMode));
+  final services = ref.watch(servicesProvider);
+  yield* services.treatsFor(demo: await demo).watchAll();
+});
+
+/// All stamps, oldest first, from the content database. Their values add
+/// up to the count that only grows.
+final stampsProvider = StreamProvider<List<Stamp>>((ref) async* {
+  final demo = ref.watch(settingsProvider.selectAsync((s) => s.demoMode));
+  final services = ref.watch(servicesProvider);
+  yield* services.treatsFor(demo: await demo).watchStamps();
+});
+
+/// The stamps one contact event earned, for the Nice one screen.
+final eventStampsProvider = StreamProvider.family<List<Stamp>, String>((
+  ref,
+  eventId,
+) async* {
+  final demo = ref.watch(settingsProvider.selectAsync((s) => s.demoMode));
+  final services = ref.watch(servicesProvider);
+  yield* services.treatsFor(demo: await demo).watchForEvent(eventId);
 });
 
 extension SettingsOrDefault on WidgetRef {

@@ -376,6 +376,53 @@ List<ContactEvent> demoContactEvents(DateTime today) {
   ];
 }
 
+/// The default treats of the demo database, in English (the demo is for
+/// development only). The same stamp numbers as the real default list.
+List<(String, int)> demoTreatNames() => const [
+  ('Favourite takeaway', 10),
+  ('Cinema evening', 10),
+  ('Cake from the good bakery', 10),
+  ('A new book or game', 20),
+  ('A lazy morning with nothing planned', 10),
+  ('A day trip', 30),
+  ('Concert or event ticket', 40),
+  ('Cook something really fancy', 10),
+  ('Bake something new', 10),
+  ('A new plant or something for the flat', 20),
+  ('Start a small project you put off', 20),
+  ('A class or workshop', 30),
+];
+
+/// The first demo card is small, so the demo history fills it and the
+/// screens show an earned treat.
+const demoFirstCardStamps = 12;
+
+/// The evening answers of the demo database: a few Yes and Not today
+/// answers in the three weeks before [today].
+List<DayAnswer> demoDayAnswers(DateTime today) {
+  final day = DateTime(today.year, today.month, today.day);
+  // Days back, answer.
+  const rows = <(int, DayAnswerValue)>[
+    (1, DayAnswerValue.yes),
+    (2, DayAnswerValue.notToday),
+    (3, DayAnswerValue.yes),
+    (5, DayAnswerValue.yes),
+    (6, DayAnswerValue.yes),
+    (9, DayAnswerValue.notToday),
+    (12, DayAnswerValue.yes),
+    (14, DayAnswerValue.yes),
+    (19, DayAnswerValue.yes),
+  ];
+  return [
+    for (final (back, answer) in rows)
+      DayAnswer(
+        day: dayKey(DateTime(day.year, day.month, day.day - back)),
+        answer: answer,
+        answeredAt: DateTime(day.year, day.month, day.day - back, 19, 30),
+      ),
+  ];
+}
+
 /// Days from the last 22 August (or any month and day) up to [day].
 int _daysSince(DateTime day, int month, int dayOfMonth) {
   final last = lastBirthday(month, dayOfMonth, day);

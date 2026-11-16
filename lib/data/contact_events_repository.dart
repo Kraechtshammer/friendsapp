@@ -3,18 +3,35 @@ import 'package:uuid/uuid.dart';
 
 import '../domain/contact_event.dart';
 import '../domain/intention.dart';
+import 'app_settings.dart';
 import 'database.dart';
+import 'settings_repository.dart';
+import 'treats_repository.dart';
 
 /// Reads and writes the contact events of one database: the real one or,
 /// in demo mode, the demo one (AppServices.contactEventsFor). See
 /// docs/02-design.md §3.
 class ContactEventsRepository {
-  ContactEventsRepository(this._db);
+  /// [loadSettings] gives the stamp weights; in demo mode they come from
+  /// the real database (AppServices), otherwise from this one.
+  ContactEventsRepository(
+    this._db, {
+    Future<AppSettings> Function()? loadSettings,
+  }) : _loadSettings = loadSettings ?? SettingsRepository(_db).load,
+       _treats = TreatsRepository(_db);
 
   final AppDatabase _db;
+  final Future<AppSettings> Function() _loadSettings;
+  final TreatsRepository _treats;
   static const _uuid = Uuid();
 
   /// Adds an event with a new id. [now] (for `createdAt`) is for tests.
+  ///
+  /// This is the one place where a stamp is awarded: every event added by
+  /// the app (Done, "Did you write?", "Did it happen?", birthday wishes,
+  /// the reconnect pick, "They wrote", the listener) comes through here,
+  /// and the stamp is created or raised in the same transaction
+  /// (TreatsRepository.awardFor). Deleting the event later keeps it.
   Future<ContactEvent> add({
     required String personId,
     required DateTime at,
@@ -38,7 +55,11 @@ class ContactEventsRepository {
       intentionId: intentionId,
       createdAt: _wholeSeconds(now ?? DateTime.now()),
     );
-    await _db.into(_db.contactEvents).insert(event);
+    final settings = await _loadSettings();
+    await _db.transaction(() async {
+      await _db.into(_db.contactEvents).insert(event);
+      await _treats.awardFor(event, settings, now: event.createdAt);
+    });
     return event;
   }
 

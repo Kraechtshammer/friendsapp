@@ -4,6 +4,7 @@ import '../domain/birthdays.dart';
 import '../domain/owed_reply.dart';
 import '../domain/person.dart';
 import '../domain/rhythm.dart';
+import '../domain/stamps.dart';
 
 /// Dark, light or as the phone says.
 enum AppThemeMode { system, light, dark }
@@ -29,6 +30,9 @@ class AppSettings {
     this.reconnectPersonId,
     this.reconnectWeek,
     this.backInTouchAnswered = const {},
+    this.stampWeights = const StampWeights(),
+    this.defaultTreatsInserted = false,
+    this.stampsBackfilled = false,
   });
 
   /// The shortest and longest waiting time for owed replies, in days.
@@ -90,6 +94,17 @@ class AppSettings {
   /// does not come back.
   final Set<String> backInTouchAnswered;
 
+  /// The weights of the stamp rule and the default card size (02-design.md
+  /// §6.10, M9). Stored as `stamp*` keys.
+  final StampWeights stampWeights;
+
+  /// The default treats were put into the real database once (M9). Never
+  /// put back, so a treat the user deleted stays gone.
+  final bool defaultTreatsInserted;
+
+  /// The stamp rule was run over the existing contact events once (M9).
+  final bool stampsBackfilled;
+
   /// Reads settings from the stored key-value pairs. Unknown or broken
   /// values fall back to the defaults.
   factory AppSettings.fromMap(Map<String, String> m) {
@@ -101,6 +116,11 @@ class AppSettings {
       'false' => false,
       _ => fallback,
     };
+    int ranged(String key, int fallback, int min, int max) =>
+        switch (int.tryParse(m[key] ?? '')) {
+          final v? when v >= min && v <= max => v,
+          _ => fallback,
+        };
     return AppSettings(
       themeMode: pick(AppThemeMode.values, 'themeMode', d.themeMode),
       demoMode: m['demoMode'] == 'true',
@@ -131,6 +151,64 @@ class AppSettings {
         for (final id in (m['backInTouchAnswered'] ?? '').split(','))
           if (id.trim().isNotEmpty) id.trim(),
       },
+      stampWeights: StampWeights(
+        close: ranged(
+          'stampClose',
+          d.stampWeights.close,
+          StampWeights.minClass,
+          StampWeights.maxClass,
+        ),
+        nowAndThen: ranged(
+          'stampNowAndThen',
+          d.stampWeights.nowAndThen,
+          StampWeights.minClass,
+          StampWeights.maxClass,
+        ),
+        fewTimesAYear: ranged(
+          'stampFewTimesAYear',
+          d.stampWeights.fewTimesAYear,
+          StampWeights.minClass,
+          StampWeights.maxClass,
+        ),
+        family: ranged(
+          'stampFamily',
+          d.stampWeights.family,
+          StampWeights.minClass,
+          StampWeights.maxClass,
+        ),
+        backInTouchBonus: ranged(
+          'stampBackInTouch',
+          d.stampWeights.backInTouchBonus,
+          StampWeights.minBonus,
+          StampWeights.maxBonus,
+        ),
+        longGapBonus: ranged(
+          'stampLongGap',
+          d.stampWeights.longGapBonus,
+          StampWeights.minBonus,
+          StampWeights.maxBonus,
+        ),
+        meetMultiplier: ranged(
+          'stampMeet',
+          d.stampWeights.meetMultiplier,
+          StampWeights.minMultiplier,
+          StampWeights.maxMultiplier,
+        ),
+        gameMultiplier: ranged(
+          'stampGame',
+          d.stampWeights.gameMultiplier,
+          StampWeights.minMultiplier,
+          StampWeights.maxMultiplier,
+        ),
+        cardSize: ranged(
+          'stampCardSize',
+          d.stampWeights.cardSize,
+          StampWeights.minCardSize,
+          StampWeights.maxCardSize,
+        ),
+      ),
+      defaultTreatsInserted: m['defaultTreatsInserted'] == 'true',
+      stampsBackfilled: m['stampsBackfilled'] == 'true',
     );
   }
 
@@ -151,6 +229,17 @@ class AppSettings {
     'reconnectPerson': reconnectPersonId,
     'reconnectWeek': reconnectWeek == null ? null : _formatDay(reconnectWeek!),
     'backInTouchAnswered': (backInTouchAnswered.toList()..sort()).join(','),
+    'stampClose': '${stampWeights.close}',
+    'stampNowAndThen': '${stampWeights.nowAndThen}',
+    'stampFewTimesAYear': '${stampWeights.fewTimesAYear}',
+    'stampFamily': '${stampWeights.family}',
+    'stampBackInTouch': '${stampWeights.backInTouchBonus}',
+    'stampLongGap': '${stampWeights.longGapBonus}',
+    'stampMeet': '${stampWeights.meetMultiplier}',
+    'stampGame': '${stampWeights.gameMultiplier}',
+    'stampCardSize': '${stampWeights.cardSize}',
+    'defaultTreatsInserted': '$defaultTreatsInserted',
+    'stampsBackfilled': '$stampsBackfilled',
   };
 
   AppSettings copyWith({
@@ -165,6 +254,9 @@ class AppSettings {
     int? replyWaitDays,
     Map<Closeness, int?>? classRhythms,
     Set<String>? backInTouchAnswered,
+    StampWeights? stampWeights,
+    bool? defaultTreatsInserted,
+    bool? stampsBackfilled,
   }) => _copy(
     themeMode: themeMode,
     demoMode: demoMode,
@@ -177,6 +269,9 @@ class AppSettings {
     replyWaitDays: replyWaitDays,
     classRhythms: classRhythms,
     backInTouchAnswered: backInTouchAnswered,
+    stampWeights: stampWeights,
+    defaultTreatsInserted: defaultTreatsInserted,
+    stampsBackfilled: stampsBackfilled,
   );
 
   /// A copy with [birthday] as the user's own birthday; null clears it.
@@ -209,6 +304,9 @@ class AppSettings {
     Object? reconnectPersonId = _keep,
     Object? reconnectWeek = _keep,
     Set<String>? backInTouchAnswered,
+    StampWeights? stampWeights,
+    bool? defaultTreatsInserted,
+    bool? stampsBackfilled,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     demoMode: demoMode ?? this.demoMode,
@@ -231,6 +329,9 @@ class AppSettings {
         ? this.reconnectWeek
         : reconnectWeek as DateTime?,
     backInTouchAnswered: backInTouchAnswered ?? this.backInTouchAnswered,
+    stampWeights: stampWeights ?? this.stampWeights,
+    defaultTreatsInserted: defaultTreatsInserted ?? this.defaultTreatsInserted,
+    stampsBackfilled: stampsBackfilled ?? this.stampsBackfilled,
   );
 
   @override
@@ -249,7 +350,10 @@ class AppSettings {
       mapEquals(other.classRhythms, classRhythms) &&
       other.reconnectPersonId == reconnectPersonId &&
       other.reconnectWeek == reconnectWeek &&
-      setEquals(other.backInTouchAnswered, backInTouchAnswered);
+      setEquals(other.backInTouchAnswered, backInTouchAnswered) &&
+      other.stampWeights == stampWeights &&
+      other.defaultTreatsInserted == defaultTreatsInserted &&
+      other.stampsBackfilled == stampsBackfilled;
 
   @override
   int get hashCode => Object.hash(
@@ -267,6 +371,9 @@ class AppSettings {
     reconnectPersonId,
     reconnectWeek,
     Object.hashAllUnordered(backInTouchAnswered),
+    stampWeights,
+    defaultTreatsInserted,
+    stampsBackfilled,
   );
 }
 

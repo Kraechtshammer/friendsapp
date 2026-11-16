@@ -12,6 +12,7 @@ import '../../data/app_settings.dart';
 import '../../domain/birthdays.dart';
 import '../../domain/person.dart';
 import '../../domain/rhythm.dart';
+import '../../domain/stamps.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../home/congratulated_screen.dart';
@@ -20,6 +21,7 @@ import '../material.dart';
 import '../widgets/grey_icon_button.dart';
 import '../widgets/kept_switch.dart';
 import '../widgets/kept_text_field.dart';
+import '../widgets/number_stepper.dart';
 import '../widgets/rhythm_stepper.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -66,6 +68,8 @@ class SettingsScreen extends ConsumerWidget {
           _OpenItems(mode: settings.openItems),
           const SizedBox(height: 32),
           _Rhythms(settings: settings),
+          const SizedBox(height: 32),
+          _Stamps(weights: settings.stampWeights),
           const SizedBox(height: 32),
           _EveningQuestion(settings: settings),
           const SizedBox(height: 32),
@@ -175,6 +179,141 @@ class _Rhythms extends ConsumerWidget {
               ],
             ),
           ),
+      ],
+    );
+  }
+}
+
+/// The weights of the stamp rule and the default card size (02-design.md
+/// §6.10, M9), each a small stepper. A change counts for contacts from then
+/// on; stamps already earned are not changed.
+class _Stamps extends ConsumerWidget {
+  const _Stamps({required this.weights});
+
+  final StampWeights weights;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    Widget row(
+      Widget leading,
+      String label,
+      int value,
+      int min,
+      int max,
+      StampWeights Function(StampWeights w, int v) change, {
+      String Function(int)? text,
+    }) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        spacing: 10,
+        children: [
+          leading,
+          Expanded(child: Text(label, style: context.text.bodyLarge)),
+          SizedBox(
+            width: 148,
+            child: NumberStepper(
+              value: value,
+              min: min,
+              max: max,
+              label: text,
+              onChanged: (v) => unawaited(
+                ref.services.settings.update(
+                  (s) => s.copyWith(stampWeights: change(s.stampWeights, v)),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    Widget classRow(
+      Closeness c,
+      int value,
+      StampWeights Function(StampWeights w, int v) change,
+    ) => row(
+      KeptIcon(closenessIcon(c), size: 24),
+      closenessGroupLabel(c, l10n),
+      value,
+      StampWeights.minClass,
+      StampWeights.maxClass,
+      change,
+    );
+    const noIcon = SizedBox(width: 24);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          l10n.settingsStamps.toUpperCase(),
+          style: context.text.labelMedium,
+        ),
+        const SizedBox(height: 4),
+        Text(l10n.settingsStampsHelp, style: context.text.bodyMedium),
+        const SizedBox(height: 12),
+        classRow(
+          Closeness.close,
+          weights.close,
+          (w, v) => w.copyWith(close: v),
+        ),
+        classRow(
+          Closeness.nowAndThen,
+          weights.nowAndThen,
+          (w, v) => w.copyWith(nowAndThen: v),
+        ),
+        classRow(
+          Closeness.fewTimesAYear,
+          weights.fewTimesAYear,
+          (w, v) => w.copyWith(fewTimesAYear: v),
+        ),
+        classRow(
+          Closeness.family,
+          weights.family,
+          (w, v) => w.copyWith(family: v),
+        ),
+        row(
+          noIcon,
+          l10n.stampBackInTouch,
+          weights.backInTouchBonus,
+          StampWeights.minBonus,
+          StampWeights.maxBonus,
+          (w, v) => w.copyWith(backInTouchBonus: v),
+          text: (v) => '+$v',
+        ),
+        row(
+          noIcon,
+          l10n.stampLongGap,
+          weights.longGapBonus,
+          StampWeights.minBonus,
+          StampWeights.maxBonus,
+          (w, v) => w.copyWith(longGapBonus: v),
+          text: (v) => '+$v',
+        ),
+        row(
+          noIcon,
+          l10n.stampMeetUp,
+          weights.meetMultiplier,
+          StampWeights.minMultiplier,
+          StampWeights.maxMultiplier,
+          (w, v) => w.copyWith(meetMultiplier: v),
+          text: (v) => '×$v',
+        ),
+        row(
+          noIcon,
+          l10n.stampGaming,
+          weights.gameMultiplier,
+          StampWeights.minMultiplier,
+          StampWeights.maxMultiplier,
+          (w, v) => w.copyWith(gameMultiplier: v),
+          text: (v) => '×$v',
+        ),
+        row(
+          noIcon,
+          l10n.stampCardSize,
+          weights.cardSize,
+          StampWeights.minCardSize,
+          StampWeights.maxCardSize,
+          (w, v) => w.copyWith(cardSize: v),
+        ),
       ],
     );
   }

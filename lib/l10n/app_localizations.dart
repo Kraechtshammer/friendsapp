@@ -1465,6 +1465,354 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keep as getting back in touch'**
   String get backInTouchKeep;
+
+  /// No description provided for @progressStampsLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Stamps so far. This number only ever grows.'**
+  String get progressStampsLine;
+
+  /// No description provided for @stampCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Treat stamp card'**
+  String get stampCardTitle;
+
+  /// No description provided for @myTreats.
+  ///
+  /// In en, this message translates to:
+  /// **'My treats'**
+  String get myTreats;
+
+  /// No description provided for @stampCardChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your next treat'**
+  String get stampCardChoose;
+
+  /// No description provided for @stampCardChooseHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Stamps you earn now wait for the card you start.'**
+  String get stampCardChooseHint;
+
+  /// No description provided for @stampCardLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One more stamp and it is yours.} other{{count} more stamps and it is yours.}}'**
+  String stampCardLeft(int count);
+
+  /// No description provided for @stampCardSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'{filled} of {total} stamps'**
+  String stampCardSemantics(int filled, int total);
+
+  /// No description provided for @progressThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get progressThisWeek;
+
+  /// No description provided for @progressThisWeekEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody yet this week. The week is still long.'**
+  String get progressThisWeekEmpty;
+
+  /// No description provided for @weeksInARow.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 week in a row} other{{count} weeks in a row}}'**
+  String weeksInARow(int count);
+
+  /// No description provided for @weeksNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A quiet week pauses it, it never resets.'**
+  String get weeksNote;
+
+  /// No description provided for @weeksPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused this week so far. Nothing is lost.'**
+  String get weeksPaused;
+
+  /// No description provided for @weeksNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No weeks yet. Your first contact starts them.'**
+  String get weeksNone;
+
+  /// No description provided for @treatsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Treats'**
+  String get treatsTitle;
+
+  /// No description provided for @treatStamps.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 stamp} other{{count} stamps}}'**
+  String treatStamps(int count);
+
+  /// No description provided for @treatCurrentTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Current card'**
+  String get treatCurrentTag;
+
+  /// No description provided for @treatsWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting'**
+  String get treatsWaiting;
+
+  /// No description provided for @treatsEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'Earned'**
+  String get treatsEarned;
+
+  /// No description provided for @treatsEnjoyed.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoyed'**
+  String get treatsEnjoyed;
+
+  /// No description provided for @treatStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start this card'**
+  String get treatStart;
+
+  /// No description provided for @treatEnjoyedButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoyed'**
+  String get treatEnjoyedButton;
+
+  /// No description provided for @treatEarnedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is yours!'**
+  String treatEarnedTitle(String name);
+
+  /// No description provided for @treatEarnedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You filled the card. Go and enjoy it.'**
+  String get treatEarnedBody;
+
+  /// No description provided for @treatFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Full!'**
+  String get treatFull;
+
+  /// No description provided for @treatAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a treat'**
+  String get treatAdd;
+
+  /// No description provided for @treatEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit treat'**
+  String get treatEdit;
+
+  /// No description provided for @treatNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get treatNameLabel;
+
+  /// No description provided for @treatStampsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Stamps needed'**
+  String get treatStampsLabel;
+
+  /// No description provided for @treatMoveUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Move up'**
+  String get treatMoveUp;
+
+  /// No description provided for @treatMoveDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Move down'**
+  String get treatMoveDown;
+
+  /// No description provided for @treatDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete treat'**
+  String get treatDelete;
+
+  /// No description provided for @yourNumbers.
+  ///
+  /// In en, this message translates to:
+  /// **'Your numbers'**
+  String get yourNumbers;
+
+  /// No description provided for @numberEveningsYes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{evening answered Yes} other{evenings answered Yes}}'**
+  String numberEveningsYes(int count);
+
+  /// No description provided for @numberContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{contact by you this month} other{contacts by you this month}}'**
+  String numberContacts(int count);
+
+  /// No description provided for @numberPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{person this month} other{different people this month}}'**
+  String numberPeople(int count);
+
+  /// No description provided for @niceOneStampsCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Stamps for the card'**
+  String get niceOneStampsCard;
+
+  /// No description provided for @niceOneStampsLoose.
+  ///
+  /// In en, this message translates to:
+  /// **'They wait for your next treat.'**
+  String get niceOneStampsLoose;
+
+  /// No description provided for @settingsStamps.
+  ///
+  /// In en, this message translates to:
+  /// **'Stamps'**
+  String get settingsStamps;
+
+  /// No description provided for @settingsStampsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'What a contact is worth. You can rebalance these any time.'**
+  String get settingsStampsHelp;
+
+  /// No description provided for @stampBackInTouch.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting back in touch, extra'**
+  String get stampBackInTouch;
+
+  /// No description provided for @stampLongGap.
+  ///
+  /// In en, this message translates to:
+  /// **'After a longer gap, extra'**
+  String get stampLongGap;
+
+  /// No description provided for @stampMeetUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Meet-up, times'**
+  String get stampMeetUp;
+
+  /// No description provided for @stampGaming.
+  ///
+  /// In en, this message translates to:
+  /// **'Gaming together, times'**
+  String get stampGaming;
+
+  /// No description provided for @stampCardSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Default card size'**
+  String get stampCardSize;
+
+  /// No description provided for @stampLess.
+  ///
+  /// In en, this message translates to:
+  /// **'Less'**
+  String get stampLess;
+
+  /// No description provided for @stampMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get stampMore;
+
+  /// No description provided for @defaultTreat1.
+  ///
+  /// In en, this message translates to:
+  /// **'Favourite takeaway'**
+  String get defaultTreat1;
+
+  /// No description provided for @defaultTreat2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cinema evening'**
+  String get defaultTreat2;
+
+  /// No description provided for @defaultTreat3.
+  ///
+  /// In en, this message translates to:
+  /// **'Cake from the good bakery'**
+  String get defaultTreat3;
+
+  /// No description provided for @defaultTreat4.
+  ///
+  /// In en, this message translates to:
+  /// **'A new book or game'**
+  String get defaultTreat4;
+
+  /// No description provided for @defaultTreat5.
+  ///
+  /// In en, this message translates to:
+  /// **'A lazy morning with nothing planned'**
+  String get defaultTreat5;
+
+  /// No description provided for @defaultTreat6.
+  ///
+  /// In en, this message translates to:
+  /// **'A day trip'**
+  String get defaultTreat6;
+
+  /// No description provided for @defaultTreat7.
+  ///
+  /// In en, this message translates to:
+  /// **'A concert or event ticket'**
+  String get defaultTreat7;
+
+  /// No description provided for @defaultTreat8.
+  ///
+  /// In en, this message translates to:
+  /// **'Cook something really fancy'**
+  String get defaultTreat8;
+
+  /// No description provided for @defaultTreat9.
+  ///
+  /// In en, this message translates to:
+  /// **'Bake something new'**
+  String get defaultTreat9;
+
+  /// No description provided for @defaultTreat10.
+  ///
+  /// In en, this message translates to:
+  /// **'A new plant or something for the flat'**
+  String get defaultTreat10;
+
+  /// No description provided for @defaultTreat11.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a small project you have been putting off'**
+  String get defaultTreat11;
+
+  /// No description provided for @defaultTreat12.
+  ///
+  /// In en, this message translates to:
+  /// **'A class or workshop'**
+  String get defaultTreat12;
 }
 
 class _AppLocalizationsDelegate

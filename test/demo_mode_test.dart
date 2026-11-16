@@ -7,6 +7,8 @@ import 'package:kept/data/database.dart';
 import 'package:kept/domain/demo_data.dart';
 import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
+import 'package:kept/domain/progress.dart';
+import 'package:kept/domain/treat.dart';
 
 void main() {
   late AppServices services;
@@ -62,6 +64,31 @@ void main() {
           .first,
       isEmpty,
     );
+  });
+
+  test('demo mode has treats and stamps that fit the demo history', () async {
+    final today = DateTime(2026, 11, 16);
+    await services.setDemoMode(true, today: today);
+    final treats = await services.treatsFor(demo: true).watchAll().first;
+    final stamps = await services.treatsFor(demo: true).watchStamps().first;
+    expect(treats, hasLength(12));
+    expect(treats.where((t) => t.state == TreatState.current), hasLength(1));
+    expect(treats.where((t) => t.state == TreatState.earned), hasLength(1));
+    final current = currentTreat(treats)!;
+    final onCard = stampsOnCard(stamps, current.id);
+    expect(onCard, greaterThan(0));
+    expect(onCard, lessThan(current.stampsNeeded));
+    expect(stampTotal(stamps), greaterThan(demoFirstCardStamps));
+    // Every stamp belongs to a demo person and a demo event, so the count
+    // can be explained.
+    final ids = {for (final p in demoPeople(today)) p.id};
+    expect(stamps.every((s) => ids.contains(s.personId)), isTrue);
+    // Nothing leaked into the real database.
+    expect(await services.treatsFor(demo: false).watchAll().first, isEmpty);
+    expect(await services.treatsFor(demo: false).watchStamps().first, isEmpty);
+    // Evening answers are there for "Your numbers".
+    final answers = await services.dayAnswersFor(demo: true).watchAll().first;
+    expect(answers, isNotEmpty);
   });
 
   test('demo mode shows the demo set and leaves the real people', () async {

@@ -5,9 +5,9 @@ The first thing a new session reads. Last rewritten on 2026-11-16, at the end of
 ## 1. Where things stand
 
 - Phase: **implement**. The app is called **Kept.** with the full stop (app label and titles; running text may write Kept). App ID `de.gartenpa.kept` (final). Repository and folder are `friendsapp`.
-- **M0 to M6 are built.** The developer has tried up to M4; notifications (M3, M4) are being tried in daily use. M5 and M6 are untried on a phone. See section 4.
-- **Released: 0.4.0** (tag `v0.4.0`, 2026-11-16, M5 and M6). Before it: 0.3.0 (M4), 0.2.0 (M2 and M3), 0.1.0 (M1). The developer's phone has the M4 debug build; nothing later was installed there.
-- Everything up to the 0.4.0 release commit is pushed (2026-11-16).
+- **M0 to M9 are built.** The developer has tried up to M4; notifications (M3, M4) are being tried in daily use. M5 to M9 are untried on a phone; what to check is in [05-test-list.md](05-test-list.md). See section 4.
+- **Released: 0.5.0** (tag `v0.5.0`, 2026-11-16: schema 4, M7, M8, M9). Before it: 0.4.0 (M5, M6), 0.3.0 (M4), 0.2.0 (M2, M3), 0.1.0 (M1). The developer's phone has the M4 debug build (schema 3); nothing later was installed there.
+- Everything up to the 0.5.0 release commit is pushed (2026-11-16).
 - The developer uses the app with real people on their Pixel 7 Pro since 2026-11-16. **Every database change needs a tested migration.**
 
 ## 2. What to read, and how much
@@ -113,7 +113,12 @@ Details of what was built are in [04-architecture.md](04-architecture.md); decis
 
 - Done: editable class rhythms in Settings and an own rhythm per person; the gentle hint as the last pick ("It's been a while with ...", one per day, rotating, no numbers); the reconnect person of the week (card on the People tab to choose, "This week: ..." as third pick, calm done state, a new week starts empty); a "You and ... are back in touch" card after a first exchange. Checked: analyze, 348 tests, Claude looked at the People render (`build/screens/m8-people.png`). **Not checked: on the phone; the week rollover and the daily rotation only show over days.**
 - Claude's choices, not confirmed: no notification for the reconnect person of the week; Family has no rhythm at start; details in 02-design.md §8.
-- Next: M9, stamps and treats.
+**M9, stamps and treats: built, not tried** (2026-11-16). Uses the schema 4 tables.
+
+- Done: the stamp rule with editable weights; awarding in one place for every way a contact is stored; twelve default treats; the current stamp card, carry-over and loose stamps; a one-time backfill of stamps for older contacts; the Progress tab (growing count, stamp card, this week, weeks in a row that pause, treats, "Your numbers"); stamps on the "Nice one" screen; a Stamps section in Settings. Checked: analyze, 407 tests, Claude looked at the Progress render (`build/screens/m9-progress.png`). **Not checked: on the phone, and how the rule feels over weeks.**
+- Claude's choices, not confirmed: Family counts 1; gaming doubles like a meet-up; a more valuable contact later in the week raises that week's stamp; deleting a contact keeps its stamp; "weeks in a row" counts every week with contact. See 02-design.md §8.
+- Schema 4, M7, M8 and M9 are released together as 0.5.0.
+- Next: M10, ideas and sharing in.
 
 ## 5. Open questions for the developer
 

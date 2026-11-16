@@ -47,11 +47,11 @@ Tests that run by themselves (`flutter analyze`, `flutter test`, the migration t
 - [ ] "They wrote" and "They called": the entry appears, Undo removes it, a second tap the same day says it is already noted.
 - [ ] Tap a history entry: edit the note, delete the entry.
 
-## Schema 4 (not released yet)
+## Schema 4 (in 0.5.0)
 
 - [ ] The first install of a build with schema 4: all people, thoughts, history and settings are still there. (Tested automatically row by row, but never run on your phone.)
 
-## M7, incoming messages and owed replies (not released yet)
+## M7, incoming messages and owed replies (in 0.5.0)
 
 - [ ] Settings, "Incoming messages": switch on, grant notification access, the state shows "Allowed".
 - [ ] A WhatsApp message from one person on your list appears in their timeline as "<Name> wrote", once per day.
@@ -63,7 +63,7 @@ Tests that run by themselves (`flutter analyze`, `flutter test`, the migration t
 - [ ] Switching the part off stops the recording.
 - [ ] Do you miss a notification for owed replies? (There is none, by Claude's choice.)
 
-## M8, rhythm and reconnect (not released yet)
+## M8, rhythm and reconnect (in 0.5.0)
 
 - [ ] Settings, "Rhythms": change a class rhythm; give one person an own rhythm on their edit page.
 - [ ] Over some evenings: the hint "It's been a while with ..." names different people, never with a number, and feels gentle.
@@ -71,6 +71,16 @@ Tests that run by themselves (`flutter analyze`, `flutter test`, the migration t
 - [ ] After you contacted them, the card shows the calm done state; next Monday it starts empty without a remark.
 - [ ] After they answered: the "back in touch" card appears once on Home.
 - [ ] Do you miss a notification for the reconnect person of the week? (There is none, by Claude's choice.)
+
+## M9, stamps and treats (in 0.5.0)
+
+- [ ] Progress tab after the first start: stamps for your contacts since M3 are there (the one-time backfill), and twelve treats wait under "My treats".
+- [ ] Start a card; a contact (Done or "Did you write?") adds stamps and the "Nice one" screen shows them.
+- [ ] A second contact with the same person in the same week adds no stamp, and the screen says nothing about it.
+- [ ] A full card: the treat becomes yours, "Enjoyed" works, extra stamps carry over.
+- [ ] Add a treat of your own, change its stamp number, reorder, delete.
+- [ ] Over some weeks: do daily chats with close friends fill cards too fast or too slowly? Rebalance in Settings, "Stamps".
+- [ ] Is "weeks in a row" the right wording for a number that counts every week with contact?
 
 ## Release builds
 

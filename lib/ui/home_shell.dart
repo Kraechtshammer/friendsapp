@@ -10,6 +10,7 @@ import '../domain/birthday_notifications.dart';
 import '../domain/birthdays.dart';
 import '../domain/contact_event.dart';
 import '../domain/evening_question.dart';
+import '../l10n/labels.dart';
 import '../platform/notifications.dart';
 import 'common.dart';
 import 'home/chat_question_screen.dart';
@@ -50,6 +51,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   EveningPlan? _scheduled;
   BirthdayPlan? _birthdaysScheduled;
   var _permissionAsked = false;
+  var _stampsPrepared = false;
   late final AppLifecycleListener _lifecycle;
   late final _incoming = IncomingSync(ref);
 
@@ -143,7 +145,25 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     ref.read(captureFocusProvider.notifier).request();
   }
 
+  /// Once per start: the default treats and the stamp backfill of the real
+  /// database, if they were not done before (M9). The treat names are in the
+  /// language of the app now.
+  void _prepareStamps() {
+    if (_stampsPrepared) return;
+    _stampsPrepared = true;
+    unawaited(
+      ref
+          .read(servicesProvider)
+          .ensureStampsReady(defaultTreatNames(context.l10n))
+          .then<void>(
+            (_) {},
+            onError: (Object e) => debugPrint('Stamps not prepared: $e'),
+          ),
+    );
+  }
+
   void _onSettings(AppSettings settings) {
+    _prepareStamps();
     _incoming.onSettings(settings);
     _scheduleEvening(settings);
     _scheduleBirthdays();

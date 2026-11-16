@@ -7,6 +7,7 @@ import '../data/database_connection.dart';
 import '../data/day_answers_repository.dart';
 import '../data/intentions_repository.dart';
 import '../data/people_repository.dart';
+import '../data/treats_repository.dart';
 import '../data/settings_repository.dart';
 import '../domain/demo_data.dart';
 
@@ -28,8 +29,12 @@ class AppServices {
   }) : settings = SettingsRepository(db),
        _realPeople = PeopleRepository(db),
        _realIntentions = IntentionsRepository(db),
-       _realContactEvents = ContactEventsRepository(db),
+       _realTreats = TreatsRepository(db),
        _realDayAnswers = DayAnswersRepository(db) {
+    _realContactEvents = ContactEventsRepository(
+      db,
+      loadSettings: settings.load,
+    );
     // Two AppDatabase instances on two files are intended here; drift
     // warns about any second instance in debug builds.
     driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -42,13 +47,15 @@ class AppServices {
   final AppDatabase Function() _openDemo;
   final PeopleRepository _realPeople;
   final IntentionsRepository _realIntentions;
-  final ContactEventsRepository _realContactEvents;
+  late final ContactEventsRepository _realContactEvents;
+  final TreatsRepository _realTreats;
   final DayAnswersRepository _realDayAnswers;
   AppDatabase? _demoDb;
   PeopleRepository? _demoPeople;
   IntentionsRepository? _demoIntentions;
   ContactEventsRepository? _demoContactEvents;
   DayAnswersRepository? _demoDayAnswers;
+  TreatsRepository? _demoTreats;
 
   /// Opens the real database file. Can't throw: the database opens lazily,
   /// so a broken file only shows up in later queries and the app still
@@ -82,8 +89,17 @@ class AppServices {
   /// The contact events of the same content database as [peopleFor].
   ContactEventsRepository contactEventsFor({required bool demo}) =>
       demo && allowDemo
-      ? _demoContactEvents ??= ContactEventsRepository(_demoDatabase())
+      ? _demoContactEvents ??= ContactEventsRepository(
+          _demoDatabase(),
+          // The weights are settings, and settings are in the real database.
+          loadSettings: settings.load,
+        )
       : _realContactEvents;
+
+  /// The treats and stamps of the same content database as [peopleFor].
+  TreatsRepository treatsFor({required bool demo}) => demo && allowDemo
+      ? _demoTreats ??= TreatsRepository(_demoDatabase())
+      : _realTreats;
 
   /// The day answers of the same content database as [peopleFor].
   DayAnswersRepository dayAnswersFor({required bool demo}) => demo && allowDemo
@@ -103,10 +119,51 @@ class AppServices {
         await _demoRepository().replaceAll(demoPeople(day));
         await _demoIntentionsRepository().replaceAll(demoIntentions(day));
         await contactEventsFor(demo: true).replaceAll(demoContactEvents(day));
+        await dayAnswersFor(demo: true).replaceAll(demoDayAnswers(day));
+        await _seedDemoTreats(day);
       });
     }
     await settings.update((s) => s.copyWith(demoMode: on));
   }
+
+  /// The demo treats: the default list in English, the first one a small
+  /// card that the demo history fills (earned), the sixth (a day trip) the
+  /// current card, partly filled by the rest. Uses the rule and the real settings
+  /// like the real database does, so the demo shows what the app does.
+  Future<void> _seedDemoTreats(DateTime day) async {
+    final treats = treatsFor(demo: true);
+    await treats.replaceAll(const [], const []);
+    final names = demoTreatNames();
+    await treats.insertDefaults(names, now: day);
+    final all = await treats.watchAll().first;
+    await treats.setStampsNeeded(all[0].id, demoFirstCardStamps);
+    await treats.setCurrent(all[0].id, now: day);
+    await treats.backfill(await settings.load(), now: day);
+    await treats.setCurrent(all[5].id, now: day);
+  }
+
+  /// Prepares the stamps of the real database once (M9), in one
+  /// transaction with the two flags in the settings, so it cannot run
+  /// twice: first the default treats ([defaultTreats], names in the
+  /// language of the app now; all waiting), then the stamp rule over the
+  /// contact events that exist (the backfill). Never touches the demo
+  /// database. Does nothing if both are done.
+  Future<void> ensureStampsReady(
+    List<(String, int)> defaultTreats, {
+    DateTime? now,
+  }) => db.transaction(() async {
+    final current = await settings.load();
+    if (current.defaultTreatsInserted && current.stampsBackfilled) return;
+    if (!current.defaultTreatsInserted) {
+      await _realTreats.insertDefaults(defaultTreats, now: now);
+    }
+    if (!current.stampsBackfilled) {
+      await _realTreats.backfill(current, now: now);
+    }
+    await settings.update(
+      (s) => s.copyWith(defaultTreatsInserted: true, stampsBackfilled: true),
+    );
+  });
 
   AppDatabase _demoDatabase() => _demoDb ??= _openDemo();
 

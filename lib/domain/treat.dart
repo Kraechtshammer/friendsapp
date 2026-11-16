@@ -17,3 +17,22 @@ enum TreatState {
   /// The user had it.
   enjoyed,
 }
+
+/// The twelve default treats (02-design.md §6.9 and §6.10) with their
+/// stamp numbers, in order. The names are texts (`defaultTreatNames` in
+/// `l10n/labels.dart`), stored in the language of the app when they are
+/// inserted.
+const defaultTreatStamps = <int>[
+  10,
+  10,
+  10,
+  20,
+  10,
+  30,
+  40,
+  10,
+  10,
+  20,
+  20,
+  30,
+];
