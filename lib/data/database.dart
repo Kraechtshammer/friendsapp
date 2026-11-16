@@ -1,8 +1,10 @@
 import 'package:drift/drift.dart';
 
 import '../domain/contact_event.dart';
+import '../domain/idea.dart';
 import '../domain/intention.dart';
 import '../domain/person.dart';
+import '../domain/treat.dart';
 import 'database.steps.dart';
 
 part 'database.g.dart';
@@ -58,6 +60,10 @@ class People extends Table {
 
   TextColumn get notes => text().withDefault(const Constant(''))();
   DateTimeColumn get createdAt => dateTime()();
+
+  /// When the user last said an owed reply to this person is settled
+  /// (milestone M7). Added in schema version 4.
+  DateTimeColumn get replyClearedAt => dateTime().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -136,6 +142,10 @@ class ContactEvents extends Table {
 
   DateTimeColumn get createdAt => dateTime()();
 
+  /// The name of an icon for the activity (a later feature). Added in
+  /// schema version 4.
+  TextColumn get activityIcon => text().nullable()();
+
   @override
   Set<Column> get primaryKey => {id};
 }
@@ -152,10 +162,89 @@ class DayAnswers extends Table {
   Set<Column> get primaryKey => {day};
 }
 
+/// A treat the user collects stamps for. Added in schema version 4.
+@DataClassName('Treat')
+class Treats extends Table {
+  /// UUID v4, made by a repository.
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+
+  /// How many stamps fill the card.
+  IntColumn get stampsNeeded => integer()();
+  TextColumn get state => textEnum<TreatState>()();
+
+  /// The order among the waiting treats.
+  IntColumn get position => integer()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get earnedAt => dateTime().nullable()();
+  DateTimeColumn get enjoyedAt => dateTime().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// A stamp the user earned. The user's count only grows, so a stamp
+/// survives the deletion of its person, event or treat: the link is
+/// cleared. Added in schema version 4.
+@DataClassName('Stamp')
+class Stamps extends Table {
+  /// UUID v4, made by a repository.
+  TextColumn get id => text()();
+
+  /// When it was earned.
+  DateTimeColumn get at => dateTime()();
+  IntColumn get value => integer()();
+  TextColumn get personId =>
+      text().nullable().references(People, #id, onDelete: KeyAction.setNull)();
+  TextColumn get contactEventId => text().nullable().references(
+    ContactEvents,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
+
+  /// The card it went onto.
+  TextColumn get treatId =>
+      text().nullable().references(Treats, #id, onDelete: KeyAction.setNull)();
+  DateTimeColumn get createdAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// An idea for a person: something to do or to talk about. Added in
+/// schema version 4.
+@DataClassName('Idea')
+class Ideas extends Table {
+  /// UUID v4, made by a repository.
+  TextColumn get id => text()();
+
+  /// Deleting the person deletes their ideas.
+  TextColumn get personId =>
+      text().references(People, #id, onDelete: KeyAction.cascade)();
+  TextColumn get note => text()();
+  TextColumn get kind => textEnum<IdeaKind>()();
+  TextColumn get link => text().nullable()();
+  TextColumn get imagePath => text().nullable()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get doneAt => dateTime().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
 /// One schema for both files: the real database (settings and the user's
 /// people) and the demo database (invented people only).
 @DriftDatabase(
-  tables: [Settings, People, Intentions, ContactEvents, DayAnswers],
+  tables: [
+    Settings,
+    People,
+    Intentions,
+    ContactEvents,
+    DayAnswers,
+    Treats,
+    Stamps,
+    Ideas,
+  ],
 )
 class AppDatabase extends _$AppDatabase {
   /// [executor]: a file database (`database_connection.dart`) or an
@@ -169,7 +258,7 @@ class AppDatabase extends _$AppDatabase {
   /// `drift_schemas/`, updates `database.steps.dart` and the schema test
   /// helpers in `test/drift/` (as in akai-timetrack).
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   /// Steps come from the snapshots in `drift_schemas/`; each one only adds.
   /// The real database on the developer's phone holds people from version
@@ -185,6 +274,17 @@ class AppDatabase extends _$AppDatabase {
         // Contact events and day answers (M3).
         await m.createTable(schema.contactEvents);
         await m.createTable(schema.dayAnswers);
+      },
+      from3To4: (m, schema) async {
+        // One step for M7 to M10: two nullable columns, three new tables.
+        await m.addColumn(schema.people, schema.people.replyClearedAt);
+        await m.addColumn(
+          schema.contactEvents,
+          schema.contactEvents.activityIcon,
+        );
+        await m.createTable(schema.treats);
+        await m.createTable(schema.stamps);
+        await m.createTable(schema.ideas);
       },
     ),
     beforeOpen: (details) async {

@@ -104,7 +104,8 @@ Details of what was built are in [04-architecture.md](04-architecture.md); decis
 
 - Done: the compact timeline on the person page (upcoming, a Today mark, history with who did what, activity and note, birthdays in both directions, "Added to your people"); "They wrote" and "They called" buttons (once per day, with Undo); a sheet to edit or delete a history entry. Checked: analyze, 248 tests, Claude looked at the dark render (`build/screens/m6-timeline-dark.png`). **Not checked: on the phone. The small direction arrows show as empty boxes in the test render (the test font lacks them); whether they show on the phone is open.**
 - M5 and M6 are released together as 0.4.0.
-- Next: one migration to schema 4 for everything M7 to M10 need, then M7.
+- **Schema 4 is in** (2026-11-16): one adding-only step for M7 to M10 (two nullable columns; tables treats, stamps, ideas). Checked: 253 tests, the 3-to-4 migration test compares every old table row by row and there is a 1-to-4 run. **Not run on the developer's phone: the phone is at schema 3 with the M4 debug build. Claude does not install there unasked.**
+- Next: M7.
 
 ## 5. Open questions for the developer
 
