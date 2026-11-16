@@ -5,9 +5,9 @@ The first thing a new session reads. Last rewritten on 2026-11-16, at the end of
 ## 1. Where things stand
 
 - Phase: **implement**. The app is called **Kept.** with the full stop (app label and titles; running text may write Kept). App ID `de.gartenpa.kept` (final). Repository and folder are `friendsapp`.
-- **M0 to M4 are done.** Notifications (M3, M4) are being tried by the developer in daily use. See section 4.
-- **Released: 0.3.0** (tag `v0.3.0`, 2026-11-16, M4). Before it: 0.2.0 (M2 and M3) and 0.1.0 (M1). An earlier `v0.3.0` tag on the M3 state existed for some minutes and was deleted; the developer was asked to delete its leftover release draft on GitHub, if there is one. It was first tagged `v0.3.0` by mistake (a skipped version); that tag was replaced by `v0.2.0` the same day.
-- Everything up to the 0.3.0 release commit is pushed (2026-11-16).
+- **M0 to M6 are built.** The developer has tried up to M4; notifications (M3, M4) are being tried in daily use. M5 and M6 are untried on a phone. See section 4.
+- **Released: 0.4.0** (tag `v0.4.0`, 2026-11-16, M5 and M6). Before it: 0.3.0 (M4), 0.2.0 (M2 and M3), 0.1.0 (M1). The developer's phone has the M4 debug build; nothing later was installed there.
+- Everything up to the 0.4.0 release commit is pushed (2026-11-16).
 - The developer uses the app with real people on their Pixel 7 Pro since 2026-11-16. **Every database change needs a tested migration.**
 
 ## 2. What to read, and how much
