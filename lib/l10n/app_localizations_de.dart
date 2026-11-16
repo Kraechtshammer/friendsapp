@@ -145,7 +145,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get reconnectingHint =>
-      'Für Leute, bei denen du dich wieder melden möchtest.';
+      'Eine kurze Liste von Leuten, bei denen du dich wieder melden möchtest. Im Leute-Tab wählst du für jede Woche eine aus. Schalte es aus, wenn ihr wieder in Kontakt seid.';
 
   @override
   String get editMessenger => 'Haupt-Messenger';
@@ -795,4 +795,91 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get longer => 'Länger';
+
+  @override
+  String get settingsRhythms => 'Rhythmen';
+
+  @override
+  String get settingsRhythmsHelp =>
+      'Wie lange es dauern darf, bis Kept vorschlägt, sich zu melden. Mehr als ein sanfter Hinweis ist das nie.';
+
+  @override
+  String get rhythmNone => 'Keiner';
+
+  @override
+  String get rhythmLikeClass => 'Wie die Gruppe';
+
+  @override
+  String rhythmWeeks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Wochen',
+      one: '1 Woche',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rhythmMonths(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Monate',
+      one: '1 Monat',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rhythmDaysCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Tage',
+      one: '1 Tag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editRhythm => 'Rhythmus';
+
+  @override
+  String get editRhythmHelp =>
+      'Wie oft du dich melden möchtest. Das ist nur ein sanfter Hinweis, nie eine Frist.';
+
+  @override
+  String hintPick(String name) {
+    return 'Mit $name ist es eine Weile her';
+  }
+
+  @override
+  String reconnectThisWeek(String name) {
+    return 'Diese Woche: $name';
+  }
+
+  @override
+  String get reconnectChoose =>
+      'Bei wem möchtest du dich diese Woche wieder melden?';
+
+  @override
+  String get reconnectCardHint =>
+      'Alte Freunde knüpfen da an, wo sie aufgehört haben.';
+
+  @override
+  String get someoneElse => 'Jemand anderes';
+
+  @override
+  String reconnectDone(String name) {
+    return 'Du hast dich diese Woche bei $name gemeldet.';
+  }
+
+  @override
+  String backInTouchTitle(String name) {
+    return '$name und du seid wieder in Kontakt.';
+  }
+
+  @override
+  String get backInTouchKeep => 'Weiter bei „Wieder in Kontakt kommen“ lassen';
 }

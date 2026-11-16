@@ -160,15 +160,15 @@ void main() {
     expect(find.text('Allowed'), findsOneWidget);
 
     // Waiting time: 1 to 14 days.
-    await tester.tap(find.byTooltip('Longer'));
+    await tester.tap(find.byTooltip('Longer').last);
     await tester.pumpAndSettle();
     expect(find.text('3 days'), findsOneWidget);
-    await tester.tap(find.byTooltip('Shorter'));
+    await tester.tap(find.byTooltip('Shorter').last);
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Shorter'));
+    await tester.tap(find.byTooltip('Shorter').last);
     await tester.pumpAndSettle();
     expect(find.text('1 day'), findsOneWidget);
-    await tester.tap(find.byTooltip('Shorter'));
+    await tester.tap(find.byTooltip('Shorter').last);
     await tester.pumpAndSettle();
     expect((await tester.runAsync(services.settings.load))!.replyWaitDays, 1);
 

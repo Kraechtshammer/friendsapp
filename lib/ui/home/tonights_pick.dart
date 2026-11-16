@@ -12,6 +12,7 @@ import '../../domain/intention.dart';
 import '../../domain/owed_reply.dart';
 import '../../domain/person_name.dart';
 import '../../domain/pick_order.dart';
+import '../../domain/reconnect_week.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
@@ -33,8 +34,10 @@ import 'open_thoughts.dart';
 /// concept V6 · Home): one card with "Another one", or three compact
 /// cards, depending on the setting `openItems`. The picks come from
 /// [tonightsPicks]: today's birthdays not congratulated yet come first,
-/// then the owed replies ([owedReplies]), then the open thoughts. With
-/// nothing to pick, nothing is shown.
+/// then the owed replies ([owedReplies]), then the reconnect person of the
+/// week, then the open thoughts and plans, and last a gentle hint for
+/// someone whose rhythm says it has been a while. With nothing to pick,
+/// nothing is shown.
 ///
 /// "Yes" on the evening question scrolls Home here
 /// ([openThoughtsRequestProvider]). If the thoughts are still loading, the
@@ -75,11 +78,21 @@ class _TonightsPickState extends ConsumerState<TonightsPick> {
     final settings = ref.settings;
     final events =
         ref.watch(allContactEventsProvider).value ?? const <ContactEvent>[];
+    final week = reconnectWeekState(
+      people: people,
+      events: events,
+      chosenId: settings.reconnectPersonId,
+      chosenWeek: settings.reconnectWeek,
+      today: now,
+    );
     final picks = tonightsPicks(
       people: people,
       intentions: loaded.value ?? const <Intention>[],
       today: today,
       now: now,
+      reconnect: week is ReconnectChosen ? week.person : null,
+      events: events,
+      classRhythms: settings.classRhythms,
       // Until the wishes are loaded nobody counts as having a birthday
       // pick, so one already congratulated never shows for a moment.
       congratulated: wishes.hasValue
@@ -240,27 +253,30 @@ class _PickCard extends ConsumerWidget {
                   label: l10n.setADate,
                   onPressed: () => _setDate(context, ref, pick),
                 ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Row(
-                  spacing: 12,
-                  children: [
-                    if (onAnother != null)
-                      Expanded(
-                        child: GreyButton(
-                          label: l10n.anotherOne,
-                          onPressed: onAnother,
+              // A hint has nothing to tick off: no Done.
+              if (pick is! HintPick || onAnother != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Row(
+                    spacing: 12,
+                    children: [
+                      if (onAnother != null)
+                        Expanded(
+                          child: GreyButton(
+                            label: l10n.anotherOne,
+                            onPressed: onAnother,
+                          ),
                         ),
-                      ),
-                    Expanded(
-                      child: GreyButton(
-                        label: _completeLabel(pick, l10n),
-                        onPressed: () => _complete(context, ref, pick),
-                      ),
-                    ),
-                  ],
+                      if (pick is! HintPick)
+                        Expanded(
+                          child: GreyButton(
+                            label: _completeLabel(pick, l10n),
+                            onPressed: () => _complete(context, ref, pick),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
             ],
           ),
         ),
@@ -353,12 +369,13 @@ class _CompactPick extends ConsumerWidget {
               icon: KeptIcons.calendar,
               onPressed: () => _setDate(context, ref, pick),
             ),
-          _SquareButton(
-            size: 48,
-            tooltip: _completeLabel(pick, l10n),
-            icon: KeptIcons.check,
-            onPressed: () => _complete(context, ref, pick),
-          ),
+          if (pick is! HintPick)
+            _SquareButton(
+              size: 48,
+              tooltip: _completeLabel(pick, l10n),
+              icon: KeptIcons.check,
+              onPressed: () => _complete(context, ref, pick),
+            ),
         ],
       ),
     );
@@ -370,6 +387,8 @@ class _CompactPick extends ConsumerWidget {
 KeptIcons _pickIcon(Pick pick) => switch (pick) {
   BirthdayPick() => KeptIcons.cake,
   ReplyPick() => KeptIcons.chat,
+  ReconnectPick() => KeptIcons.people,
+  HintPick() => KeptIcons.leaf,
   IntentionPick(:final intention) => kindIcon(intention.kind),
 };
 
@@ -380,6 +399,10 @@ String _pickText(Pick pick, AppLocalizations l10n) => switch (pick) {
   BirthdayPick(:final age?) => l10n.birthdayTurns(age),
   BirthdayPick() => l10n.birthdayToday,
   ReplyPick(:final person) => l10n.stillOweReply(firstNameOf(person.name)),
+  ReconnectPick(:final person) => l10n.reconnectThisWeek(
+    firstNameOf(person.name),
+  ),
+  HintPick(:final person) => l10n.hintPick(firstNameOf(person.name)),
   IntentionPick(:final intention) =>
     intention.note.trim().isEmpty
         ? kindLabel(intention.kind, l10n)
@@ -396,6 +419,8 @@ void _openChat(BuildContext context, WidgetRef ref, Pick pick) =>
       ),
       // Opening the chat also clears the owed reply (openChat).
       ReplyPick(:final person) => openChat(context, ref, person),
+      ReconnectPick(:final person) => openChat(context, ref, person),
+      HintPick(:final person) => openChat(context, ref, person),
       IntentionPick(:final person, :final intention) => openChat(
         context,
         ref,
@@ -437,10 +462,12 @@ class WhenLineOf extends StatelessWidget {
 String _completeLabel(Pick pick, AppLocalizations l10n) => switch (pick) {
   BirthdayPick() => l10n.congratulated,
   ReplyPick() => l10n.alreadyAnswered,
+  ReconnectPick() || HintPick() => l10n.done,
   IntentionPick() => l10n.done,
 };
 
-/// "Congratulated" on a birthday pick, "Done" on a thought. "Already
+/// "Congratulated" on a birthday pick, "Done" on a thought or the
+/// reconnect pick (a manual `wrote` contact). "Already
 /// answered" on an owed reply only notes the time (`replyClearedAt`) and
 /// stores nothing else (02-design.md §2.6).
 void _complete(BuildContext context, WidgetRef ref, Pick pick) =>
@@ -450,6 +477,14 @@ void _complete(BuildContext context, WidgetRef ref, Pick pick) =>
         ref
             .read(peopleRepositoryProvider)
             .setReplyClearedAt(person.id, ref.read(clockProvider)()),
+      // Done on the reconnect pick: the user got in touch.
+      ReconnectPick(:final person) => completeWrite(
+        context,
+        ref,
+        person,
+        source: ContactSource.manual,
+      ),
+      HintPick() => Future<void>.value(),
       IntentionPick(:final person, :final intention) => completeThought(
         context,
         ref,

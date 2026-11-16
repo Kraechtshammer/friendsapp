@@ -7,6 +7,7 @@ import '../common.dart';
 import '../kept_icon.dart';
 import '../material.dart';
 import '../settings/settings_screen.dart';
+import 'back_in_touch_card.dart';
 import 'capture_card.dart';
 import 'coming_up.dart';
 import 'congratulated_screen.dart';
@@ -55,6 +56,7 @@ class HomeScreen extends ConsumerWidget {
         CaptureCard(onAddPeople: onAddPeople),
         const OwnBirthdayCard(),
         const DidItHappen(),
+        const BackInTouchCard(),
         const TonightsPick(),
         ComingUp(onSeeAll: onShowUpcoming),
         const OpenThoughts(),

@@ -53,6 +53,10 @@ void main() {
   }
 
   testWidgets('groups people by class and opens a person', (tester) async {
+    // Tall, so the reconnect card at the top does not push anyone off.
+    tester.view.physicalSize = const Size(800, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     await tester.runAsync(() async {
       final people = services.peopleFor(demo: false);
       await people.add(
@@ -70,7 +74,8 @@ void main() {
       await people.add(name: 'Nora Lind', closeness: Closeness.fewTimesAYear);
     });
     await openPeopleTab(tester);
-    double top(String text) => tester.getTopLeft(find.text(text)).dy;
+    // Tom is also on the reconnect card at the top; the group comes last.
+    double top(String text) => tester.getTopLeft(find.text(text).last).dy;
 
     expect(find.text('Your people'), findsOneWidget);
     // Nobody is "now and then", so that group is left out.
@@ -86,7 +91,7 @@ void main() {
     expect(top('Nora') > few && top('Nora') < family, isTrue);
     expect(top('Grandpa') > family, isTrue);
 
-    await tester.tap(find.text('Tom'));
+    await tester.tap(find.text('Tom').last);
     await tester.pumpAndSettle();
     expect(find.byType(PersonScreen), findsOneWidget);
     for (final text in [

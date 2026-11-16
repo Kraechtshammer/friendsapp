@@ -104,6 +104,13 @@ class PeopleRepository {
         ),
       );
 
+  /// Sets only `reconnecting` of person [id]: "Done" on "You and X are back
+  /// in touch" switches it off (02-design.md §2.4). The class stays.
+  Future<void> setReconnecting(String id, bool value) =>
+      (_db.update(_db.people)..where((t) => t.id.equals(id))).write(
+        PeopleCompanion(reconnecting: Value(value)),
+      );
+
   Future<void> delete(String id) =>
       (_db.delete(_db.people)..where((t) => t.id.equals(id))).go();
 

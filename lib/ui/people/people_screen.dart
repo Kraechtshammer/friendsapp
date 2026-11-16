@@ -16,6 +16,7 @@ import '../widgets/section_label.dart';
 import 'edit_person_screen.dart';
 import 'import_contacts_screen.dart';
 import 'person_screen.dart';
+import 'reconnect_card.dart';
 
 /// Everyone, grouped by class in the order of [Closeness]. Groups with
 /// nobody are left out. See concept V6 · People (docs/concepts/gen_v6.py).
@@ -72,7 +73,13 @@ class PeopleScreen extends ConsumerWidget {
     };
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 22, 16, 24),
-      children: [title, const SizedBox(height: 14), body],
+      children: [
+        title,
+        const SizedBox(height: 14),
+        if (people.value case final list? when list.isNotEmpty)
+          ReconnectCard(list),
+        body,
+      ],
     );
   }
 }

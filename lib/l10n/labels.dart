@@ -1,6 +1,7 @@
 import '../domain/greeting.dart';
 import '../domain/intention.dart';
 import '../domain/person.dart';
+import '../domain/rhythm.dart';
 import '../ui/kept_icon.dart';
 import 'app_localizations.dart';
 
@@ -100,4 +101,16 @@ String whenText(When when, AppLocalizations l10n) {
           : l10n.whenCondition,
     final h => horizonLabel(h, l10n),
   };
+}
+
+/// A rhythm span as text: weeks up to 8 weeks, months from 3 months on
+/// ([rhythmMonths]), and plain days for a value that is neither (an own
+/// rhythm set by an older version or by hand).
+String rhythmLabel(int days, AppLocalizations l10n) {
+  if (rhythmSpans.contains(days)) {
+    return days >= 90
+        ? l10n.rhythmMonths(rhythmMonths(days))
+        : l10n.rhythmWeeks(days ~/ 7);
+  }
+  return l10n.rhythmDaysCount(days);
 }

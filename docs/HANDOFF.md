@@ -109,7 +109,11 @@ Details of what was built are in [04-architecture.md](04-architecture.md); decis
 
 - Done: the optional listener (Settings, "Incoming messages", off at start, needs notification access granted by hand) records who wrote or called in WhatsApp, Telegram, Signal and Discord, once per person, kind and day; the pick "Still owe ... a reply?" with Open chat and Already answered, second in the pick order, after a waiting time (start 2 days, 1 to 14 in Settings). Checked: analyze, 279 tests, debug APK builds, Claude read the Kotlin listener: it never reads the message text. **Not checked: everything on the phone; the Kotlin code has no tests.** Group chat detection is fairly sure for WhatsApp and Signal, unsure for Telegram and Discord.
 - Claude's choices, not confirmed: no notification of its own for owed replies; no "Did Jonas answer?" fallback question (the "They wrote" button covers entering by hand); "Already answered" stores no contact.
-- Next: M8, rhythm and reconnect.
+**M8, rhythm and reconnect: built, not tried** (2026-11-16). No schema change.
+
+- Done: editable class rhythms in Settings and an own rhythm per person; the gentle hint as the last pick ("It's been a while with ...", one per day, rotating, no numbers); the reconnect person of the week (card on the People tab to choose, "This week: ..." as third pick, calm done state, a new week starts empty); a "You and ... are back in touch" card after a first exchange. Checked: analyze, 348 tests, Claude looked at the People render (`build/screens/m8-people.png`). **Not checked: on the phone; the week rollover and the daily rotation only show over days.**
+- Claude's choices, not confirmed: no notification for the reconnect person of the week; Family has no rhythm at start; details in 02-design.md §8.
+- Next: M9, stamps and treats.
 
 ## 5. Open questions for the developer
 

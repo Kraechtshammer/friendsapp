@@ -145,7 +145,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reconnectingHint =>
-      'For people you want to get back in touch with.';
+      'A short list of people you want to get back in touch with. On the People tab you pick one for each week. Switch it off when you are back in touch.';
 
   @override
   String get editMessenger => 'Main messenger';
@@ -789,4 +789,90 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get longer => 'Longer';
+
+  @override
+  String get settingsRhythms => 'Rhythms';
+
+  @override
+  String get settingsRhythmsHelp =>
+      'How long it can be before Kept suggests getting in touch. It only ever gives a gentle hint.';
+
+  @override
+  String get rhythmNone => 'None';
+
+  @override
+  String get rhythmLikeClass => 'Like the class';
+
+  @override
+  String rhythmWeeks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count weeks',
+      one: '1 week',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rhythmMonths(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count months',
+      one: '1 month',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rhythmDaysCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editRhythm => 'Rhythm';
+
+  @override
+  String get editRhythmHelp =>
+      'How often you would like to be in touch. It only gives a gentle hint, never a deadline.';
+
+  @override
+  String hintPick(String name) {
+    return 'It\'s been a while with $name';
+  }
+
+  @override
+  String reconnectThisWeek(String name) {
+    return 'This week: $name';
+  }
+
+  @override
+  String get reconnectChoose =>
+      'Who do you want to get back in touch with this week?';
+
+  @override
+  String get reconnectCardHint => 'Old friends pick up where they left off.';
+
+  @override
+  String get someoneElse => 'Someone else';
+
+  @override
+  String reconnectDone(String name) {
+    return 'You got in touch with $name this week.';
+  }
+
+  @override
+  String backInTouchTitle(String name) {
+    return 'You and $name are back in touch.';
+  }
+
+  @override
+  String get backInTouchKeep => 'Keep as getting back in touch';
 }

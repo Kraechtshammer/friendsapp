@@ -40,11 +40,14 @@ Future<void> completeThought(
 );
 
 /// "Yes" on "Did you write?" for a chat that was not opened for a thought:
-/// stores a confirmed `wrote` event, then shows the "Nice one" screen.
+/// stores a `wrote` event ([source] `confirmed` for that question,
+/// `manual` for Done on the reconnect pick), then shows the "Nice one"
+/// screen.
 Future<void> completeWrite(
   BuildContext context,
   WidgetRef ref,
   Person person, {
+  ContactSource source = ContactSource.confirmed,
   bool replace = false,
 }) => _storeAndCelebrate(
   context,
@@ -58,7 +61,7 @@ Future<void> completeWrite(
         at: DateTime.now(),
         kind: ContactKind.wrote,
         direction: ContactDirection.byUser,
-        source: ContactSource.confirmed,
+        source: source,
       ),
 );
 

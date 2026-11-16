@@ -329,7 +329,7 @@ abstract class AppLocalizations {
   /// No description provided for @reconnectingHint.
   ///
   /// In en, this message translates to:
-  /// **'For people you want to get back in touch with.'**
+  /// **'A short list of people you want to get back in touch with. On the People tab you pick one for each week. Switch it off when you are back in touch.'**
   String get reconnectingHint;
 
   /// No description provided for @editMessenger.
@@ -1363,6 +1363,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Longer'**
   String get longer;
+
+  /// No description provided for @settingsRhythms.
+  ///
+  /// In en, this message translates to:
+  /// **'Rhythms'**
+  String get settingsRhythms;
+
+  /// No description provided for @settingsRhythmsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How long it can be before Kept suggests getting in touch. It only ever gives a gentle hint.'**
+  String get settingsRhythmsHelp;
+
+  /// No description provided for @rhythmNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get rhythmNone;
+
+  /// No description provided for @rhythmLikeClass.
+  ///
+  /// In en, this message translates to:
+  /// **'Like the class'**
+  String get rhythmLikeClass;
+
+  /// No description provided for @rhythmWeeks.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 week} other{{count} weeks}}'**
+  String rhythmWeeks(int count);
+
+  /// No description provided for @rhythmMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 month} other{{count} months}}'**
+  String rhythmMonths(int count);
+
+  /// No description provided for @rhythmDaysCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String rhythmDaysCount(int count);
+
+  /// No description provided for @editRhythm.
+  ///
+  /// In en, this message translates to:
+  /// **'Rhythm'**
+  String get editRhythm;
+
+  /// No description provided for @editRhythmHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How often you would like to be in touch. It only gives a gentle hint, never a deadline.'**
+  String get editRhythmHelp;
+
+  /// No description provided for @hintPick.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s been a while with {name}'**
+  String hintPick(String name);
+
+  /// No description provided for @reconnectThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This week: {name}'**
+  String reconnectThisWeek(String name);
+
+  /// No description provided for @reconnectChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Who do you want to get back in touch with this week?'**
+  String get reconnectChoose;
+
+  /// No description provided for @reconnectCardHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Old friends pick up where they left off.'**
+  String get reconnectCardHint;
+
+  /// No description provided for @someoneElse.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone else'**
+  String get someoneElse;
+
+  /// No description provided for @reconnectDone.
+  ///
+  /// In en, this message translates to:
+  /// **'You got in touch with {name} this week.'**
+  String reconnectDone(String name);
+
+  /// No description provided for @backInTouchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You and {name} are back in touch.'**
+  String backInTouchTitle(String name);
+
+  /// No description provided for @backInTouchKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep as getting back in touch'**
+  String get backInTouchKeep;
 }
 
 class _AppLocalizationsDelegate

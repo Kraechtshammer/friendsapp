@@ -5,15 +5,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../data/database.dart';
+import '../../domain/rhythm.dart';
 import '../../domain/person.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
 import '../widgets/choice_chips.dart';
+import '../widgets/kept_card.dart';
 import '../widgets/kept_switch.dart';
 import '../widgets/kept_text_field.dart';
 import '../widgets/main_button.dart';
+import '../widgets/rhythm_stepper.dart';
 import '../widgets/section_label.dart';
 
 /// Opens the form for a new person.
@@ -104,6 +107,9 @@ class _FormState extends ConsumerState<_Form> {
 
   late Closeness _closeness = widget.person?.closeness ?? Closeness.nowAndThen;
   late bool _reconnecting = widget.person?.reconnecting ?? false;
+
+  /// The person's own rhythm in days; null is "like the class".
+  late int? _rhythm = widget.person?.rhythmDays;
   late Messenger? _messenger = widget.person?.mainMessenger;
   late AvatarShape _shape = widget.person?.avatarShape ?? AvatarShape.values[0];
   late AvatarColor _color = widget.person?.avatarColor ?? AvatarColor.values[0];
@@ -153,6 +159,7 @@ class _FormState extends ConsumerState<_Form> {
         name: _name.text.trim(),
         closeness: _closeness,
         reconnecting: _reconnecting,
+        rhythmDays: _rhythm,
         mainMessenger: _messenger,
         phone: _orNull(_phone),
         telegramUsername: _orNull(_telegram),
@@ -164,11 +171,24 @@ class _FormState extends ConsumerState<_Form> {
         notes: _notes.text.trim(),
       );
     } else {
+      if (_reconnecting && !person.reconnecting) {
+        // A new time of getting back in touch: ask "back in touch?" again.
+        await ref
+            .read(servicesProvider)
+            .settings
+            .update(
+              (s) => s.copyWith(
+                backInTouchAnswered: {...s.backInTouchAnswered}
+                  ..remove(person.id),
+              ),
+            );
+      }
       await repo.update(
         person.copyWith(
           name: _name.text.trim(),
           closeness: _closeness,
           reconnecting: _reconnecting,
+          rhythmDays: Value(_rhythm),
           mainMessenger: Value(_messenger),
           phone: Value(_orNull(_phone)),
           telegramUsername: Value(_orNull(_telegram)),
@@ -212,6 +232,16 @@ class _FormState extends ConsumerState<_Form> {
     await repo.delete(person.id);
     // Back to the tab, past the person page that is now empty.
     navigator.popUntil((route) => route.isFirst);
+  }
+
+  /// The rhythm of the chosen class, as text ("2 weeks" or "none").
+  String _classRhythmLabel(BuildContext context) {
+    final rhythms =
+        ref.watch(settingsProvider).value?.classRhythms ?? defaultClassRhythms;
+    final days = rhythms[_closeness];
+    return days == null
+        ? context.l10n.rhythmNone.toLowerCase()
+        : rhythmLabel(days, context.l10n);
   }
 
   @override
@@ -277,32 +307,21 @@ class _FormState extends ConsumerState<_Form> {
                   ),
                 ]),
                 const SizedBox(height: 18),
-                Row(
-                  spacing: 12,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 2,
-                        children: [
-                          Text(
-                            l10n.reconnecting,
-                            style: context.text.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            l10n.reconnectingHint,
-                            style: context.text.bodyMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                    KeptSwitch(
-                      value: _reconnecting,
-                      onChanged: (v) => setState(() => _reconnecting = v),
-                    ),
-                  ],
+                _group(l10n.editRhythm, [
+                  Text(l10n.editRhythmHelp, style: context.text.bodyMedium),
+                  RhythmStepper(
+                    options: rhythmOptions(current: _rhythm, nullFirst: true),
+                    value: _rhythm,
+                    label: (days) => days == null
+                        ? '${l10n.rhythmLikeClass} · ${_classRhythmLabel(context)}'
+                        : rhythmLabel(days, l10n),
+                    onChanged: (v) => setState(() => _rhythm = v),
+                  ),
+                ]),
+                const SizedBox(height: 18),
+                _ReconnectingSwitch(
+                  value: _reconnecting,
+                  onChanged: (v) => setState(() => _reconnecting = v),
                 ),
                 const SizedBox(height: 18),
                 _group(l10n.editMessenger, [
@@ -526,4 +545,49 @@ class _ColorPicker extends StatelessWidget {
         ),
     ],
   );
+}
+
+/// The "getting back in touch" switch, in a lilac card so it reads as a
+/// state of its own, apart from the class (02-design.md §6.9).
+class _ReconnectingSwitch extends StatelessWidget {
+  const _ReconnectingSwitch({required this.value, required this.onChanged});
+
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final tone = context.kept.lilacTone;
+    final l10n = context.l10n;
+    return KeptCard(
+      tone: tone,
+      small: true,
+      child: Row(
+        spacing: 12,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 4,
+              children: [
+                Text(
+                  l10n.reconnecting,
+                  style: context.text.labelLarge?.copyWith(
+                    color: tone.onContainer,
+                  ),
+                ),
+                Text(
+                  l10n.reconnectingHint,
+                  style: context.text.bodyMedium?.copyWith(
+                    color: tone.onContainer,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          KeptSwitch(value: value, onChanged: onChanged),
+        ],
+      ),
+    );
+  }
 }

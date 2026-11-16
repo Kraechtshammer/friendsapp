@@ -1,7 +1,9 @@
-import 'package:flutter/foundation.dart' show setEquals;
+import 'package:flutter/foundation.dart' show mapEquals, setEquals;
 
 import '../domain/birthdays.dart';
 import '../domain/owed_reply.dart';
+import '../domain/person.dart';
+import '../domain/rhythm.dart';
 
 /// Dark, light or as the phone says.
 enum AppThemeMode { system, light, dark }
@@ -23,6 +25,10 @@ class AppSettings {
     this.ownBirthday,
     this.incomingOn = false,
     this.replyWaitDays = defaultReplyWaitDays,
+    this.classRhythms = defaultClassRhythms,
+    this.reconnectPersonId,
+    this.reconnectWeek,
+    this.backInTouchAnswered = const {},
   });
 
   /// The shortest and longest waiting time for owed replies, in days.
@@ -66,6 +72,24 @@ class AppSettings {
   /// Days after an incoming message before a reply counts as owed.
   final int replyWaitDays;
 
+  /// The rhythm of each class in days; null is no rhythm (02-design.md
+  /// §6.9). Stored as `rhythm_<class>`: a number of days, or `none`.
+  final Map<Closeness, int?> classRhythms;
+
+  /// The class's rhythm; null is none.
+  int? rhythmOf(Closeness closeness) => classRhythms[closeness];
+
+  /// The person the user chose to get back in touch with, and the Monday
+  /// (local midnight) of the week they chose them (01-research.md §9.8,
+  /// F13). Both null when nobody is chosen. A week that has passed counts
+  /// as nobody ([reconnectWeekState]).
+  final String? reconnectPersonId;
+  final DateTime? reconnectWeek;
+
+  /// People whose "You and X are back in touch" card was answered, so it
+  /// does not come back.
+  final Set<String> backInTouchAnswered;
+
   /// Reads settings from the stored key-value pairs. Unknown or broken
   /// values fall back to the defaults.
   factory AppSettings.fromMap(Map<String, String> m) {
@@ -91,6 +115,22 @@ class AppSettings {
         final v? when v >= minReplyWaitDays && v <= maxReplyWaitDays => v,
         _ => d.replyWaitDays,
       },
+      classRhythms: {
+        for (final c in Closeness.values)
+          c: switch (m['rhythm_${c.name}']) {
+            'none' => null,
+            final v? when _validRhythm(int.tryParse(v)) => int.parse(v),
+            _ => defaultClassRhythms[c],
+          },
+      },
+      reconnectPersonId: _parseDay(m['reconnectWeek']) == null
+          ? null
+          : m['reconnectPerson'],
+      reconnectWeek: _parseDay(m['reconnectWeek']),
+      backInTouchAnswered: {
+        for (final id in (m['backInTouchAnswered'] ?? '').split(','))
+          if (id.trim().isNotEmpty) id.trim(),
+      },
     );
   }
 
@@ -106,6 +146,11 @@ class AppSettings {
     'ownBirthday': ownBirthday?.format(),
     'incomingOn': '$incomingOn',
     'replyWaitDays': '$replyWaitDays',
+    for (final c in Closeness.values)
+      'rhythm_${c.name}': classRhythms[c]?.toString() ?? 'none',
+    'reconnectPerson': reconnectPersonId,
+    'reconnectWeek': reconnectWeek == null ? null : _formatDay(reconnectWeek!),
+    'backInTouchAnswered': (backInTouchAnswered.toList()..sort()).join(','),
   };
 
   AppSettings copyWith({
@@ -118,6 +163,52 @@ class AppSettings {
     OpenItemsMode? openItems,
     bool? incomingOn,
     int? replyWaitDays,
+    Map<Closeness, int?>? classRhythms,
+    Set<String>? backInTouchAnswered,
+  }) => _copy(
+    themeMode: themeMode,
+    demoMode: demoMode,
+    eveningOn: eveningOn,
+    eveningMinute: eveningMinute,
+    eveningExcludedDays: eveningExcludedDays,
+    notificationPermissionAsked: notificationPermissionAsked,
+    openItems: openItems,
+    incomingOn: incomingOn,
+    replyWaitDays: replyWaitDays,
+    classRhythms: classRhythms,
+    backInTouchAnswered: backInTouchAnswered,
+  );
+
+  /// A copy with [birthday] as the user's own birthday; null clears it.
+  AppSettings withOwnBirthday(Birthday? birthday) =>
+      _copy(ownBirthday: birthday);
+
+  /// A copy with [personId] as the reconnect person of the week that
+  /// starts on [week] (a Monday); both null clears the choice.
+  AppSettings withReconnectOfWeek(String? personId, DateTime? week) =>
+      _copy(reconnectPersonId: personId, reconnectWeek: week);
+
+  /// A copy with [classRhythms] changed for one class; null days is none.
+  AppSettings withClassRhythm(Closeness closeness, int? days) =>
+      copyWith(classRhythms: {...classRhythms, closeness: days});
+
+  /// Nullable fields are replaced with whatever is passed, even null,
+  /// unless left out ([_keep]).
+  AppSettings _copy({
+    AppThemeMode? themeMode,
+    bool? demoMode,
+    bool? eveningOn,
+    int? eveningMinute,
+    Set<int>? eveningExcludedDays,
+    bool? notificationPermissionAsked,
+    OpenItemsMode? openItems,
+    Object? ownBirthday = _keep,
+    bool? incomingOn,
+    int? replyWaitDays,
+    Map<Closeness, int?>? classRhythms,
+    Object? reconnectPersonId = _keep,
+    Object? reconnectWeek = _keep,
+    Set<String>? backInTouchAnswered,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     demoMode: demoMode ?? this.demoMode,
@@ -127,23 +218,19 @@ class AppSettings {
     notificationPermissionAsked:
         notificationPermissionAsked ?? this.notificationPermissionAsked,
     openItems: openItems ?? this.openItems,
-    ownBirthday: ownBirthday,
+    ownBirthday: identical(ownBirthday, _keep)
+        ? this.ownBirthday
+        : ownBirthday as Birthday?,
     incomingOn: incomingOn ?? this.incomingOn,
     replyWaitDays: replyWaitDays ?? this.replyWaitDays,
-  );
-
-  /// A copy with [birthday] as the user's own birthday; null clears it.
-  AppSettings withOwnBirthday(Birthday? birthday) => AppSettings(
-    themeMode: themeMode,
-    demoMode: demoMode,
-    eveningOn: eveningOn,
-    eveningMinute: eveningMinute,
-    eveningExcludedDays: eveningExcludedDays,
-    notificationPermissionAsked: notificationPermissionAsked,
-    openItems: openItems,
-    ownBirthday: birthday,
-    incomingOn: incomingOn,
-    replyWaitDays: replyWaitDays,
+    classRhythms: classRhythms ?? this.classRhythms,
+    reconnectPersonId: identical(reconnectPersonId, _keep)
+        ? this.reconnectPersonId
+        : reconnectPersonId as String?,
+    reconnectWeek: identical(reconnectWeek, _keep)
+        ? this.reconnectWeek
+        : reconnectWeek as DateTime?,
+    backInTouchAnswered: backInTouchAnswered ?? this.backInTouchAnswered,
   );
 
   @override
@@ -158,7 +245,11 @@ class AppSettings {
       other.openItems == openItems &&
       other.ownBirthday == ownBirthday &&
       other.incomingOn == incomingOn &&
-      other.replyWaitDays == replyWaitDays;
+      other.replyWaitDays == replyWaitDays &&
+      mapEquals(other.classRhythms, classRhythms) &&
+      other.reconnectPersonId == reconnectPersonId &&
+      other.reconnectWeek == reconnectWeek &&
+      setEquals(other.backInTouchAnswered, backInTouchAnswered);
 
   @override
   int get hashCode => Object.hash(
@@ -172,7 +263,30 @@ class AppSettings {
     ownBirthday,
     incomingOn,
     replyWaitDays,
+    Object.hashAll([for (final c in Closeness.values) classRhythms[c]]),
+    reconnectPersonId,
+    reconnectWeek,
+    Object.hashAllUnordered(backInTouchAnswered),
   );
+}
+
+const _keep = Object();
+
+bool _validRhythm(int? days) => days != null && days >= 1 && days <= 3650;
+
+/// "YYYY-MM-DD".
+String _formatDay(DateTime d) {
+  String two(int n) => n.toString().padLeft(2, '0');
+  return '${d.year.toString().padLeft(4, '0')}-${two(d.month)}-${two(d.day)}';
+}
+
+/// A stored "YYYY-MM-DD" as local midnight; null if it is not one.
+DateTime? _parseDay(String? text) {
+  final m = RegExp(r'^(\d{4})-(\d{2})-(\d{2})$').firstMatch(text ?? '');
+  if (m == null) return null;
+  final y = int.parse(m[1]!), mo = int.parse(m[2]!), d = int.parse(m[3]!);
+  final day = DateTime(y, mo, d);
+  return day.month == mo && day.day == d ? day : null;
 }
 
 /// "HH:MM", 24 hours.

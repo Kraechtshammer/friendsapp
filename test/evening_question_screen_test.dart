@@ -47,7 +47,7 @@ void main() {
     await tester.pumpAndSettle();
     // The section at the top of the screen. Scrolling to "Days" would put
     // it under the app bar now that the page is longer (M7).
-    await tester.ensureVisible(find.text('EVENING QUESTION'));
+    await tester.scrollUntilVisible(find.text('EVENING QUESTION'), 100);
     await tester.pumpAndSettle();
   }
 

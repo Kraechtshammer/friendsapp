@@ -10,6 +10,8 @@ import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/app_settings.dart';
 import '../../domain/birthdays.dart';
+import '../../domain/person.dart';
+import '../../domain/rhythm.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../home/congratulated_screen.dart';
@@ -18,6 +20,7 @@ import '../material.dart';
 import '../widgets/grey_icon_button.dart';
 import '../widgets/kept_switch.dart';
 import '../widgets/kept_text_field.dart';
+import '../widgets/rhythm_stepper.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -61,6 +64,8 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 32),
           _OpenItems(mode: settings.openItems),
+          const SizedBox(height: 32),
+          _Rhythms(settings: settings),
           const SizedBox(height: 32),
           _EveningQuestion(settings: settings),
           const SizedBox(height: 32),
@@ -113,6 +118,63 @@ class _OpenItems extends ConsumerWidget {
             ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+/// The rhythm of each class (02-design.md §6.9, §6.10): one stepper per
+/// class over [rhythmSpans] and "None". A rhythm only drives the gentle
+/// hint on Home, never an overdue mark. Family starts with none.
+class _Rhythms extends ConsumerWidget {
+  const _Rhythms({required this.settings});
+
+  final AppSettings settings;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          l10n.settingsRhythms.toUpperCase(),
+          style: context.text.labelMedium,
+        ),
+        const SizedBox(height: 4),
+        Text(l10n.settingsRhythmsHelp, style: context.text.bodyMedium),
+        const SizedBox(height: 12),
+        for (final c in Closeness.values)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
+              spacing: 10,
+              children: [
+                KeptIcon(closenessIcon(c), size: 24),
+                Expanded(
+                  child: Text(
+                    closenessGroupLabel(c, l10n),
+                    style: context.text.bodyLarge,
+                  ),
+                ),
+                SizedBox(
+                  width: 196,
+                  child: RhythmStepper(
+                    options: rhythmOptions(current: settings.rhythmOf(c)),
+                    value: settings.rhythmOf(c),
+                    label: (days) => days == null
+                        ? l10n.rhythmNone
+                        : rhythmLabel(days, l10n),
+                    onChanged: (days) => unawaited(
+                      ref.services.settings.update(
+                        (s) => s.withClassRhythm(c, days),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
       ],
     );
   }

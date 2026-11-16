@@ -63,6 +63,15 @@ Tests that run by themselves (`flutter analyze`, `flutter test`, the migration t
 - [ ] Switching the part off stops the recording.
 - [ ] Do you miss a notification for owed replies? (There is none, by Claude's choice.)
 
+## M8, rhythm and reconnect (not released yet)
+
+- [ ] Settings, "Rhythms": change a class rhythm; give one person an own rhythm on their edit page.
+- [ ] Over some evenings: the hint "It's been a while with ..." names different people, never with a number, and feels gentle.
+- [ ] People tab: choose a reconnect person for the week; "This week: ..." shows as a pick on Home.
+- [ ] After you contacted them, the card shows the calm done state; next Monday it starts empty without a remark.
+- [ ] After they answered: the "back in touch" card appears once on Home.
+- [ ] Do you miss a notification for the reconnect person of the week? (There is none, by Claude's choice.)
+
 ## Release builds
 
 - [ ] The APK from the GitHub release installs over the debug build or over the last release, and keeps the data. (A debug build and a release build are signed differently; Android may refuse one over the other. Do not uninstall to get around it: that deletes the data. Tell Claude instead.)

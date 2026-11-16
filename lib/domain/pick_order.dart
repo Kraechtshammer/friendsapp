@@ -1,11 +1,12 @@
 import '../data/database.dart';
 import 'birthdays.dart';
 import 'owed_reply.dart';
+import 'person.dart';
 import 'plans.dart';
+import 'rhythm.dart';
 
-/// Where a pick comes from (02-design.md §2.4). The reconnect person and
-/// rhythms will add their own kinds.
-enum PickKind { birthday, reply, intention, plan }
+/// Where a pick comes from (02-design.md §2.4).
+enum PickKind { birthday, reply, reconnect, intention, plan, hint }
 
 /// One thing to suggest tonight: a person and the reason.
 sealed class Pick {
@@ -40,6 +41,25 @@ class ReplyPick extends Pick {
   PickKind get kind => PickKind.reply;
 }
 
+/// The reconnect person of the week (§2.4, step 3): the card says "This
+/// week: NAME" until the user has been in touch that week.
+class ReconnectPick extends Pick {
+  const ReconnectPick(super.person);
+
+  @override
+  PickKind get kind => PickKind.reconnect;
+}
+
+/// A person whose rhythm says it has been a while (§2.4, step 5; F8,
+/// [peopleDueForHint]). The card says "It's been a while with NAME", with no
+/// number. There is nothing to tick off, so it has no Done.
+class HintPick extends Pick {
+  const HintPick(super.person);
+
+  @override
+  PickKind get kind => PickKind.hint;
+}
+
 /// One of the user's own open intentions (§2.4, step 4).
 class IntentionPick extends Pick {
   const IntentionPick(super.person, this.intention);
@@ -62,16 +82,26 @@ class PlanPick extends IntentionPick {
 
 /// Tonight's picks, in order: birthdays on the local day of [today] of
 /// people not in [congratulated] (in the order of [people]), then the owed
-/// replies [owed] (from [owedReplies], longest owed first), then the plain
-/// thoughts and the due plans ([intentionPicks]). At most one pick per
-/// person: a person with an earlier pick has no later one until that is
-/// gone. [now] is the time for the due plans; it defaults to [today].
+/// replies [owed] (from [owedReplies], longest owed first), then the
+/// [reconnect] person of the week, then the plain thoughts and the due
+/// plans ([intentionPicks]), and last at most one [HintPick].
+///
+/// The hint is chosen only when [classRhythms] is given: from the people
+/// due ([peopleDueForHint], with [events]) by the rotation of the day
+/// ([hintPersonFor]), leaving out everyone with an earlier pick and
+/// everyone with an open thought or plan in [intentions], with or without
+/// a date. At most one pick per person: a person with an earlier pick has
+/// no later one until that is gone. [now] is the time for the due plans and
+/// the hint; it defaults to [today].
 List<Pick> tonightsPicks({
   required List<Person> people,
   required List<Intention> intentions,
   required DateTime today,
   required Set<String> congratulated,
   List<OwedReply> owed = const [],
+  Person? reconnect,
+  Iterable<ContactEvent> events = const [],
+  Map<Closeness, int?>? classRhythms,
   DateTime? now,
 }) {
   final birthdays = [
@@ -84,11 +114,33 @@ List<Pick> tonightsPicks({
     for (final o in owed)
       if (taken.add(o.person.id)) ReplyPick(o.person, since: o.since),
   ];
+  final reconnectPick = reconnect == null || !taken.add(reconnect.id)
+      ? null
+      : ReconnectPick(reconnect);
+  final thoughts = [
+    for (final i in intentionPicks(people, intentions, now: now ?? today))
+      if (!taken.contains(i.person.id)) i,
+  ];
+  taken
+    ..addAll(thoughts.map((i) => i.person.id))
+    ..addAll(intentions.map((i) => i.personId));
+  final hint = classRhythms == null
+      ? null
+      : hintPersonFor([
+          for (final p in peopleDueForHint(
+            people,
+            events,
+            classRhythms,
+            now ?? today,
+          ))
+            if (!taken.contains(p.id)) p,
+        ], today);
   return [
     ...birthdays,
     ...replies,
-    for (final i in intentionPicks(people, intentions, now: now ?? today))
-      if (!taken.contains(i.person.id)) i,
+    ?reconnectPick,
+    ...thoughts,
+    if (hint != null) HintPick(hint),
   ];
 }
 

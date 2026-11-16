@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kept/data/app_settings.dart';
 import 'package:kept/data/database.dart';
 import 'package:kept/data/settings_repository.dart';
+import 'package:kept/domain/person.dart';
 
 void main() {
   late AppDatabase db;
@@ -87,5 +88,37 @@ void main() {
     expect(settings.eveningOn, isTrue);
     expect(settings.eveningMinute, 19 * 60);
     expect(settings.eveningExcludedDays, {3, 6});
+  });
+
+  test(
+    'rhythms start at 2 weeks, 6 weeks, 3 months and none for Family',
+    () async {
+      final settings = await repo.load();
+      expect(settings.rhythmOf(Closeness.close), 14);
+      expect(settings.rhythmOf(Closeness.nowAndThen), 42);
+      expect(settings.rhythmOf(Closeness.fewTimesAYear), 90);
+      expect(settings.rhythmOf(Closeness.family), isNull);
+    },
+  );
+
+  test('rhythms are stored, none included, and read back', () async {
+    await repo.update((s) => s.withClassRhythm(Closeness.family, 56));
+    await repo.update((s) => s.withClassRhythm(Closeness.close, null));
+    final settings = await repo.load();
+    expect(settings.rhythmOf(Closeness.family), 56);
+    expect(settings.rhythmOf(Closeness.close), isNull);
+    expect(settings.rhythmOf(Closeness.nowAndThen), 42);
+    expect(await repo.watch().first, settings);
+  });
+
+  test('a broken rhythm falls back to the start value', () {
+    final settings = AppSettings.fromMap({
+      'rhythm_close': 'often',
+      'rhythm_nowAndThen': '0',
+      'rhythm_family': '-3',
+    });
+    expect(settings.rhythmOf(Closeness.close), 14);
+    expect(settings.rhythmOf(Closeness.nowAndThen), 42);
+    expect(settings.rhythmOf(Closeness.family), isNull);
   });
 }
