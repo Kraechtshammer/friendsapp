@@ -29,6 +29,7 @@ enum KeptIcons {
   controller,
   cups,
   wasd,
+  bench,
 
   // The class badge on an avatar: a plant that grows with the class.
   sprout,
