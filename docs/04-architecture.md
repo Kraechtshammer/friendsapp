@@ -138,11 +138,7 @@ In-memory drift databases. `test/demo_mode_test.dart` shows how to build `AppSer
 
 ### 2.5 Planned, not built
 
-| Layer | Will hold |
-|---|---|
-| `core/` | Time helpers (day keys, calendar arithmetic) |
-| `domain/` | The pick order, the stamp rule, rhythms and due dates, as pure functions that take the current time as a parameter |
-| `platform/` | Notifications, contacts and birthdays, opening chats with `android_intent_plus`, our own Kotlin notification listener, icon long-press |
+Nothing from the milestones M0 to M10. Ideas for after 1.0.0 are listed in HANDOFF.md.
 
 ## 3. Code style
 
@@ -165,7 +161,10 @@ Remove an item when it is fixed.
 - The navigation indicator pill is 64 x 32 (Material's default); ui-style.md §6 says 64 x 36.
 - `KeptColors.lerp` does not blend: it switches at the half-way point. A theme change has no colour animation.
 - The contrast of muted text on tonal containers has not been measured (also open in ui-style.md §8).
-- Tests: one widget test and one asset test. No test checks the theme mapping or the German texts.
-- The light theme has not been looked at on a phone. Only the dark theme was checked.
-- Declared dependencies that nothing uses yet add build weight and, for notifications, manifest entries. They match the approved list in 02-design.md §4.
-- No error or loading UI exists. That is fine now; decide when the database arrives.
+- The light theme has not been looked at on a phone. Only the dark theme was checked, mostly in test renders.
+- No test checks the theme mapping. The German texts were written by subagents and are not reviewed by the developer.
+- All Kotlin code (notification listener, share receiver, update installer) is untested by automated tests; it is checked only on the phone (05-test-list.md).
+- Release builds do not shrink code or resources (no `minifyEnabled`). The APK is about 65 MB.
+- `minSdk` and `targetSdk` follow Flutter's defaults and are not pinned. Check the target against Play's rules before a Play release.
+- Test renders use a test font: some glyphs (small arrows, Material icons) show as boxes there. Whether they show on a phone is on the test list.
+- Loading and error states are minimal: a failed database read shows nothing instead of a message.

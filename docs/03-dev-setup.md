@@ -153,7 +153,7 @@ Checked on 2026-11-15:
 Not checked yet:
 
 - That the shared emulator volume works from this container.
-- Phone connection from this container.
-- The CI and release workflows on GitHub. They have not run yet. The release workflow needs the signing secrets first.
+- Phone connection from this container. (Installs go from WSL through the Windows adb instead, by cable or by wireless debugging; see HANDOFF §7.)
+- (Settled on 2026-11-16: the CI and release workflows run on GitHub; releases 0.1.0 to 0.6.0 were built, signed with the release key and published by the release workflow.)
 
 The test build left an image named `friendsapp-devcontainer-check`. It keeps the layers cached for the real container build. Remove it with `docker rmi friendsapp-devcontainer-check` once the dev container has been opened.
