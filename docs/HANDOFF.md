@@ -15,7 +15,8 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
   - 0.6.0: M10, ideas and sharing into the app.
   - 0.7.0: the review changes, the first-start flow, the permissions page, refresh from contacts, the licences row, the K. launcher icon, the in-app update, the evening ping naming its reason, a clean-up of unused code.
 - **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.8.0 next).
-- **The developer's phone** has a debug build of 0.6.0 under the release's app id (schema 4, real data). The developer will uninstall it and start fresh on the release build; debug builds then install beside it as "Kept. debug".
+- **The developer's phone** (2026-11-16) has two installs: `de.gartenpa.kept`, an old debug build of 0.6.0 under the release's app id with the developer's real data (schema 4), and `de.gartenpa.kept.debug` ("Kept. debug"), the 0.7.0 debug build, empty, for testing. The developer will uninstall the first and start fresh on the release APK from GitHub; Claude does not uninstall it unasked. The in-app update can only be tried once a release build is installed and a newer release exists.
+- Pushed: everything up to the 0.7.0 release commit. Later docs commits are local until the developer asks for a push or the next release.
 - **Tried by the developer:** M1 to M4 on the phone (M2 "all worked", M3 "everything else looks good", M4 "so far it looks good"); the evening and birthday notifications are being tried in daily use and have no report yet. The 0.6.0 debug build was installed on 2026-11-16; there is no report on the migration to schema 4 or on M5 onward. **Every database change needs a tested migration.**
 
 ## 2. What to read, and how much
