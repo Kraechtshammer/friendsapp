@@ -8,6 +8,7 @@ import '../kept_icon.dart';
 import '../material.dart';
 import '../settings/settings_screen.dart';
 import 'capture_card.dart';
+import 'congratulated_screen.dart';
 import 'open_thoughts.dart';
 import 'tonights_pick.dart';
 
@@ -43,6 +44,7 @@ class HomeScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 14),
         CaptureCard(onAddPeople: onAddPeople),
+        const OwnBirthdayCard(),
         const TonightsPick(),
         const OpenThoughts(),
       ],

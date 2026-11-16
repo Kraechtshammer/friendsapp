@@ -1,11 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/app_settings.dart';
 import '../../data/database.dart';
+import '../../domain/birthdays.dart';
+import '../../domain/contact_event.dart';
 import '../../domain/person_name.dart';
 import '../../domain/pick_order.dart';
+import '../../l10n/app_localizations.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../kept_icon.dart';
@@ -24,7 +29,8 @@ import 'open_thoughts.dart';
 /// "Tonight's pick" under the capture card (02-design.md §2.3 and §2.4;
 /// concept V6 · Home): one card with "Another one", or three compact
 /// cards, depending on the setting `openItems`. The picks come from
-/// [intentionPicks]. With nothing open, nothing is shown.
+/// [tonightsPicks]: today's birthdays not congratulated yet come first,
+/// then the open thoughts. With nothing to pick, nothing is shown.
 ///
 /// "Yes" on the evening question scrolls Home here
 /// ([openThoughtsRequestProvider]). If the thoughts are still loading, the
@@ -56,9 +62,21 @@ class _TonightsPickState extends ConsumerState<TonightsPick> {
       setState(() => _scrollPending = true);
     });
     final loaded = ref.watch(openIntentionsProvider);
-    final picks = intentionPicks(
-      ref.watch(peopleProvider).value ?? const <Person>[],
-      loaded.value ?? const <Intention>[],
+    final now = ref.watch(clockProvider)();
+    final today = DateTime(now.year, now.month, now.day);
+    final wishes = ref.watch(
+      birthdayWishesProvider((ContactDirection.byUser, today)),
+    );
+    final people = ref.watch(peopleProvider).value ?? const <Person>[];
+    final picks = tonightsPicks(
+      people: people,
+      intentions: loaded.value ?? const <Intention>[],
+      today: today,
+      // Until the wishes are loaded nobody counts as having a birthday
+      // pick, so one already congratulated never shows for a moment.
+      congratulated: wishes.hasValue
+          ? congratulatedIds(wishes.requireValue, today)
+          : {for (final p in people) p.id},
     );
     if (_scrollPending && picks.isNotEmpty) {
       _scrollPending = false;
@@ -98,7 +116,8 @@ class _TonightsPickState extends ConsumerState<TonightsPick> {
   }
 }
 
-/// The one-item card: person, thought, last time, and the three buttons.
+/// The one-item card: person, thought (or birthday), last time, and the
+/// three buttons. For a birthday "Done" is "Congratulated".
 class _PickCard extends ConsumerWidget {
   const _PickCard(this.pick, {required this.onAnother});
 
@@ -111,10 +130,9 @@ class _PickCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final kept = context.kept;
+    final pick = this.pick;
     final person = pick.person;
-    final intention = pick.intention;
     final messenger = person.mainMessenger;
-    final note = intention.note.trim();
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -145,7 +163,7 @@ class _PickCard extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                            KeptIcon(kindIcon(intention.kind), size: 22),
+                            KeptIcon(_pickIcon(pick), size: 22),
                           ],
                         ),
                         Text(
@@ -181,7 +199,7 @@ class _PickCard extends ConsumerWidget {
                   spacing: 4,
                   children: [
                     Text(
-                      note.isEmpty ? kindLabel(intention.kind, l10n) : note,
+                      _pickText(pick, l10n),
                       style: context.text.bodyLarge?.copyWith(color: kept.text),
                     ),
                     LastTimeLine(person.id),
@@ -192,8 +210,7 @@ class _PickCard extends ConsumerWidget {
                 MainButton(
                   label: l10n.openMessenger(messengerLabel(messenger, l10n)),
                   icon: messengerIcon(messenger),
-                  onPressed: () =>
-                      openChat(context, ref, person, intention: intention),
+                  onPressed: () => _openChat(context, ref, pick),
                 ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
@@ -209,9 +226,10 @@ class _PickCard extends ConsumerWidget {
                       ),
                     Expanded(
                       child: GreyButton(
-                        label: l10n.done,
-                        onPressed: () =>
-                            completeThought(context, ref, person, intention),
+                        label: pick is BirthdayPick
+                            ? l10n.congratulated
+                            : l10n.done,
+                        onPressed: () => _complete(context, ref, pick),
                       ),
                     ),
                   ],
@@ -240,9 +258,7 @@ class _CompactPick extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final person = pick.person;
-    final intention = pick.intention;
     final messenger = person.mainMessenger;
-    final note = intention.note.trim();
     return KeptCard(
       small: true,
       padding: const EdgeInsets.all(12),
@@ -271,11 +287,11 @@ class _CompactPick extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    KeptIcon(kindIcon(intention.kind), size: 22),
+                    KeptIcon(_pickIcon(pick), size: 22),
                   ],
                 ),
                 Text(
-                  note.isEmpty ? kindLabel(intention.kind, l10n) : note,
+                  _pickText(pick, l10n),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: context.text.bodyMedium,
@@ -290,20 +306,64 @@ class _CompactPick extends ConsumerWidget {
               coral: true,
               tooltip: l10n.openMessenger(messengerLabel(messenger, l10n)),
               icon: messengerIcon(messenger),
-              onPressed: () =>
-                  openChat(context, ref, person, intention: intention),
+              onPressed: () => _openChat(context, ref, pick),
             ),
           _SquareButton(
             size: 48,
-            tooltip: l10n.done,
+            tooltip: pick is BirthdayPick ? l10n.congratulated : l10n.done,
             icon: KeptIcons.check,
-            onPressed: () => completeThought(context, ref, person, intention),
+            onPressed: () => _complete(context, ref, pick),
           ),
         ],
       ),
     );
   }
 }
+
+/// The icon next to the name: the cake for a birthday, else the kind.
+KeptIcons _pickIcon(Pick pick) => switch (pick) {
+  BirthdayPick() => KeptIcons.cake,
+  IntentionPick(:final intention) => kindIcon(intention.kind),
+};
+
+/// The line under the name: the birthday with the age if known, or the
+/// thought (its kind when it has no text).
+String _pickText(Pick pick, AppLocalizations l10n) => switch (pick) {
+  BirthdayPick(:final age?) => l10n.birthdayTurns(age),
+  BirthdayPick() => l10n.birthdayToday,
+  IntentionPick(:final intention) =>
+    intention.note.trim().isEmpty
+        ? kindLabel(intention.kind, l10n)
+        : intention.note.trim(),
+};
+
+void _openChat(BuildContext context, WidgetRef ref, Pick pick) =>
+    unawaited(switch (pick) {
+      BirthdayPick(:final person) => openChat(
+        context,
+        ref,
+        person,
+        birthday: true,
+      ),
+      IntentionPick(:final person, :final intention) => openChat(
+        context,
+        ref,
+        person,
+        intention: intention,
+      ),
+    });
+
+/// "Congratulated" on a birthday pick, "Done" on a thought.
+void _complete(BuildContext context, WidgetRef ref, Pick pick) =>
+    unawaited(switch (pick) {
+      BirthdayPick(:final person) => completeBirthday(context, ref, person),
+      IntentionPick(:final person, :final intention) => completeThought(
+        context,
+        ref,
+        person,
+        intention,
+      ),
+    });
 
 /// A rounded square with a colourful icon (ui-style.md §6): grey, or coral
 /// for opening the chat. Hard shadow 4 in the edge colour. [tooltip] is

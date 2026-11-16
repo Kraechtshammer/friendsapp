@@ -15,6 +15,9 @@ import 'nice_one_screen.dart';
 /// "Did you write to Tom?" after the user comes back from a messenger. See
 /// concept V6 · Back from the chat (docs/concepts/gen_v6.py).
 ///
+/// After a birthday pick it asks "Did you congratulate Tom?" and Yes
+/// stores a confirmed birthday wish.
+///
 /// Yes stores a confirmed contact and shows the Nice one screen in its
 /// place. Not yet closes the screen and stores nothing; the thought, if
 /// there is one, stays open and nothing becomes overdue.
@@ -29,12 +32,14 @@ class ChatQuestionScreen extends ConsumerWidget {
     final person = question.person;
     final intention = question.intention;
     final name = firstNameOf(person.name);
-    final title = switch (intention?.kind ?? IntentionKind.write) {
-      IntentionKind.write => l10n.chatQuestionWrite(name),
-      IntentionKind.call => l10n.chatQuestionCall(name),
-      IntentionKind.meet => l10n.chatQuestionMeet(name),
-      IntentionKind.game => l10n.chatQuestionGame(name),
-    };
+    final title = question.birthday
+        ? l10n.chatQuestionBirthday(name)
+        : switch (intention?.kind ?? IntentionKind.write) {
+            IntentionKind.write => l10n.chatQuestionWrite(name),
+            IntentionKind.call => l10n.chatQuestionCall(name),
+            IntentionKind.meet => l10n.chatQuestionMeet(name),
+            IntentionKind.game => l10n.chatQuestionGame(name),
+          };
     final messenger = person.mainMessenger;
     return Scaffold(
       body: SafeArea(
@@ -67,7 +72,15 @@ class ChatQuestionScreen extends ConsumerWidget {
                 ),
                 MainButton(
                   label: l10n.chatQuestionYes,
-                  onPressed: () => intention == null
+                  onPressed: () => question.birthday
+                      ? completeBirthday(
+                          context,
+                          ref,
+                          person,
+                          source: ContactSource.confirmed,
+                          replace: true,
+                        )
+                      : intention == null
                       ? completeWrite(context, ref, person, replace: true)
                       : completeThought(
                           context,

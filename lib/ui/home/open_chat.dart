@@ -11,13 +11,14 @@ import '../material.dart';
 /// "Open" with the person's messenger for [person]: opens their main messenger and queues
 /// the "Did you write?" question for when the user is back in the app
 /// ([pendingChatQuestionProvider]). [intention] is the thought the chat is
-/// for, if any. If the messenger does not open, nothing is queued and a
+/// for, if any; [birthday] says it was opened to congratulate. If the messenger does not open, nothing is queued and a
 /// note says so. Does nothing for a person without a main messenger.
 Future<void> openChat(
   BuildContext context,
   WidgetRef ref,
   Person person, {
   Intention? intention,
+  bool birthday = false,
 }) async {
   final link = chatLink(person);
   if (link == null) return;
@@ -26,7 +27,7 @@ Future<void> openChat(
   final messenger = ScaffoldMessenger.of(context);
   final pending = ref.read(pendingChatQuestionProvider.notifier);
   // Queued before opening, so a quick return cannot beat it.
-  pending.set(ChatQuestion(person, intention: intention));
+  pending.set(ChatQuestion(person, intention: intention, birthday: birthday));
   final opened = await ref.read(chatOpenerProvider).open(link);
   if (!opened) {
     pending.take();

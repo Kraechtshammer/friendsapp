@@ -64,6 +64,107 @@ class ContactEventsRepository {
           .watchSingleOrNull()
           .map((e) => e?.note);
 
+  /// The birthday wishes in [direction] on the local day of [day], of
+  /// everyone, oldest first.
+  Stream<List<ContactEvent>> watchBirthdayWishes(
+    ContactDirection direction,
+    DateTime day,
+  ) {
+    final start = DateTime(day.year, day.month, day.day);
+    final end = DateTime(day.year, day.month, day.day + 1);
+    return (_db.select(_db.contactEvents)
+          ..where(
+            (t) =>
+                t.kind.equalsValue(ContactKind.birthdayWish) &
+                t.direction.equalsValue(direction) &
+                t.at.isBiggerOrEqualValue(start) &
+                t.at.isSmallerThanValue(end),
+          )
+          ..orderBy([
+            (t) => OrderingTerm.asc(t.at),
+            (t) => OrderingTerm.asc(t.id),
+          ]))
+        .watch();
+  }
+
+  /// "You congratulated" [personId] on the local day of [day]: adds a
+  /// birthday wish by the user, unless one is already stored for that day;
+  /// then that one is returned and nothing is added. [at] defaults to now;
+  /// it is moved into [day] if it falls outside (a late answer after
+  /// midnight still counts for the birthday).
+  Future<ContactEvent> addBirthdayWishOnce({
+    required String personId,
+    required DateTime day,
+    required ContactSource source,
+    DateTime? at,
+    DateTime? now,
+  }) {
+    final time = now ?? DateTime.now();
+    var when = at ?? time;
+    if (dayKey(when) != dayKey(day)) {
+      when = DateTime(day.year, day.month, day.day, 23, 59);
+    }
+    return _db.transaction(() async {
+      final existing = await (_db.select(
+        _db.contactEvents,
+      )..where((t) => t.personId.equals(personId))).get();
+      for (final e in existing) {
+        if (e.kind == ContactKind.birthdayWish &&
+            e.direction == ContactDirection.byUser &&
+            dayKey(e.at) == dayKey(day)) {
+          return e;
+        }
+      }
+      return add(
+        personId: personId,
+        at: when,
+        kind: ContactKind.birthdayWish,
+        direction: ContactDirection.byUser,
+        source: source,
+        now: time,
+      );
+    });
+  }
+
+  /// "They congratulated you": stores ([on] true) or removes ([on] false)
+  /// [personId]'s birthday wish to the user on the local day of [day]. At
+  /// most one is stored per person and day. [at] is the time of a new one.
+  Future<void> setWishFrom(
+    String personId,
+    DateTime day, {
+    required bool on,
+    required DateTime at,
+  }) {
+    final start = DateTime(day.year, day.month, day.day);
+    final end = DateTime(day.year, day.month, day.day + 1);
+    return _db.transaction(() async {
+      final query = _db.select(_db.contactEvents)
+        ..where(
+          (t) =>
+              t.personId.equals(personId) &
+              t.kind.equalsValue(ContactKind.birthdayWish) &
+              t.direction.equalsValue(ContactDirection.byThem) &
+              t.at.isBiggerOrEqualValue(start) &
+              t.at.isSmallerThanValue(end),
+        );
+      final existing = await query.get();
+      if (!on) {
+        for (final e in existing) {
+          await delete(e.id);
+        }
+        return;
+      }
+      if (existing.isNotEmpty) return;
+      await add(
+        personId: personId,
+        at: at,
+        kind: ContactKind.birthdayWish,
+        direction: ContactDirection.byThem,
+        source: ContactSource.manual,
+      );
+    });
+  }
+
   /// Marks the intention [intentionId] done and adds the contact event that
   /// did it, linked to it, in one transaction. Kind and direction follow
   /// from the intention's kind (contactKindFor, contactDirectionFor).

@@ -853,6 +853,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not yet is fine. Nothing becomes overdue.'**
   String get chatQuestionHint;
+
+  /// No description provided for @congratulated.
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulated'**
+  String get congratulated;
+
+  /// No description provided for @birthdayToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday today'**
+  String get birthdayToday;
+
+  /// No description provided for @birthdayTurns.
+  ///
+  /// In en, this message translates to:
+  /// **'Turns {age} today'**
+  String birthdayTurns(int age);
+
+  /// No description provided for @chatQuestionBirthday.
+  ///
+  /// In en, this message translates to:
+  /// **'Did you congratulate {name}?'**
+  String chatQuestionBirthday(String name);
+
+  /// No description provided for @birthdayNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s {name}\'s birthday today. Congratulated yet?'**
+  String birthdayNotification(String name);
+
+  /// No description provided for @birthdayLateNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Last hour of {name}\'s birthday'**
+  String birthdayLateNotification(String name);
+
+  /// No description provided for @birthdayLateNotificationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulated yet?'**
+  String get birthdayLateNotificationBody;
+
+  /// No description provided for @birthdayYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get birthdayYes;
+
+  /// No description provided for @birthdayOpenChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Open chat'**
+  String get birthdayOpenChat;
+
+  /// No description provided for @birthdayChannel.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthdays'**
+  String get birthdayChannel;
+
+  /// No description provided for @congratulatedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Who congratulated you?'**
+  String get congratulatedTitle;
+
+  /// No description provided for @congratulatedToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Happy birthday!'**
+  String get congratulatedToday;
+
+  /// No description provided for @congratulatedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Your birthday on {date}'**
+  String congratulatedOn(DateTime date);
+
+  /// No description provided for @ownBirthdayCardHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Happy birthday! Note who wished you well.'**
+  String get ownBirthdayCardHint;
+
+  /// No description provided for @settingsOwnBirthday.
+  ///
+  /// In en, this message translates to:
+  /// **'Your birthday'**
+  String get settingsOwnBirthday;
+
+  /// No description provided for @settingsOwnBirthdayNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get settingsOwnBirthdayNotSet;
 }
 
 class _AppLocalizationsDelegate

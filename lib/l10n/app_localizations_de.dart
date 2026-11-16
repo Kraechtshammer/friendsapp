@@ -443,4 +443,69 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get chatQuestionHint =>
       'Noch nicht ist in Ordnung. Nichts ist überfällig.';
+
+  @override
+  String get congratulated => 'Gratuliert';
+
+  @override
+  String get birthdayToday => 'Hat heute Geburtstag';
+
+  @override
+  String birthdayTurns(int age) {
+    return 'Wird heute $age';
+  }
+
+  @override
+  String chatQuestionBirthday(String name) {
+    return 'Hast du $name gratuliert?';
+  }
+
+  @override
+  String birthdayNotification(String name) {
+    return '$name hat heute Geburtstag. Schon gratuliert?';
+  }
+
+  @override
+  String birthdayLateNotification(String name) {
+    return '$name hat nur noch eine Stunde Geburtstag';
+  }
+
+  @override
+  String get birthdayLateNotificationBody => 'Schon gratuliert?';
+
+  @override
+  String get birthdayYes => 'Ja';
+
+  @override
+  String get birthdayOpenChat => 'Chat öffnen';
+
+  @override
+  String get birthdayChannel => 'Geburtstage';
+
+  @override
+  String get congratulatedTitle => 'Wer hat dir gratuliert?';
+
+  @override
+  String get congratulatedToday => 'Alles Gute zum Geburtstag!';
+
+  @override
+  String congratulatedOn(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat(
+      'd. MMMM',
+      localeName,
+    );
+    final String dateString = dateDateFormat.format(date);
+
+    return 'Dein Geburtstag am $dateString';
+  }
+
+  @override
+  String get ownBirthdayCardHint =>
+      'Alles Gute! Halte fest, wer dir gratuliert hat.';
+
+  @override
+  String get settingsOwnBirthday => 'Dein Geburtstag';
+
+  @override
+  String get settingsOwnBirthdayNotSet => 'Nicht eingetragen';
 }

@@ -7,6 +7,7 @@ import '../data/day_answers_repository.dart';
 import '../data/intentions_repository.dart';
 import '../data/people_repository.dart';
 import '../domain/chat_question.dart';
+import '../domain/contact_event.dart';
 import '../platform/app_shortcuts.dart';
 import '../platform/chat_opener.dart';
 import '../platform/contacts.dart';
@@ -182,6 +183,38 @@ final personLatestNoteProvider = StreamProvider.family<String?, String>((
   final services = ref.watch(servicesProvider);
   yield* services.contactEventsFor(demo: await demo).watchLatestNote(personId);
 });
+
+/// The birthday wishes in one direction on one local day (midnight), of
+/// everyone, from the content database (demo or real, like
+/// [personContactEventsProvider]).
+final birthdayWishesProvider =
+    StreamProvider.family<List<ContactEvent>, (ContactDirection, DateTime)>((
+      ref,
+      key,
+    ) async* {
+      final demo = ref.watch(settingsProvider.selectAsync((s) => s.demoMode));
+      final services = ref.watch(servicesProvider);
+      yield* services
+          .contactEventsFor(demo: await demo)
+          .watchBirthdayWishes(key.$1, key.$2);
+    });
+
+/// The real people, also in demo mode. The birthday notifications are
+/// planned from them only: their "Yes" writes to the real database
+/// (02-design.md §8, demo data).
+final realPeopleProvider = StreamProvider<List<Person>>(
+  (ref) => ref.watch(servicesProvider).peopleFor(demo: false).watchAll(),
+);
+
+/// The user's birthday wishes on one local day (midnight) in the real
+/// database, also in demo mode; see [realPeopleProvider].
+final realWishesByUserProvider =
+    StreamProvider.family<List<ContactEvent>, DateTime>(
+      (ref, day) => ref
+          .watch(servicesProvider)
+          .contactEventsFor(demo: false)
+          .watchBirthdayWishes(ContactDirection.byUser, day),
+    );
 
 /// Where day answers are written: the demo or the real database, following
 /// `demoMode`, like [peopleRepositoryProvider].

@@ -60,6 +60,40 @@ Future<void> completeWrite(
       ),
 );
 
+/// "Congratulated" on a birthday pick ([source] `manual`) or "Yes" on "Did
+/// you congratulate?" (`confirmed`): stores the user's birthday wish for
+/// today (once), cancels today's birthday notifications for the person,
+/// then shows the "Nice one" screen. HomeShell plans the notifications
+/// again when the wish appears, which moves them to the next birthday.
+Future<void> completeBirthday(
+  BuildContext context,
+  WidgetRef ref,
+  Person person, {
+  ContactSource source = ContactSource.manual,
+  bool replace = false,
+}) {
+  final now = ref.read(clockProvider)();
+  final notifications = ref.read(notificationsProvider);
+  return _storeAndCelebrate(
+    context,
+    person: person,
+    thought: '',
+    replace: replace,
+    store: () async {
+      final event = await ref
+          .read(contactEventsRepositoryProvider)
+          .addBirthdayWishOnce(
+            personId: person.id,
+            day: now,
+            at: now,
+            source: source,
+          );
+      unawaited(notifications.cancelBirthday(person.id));
+      return event;
+    },
+  );
+}
+
 Future<void> _storeAndCelebrate(
   BuildContext context, {
   required Person person,
