@@ -103,6 +103,13 @@ class ContactEventsRepository {
     });
   }
 
+  /// Sets the activity and the note of an event. Both are replaced, so
+  /// null clears one. Nothing else of an event can change.
+  Future<void> update(String id, {String? activity, String? note}) =>
+      (_db.update(_db.contactEvents)..where((t) => t.id.equals(id))).write(
+        ContactEventsCompanion(activity: Value(activity), note: Value(note)),
+      );
+
   Future<void> delete(String id) =>
       (_db.delete(_db.contactEvents)..where((t) => t.id.equals(id))).go();
 

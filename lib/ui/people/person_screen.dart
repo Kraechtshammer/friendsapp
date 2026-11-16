@@ -10,6 +10,8 @@ import '../../l10n/labels.dart';
 import '../common.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
+import '../home/nice_one_screen.dart';
+import '../home/open_thoughts.dart';
 import '../kept_icon.dart';
 import '../widgets/grey_button.dart';
 import '../widgets/grey_icon_button.dart';
@@ -109,7 +111,7 @@ class _Body extends ConsumerWidget {
                     ],
                   ),
                 ),
-              _OpenIntentions(person.id),
+              _OpenIntentions(person),
             ],
           ),
         ),
@@ -121,9 +123,11 @@ class _Body extends ConsumerWidget {
 /// This person's open intentions, each with Done and Drop (02-design.md
 /// §2.3). Neutral: no dates, nothing is late.
 class _OpenIntentions extends ConsumerWidget {
-  const _OpenIntentions(this.personId);
+  const _OpenIntentions(this.person);
 
-  final String personId;
+  final Person person;
+
+  String get personId => person.id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -154,11 +158,18 @@ class _OpenIntentions extends ConsumerWidget {
                   children: [
                     KeptIcon(kindIcon(i.kind), size: 22),
                     Expanded(
-                      child: Text(
-                        i.note.trim().isEmpty
-                            ? kindLabel(i.kind, l10n)
-                            : i.note.trim(),
-                        style: context.text.bodyLarge,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 2,
+                        children: [
+                          Text(
+                            i.note.trim().isEmpty
+                                ? kindLabel(i.kind, l10n)
+                                : i.note.trim(),
+                            style: context.text.bodyLarge,
+                          ),
+                          LastTimeLine(personId),
+                        ],
                       ),
                     ),
                   ],
@@ -170,7 +181,7 @@ class _OpenIntentions extends ConsumerWidget {
                     GreyButton(
                       small: true,
                       label: l10n.done,
-                      onPressed: () => repo.setState(i.id, IntentionState.done),
+                      onPressed: () => completeThought(context, ref, person, i),
                     ),
                     GreyButton(
                       small: true,

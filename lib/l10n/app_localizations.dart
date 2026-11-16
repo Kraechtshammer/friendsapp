@@ -655,6 +655,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Capture a thought'**
   String get shortcutCapture;
+
+  /// No description provided for @niceOneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nice one!'**
+  String get niceOneTitle;
+
+  /// No description provided for @niceOneSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s what counts.'**
+  String get niceOneSubtitle;
+
+  /// No description provided for @activityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'What did you do?'**
+  String get activityLabel;
+
+  /// No description provided for @nextTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'One line for next time?'**
+  String get nextTimeLabel;
+
+  /// No description provided for @nextTimeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'new job in March'**
+  String get nextTimeHint;
+
+  /// No description provided for @remindMe.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me'**
+  String get remindMe;
+
+  /// No description provided for @remindMeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Also keeps this line as an open thought.'**
+  String get remindMeHelp;
+
+  /// No description provided for @niceOneClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get niceOneClose;
+
+  /// No description provided for @lastTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Last time: {note}'**
+  String lastTime(String note);
 }
 
 class _AppLocalizationsDelegate

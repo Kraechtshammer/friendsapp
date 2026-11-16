@@ -177,4 +177,19 @@ void main() {
     expect(kept.id, event.id);
     expect(kept.intentionId, isNull);
   });
+
+  test('update sets activity and note, and null clears them', () async {
+    final event = await add(anna, 0, note: 'old', kind: ContactKind.met);
+    await repo.update(event.id, activity: 'Bouldering', note: 'new job');
+    var stored = (await repo.watchForPerson(anna.id).first).single;
+    expect(stored.activity, 'Bouldering');
+    expect(stored.note, 'new job');
+    expect(stored.kind, ContactKind.met);
+    expect(stored.at, event.at);
+
+    await repo.update(event.id);
+    stored = (await repo.watchForPerson(anna.id).first).single;
+    expect(stored.activity, isNull);
+    expect(stored.note, isNull);
+  });
 }

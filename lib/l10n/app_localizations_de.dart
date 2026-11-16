@@ -329,4 +329,33 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get shortcutCapture => 'Gedanken festhalten';
+
+  @override
+  String get niceOneTitle => 'Stark!';
+
+  @override
+  String get niceOneSubtitle => 'Das zählt.';
+
+  @override
+  String get activityLabel => 'Was habt ihr gemacht?';
+
+  @override
+  String get nextTimeLabel => 'Eine Zeile für nächstes Mal?';
+
+  @override
+  String get nextTimeHint => 'neuer Job im März';
+
+  @override
+  String get remindMe => 'Erinnere mich';
+
+  @override
+  String get remindMeHelp => 'Hält die Zeile außerdem als offenen Gedanken.';
+
+  @override
+  String get niceOneClose => 'Schließen';
+
+  @override
+  String lastTime(String note) {
+    return 'Letztes Mal: $note';
+  }
 }

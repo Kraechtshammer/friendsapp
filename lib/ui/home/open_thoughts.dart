@@ -9,6 +9,8 @@ import '../kept_icon.dart';
 import '../material.dart';
 import '../people/person_screen.dart';
 import '../widgets/avatar.dart';
+import '../widgets/grey_button.dart';
+import 'nice_one_screen.dart';
 import '../widgets/kept_card.dart';
 import '../widgets/section_label.dart';
 
@@ -41,14 +43,14 @@ class OpenThoughts extends ConsumerWidget {
   }
 }
 
-class _Row extends StatelessWidget {
+class _Row extends ConsumerWidget {
   const _Row(this.person, this.intention);
 
   final Person person;
   final Intention intention;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final note = intention.note.trim();
     return KeptCard(
       small: true,
@@ -88,11 +90,37 @@ class _Row extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: context.text.bodyMedium,
                   ),
+                LastTimeLine(person.id),
               ],
             ),
           ),
+          GreyButton(
+            small: true,
+            label: context.l10n.done,
+            onPressed: () => completeThought(context, ref, person, intention),
+          ),
         ],
       ),
+    );
+  }
+}
+
+/// "Last time: ..." with the person's newest contact line, small and
+/// muted; nothing when there is none.
+class LastTimeLine extends ConsumerWidget {
+  const LastTimeLine(this.personId, {super.key});
+
+  final String personId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final note = ref.watch(personLatestNoteProvider(personId)).value?.trim();
+    if (note == null || note.isEmpty) return const SizedBox.shrink();
+    return Text(
+      context.l10n.lastTime(note),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: context.text.bodySmall?.copyWith(color: context.kept.muted),
     );
   }
 }

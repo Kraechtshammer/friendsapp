@@ -117,5 +117,14 @@
   "pickerNoMatch": "Niemand gefunden.",
   "done": "Erledigt",
   "drop": "Loslassen",
-  "shortcutCapture": "Gedanken festhalten"
+  "shortcutCapture": "Gedanken festhalten",
+  "niceOneTitle": "Stark!",
+  "niceOneSubtitle": "Das zählt.",
+  "activityLabel": "Was habt ihr gemacht?",
+  "nextTimeLabel": "Eine Zeile für nächstes Mal?",
+  "nextTimeHint": "neuer Job im März",
+  "remindMe": "Erinnere mich",
+  "remindMeHelp": "Hält die Zeile außerdem als offenen Gedanken.",
+  "niceOneClose": "Schließen",
+  "lastTime": "Letztes Mal: {note}"
 }

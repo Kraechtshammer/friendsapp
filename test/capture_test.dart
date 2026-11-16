@@ -8,6 +8,7 @@ import 'package:kept/data/database.dart';
 import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
 import 'package:kept/platform/app_shortcuts.dart';
+import 'package:kept/ui/home/nice_one_screen.dart';
 import 'package:kept/ui/material.dart';
 import 'package:kept/ui/people/person_screen.dart';
 
@@ -98,6 +99,14 @@ void main() {
 
     // Done removes it here and on Home.
     await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    expect(find.text('Nice one!'), findsOneWidget);
+    await tester.tap(
+      find.descendant(
+        of: find.byType(NiceOneScreen),
+        matching: find.text('Close'),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.text('ON YOUR MIND'), findsNothing);
     await tester.tap(find.byTooltip('Back'));

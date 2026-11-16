@@ -159,5 +159,21 @@
   "pickerNoMatch": "Nobody found.",
   "done": "Done",
   "drop": "Drop",
-  "shortcutCapture": "Capture a thought"
+  "shortcutCapture": "Capture a thought",
+  "niceOneTitle": "Nice one!",
+  "niceOneSubtitle": "That's what counts.",
+  "activityLabel": "What did you do?",
+  "nextTimeLabel": "One line for next time?",
+  "nextTimeHint": "new job in March",
+  "remindMe": "Remind me",
+  "remindMeHelp": "Also keeps this line as an open thought.",
+  "niceOneClose": "Close",
+  "lastTime": "Last time: {note}",
+  "@lastTime": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  }
 }
