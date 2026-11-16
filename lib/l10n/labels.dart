@@ -71,6 +71,5 @@ KeptIcons kindIcon(IntentionKind kind) => switch (kind) {
   IntentionKind.write => KeptIcons.chat,
   IntentionKind.call => KeptIcons.phone,
   IntentionKind.meet => KeptIcons.mountain,
-  // TODO(M3): own game icon
-  IntentionKind.game => KeptIcons.mountain,
+  IntentionKind.game => KeptIcons.controller,
 };
