@@ -70,6 +70,6 @@ String kindLabel(IntentionKind kind, AppLocalizations l10n) => switch (kind) {
 KeptIcons kindIcon(IntentionKind kind) => switch (kind) {
   IntentionKind.write => KeptIcons.chat,
   IntentionKind.call => KeptIcons.phone,
-  IntentionKind.meet => KeptIcons.mountain,
+  IntentionKind.meet => KeptIcons.people,
   IntentionKind.game => KeptIcons.controller,
 };
