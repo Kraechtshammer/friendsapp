@@ -8,6 +8,7 @@ import '../../data/app_settings.dart';
 import '../../data/database.dart';
 import '../../domain/birthdays.dart';
 import '../../domain/contact_event.dart';
+import '../../domain/intention.dart';
 import '../../domain/person_name.dart';
 import '../../domain/pick_order.dart';
 import '../../l10n/app_localizations.dart';
@@ -22,6 +23,7 @@ import '../widgets/kept_card.dart';
 import '../widgets/main_button.dart';
 import '../widgets/section_label.dart';
 import '../widgets/tag.dart';
+import '../widgets/when_picker.dart';
 import 'nice_one_screen.dart';
 import 'open_chat.dart';
 import 'open_thoughts.dart';
@@ -72,6 +74,7 @@ class _TonightsPickState extends ConsumerState<TonightsPick> {
       people: people,
       intentions: loaded.value ?? const <Intention>[],
       today: today,
+      now: now,
       // Until the wishes are loaded nobody counts as having a birthday
       // pick, so one already congratulated never shows for a moment.
       congratulated: wishes.hasValue
@@ -198,10 +201,18 @@ class _PickCard extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 4,
                   children: [
+                    if (pick is PlanPick)
+                      Text(
+                        l10n.wantSetDate(firstNameOf(person.name)),
+                        style: context.text.labelLarge?.copyWith(
+                          color: kept.text,
+                        ),
+                      ),
                     Text(
                       _pickText(pick, l10n),
                       style: context.text.bodyLarge?.copyWith(color: kept.text),
                     ),
+                    WhenLineOf(pick),
                     LastTimeLine(person.id),
                   ],
                 ),
@@ -211,6 +222,11 @@ class _PickCard extends ConsumerWidget {
                   label: l10n.openMessenger(messengerLabel(messenger, l10n)),
                   icon: messengerIcon(messenger),
                   onPressed: () => _openChat(context, ref, pick),
+                ),
+              if (pick is PlanPick)
+                GreyButton(
+                  label: l10n.setADate,
+                  onPressed: () => _setDate(context, ref, pick),
                 ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
@@ -256,6 +272,7 @@ class _CompactPick extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final pick = this.pick;
     final l10n = context.l10n;
     final person = pick.person;
     final messenger = person.mainMessenger;
@@ -291,11 +308,22 @@ class _CompactPick extends ConsumerWidget {
                   ],
                 ),
                 Text(
-                  _pickText(pick, l10n),
+                  pick is PlanPick
+                      ? l10n.wantSetDate(firstNameOf(person.name))
+                      : _pickText(pick, l10n),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: context.text.bodyMedium,
                 ),
+                if (pick is PlanPick)
+                  Text(
+                    _pickText(pick, l10n),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.text.bodySmall?.copyWith(
+                      color: context.kept.muted,
+                    ),
+                  ),
                 LastTimeLine(person.id),
               ],
             ),
@@ -307,6 +335,13 @@ class _CompactPick extends ConsumerWidget {
               tooltip: l10n.openMessenger(messengerLabel(messenger, l10n)),
               icon: messengerIcon(messenger),
               onPressed: () => _openChat(context, ref, pick),
+            ),
+          if (pick is PlanPick)
+            _SquareButton(
+              size: 48,
+              tooltip: l10n.setADate,
+              icon: KeptIcons.calendar,
+              onPressed: () => _setDate(context, ref, pick),
             ),
           _SquareButton(
             size: 48,
@@ -352,6 +387,34 @@ void _openChat(BuildContext context, WidgetRef ref, Pick pick) =>
         intention: intention,
       ),
     });
+
+/// "Set a date" on a due plan: the date picker, then the date is stored
+/// and the plan leaves the picks.
+Future<void> _setDate(
+  BuildContext context,
+  WidgetRef ref,
+  PlanPick pick,
+) async {
+  final day = await pickDay(context, ref);
+  if (day == null) return;
+  await ref
+      .read(intentionsRepositoryProvider)
+      .setWhen(pick.intention.id, When.date(day));
+}
+
+/// The "when" line of the thought in a pick, if it has one (a due plan
+/// shows "Soon" or "Later").
+class WhenLineOf extends StatelessWidget {
+  const WhenLineOf(this.pick, {super.key});
+
+  final Pick pick;
+
+  @override
+  Widget build(BuildContext context) => switch (pick) {
+    IntentionPick(:final intention) => WhenLine(intention),
+    _ => const SizedBox.shrink(),
+  };
+}
 
 /// "Congratulated" on a birthday pick, "Done" on a thought.
 void _complete(BuildContext context, WidgetRef ref, Pick pick) =>

@@ -3,14 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../data/database.dart';
 import '../../domain/person_name.dart';
+import '../../domain/plans.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../kept_icon.dart';
 import '../material.dart';
-import '../people/person_screen.dart';
 import '../widgets/avatar.dart';
 import '../widgets/grey_button.dart';
 import 'nice_one_screen.dart';
+import 'thought_sheet.dart';
 import '../widgets/kept_card.dart';
 import '../widgets/section_label.dart';
 
@@ -56,9 +57,7 @@ class _Row extends ConsumerWidget {
     return KeptCard(
       small: true,
       padding: const EdgeInsets.all(12),
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => PersonScreen(id: person.id)),
-      ),
+      onTap: () => showThoughtSheet(context, ref, person, intention),
       child: Row(
         spacing: 12,
         children: [
@@ -91,6 +90,7 @@ class _Row extends ConsumerWidget {
                     overflow: TextOverflow.ellipsis,
                     style: context.text.bodyMedium,
                   ),
+                WhenLine(intention),
                 LastTimeLine(person.id),
               ],
             ),
@@ -122,6 +122,30 @@ class LastTimeLine extends ConsumerWidget {
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: context.text.bodySmall?.copyWith(color: context.kept.muted),
+    );
+  }
+}
+
+/// The "when" of a thought as a small line in the sun colour ("Sat 21
+/// Nov · 11:00", "Soon", "when it is warm again"); nothing when it has
+/// none.
+class WhenLine extends StatelessWidget {
+  const WhenLine(this.intention, {super.key});
+
+  final Intention intention;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = whenText(whenOf(intention), context.l10n);
+    if (text.isEmpty) return const SizedBox.shrink();
+    return Text(
+      text,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: context.text.bodySmall?.copyWith(
+        color: context.kept.sunTone.onContainer,
+        fontWeight: FontWeight.w600,
+      ),
     );
   }
 }

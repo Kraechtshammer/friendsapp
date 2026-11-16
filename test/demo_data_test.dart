@@ -63,17 +63,24 @@ void main() {
   group('intentions', () {
     final intentions = demoIntentions(today);
 
-    test('seven open and three done, mixed kinds', () {
-      expect(intentions, hasLength(10));
+    test('ten thoughts and seven plans, mixed kinds', () {
+      expect(intentions, hasLength(17));
       int count(IntentionState s) =>
           intentions.where((i) => i.state == s).length;
-      expect(count(IntentionState.open), 7);
+      expect(count(IntentionState.open), 14);
       expect(count(IntentionState.done), 3);
+      // Four with a date, one of them passed; three with a horizon.
+      expect(intentions.where((i) => i.date != null), hasLength(4));
+      expect(
+        intentions.where((i) => i.date != null && i.date!.isBefore(today)),
+        hasLength(1),
+      );
+      expect(intentions.where((i) => i.horizon != null), hasLength(3));
       expect(
         intentions.map((i) => i.kind).toSet(),
         IntentionKind.values.toSet(),
       );
-      expect(intentions.map((i) => i.id).toSet(), hasLength(10));
+      expect(intentions.map((i) => i.id).toSet(), hasLength(17));
     });
 
     test('refer only to demo people', () {
@@ -86,7 +93,8 @@ void main() {
     test('lie a few days back; done ones closed after they were made', () {
       for (final i in intentions) {
         expect(i.createdAt.isBefore(today), isTrue);
-        expect(today.difference(i.createdAt).inDays, lessThan(14));
+        // The "soon" plan is 15 days old on purpose: it is due.
+        expect(today.difference(i.createdAt).inDays, lessThan(16));
         if (i.state == IntentionState.done) {
           expect(i.closedAt!.isAfter(i.createdAt), isTrue);
           expect(i.closedAt!.isBefore(today), isTrue);

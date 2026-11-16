@@ -508,4 +508,138 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsOwnBirthdayNotSet => 'Nicht eingetragen';
+
+  @override
+  String get whenDate => 'Datum';
+
+  @override
+  String get whenSoon => 'Bald';
+
+  @override
+  String get whenLater => 'Später';
+
+  @override
+  String get whenCondition => 'Wenn…';
+
+  @override
+  String get whenAddTime => 'Uhrzeit';
+
+  @override
+  String get whenSection => 'Wann';
+
+  @override
+  String get whenConditionHint => 'wenn es wieder warm ist';
+
+  @override
+  String get editThought => 'Gedanke bearbeiten';
+
+  @override
+  String dateWeekday(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat('EEE', localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
+  }
+
+  @override
+  String dateDayNumber(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.d(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
+  }
+
+  @override
+  String dateShort(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat(
+      'EEE, d. MMM',
+      localeName,
+    );
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
+  }
+
+  @override
+  String monthLabel(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.MMMM(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
+  }
+
+  @override
+  String monthYearLabel(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat(
+      'MMMM y',
+      localeName,
+    );
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
+  }
+
+  @override
+  String timeShort(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.jm(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
+  }
+
+  @override
+  String get upcomingTitle => 'Demnächst';
+
+  @override
+  String get upcomingSubtitle =>
+      'Geburtstage und Termine, die du gesetzt hast. Hier ist nie etwas überfällig.';
+
+  @override
+  String get upcomingEmpty =>
+      'Noch nichts mit Datum. Geburtstage und Termine, die du setzt, erscheinen hier.';
+
+  @override
+  String get groupThisWeek => 'Diese Woche';
+
+  @override
+  String get groupNextWeek => 'Nächste Woche';
+
+  @override
+  String birthdayOf(String name) {
+    return 'Geburtstag von $name';
+  }
+
+  @override
+  String turnsAge(int age) {
+    return 'Wird $age';
+  }
+
+  @override
+  String get noDateYet => 'Noch kein Datum';
+
+  @override
+  String get pickADate => 'Datum wählen';
+
+  @override
+  String get comingUp => 'Demnächst';
+
+  @override
+  String get seeAll => 'Alle ansehen';
+
+  @override
+  String get didItHappen => 'Hat es geklappt?';
+
+  @override
+  String get yes => 'Ja';
+
+  @override
+  String get no => 'Nein';
+
+  @override
+  String wantSetDate(String name) {
+    return 'Möchtest du ein Datum mit $name festlegen?';
+  }
+
+  @override
+  String get setADate => 'Datum festlegen';
 }

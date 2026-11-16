@@ -12,6 +12,7 @@ import '../widgets/avatar.dart';
 import '../home/nice_one_screen.dart';
 import '../home/open_chat.dart';
 import '../home/open_thoughts.dart';
+import '../home/thought_sheet.dart';
 import '../kept_icon.dart';
 import '../widgets/grey_button.dart';
 import '../widgets/grey_icon_button.dart';
@@ -107,7 +108,7 @@ class _Body extends ConsumerWidget {
 }
 
 /// This person's open intentions, each with Done and Drop (02-design.md
-/// §2.3). Neutral: no dates, nothing is late.
+/// §2.3). Tapping one opens the edit sheet. Nothing is shown as late.
 class _OpenIntentions extends ConsumerWidget {
   const _OpenIntentions(this.person);
 
@@ -135,6 +136,7 @@ class _OpenIntentions extends ConsumerWidget {
           KeptCard(
             small: true,
             padding: const EdgeInsets.all(12),
+            onTap: () => showThoughtSheet(context, ref, person, i),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 10,
@@ -154,6 +156,7 @@ class _OpenIntentions extends ConsumerWidget {
                                 : i.note.trim(),
                             style: context.text.bodyLarge,
                           ),
+                          WhenLine(i),
                           LastTimeLine(personId),
                         ],
                       ),

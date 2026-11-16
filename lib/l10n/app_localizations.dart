@@ -949,6 +949,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not set'**
   String get settingsOwnBirthdayNotSet;
+
+  /// No description provided for @whenDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get whenDate;
+
+  /// No description provided for @whenSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Soon'**
+  String get whenSoon;
+
+  /// No description provided for @whenLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get whenLater;
+
+  /// No description provided for @whenCondition.
+  ///
+  /// In en, this message translates to:
+  /// **'When…'**
+  String get whenCondition;
+
+  /// No description provided for @whenAddTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get whenAddTime;
+
+  /// No description provided for @whenSection.
+  ///
+  /// In en, this message translates to:
+  /// **'When'**
+  String get whenSection;
+
+  /// No description provided for @whenConditionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'when it is warm again'**
+  String get whenConditionHint;
+
+  /// No description provided for @editThought.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit thought'**
+  String get editThought;
+
+  /// No description provided for @dateWeekday.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}'**
+  String dateWeekday(DateTime date);
+
+  /// No description provided for @dateDayNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}'**
+  String dateDayNumber(DateTime date);
+
+  /// No description provided for @dateShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}'**
+  String dateShort(DateTime date);
+
+  /// No description provided for @monthLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}'**
+  String monthLabel(DateTime date);
+
+  /// No description provided for @monthYearLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}'**
+  String monthYearLabel(DateTime date);
+
+  /// No description provided for @timeShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}'**
+  String timeShort(DateTime date);
+
+  /// No description provided for @upcomingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming up'**
+  String get upcomingTitle;
+
+  /// No description provided for @upcomingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthdays and dates you have set. Nothing here is ever late.'**
+  String get upcomingSubtitle;
+
+  /// No description provided for @upcomingEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing dated yet. Birthdays and the dates you set will show up here.'**
+  String get upcomingEmpty;
+
+  /// No description provided for @groupThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get groupThisWeek;
+
+  /// No description provided for @groupNextWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Next week'**
+  String get groupNextWeek;
+
+  /// No description provided for @birthdayOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s birthday'**
+  String birthdayOf(String name);
+
+  /// No description provided for @turnsAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Turns {age}'**
+  String turnsAge(int age);
+
+  /// No description provided for @noDateYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No date yet'**
+  String get noDateYet;
+
+  /// No description provided for @pickADate.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a date'**
+  String get pickADate;
+
+  /// No description provided for @comingUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming up'**
+  String get comingUp;
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
+  /// No description provided for @didItHappen.
+  ///
+  /// In en, this message translates to:
+  /// **'Did it happen?'**
+  String get didItHappen;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @wantSetDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Want to set a date with {name}?'**
+  String wantSetDate(String name);
+
+  /// No description provided for @setADate.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a date'**
+  String get setADate;
 }
 
 class _AppLocalizationsDelegate

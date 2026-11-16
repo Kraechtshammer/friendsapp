@@ -31,6 +31,15 @@ Tests that run by themselves (`flutter analyze`, `flutter test`, the migration t
 - [ ] "Birthdays" shows as its own channel in the app's Android notification settings.
 - [ ] Your own birthday: the "Who congratulated you?" card and its toggles.
 
+## M5, Upcoming and plans (not released yet)
+
+- [ ] Capture with a date, with a date and time, with Soon, Later and When...: still quick enough?
+- [ ] The system date and time pickers look and behave right in the app's theme.
+- [ ] Tap a thought: the edit sheet opens; the keyboard does not cover its fields.
+- [ ] Upcoming tab: your real birthdays are all there, in the right order, with the right age.
+- [ ] The day after a dated plan: "Did it happen?" appears once on Home; try Yes and No.
+- [ ] Is it right that tapping a thought on Home opens the edit sheet instead of the person page?
+
 ## Release builds
 
 - [ ] The APK from the GitHub release installs over the debug build or over the last release, and keeps the data. (A debug build and a release build are signed differently; Android may refuse one over the other. Do not uninstall to get around it: that deletes the data. Tell Claude instead.)

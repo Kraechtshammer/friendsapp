@@ -73,3 +73,31 @@ KeptIcons kindIcon(IntentionKind kind) => switch (kind) {
   IntentionKind.meet => KeptIcons.people,
   IntentionKind.game => KeptIcons.controller,
 };
+
+String horizonLabel(Horizon horizon, AppLocalizations l10n) =>
+    switch (horizon) {
+      Horizon.soon => l10n.whenSoon,
+      Horizon.later => l10n.whenLater,
+      Horizon.whenCondition => l10n.whenCondition,
+    };
+
+/// The "when" as one short line: "Sat 21 Nov · 11:00" (no time for a day
+/// without one), "Soon", "Later", or the condition the user wrote ("when
+/// it is warm again"). Empty for no "when".
+String whenText(When when, AppLocalizations l10n) {
+  final date = when.date;
+  if (date != null) {
+    return [
+      l10n.dateShort(date),
+      if (when.hasTime) l10n.timeShort(date),
+    ].join(' · ');
+  }
+  return switch (when.horizon) {
+    null => '',
+    Horizon.whenCondition =>
+      (when.condition?.trim().isNotEmpty ?? false)
+          ? when.condition!.trim()
+          : l10n.whenCondition,
+    final h => horizonLabel(h, l10n),
+  };
+}

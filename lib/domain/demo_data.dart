@@ -168,9 +168,11 @@ List<Person> demoPeople(DateTime today) {
   return people;
 }
 
-/// The invented intentions of the demo database: seven open and three
-/// done, spread over [demoPeople] of the same [today]. Deterministic:
-/// each was made a few days before [today], at a fixed hour.
+/// The invented intentions of the demo database: seven open thoughts and
+/// three done ones, then seven plans (four with a date, one of them
+/// passed, and three with a horizon), spread over [demoPeople] of the same
+/// [today]. Deterministic: each was made a few days before [today], at a
+/// fixed hour; the "soon" plan is 15 days old, so it is due.
 List<Intention> demoIntentions(DateTime today) {
   final day = DateTime(today.year, today.month, today.day);
   final ids = {for (final p in demoPeople(today)) p.name: p.id};
@@ -203,6 +205,64 @@ List<Intention> demoIntentions(DateTime today) {
     ('Amira Haddad', 'congrats on the flat', IntentionKind.write, 10, 9, 7),
     ('Malik Osei', 'match on Saturday', IntentionKind.call, 12, 22, 11),
   ];
+  // Dated and undated plans (M5), for people with no other thought. Days
+  // ahead are counted from [day]; a negative number is a date that has
+  // passed, so Home asks "Did it happen?".
+  DateTime ahead(int days, [int hour = 0, int minute = 0]) =>
+      DateTime(day.year, day.month, day.day + days, hour, minute);
+  final plans = <(String, String, IntentionKind, int, When)>[
+    // Name, note, kind, days back, when.
+    (
+      'Noor Vandersee',
+      'coffee at the market',
+      IntentionKind.meet,
+      6,
+      When.date(ahead(-1, 18)),
+    ),
+    (
+      'Mateo Ruiz Kessler',
+      'climbing gym',
+      IntentionKind.meet,
+      5,
+      When.date(ahead(1, 11)),
+    ),
+    (
+      'Clara Weissmann',
+      'call about the move',
+      IntentionKind.call,
+      4,
+      When.date(ahead(5)),
+    ),
+    (
+      'Tobi Okafor',
+      'game night',
+      IntentionKind.game,
+      3,
+      When.date(ahead(9, 20)),
+    ),
+    // 15 days old: a "soon" plan is due after 14.
+    (
+      'Yusuf Aydemir',
+      'ramen night',
+      IntentionKind.meet,
+      15,
+      When.horizon(Horizon.soon),
+    ),
+    (
+      'Rosa Brenner',
+      'a trip to the coast',
+      IntentionKind.meet,
+      4,
+      When.horizon(Horizon.later),
+    ),
+    (
+      'Max Brenner',
+      'barbecue in the park',
+      IntentionKind.meet,
+      3,
+      When.horizon(Horizon.whenCondition, condition: 'when it is warm again'),
+    ),
+  ];
   return [
     for (final (i, (name, note, kind, back, hour, doneBack)) in rows.indexed)
       Intention(
@@ -213,6 +273,18 @@ List<Intention> demoIntentions(DateTime today) {
         state: doneBack == null ? IntentionState.open : IntentionState.done,
         createdAt: at(back, hour),
         closedAt: doneBack == null ? null : at(doneBack, hour),
+      ),
+    for (final (i, (name, note, kind, back, w)) in plans.indexed)
+      Intention(
+        id: 'demo-p${(i + 1).toString().padLeft(2, '0')}',
+        personId: ids[name]!,
+        note: note,
+        kind: kind,
+        state: IntentionState.open,
+        date: w.date,
+        horizon: w.horizon,
+        condition: w.condition,
+        createdAt: at(back, 15),
       ),
   ];
 }

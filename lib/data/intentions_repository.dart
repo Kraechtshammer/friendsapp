@@ -38,6 +38,7 @@ class IntentionsRepository {
     required String personId,
     String note = '',
     IntentionKind kind = IntentionKind.write,
+    When when = const When.none(),
     DateTime? now,
   }) async {
     final intention = Intention(
@@ -46,10 +47,55 @@ class IntentionsRepository {
       note: note,
       kind: kind,
       state: IntentionState.open,
+      date: when.date == null ? null : _wholeSeconds(when.date!),
+      horizon: when.horizon,
+      condition: _condition(when),
       createdAt: _wholeSeconds(now ?? DateTime.now()),
     );
     await _db.into(_db.intentions).insert(intention);
     return intention;
+  }
+
+  /// Changes the text, the kind and the "when" of an intention in one
+  /// step, as the edit sheet does. A date and a horizon never go together;
+  /// the condition is kept only for "when…" and only if it has text.
+  Future<void> update(
+    String id, {
+    required String note,
+    required IntentionKind kind,
+    required When when,
+  }) => (_db.update(_db.intentions)..where((t) => t.id.equals(id))).write(
+    IntentionsCompanion(
+      note: Value(note),
+      kind: Value(kind),
+      date: Value(when.date == null ? null : _wholeSeconds(when.date!)),
+      horizon: Value(when.horizon),
+      condition: Value(_condition(when)),
+    ),
+  );
+
+  /// Sets only the "when" ("Set a date", "Pick a date").
+  Future<void> setWhen(String id, When when) =>
+      (_db.update(_db.intentions)..where((t) => t.id.equals(id))).write(
+        IntentionsCompanion(
+          date: Value(when.date == null ? null : _wholeSeconds(when.date!)),
+          horizon: Value(when.horizon),
+          condition: Value(_condition(when)),
+        ),
+      );
+
+  /// "Did it happen?" answered No: the date is cleared and the horizon is
+  /// Soon, so the thought is an undated plan again. Nothing else is stored.
+  Future<void> moveBackToPlans(String id) =>
+      setWhen(id, const When.horizon(Horizon.soon));
+
+  static String? _condition(When when) {
+    final text = when.condition?.trim();
+    return when.horizon == Horizon.whenCondition &&
+            text != null &&
+            text.isNotEmpty
+        ? text
+        : null;
   }
 
   /// Moves an intention to [state]. Leaving `open` sets `closedAt`; going

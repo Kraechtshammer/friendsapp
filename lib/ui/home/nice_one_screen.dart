@@ -19,13 +19,15 @@ import '../widgets/main_button.dart';
 /// "Nice one" screen for it. Leaving that screen early loses nothing.
 /// [source] is `manual` for the Done button and `confirmed` for "Yes" on
 /// "Did you write?". With [replace] the Nice one screen takes the place of
-/// the current one (the question).
+/// the current one (the question). [at] is the time of the contact if it
+/// is not now ("Did it happen?" uses the planned date).
 Future<void> completeThought(
   BuildContext context,
   WidgetRef ref,
   Person person,
   Intention intention, {
   ContactSource source = ContactSource.manual,
+  DateTime? at,
   bool replace = false,
 }) => _storeAndCelebrate(
   context,
@@ -34,7 +36,7 @@ Future<void> completeThought(
   replace: replace,
   store: () => ref
       .read(contactEventsRepositoryProvider)
-      .completeIntention(intention.id, source: source),
+      .completeIntention(intention.id, source: source, at: at),
 );
 
 /// "Yes" on "Did you write?" for a chat that was not opened for a thought:

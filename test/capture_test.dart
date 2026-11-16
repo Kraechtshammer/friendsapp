@@ -98,8 +98,18 @@ void main() {
     expect(rows!.single.kind, IntentionKind.call);
     expect(rows.single.note, 'saw a bouldering video');
 
-    // The row opens the person's page, which lists it too.
+    // The row opens the edit sheet; Save closes it.
     await tester.tap(find.text('saw a bouldering video').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Edit thought'), findsOneWidget);
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    expect(find.text('Edit thought'), findsNothing);
+
+    // The person's page lists it too.
+    await tester.tap(find.text('People'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Tom'));
     await tester.pumpAndSettle();
     expect(find.byType(PersonScreen), findsOneWidget);
     expect(find.text('ON YOUR MIND'), findsOneWidget);

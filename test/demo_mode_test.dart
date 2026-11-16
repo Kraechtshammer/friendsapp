@@ -103,7 +103,7 @@ void main() {
 
       final today = DateTime(2026, 11, 16);
       await services.setDemoMode(true, today: today);
-      final demo = await openWhen(7);
+      final demo = await openWhen(14);
       final expected = demoIntentions(today)
           .where((i) => i.state == IntentionState.open)
           .map((i) => i.id)
@@ -130,7 +130,7 @@ void main() {
       await container
           .read(intentionsRepositoryProvider)
           .add(personId: malik.id, note: 'demo capture');
-      await openWhen(8);
+      await openWhen(15);
 
       await services.setDemoMode(false);
       expect(await openWhen(1), [real]);
@@ -138,7 +138,7 @@ void main() {
       // Switching on again starts the demo intentions from scratch.
       await services.setDemoMode(true, today: today);
       expect(
-        (await openWhen(7)).map((i) => i.note),
+        (await openWhen(14)).map((i) => i.note),
         isNot(contains('demo capture')),
       );
     },

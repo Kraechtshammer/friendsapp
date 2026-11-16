@@ -15,6 +15,7 @@ import '../widgets/grey_button.dart';
 import '../widgets/kept_card.dart';
 import '../widgets/kept_text_field.dart';
 import '../widgets/main_button.dart';
+import '../widgets/when_picker.dart';
 import 'person_picker.dart';
 
 /// The capture card: a note, a person, a kind, Save (02-design.md §2.1;
@@ -35,6 +36,9 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
   String? _personId;
   var _kind = IntentionKind.write;
 
+  /// Optional, and collapsed into one row of chips (02-design.md §6.9).
+  var _when = const When.none();
+
   @override
   void dispose() {
     _note.dispose();
@@ -54,12 +58,13 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
     FocusScope.of(context).unfocus();
     await ref
         .read(intentionsRepositoryProvider)
-        .add(personId: person.id, note: note, kind: _kind);
+        .add(personId: person.id, note: note, kind: _kind, when: _when);
     if (!mounted) return;
     _note.clear();
     setState(() {
       _personId = null;
       _kind = IntentionKind.write;
+      _when = const When.none();
     });
     messenger
       ..hideCurrentSnackBar()
@@ -151,6 +156,11 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
                 ],
                 value: _kind,
                 onChanged: (k) => setState(() => _kind = k),
+              ),
+              WhenPicker(
+                value: _when,
+                fieldColor: kept.ground,
+                onChanged: (w) => setState(() => _when = w),
               ),
               MainButton(
                 label: l10n.captureSave(firstNameOf(selected.name)),

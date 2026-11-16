@@ -97,7 +97,9 @@ void main() {
 
   testWidgets('Done on the person page does the same', (tester) async {
     await start(tester, IntentionKind.call);
-    await tester.tap(find.text('Bouldering').last);
+    await tester.tap(find.text('People'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Tom'));
     await tester.pumpAndSettle();
     await tapDone(tester);
     expect(find.byType(NiceOneScreen), findsOneWidget);

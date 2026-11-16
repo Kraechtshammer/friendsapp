@@ -273,7 +273,10 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         child: IndexedStack(
           index: _tab,
           children: [
-            HomeScreen(onAddPeople: () => setState(() => _tab = 2)),
+            HomeScreen(
+              onAddPeople: () => setState(() => _tab = 2),
+              onShowUpcoming: () => setState(() => _tab = 1),
+            ),
             const UpcomingScreen(),
             const PeopleScreen(),
             const ProgressScreen(),
