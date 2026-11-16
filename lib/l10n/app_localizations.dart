@@ -769,6 +769,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open notification settings'**
   String get settingsOpenNotificationSettings;
+
+  /// No description provided for @settingsOpenItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Open items'**
+  String get settingsOpenItems;
+
+  /// No description provided for @settingsOpenItemsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How many ideas Home offers for tonight.'**
+  String get settingsOpenItemsHelp;
+
+  /// No description provided for @openItemsOne.
+  ///
+  /// In en, this message translates to:
+  /// **'One'**
+  String get openItemsOne;
+
+  /// No description provided for @openItemsThree.
+  ///
+  /// In en, this message translates to:
+  /// **'Three'**
+  String get openItemsThree;
+
+  /// No description provided for @tonightsPick.
+  ///
+  /// In en, this message translates to:
+  /// **'Tonight\'s pick'**
+  String get tonightsPick;
+
+  /// No description provided for @anotherOne.
+  ///
+  /// In en, this message translates to:
+  /// **'Another one'**
+  String get anotherOne;
+
+  /// No description provided for @chatQuestionWrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Did you write to {name}?'**
+  String chatQuestionWrite(String name);
+
+  /// No description provided for @chatQuestionCall.
+  ///
+  /// In en, this message translates to:
+  /// **'Did you call {name}?'**
+  String chatQuestionCall(String name);
+
+  /// No description provided for @chatQuestionMeet.
+  ///
+  /// In en, this message translates to:
+  /// **'Did you meet {name}?'**
+  String chatQuestionMeet(String name);
+
+  /// No description provided for @chatQuestionGame.
+  ///
+  /// In en, this message translates to:
+  /// **'Did you game with {name}?'**
+  String chatQuestionGame(String name);
+
+  /// No description provided for @chatQuestionOpened.
+  ///
+  /// In en, this message translates to:
+  /// **'You opened {messenger} a moment ago.'**
+  String chatQuestionOpened(String messenger);
+
+  /// No description provided for @chatQuestionYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get chatQuestionYes;
+
+  /// No description provided for @chatQuestionNotYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet'**
+  String get chatQuestionNotYet;
+
+  /// No description provided for @chatQuestionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet is fine. Nothing becomes overdue.'**
+  String get chatQuestionHint;
 }
 
 class _AppLocalizationsDelegate

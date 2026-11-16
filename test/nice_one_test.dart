@@ -27,6 +27,10 @@ void main() {
   });
 
   Future<void> start(WidgetTester tester, IntentionKind kind) async {
+    // Tall, so the list below tonight's pick is built too.
+    tester.view.physicalSize = const Size(800, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     await tester.runAsync(() async {
       tom = await services
           .peopleFor(demo: false)
@@ -66,7 +70,7 @@ void main() {
       .then((v) => v!);
 
   Future<void> tapDone(WidgetTester tester) async {
-    await tester.tap(find.text('Done'));
+    await tester.tap(find.text('Done').first);
     await tester.pumpAndSettle();
   }
 
@@ -93,7 +97,7 @@ void main() {
 
   testWidgets('Done on the person page does the same', (tester) async {
     await start(tester, IntentionKind.call);
-    await tester.tap(find.text('Bouldering'));
+    await tester.tap(find.text('Bouldering').last);
     await tester.pumpAndSettle();
     await tapDone(tester);
     expect(find.byType(NiceOneScreen), findsOneWidget);
@@ -133,7 +137,8 @@ void main() {
           .add(personId: tom.id, note: 'Call him'),
     );
     await tester.pumpAndSettle();
-    expect(find.text('Last time: new job in March'), findsOneWidget);
+    // In the pick and in the list below it.
+    expect(find.text('Last time: new job in March'), findsNWidgets(2));
     await closeDown(tester);
   });
 

@@ -7,6 +7,7 @@ import '../data/app_settings.dart';
 import '../domain/contact_event.dart';
 import '../domain/evening_question.dart';
 import 'common.dart';
+import 'home/chat_question_screen.dart';
 import 'home/home_screen.dart';
 import 'kept_icon.dart';
 import 'material.dart';
@@ -32,16 +33,34 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   String? _shortcutTitle;
   EveningPlan? _scheduled;
   var _permissionAsked = false;
+  late final AppLifecycleListener _lifecycle;
 
   @override
   void initState() {
     super.initState();
+    _lifecycle = AppLifecycleListener(onResume: _askPendingQuestion);
     unawaited(
       ref.read(notificationsProvider).setUp(onAnswer: _onEveningAnswer),
     );
     ref.listenManual(settingsProvider, (_, next) {
       if (next.value case final settings?) _onSettings(settings);
     });
+  }
+
+  @override
+  void dispose() {
+    _lifecycle.dispose();
+    super.dispose();
+  }
+
+  /// Back from a messenger after "Open chat": ask "Did you write?" once
+  /// (02-design.md §2.3).
+  void _askPendingQuestion() {
+    final question = ref.read(pendingChatQuestionProvider.notifier).take();
+    if (question == null || !mounted) return;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => ChatQuestionScreen(question)),
+    );
   }
 
   @override

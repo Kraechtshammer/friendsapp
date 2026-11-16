@@ -3,6 +3,9 @@ import 'package:flutter/foundation.dart' show setEquals;
 /// Dark, light or as the phone says.
 enum AppThemeMode { system, light, dark }
 
+/// How many open items Home offers for tonight (02-design.md §2.3).
+enum OpenItemsMode { one, three }
+
 /// All settings, with their defaults. Stored as text in the settings table
 /// of the real database (02-design.md §3).
 class AppSettings {
@@ -13,6 +16,7 @@ class AppSettings {
     this.eveningMinute = defaultEveningMinute,
     this.eveningExcludedDays = const {},
     this.notificationPermissionAsked = false,
+    this.openItems = OpenItemsMode.one,
   });
 
   /// 19:00, as minutes after midnight.
@@ -38,6 +42,9 @@ class AppSettings {
   /// ask again by itself; switching the evening question on asks again.
   final bool notificationPermissionAsked;
 
+  /// One item with "Another one" (the start value) or a list of three.
+  final OpenItemsMode openItems;
+
   /// Reads settings from the stored key-value pairs. Unknown or broken
   /// values fall back to the defaults.
   factory AppSettings.fromMap(Map<String, String> m) {
@@ -56,6 +63,7 @@ class AppSettings {
       eveningMinute: _parseTime(m['eveningTime']) ?? d.eveningMinute,
       eveningExcludedDays: _parseDays(m['eveningExcludedDays']),
       notificationPermissionAsked: m['notificationPermissionAsked'] == 'true',
+      openItems: pick(OpenItemsMode.values, 'openItems', d.openItems),
     );
   }
 
@@ -67,6 +75,7 @@ class AppSettings {
     'eveningTime': _formatTime(eveningMinute),
     'eveningExcludedDays': (eveningExcludedDays.toList()..sort()).join(','),
     'notificationPermissionAsked': '$notificationPermissionAsked',
+    'openItems': openItems.name,
   };
 
   AppSettings copyWith({
@@ -76,6 +85,7 @@ class AppSettings {
     int? eveningMinute,
     Set<int>? eveningExcludedDays,
     bool? notificationPermissionAsked,
+    OpenItemsMode? openItems,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     demoMode: demoMode ?? this.demoMode,
@@ -84,6 +94,7 @@ class AppSettings {
     eveningExcludedDays: eveningExcludedDays ?? this.eveningExcludedDays,
     notificationPermissionAsked:
         notificationPermissionAsked ?? this.notificationPermissionAsked,
+    openItems: openItems ?? this.openItems,
   );
 
   @override
@@ -94,7 +105,8 @@ class AppSettings {
       other.eveningOn == eveningOn &&
       other.eveningMinute == eveningMinute &&
       setEquals(other.eveningExcludedDays, eveningExcludedDays) &&
-      other.notificationPermissionAsked == notificationPermissionAsked;
+      other.notificationPermissionAsked == notificationPermissionAsked &&
+      other.openItems == openItems;
 
   @override
   int get hashCode => Object.hash(
@@ -104,6 +116,7 @@ class AppSettings {
     eveningMinute,
     Object.hashAllUnordered(eveningExcludedDays),
     notificationPermissionAsked,
+    openItems,
   );
 }
 

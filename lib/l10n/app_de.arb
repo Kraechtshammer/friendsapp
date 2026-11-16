@@ -136,5 +136,19 @@
   "settingsEveningTime": "Uhrzeit",
   "settingsEveningDays": "Tage",
   "settingsNotificationsOff": "Benachrichtigungen sind für Kept aus.",
-  "settingsOpenNotificationSettings": "Benachrichtigungen öffnen"
+  "settingsOpenNotificationSettings": "Benachrichtigungen öffnen",
+  "settingsOpenItems": "Offene Punkte",
+  "settingsOpenItemsHelp": "Wie viele Ideen Home für heute Abend zeigt.",
+  "openItemsOne": "Einer",
+  "openItemsThree": "Drei",
+  "tonightsPick": "Heute Abend dran",
+  "anotherOne": "Eine andere",
+  "chatQuestionWrite": "Hast du {name} geschrieben?",
+  "chatQuestionCall": "Hast du {name} angerufen?",
+  "chatQuestionMeet": "Hast du {name} getroffen?",
+  "chatQuestionGame": "Hast du mit {name} gezockt?",
+  "chatQuestionOpened": "Du hast gerade {messenger} geöffnet.",
+  "chatQuestionYes": "Ja",
+  "chatQuestionNotYet": "Noch nicht",
+  "chatQuestionHint": "Noch nicht ist in Ordnung. Nichts ist überfällig."
 }

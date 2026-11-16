@@ -4,13 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/database.dart';
-import '../../domain/chat_link.dart';
 import '../../domain/intention.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
 import '../home/nice_one_screen.dart';
+import '../home/open_chat.dart';
 import '../home/open_thoughts.dart';
 import '../kept_icon.dart';
 import '../widgets/grey_button.dart';
@@ -61,20 +61,6 @@ class _Body extends ConsumerWidget {
 
   final Person person;
 
-  Future<void> _open(BuildContext context, WidgetRef ref, Person person) async {
-    final link = chatLink(person);
-    if (link == null) return;
-    final l10n = context.l10n;
-    final name = messengerLabel(person.mainMessenger!, l10n);
-    final messenger = ScaffoldMessenger.of(context);
-    final opened = await ref.read(chatOpenerProvider).open(link);
-    if (!opened) {
-      messenger.showSnackBar(
-        SnackBar(content: Text(l10n.messengerNotOpened(name))),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
@@ -93,7 +79,7 @@ class _Body extends ConsumerWidget {
                 MainButton(
                   label: l10n.openMessenger(messengerLabel(messenger, l10n)),
                   icon: messengerIcon(messenger),
-                  onPressed: () => _open(context, ref, person),
+                  onPressed: () => openChat(context, ref, person),
                 ),
               if (person.notes.trim().isNotEmpty)
                 KeptCard(

@@ -17,30 +17,66 @@ import '../widgets/main_button.dart';
 
 /// Done on an open thought: stores the contact at once, then shows the
 /// "Nice one" screen for it. Leaving that screen early loses nothing.
+/// [source] is `manual` for the Done button and `confirmed` for "Yes" on
+/// "Did you write?". With [replace] the Nice one screen takes the place of
+/// the current one (the question).
 Future<void> completeThought(
   BuildContext context,
   WidgetRef ref,
   Person person,
-  Intention intention,
-) async {
+  Intention intention, {
+  ContactSource source = ContactSource.manual,
+  bool replace = false,
+}) => _storeAndCelebrate(
+  context,
+  person: person,
+  thought: intention.note.trim(),
+  replace: replace,
+  store: () => ref
+      .read(contactEventsRepositoryProvider)
+      .completeIntention(intention.id, source: source),
+);
+
+/// "Yes" on "Did you write?" for a chat that was not opened for a thought:
+/// stores a confirmed `wrote` event, then shows the "Nice one" screen.
+Future<void> completeWrite(
+  BuildContext context,
+  WidgetRef ref,
+  Person person, {
+  bool replace = false,
+}) => _storeAndCelebrate(
+  context,
+  person: person,
+  thought: '',
+  replace: replace,
+  store: () => ref
+      .read(contactEventsRepositoryProvider)
+      .add(
+        personId: person.id,
+        at: DateTime.now(),
+        kind: ContactKind.wrote,
+        direction: ContactDirection.byUser,
+        source: ContactSource.confirmed,
+      ),
+);
+
+Future<void> _storeAndCelebrate(
+  BuildContext context, {
+  required Person person,
+  required String thought,
+  required bool replace,
+  required Future<ContactEvent> Function() store,
+}) async {
   // The row is gone once the thought is done, so keep what is needed.
   final navigator = Navigator.of(context);
   // A "Saved for ..." note must not cover the Close button.
   ScaffoldMessenger.of(context).clearSnackBars();
-  final event = await ref
-      .read(contactEventsRepositoryProvider)
-      .completeIntention(intention.id, source: ContactSource.manual);
-  unawaited(
-    navigator.push(
-      MaterialPageRoute<void>(
-        builder: (_) => NiceOneScreen(
-          person: person,
-          event: event,
-          thought: intention.note.trim(),
-        ),
-      ),
-    ),
+  final event = await store();
+  final route = MaterialPageRoute<void>(
+    builder: (_) =>
+        NiceOneScreen(person: person, event: event, thought: thought),
   );
+  unawaited(replace ? navigator.pushReplacement(route) : navigator.push(route));
 }
 
 /// The screen after a contact is confirmed. See concept V6 · After 'Yes, I

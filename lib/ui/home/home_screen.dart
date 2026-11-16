@@ -9,8 +9,9 @@ import '../material.dart';
 import '../settings/settings_screen.dart';
 import 'capture_card.dart';
 import 'open_thoughts.dart';
+import 'tonights_pick.dart';
 
-/// Home: a greeting, quick capture and the open thoughts. The whole tab
+/// Home: a greeting, quick capture, tonight's pick and the open thoughts. The whole tab
 /// scrolls. See 02-design.md §2.1 and the concept V6b · Capturing
 /// (docs/concepts/gen_v6.py).
 class HomeScreen extends ConsumerWidget {
@@ -42,6 +43,7 @@ class HomeScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 14),
         CaptureCard(onAddPeople: onAddPeople),
+        const TonightsPick(),
         const OpenThoughts(),
       ],
     );

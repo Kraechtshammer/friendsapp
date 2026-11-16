@@ -6,6 +6,7 @@ import '../data/database.dart';
 import '../data/day_answers_repository.dart';
 import '../data/intentions_repository.dart';
 import '../data/people_repository.dart';
+import '../domain/chat_question.dart';
 import '../platform/app_shortcuts.dart';
 import '../platform/chat_opener.dart';
 import '../platform/contacts.dart';
@@ -56,6 +57,29 @@ class OpenThoughtsRequests extends Notifier<int> {
 final openThoughtsRequestProvider = NotifierProvider<OpenThoughtsRequests, int>(
   OpenThoughtsRequests.new,
 );
+
+/// The "Did you write?" question after an "Open chat" tap. Set when the
+/// chat is opened; HomeShell asks it when the app is back in front and
+/// clears it, so it is asked once. Kept in memory on purpose: if the app is
+/// killed in between, nothing is asked. Tests set it directly.
+class PendingChatQuestion extends Notifier<ChatQuestion?> {
+  @override
+  ChatQuestion? build() => null;
+
+  void set(ChatQuestion question) => state = question;
+
+  /// Returns the question and forgets it.
+  ChatQuestion? take() {
+    final question = state;
+    state = null;
+    return question;
+  }
+}
+
+final pendingChatQuestionProvider =
+    NotifierProvider<PendingChatQuestion, ChatQuestion?>(
+      PendingChatQuestion.new,
+    );
 
 /// The current time, for the greeting. Tests override it with a fixed time.
 final clockProvider = Provider<DateTime Function()>((ref) => DateTime.now);

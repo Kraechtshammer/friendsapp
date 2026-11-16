@@ -388,4 +388,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsOpenNotificationSettings => 'Open notification settings';
+
+  @override
+  String get settingsOpenItems => 'Open items';
+
+  @override
+  String get settingsOpenItemsHelp => 'How many ideas Home offers for tonight.';
+
+  @override
+  String get openItemsOne => 'One';
+
+  @override
+  String get openItemsThree => 'Three';
+
+  @override
+  String get tonightsPick => 'Tonight\'s pick';
+
+  @override
+  String get anotherOne => 'Another one';
+
+  @override
+  String chatQuestionWrite(String name) {
+    return 'Did you write to $name?';
+  }
+
+  @override
+  String chatQuestionCall(String name) {
+    return 'Did you call $name?';
+  }
+
+  @override
+  String chatQuestionMeet(String name) {
+    return 'Did you meet $name?';
+  }
+
+  @override
+  String chatQuestionGame(String name) {
+    return 'Did you game with $name?';
+  }
+
+  @override
+  String chatQuestionOpened(String messenger) {
+    return 'You opened $messenger a moment ago.';
+  }
+
+  @override
+  String get chatQuestionYes => 'Yes';
+
+  @override
+  String get chatQuestionNotYet => 'Not yet';
+
+  @override
+  String get chatQuestionHint => 'Not yet is fine. Nothing becomes overdue.';
 }

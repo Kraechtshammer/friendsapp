@@ -38,6 +38,10 @@ void main() {
       });
 
   Future<void> start(WidgetTester tester) async {
+    // Tall, so the list below tonight's pick is built too.
+    tester.view.physicalSize = const Size(800, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -85,7 +89,8 @@ void main() {
       isEmpty,
     );
     expect(find.text('ON YOUR MIND'), findsOneWidget);
-    expect(find.text('saw a bouldering video'), findsOneWidget);
+    // Once as tonight's pick and once in the list below it.
+    expect(find.text('saw a bouldering video'), findsNWidgets(2));
 
     final rows = await tester.runAsync(
       () => services.intentionsFor(demo: false).watchOpen().first,
@@ -94,14 +99,14 @@ void main() {
     expect(rows.single.note, 'saw a bouldering video');
 
     // The row opens the person's page, which lists it too.
-    await tester.tap(find.text('saw a bouldering video'));
+    await tester.tap(find.text('saw a bouldering video').last);
     await tester.pumpAndSettle();
     expect(find.byType(PersonScreen), findsOneWidget);
     expect(find.text('ON YOUR MIND'), findsOneWidget);
     expect(find.text('saw a bouldering video'), findsOneWidget);
 
     // Done removes it here and on Home.
-    await tester.tap(find.text('Done'));
+    await tester.tap(find.text('Done').first);
     await tester.pumpAndSettle();
     expect(find.text('Nice one!'), findsOneWidget);
     await tester.tap(

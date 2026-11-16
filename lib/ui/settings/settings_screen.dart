@@ -52,10 +52,56 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 32),
+          _OpenItems(mode: settings.openItems),
+          const SizedBox(height: 32),
           _EveningQuestion(settings: settings),
           if (kDebugMode) _Development(demoMode: settings.demoMode),
         ],
       ),
+    );
+  }
+}
+
+/// How many open items Home shows for tonight (02-design.md §2.3): one
+/// with "Another one", or a list of three.
+class _OpenItems extends ConsumerWidget {
+  const _OpenItems({required this.mode});
+
+  final OpenItemsMode mode;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          l10n.settingsOpenItems.toUpperCase(),
+          style: context.text.labelMedium,
+        ),
+        const SizedBox(height: 4),
+        Text(l10n.settingsOpenItemsHelp, style: context.text.bodyMedium),
+        const SizedBox(height: 12),
+        SegmentedButton<OpenItemsMode>(
+          showSelectedIcon: false,
+          segments: [
+            ButtonSegment(
+              value: OpenItemsMode.one,
+              label: Text(l10n.openItemsOne),
+            ),
+            ButtonSegment(
+              value: OpenItemsMode.three,
+              label: Text(l10n.openItemsThree),
+            ),
+          ],
+          selected: {mode},
+          onSelectionChanged: (chosen) => unawaited(
+            ref.services.settings.update(
+              (s) => s.copyWith(openItems: chosen.single),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
