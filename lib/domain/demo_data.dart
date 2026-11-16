@@ -1,5 +1,6 @@
 import '../data/database.dart';
 import 'avatar_pick.dart';
+import 'intention.dart';
 import 'person.dart';
 
 /// The invented people of the demo database (02-design.md §8). All names,
@@ -165,6 +166,55 @@ List<Person> demoPeople(DateTime today) {
     );
   }
   return people;
+}
+
+/// The invented intentions of the demo database: seven open and three
+/// done, spread over [demoPeople] of the same [today]. Deterministic:
+/// each was made a few days before [today], at a fixed hour.
+List<Intention> demoIntentions(DateTime today) {
+  final day = DateTime(today.year, today.month, today.day);
+  final ids = {for (final p in demoPeople(today)) p.name: p.id};
+  DateTime at(int daysBack, int hour) =>
+      DateTime(day.year, day.month, day.day - daysBack, hour);
+  final rows = <(String, String, IntentionKind, int, int, int?)>[
+    // Name, note, kind, days back, hour, done how many days back.
+    ('Malik Osei', 'saw a bouldering video', IntentionKind.write, 1, 21, null),
+    (
+      'Ingrid Solberg',
+      'ask about the new job',
+      IntentionKind.call,
+      2,
+      19,
+      null,
+    ),
+    ('Lena Hartwig', 'birthday dinner?', IntentionKind.meet, 3, 12, null),
+    ('Kenji Moreau', 'send the ramen place', IntentionKind.write, 4, 8, null),
+    ('Hilde Brenner', 'how was the doctor', IntentionKind.call, 5, 18, null),
+    (
+      'Paulina Brandt',
+      'pottery pieces, show?',
+      IntentionKind.write,
+      6,
+      20,
+      null,
+    ),
+    ('Felix Grünberg', '', IntentionKind.meet, 9, 17, null),
+    ('Sofia Lindqvist', 'return the book', IntentionKind.meet, 8, 10, 2),
+    ('Amira Haddad', 'congrats on the flat', IntentionKind.write, 10, 9, 7),
+    ('Malik Osei', 'match on Saturday', IntentionKind.call, 12, 22, 11),
+  ];
+  return [
+    for (final (i, (name, note, kind, back, hour, doneBack)) in rows.indexed)
+      Intention(
+        id: 'demo-i${(i + 1).toString().padLeft(2, '0')}',
+        personId: ids[name]!,
+        note: note,
+        kind: kind,
+        state: doneBack == null ? IntentionState.open : IntentionState.done,
+        createdAt: at(back, hour),
+        closedAt: doneBack == null ? null : at(doneBack, hour),
+      ),
+  ];
 }
 
 class _Demo {

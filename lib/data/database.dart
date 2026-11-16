@@ -1,6 +1,8 @@
 import 'package:drift/drift.dart';
 
+import '../domain/intention.dart';
 import '../domain/person.dart';
+import 'database.steps.dart';
 
 part 'database.g.dart';
 
@@ -60,9 +62,48 @@ class People extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+/// Something the user wants to do with a person: a thought caught at
+/// capture (02-design.md §2.1, §3). Added in schema version 2.
+@DataClassName('Intention')
+class Intentions extends Table {
+  /// UUID v4, made by IntentionsRepository.
+  TextColumn get id => text()();
+
+  /// Deleting the person deletes their intentions. Needs
+  /// `PRAGMA foreign_keys = ON` (AppDatabase.migration, beforeOpen).
+  TextColumn get personId =>
+      text().references(People, #id, onDelete: KeyAction.cascade)();
+
+  /// What came to mind ("saw a bouldering video"). May be empty.
+  TextColumn get note => text().withDefault(const Constant(''))();
+  TextColumn get kind => textEnum<IntentionKind>().withDefault(
+    Constant(IntentionKind.write.name),
+  )();
+  TextColumn get state => textEnum<IntentionState>().withDefault(
+    Constant(IntentionState.open.name),
+  )();
+
+  /// An attached link (a later milestone).
+  TextColumn get link => text().nullable()();
+
+  /// When: a date, or a horizon (with [condition] for "when ..."), or
+  /// nothing. Used from milestone M5; here now to spare a migration.
+  DateTimeColumn get date => dateTime().nullable()();
+  TextColumn get horizon => textEnum<Horizon>().nullable()();
+  TextColumn get condition => text().nullable()();
+
+  DateTimeColumn get createdAt => dateTime()();
+
+  /// Set when the intention leaves `open`; cleared when it is reopened.
+  DateTimeColumn get closedAt => dateTime().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
 /// One schema for both files: the real database (settings and the user's
 /// people) and the demo database (invented people only).
-@DriftDatabase(tables: [Settings, People])
+@DriftDatabase(tables: [Settings, People, Intentions])
 class AppDatabase extends _$AppDatabase {
   /// [executor]: a file database (`database_connection.dart`) or an
   /// in-memory one in tests. Opening the file lives elsewhere so drift's
@@ -70,10 +111,28 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Raise this and add a migration step for every schema change. Only add
-  /// tables or nullable columns; never rename or reuse a column. The
-  /// snapshot of version 1 is in `drift_schemas/`; with version 2, run
-  /// `dart run drift_dev make-migrations` and use `stepByStep` as
-  /// akai-timetrack does.
+  /// tables or nullable columns; never rename or reuse a column. Then run
+  /// `dart run drift_dev make-migrations`: it saves a snapshot in
+  /// `drift_schemas/`, updates `database.steps.dart` and the schema test
+  /// helpers in `test/drift/` (as in akai-timetrack).
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  /// Steps come from the snapshots in `drift_schemas/`; each one only adds.
+  /// The real database on the developer's phone holds people from version
+  /// 1, so a step must never drop or rebuild a table with data.
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onUpgrade: stepByStep(
+      from1To2: (m, schema) async {
+        // Intentions (M2, capture).
+        await m.createTable(schema.intentions);
+      },
+    ),
+    beforeOpen: (details) async {
+      // SQLite leaves foreign keys off per connection; the cascade from
+      // people to intentions needs them.
+      await customStatement('PRAGMA foreign_keys = ON');
+    },
+  );
 }

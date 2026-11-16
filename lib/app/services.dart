@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 
 import '../data/database.dart';
 import '../data/database_connection.dart';
+import '../data/intentions_repository.dart';
 import '../data/people_repository.dart';
 import '../data/settings_repository.dart';
 import '../domain/demo_data.dart';
@@ -23,7 +24,8 @@ class AppServices {
     required this._openDemo,
     this.allowDemo = kDebugMode,
   }) : settings = SettingsRepository(db),
-       _realPeople = PeopleRepository(db) {
+       _realPeople = PeopleRepository(db),
+       _realIntentions = IntentionsRepository(db) {
     // Two AppDatabase instances on two files are intended here; drift
     // warns about any second instance in debug builds.
     driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -35,8 +37,10 @@ class AppServices {
 
   final AppDatabase Function() _openDemo;
   final PeopleRepository _realPeople;
+  final IntentionsRepository _realIntentions;
   AppDatabase? _demoDb;
   PeopleRepository? _demoPeople;
+  IntentionsRepository? _demoIntentions;
 
   /// Opens the real database file. Can't throw: the database opens lazily,
   /// so a broken file only shows up in later queries and the app still
@@ -63,19 +67,34 @@ class AppServices {
   PeopleRepository peopleFor({required bool demo}) =>
       demo && allowDemo ? _demoRepository() : _realPeople;
 
+  /// The intentions of the same content database as [peopleFor].
+  IntentionsRepository intentionsFor({required bool demo}) =>
+      demo && allowDemo ? _demoIntentionsRepository() : _realIntentions;
+
   /// Switches demo mode. On: the demo database is filled with the demo set
-  /// from scratch first, so the screens switch straight to it. Off: back
+  /// (people, then their intentions) from scratch first, so the screens
+  /// switch straight to it. Off: back
   /// to the real database; the demo file is deleted at the next start.
   Future<void> setDemoMode(bool on, {DateTime? today}) async {
     if (on && !allowDemo) return;
     if (on) {
-      await _demoRepository().replaceAll(demoPeople(today ?? DateTime.now()));
+      final day = today ?? DateTime.now();
+      await _demoDatabase().transaction(() async {
+        // Replacing the people removes their old intentions (cascade).
+        await _demoRepository().replaceAll(demoPeople(day));
+        await _demoIntentionsRepository().replaceAll(demoIntentions(day));
+      });
     }
     await settings.update((s) => s.copyWith(demoMode: on));
   }
 
+  AppDatabase _demoDatabase() => _demoDb ??= _openDemo();
+
   PeopleRepository _demoRepository() =>
-      _demoPeople ??= PeopleRepository(_demoDb ??= _openDemo());
+      _demoPeople ??= PeopleRepository(_demoDatabase());
+
+  IntentionsRepository _demoIntentionsRepository() =>
+      _demoIntentions ??= IntentionsRepository(_demoDatabase());
 
   /// Closes both databases. For tests.
   Future<void> close() async {

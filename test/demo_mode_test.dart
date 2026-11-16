@@ -5,6 +5,7 @@ import 'package:kept/app/providers.dart';
 import 'package:kept/app/services.dart';
 import 'package:kept/data/database.dart';
 import 'package:kept/domain/demo_data.dart';
+import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
 
 void main() {
@@ -74,6 +75,75 @@ void main() {
     expect((await services.settings.load()).demoMode, isTrue);
   });
 
+  /// The open intentions once there are [length] of them.
+  Future<List<Intention>> openWhen(int length) async {
+    final sub = container.listen(openIntentionsProvider, (_, _) {});
+    try {
+      for (var i = 0; i < 100; i++) {
+        final open = sub.read().value;
+        if (open != null && open.length == length) return open;
+        await Future<void>.delayed(const Duration(milliseconds: 5));
+      }
+      fail('open intentions never reached $length: ${sub.read()}');
+    } finally {
+      sub.close();
+    }
+  }
+
+  test(
+    'demo mode shows the demo intentions and leaves the real ones',
+    () async {
+      final anna = await services
+          .peopleFor(demo: false)
+          .add(name: 'Anna Real', closeness: Closeness.close);
+      final real = await services
+          .intentionsFor(demo: false)
+          .add(personId: anna.id, note: 'real one');
+      expect(await openWhen(1), [real]);
+
+      final today = DateTime(2026, 11, 16);
+      await services.setDemoMode(true, today: today);
+      final demo = await openWhen(7);
+      final expected = demoIntentions(today)
+          .where((i) => i.state == IntentionState.open)
+          .map((i) => i.id)
+          .toSet();
+      expect(demo.map((i) => i.id).toSet(), expected);
+
+      // One person's page shows done ones too.
+      final malik = demoPeople(today)
+          .singleWhere((p) => p.name == 'Malik Osei');
+      final sub = container.listen(
+        personIntentionsProvider(malik.id),
+        (_, _) {},
+      );
+      for (var i = 0; i < 100 && sub.read().value?.length != 2; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 5));
+      }
+      expect(sub.read().value!.map((i) => i.state).toSet(), {
+        IntentionState.open,
+        IntentionState.done,
+      });
+      sub.close();
+
+      // A capture in demo mode goes to the demo database only.
+      await container
+          .read(intentionsRepositoryProvider)
+          .add(personId: malik.id, note: 'demo capture');
+      await openWhen(8);
+
+      await services.setDemoMode(false);
+      expect(await openWhen(1), [real]);
+
+      // Switching on again starts the demo intentions from scratch.
+      await services.setDemoMode(true, today: today);
+      expect(
+        (await openWhen(7)).map((i) => i.note),
+        isNot(contains('demo capture')),
+      );
+    },
+  );
+
   test('without demo allowed the switch does nothing', () async {
     final release = AppServices(
       db: AppDatabase(NativeDatabase.memory()),
@@ -83,6 +153,10 @@ void main() {
     await release.setDemoMode(true);
     expect((await release.settings.load()).demoMode, isFalse);
     expect(release.peopleFor(demo: true), same(release.peopleFor(demo: false)));
+    expect(
+      release.intentionsFor(demo: true),
+      same(release.intentionsFor(demo: false)),
+    );
     await release.close();
   });
 }

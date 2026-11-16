@@ -101,6 +101,17 @@ The developer tried the People tab, add, edit and the contact import on the phon
 
 Phone numbers are stored with a leading plus; links such as `wa.me` need the digits only.
 
+## 4b. M2, Capture: in progress
+
+Done:
+
+- Data (2026-11-16, Opus subagent, reviewed by Claude): the `intentions` table with a tested upgrade from schema 1 to 2 that keeps existing people, repository, providers, demo intentions, and `recentPeople` for the person picker. Checked: analyze, 67 tests. Not checked: the upgrade on the developer's phone.
+
+Next:
+
+1. The capture card on Home (text, person, kind, Save), the open thoughts listed below it and on the person page.
+2. Long-press on the app icon jumps to capture (`quick_actions`).
+
 ## 5. Open questions for the developer
 
 - None new. Settled on 2026-11-15 (02-design.md §8): the name is "Kept.", the version starts at 0.1.0, and development builds get demo data. The demo data is built in M1, when there is a people table to fill.

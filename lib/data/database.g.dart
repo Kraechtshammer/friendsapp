@@ -1292,16 +1292,711 @@ class PeopleCompanion extends UpdateCompanion<Person> {
   }
 }
 
+class $IntentionsTable extends Intentions
+    with TableInfo<$IntentionsTable, Intention> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $IntentionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _personIdMeta = const VerificationMeta(
+    'personId',
+  );
+  @override
+  late final GeneratedColumn<String> personId = GeneratedColumn<String>(
+    'person_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES people (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+  @override
+  late final GeneratedColumn<String> note = GeneratedColumn<String>(
+    'note',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<IntentionKind, String> kind =
+      GeneratedColumn<String>(
+        'kind',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: Constant(IntentionKind.write.name),
+      ).withConverter<IntentionKind>($IntentionsTable.$converterkind);
+  @override
+  late final GeneratedColumnWithTypeConverter<IntentionState, String> state =
+      GeneratedColumn<String>(
+        'state',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: Constant(IntentionState.open.name),
+      ).withConverter<IntentionState>($IntentionsTable.$converterstate);
+  static const VerificationMeta _linkMeta = const VerificationMeta('link');
+  @override
+  late final GeneratedColumn<String> link = GeneratedColumn<String>(
+    'link',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<Horizon?, String> horizon =
+      GeneratedColumn<String>(
+        'horizon',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<Horizon?>($IntentionsTable.$converterhorizonn);
+  static const VerificationMeta _conditionMeta = const VerificationMeta(
+    'condition',
+  );
+  @override
+  late final GeneratedColumn<String> condition = GeneratedColumn<String>(
+    'condition',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _closedAtMeta = const VerificationMeta(
+    'closedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> closedAt = GeneratedColumn<DateTime>(
+    'closed_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    personId,
+    note,
+    kind,
+    state,
+    link,
+    date,
+    horizon,
+    condition,
+    createdAt,
+    closedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'intentions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Intention> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('person_id')) {
+      context.handle(
+        _personIdMeta,
+        personId.isAcceptableOrUnknown(data['person_id']!, _personIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_personIdMeta);
+    }
+    if (data.containsKey('note')) {
+      context.handle(
+        _noteMeta,
+        note.isAcceptableOrUnknown(data['note']!, _noteMeta),
+      );
+    }
+    if (data.containsKey('link')) {
+      context.handle(
+        _linkMeta,
+        link.isAcceptableOrUnknown(data['link']!, _linkMeta),
+      );
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    }
+    if (data.containsKey('condition')) {
+      context.handle(
+        _conditionMeta,
+        condition.isAcceptableOrUnknown(data['condition']!, _conditionMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('closed_at')) {
+      context.handle(
+        _closedAtMeta,
+        closedAt.isAcceptableOrUnknown(data['closed_at']!, _closedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Intention map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Intention(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      personId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}person_id'],
+      )!,
+      note: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}note'],
+      )!,
+      kind: $IntentionsTable.$converterkind.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}kind'],
+        )!,
+      ),
+      state: $IntentionsTable.$converterstate.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}state'],
+        )!,
+      ),
+      link: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}link'],
+      ),
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      ),
+      horizon: $IntentionsTable.$converterhorizonn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}horizon'],
+        ),
+      ),
+      condition: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}condition'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      closedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}closed_at'],
+      ),
+    );
+  }
+
+  @override
+  $IntentionsTable createAlias(String alias) {
+    return $IntentionsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<IntentionKind, String, String> $converterkind =
+      const EnumNameConverter<IntentionKind>(IntentionKind.values);
+  static JsonTypeConverter2<IntentionState, String, String> $converterstate =
+      const EnumNameConverter<IntentionState>(IntentionState.values);
+  static JsonTypeConverter2<Horizon, String, String> $converterhorizon =
+      const EnumNameConverter<Horizon>(Horizon.values);
+  static JsonTypeConverter2<Horizon?, String?, String?> $converterhorizonn =
+      JsonTypeConverter2.asNullable($converterhorizon);
+}
+
+class Intention extends DataClass implements Insertable<Intention> {
+  /// UUID v4, made by IntentionsRepository.
+  final String id;
+
+  /// Deleting the person deletes their intentions. Needs
+  /// `PRAGMA foreign_keys = ON` (AppDatabase.migration, beforeOpen).
+  final String personId;
+
+  /// What came to mind ("saw a bouldering video"). May be empty.
+  final String note;
+  final IntentionKind kind;
+  final IntentionState state;
+
+  /// An attached link (a later milestone).
+  final String? link;
+
+  /// When: a date, or a horizon (with [condition] for "when ..."), or
+  /// nothing. Used from milestone M5; here now to spare a migration.
+  final DateTime? date;
+  final Horizon? horizon;
+  final String? condition;
+  final DateTime createdAt;
+
+  /// Set when the intention leaves `open`; cleared when it is reopened.
+  final DateTime? closedAt;
+  const Intention({
+    required this.id,
+    required this.personId,
+    required this.note,
+    required this.kind,
+    required this.state,
+    this.link,
+    this.date,
+    this.horizon,
+    this.condition,
+    required this.createdAt,
+    this.closedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['person_id'] = Variable<String>(personId);
+    map['note'] = Variable<String>(note);
+    {
+      map['kind'] = Variable<String>(
+        $IntentionsTable.$converterkind.toSql(kind),
+      );
+    }
+    {
+      map['state'] = Variable<String>(
+        $IntentionsTable.$converterstate.toSql(state),
+      );
+    }
+    if (!nullToAbsent || link != null) {
+      map['link'] = Variable<String>(link);
+    }
+    if (!nullToAbsent || date != null) {
+      map['date'] = Variable<DateTime>(date);
+    }
+    if (!nullToAbsent || horizon != null) {
+      map['horizon'] = Variable<String>(
+        $IntentionsTable.$converterhorizonn.toSql(horizon),
+      );
+    }
+    if (!nullToAbsent || condition != null) {
+      map['condition'] = Variable<String>(condition);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || closedAt != null) {
+      map['closed_at'] = Variable<DateTime>(closedAt);
+    }
+    return map;
+  }
+
+  IntentionsCompanion toCompanion(bool nullToAbsent) {
+    return IntentionsCompanion(
+      id: Value(id),
+      personId: Value(personId),
+      note: Value(note),
+      kind: Value(kind),
+      state: Value(state),
+      link: link == null && nullToAbsent ? const Value.absent() : Value(link),
+      date: date == null && nullToAbsent ? const Value.absent() : Value(date),
+      horizon: horizon == null && nullToAbsent
+          ? const Value.absent()
+          : Value(horizon),
+      condition: condition == null && nullToAbsent
+          ? const Value.absent()
+          : Value(condition),
+      createdAt: Value(createdAt),
+      closedAt: closedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(closedAt),
+    );
+  }
+
+  factory Intention.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Intention(
+      id: serializer.fromJson<String>(json['id']),
+      personId: serializer.fromJson<String>(json['personId']),
+      note: serializer.fromJson<String>(json['note']),
+      kind: $IntentionsTable.$converterkind.fromJson(
+        serializer.fromJson<String>(json['kind']),
+      ),
+      state: $IntentionsTable.$converterstate.fromJson(
+        serializer.fromJson<String>(json['state']),
+      ),
+      link: serializer.fromJson<String?>(json['link']),
+      date: serializer.fromJson<DateTime?>(json['date']),
+      horizon: $IntentionsTable.$converterhorizonn.fromJson(
+        serializer.fromJson<String?>(json['horizon']),
+      ),
+      condition: serializer.fromJson<String?>(json['condition']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      closedAt: serializer.fromJson<DateTime?>(json['closedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'personId': serializer.toJson<String>(personId),
+      'note': serializer.toJson<String>(note),
+      'kind': serializer.toJson<String>(
+        $IntentionsTable.$converterkind.toJson(kind),
+      ),
+      'state': serializer.toJson<String>(
+        $IntentionsTable.$converterstate.toJson(state),
+      ),
+      'link': serializer.toJson<String?>(link),
+      'date': serializer.toJson<DateTime?>(date),
+      'horizon': serializer.toJson<String?>(
+        $IntentionsTable.$converterhorizonn.toJson(horizon),
+      ),
+      'condition': serializer.toJson<String?>(condition),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'closedAt': serializer.toJson<DateTime?>(closedAt),
+    };
+  }
+
+  Intention copyWith({
+    String? id,
+    String? personId,
+    String? note,
+    IntentionKind? kind,
+    IntentionState? state,
+    Value<String?> link = const Value.absent(),
+    Value<DateTime?> date = const Value.absent(),
+    Value<Horizon?> horizon = const Value.absent(),
+    Value<String?> condition = const Value.absent(),
+    DateTime? createdAt,
+    Value<DateTime?> closedAt = const Value.absent(),
+  }) => Intention(
+    id: id ?? this.id,
+    personId: personId ?? this.personId,
+    note: note ?? this.note,
+    kind: kind ?? this.kind,
+    state: state ?? this.state,
+    link: link.present ? link.value : this.link,
+    date: date.present ? date.value : this.date,
+    horizon: horizon.present ? horizon.value : this.horizon,
+    condition: condition.present ? condition.value : this.condition,
+    createdAt: createdAt ?? this.createdAt,
+    closedAt: closedAt.present ? closedAt.value : this.closedAt,
+  );
+  Intention copyWithCompanion(IntentionsCompanion data) {
+    return Intention(
+      id: data.id.present ? data.id.value : this.id,
+      personId: data.personId.present ? data.personId.value : this.personId,
+      note: data.note.present ? data.note.value : this.note,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      state: data.state.present ? data.state.value : this.state,
+      link: data.link.present ? data.link.value : this.link,
+      date: data.date.present ? data.date.value : this.date,
+      horizon: data.horizon.present ? data.horizon.value : this.horizon,
+      condition: data.condition.present ? data.condition.value : this.condition,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      closedAt: data.closedAt.present ? data.closedAt.value : this.closedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Intention(')
+          ..write('id: $id, ')
+          ..write('personId: $personId, ')
+          ..write('note: $note, ')
+          ..write('kind: $kind, ')
+          ..write('state: $state, ')
+          ..write('link: $link, ')
+          ..write('date: $date, ')
+          ..write('horizon: $horizon, ')
+          ..write('condition: $condition, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('closedAt: $closedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    personId,
+    note,
+    kind,
+    state,
+    link,
+    date,
+    horizon,
+    condition,
+    createdAt,
+    closedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Intention &&
+          other.id == this.id &&
+          other.personId == this.personId &&
+          other.note == this.note &&
+          other.kind == this.kind &&
+          other.state == this.state &&
+          other.link == this.link &&
+          other.date == this.date &&
+          other.horizon == this.horizon &&
+          other.condition == this.condition &&
+          other.createdAt == this.createdAt &&
+          other.closedAt == this.closedAt);
+}
+
+class IntentionsCompanion extends UpdateCompanion<Intention> {
+  final Value<String> id;
+  final Value<String> personId;
+  final Value<String> note;
+  final Value<IntentionKind> kind;
+  final Value<IntentionState> state;
+  final Value<String?> link;
+  final Value<DateTime?> date;
+  final Value<Horizon?> horizon;
+  final Value<String?> condition;
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> closedAt;
+  final Value<int> rowid;
+  const IntentionsCompanion({
+    this.id = const Value.absent(),
+    this.personId = const Value.absent(),
+    this.note = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.state = const Value.absent(),
+    this.link = const Value.absent(),
+    this.date = const Value.absent(),
+    this.horizon = const Value.absent(),
+    this.condition = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.closedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  IntentionsCompanion.insert({
+    required String id,
+    required String personId,
+    this.note = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.state = const Value.absent(),
+    this.link = const Value.absent(),
+    this.date = const Value.absent(),
+    this.horizon = const Value.absent(),
+    this.condition = const Value.absent(),
+    required DateTime createdAt,
+    this.closedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       personId = Value(personId),
+       createdAt = Value(createdAt);
+  static Insertable<Intention> custom({
+    Expression<String>? id,
+    Expression<String>? personId,
+    Expression<String>? note,
+    Expression<String>? kind,
+    Expression<String>? state,
+    Expression<String>? link,
+    Expression<DateTime>? date,
+    Expression<String>? horizon,
+    Expression<String>? condition,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? closedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (personId != null) 'person_id': personId,
+      if (note != null) 'note': note,
+      if (kind != null) 'kind': kind,
+      if (state != null) 'state': state,
+      if (link != null) 'link': link,
+      if (date != null) 'date': date,
+      if (horizon != null) 'horizon': horizon,
+      if (condition != null) 'condition': condition,
+      if (createdAt != null) 'created_at': createdAt,
+      if (closedAt != null) 'closed_at': closedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  IntentionsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? personId,
+    Value<String>? note,
+    Value<IntentionKind>? kind,
+    Value<IntentionState>? state,
+    Value<String?>? link,
+    Value<DateTime?>? date,
+    Value<Horizon?>? horizon,
+    Value<String?>? condition,
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? closedAt,
+    Value<int>? rowid,
+  }) {
+    return IntentionsCompanion(
+      id: id ?? this.id,
+      personId: personId ?? this.personId,
+      note: note ?? this.note,
+      kind: kind ?? this.kind,
+      state: state ?? this.state,
+      link: link ?? this.link,
+      date: date ?? this.date,
+      horizon: horizon ?? this.horizon,
+      condition: condition ?? this.condition,
+      createdAt: createdAt ?? this.createdAt,
+      closedAt: closedAt ?? this.closedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (personId.present) {
+      map['person_id'] = Variable<String>(personId.value);
+    }
+    if (note.present) {
+      map['note'] = Variable<String>(note.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(
+        $IntentionsTable.$converterkind.toSql(kind.value),
+      );
+    }
+    if (state.present) {
+      map['state'] = Variable<String>(
+        $IntentionsTable.$converterstate.toSql(state.value),
+      );
+    }
+    if (link.present) {
+      map['link'] = Variable<String>(link.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (horizon.present) {
+      map['horizon'] = Variable<String>(
+        $IntentionsTable.$converterhorizonn.toSql(horizon.value),
+      );
+    }
+    if (condition.present) {
+      map['condition'] = Variable<String>(condition.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (closedAt.present) {
+      map['closed_at'] = Variable<DateTime>(closedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('IntentionsCompanion(')
+          ..write('id: $id, ')
+          ..write('personId: $personId, ')
+          ..write('note: $note, ')
+          ..write('kind: $kind, ')
+          ..write('state: $state, ')
+          ..write('link: $link, ')
+          ..write('date: $date, ')
+          ..write('horizon: $horizon, ')
+          ..write('condition: $condition, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('closedAt: $closedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $SettingsTable settings = $SettingsTable(this);
   late final $PeopleTable people = $PeopleTable(this);
+  late final $IntentionsTable intentions = $IntentionsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [settings, people];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    settings,
+    people,
+    intentions,
+  ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'people',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('intentions', kind: UpdateKind.delete)],
+    ),
+  ]);
 }
 
 typedef $$SettingsTableCreateCompanionBuilder = SettingsCompanion Function({
@@ -1487,6 +2182,29 @@ typedef $$PeopleTableUpdateCompanionBuilder = PeopleCompanion Function({
   Value<int> rowid,
 });
 
+final class $$PeopleTableReferences
+    extends BaseReferences<_$AppDatabase, $PeopleTable, Person> {
+  $$PeopleTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$IntentionsTable, List<Intention>>
+  _intentionsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.intentions,
+    aliasName: 'people__id__intentions__person_id',
+  );
+
+  $$IntentionsTableProcessedTableManager get intentionsRefs {
+    final manager = $$IntentionsTableTableManager(
+      $_db,
+      $_db.intentions,
+    ).filter((f) => f.personId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_intentionsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
 class $$PeopleTableFilterComposer
     extends Composer<_$AppDatabase, $PeopleTable> {
   $$PeopleTableFilterComposer({
@@ -1589,6 +2307,31 @@ class $$PeopleTableFilterComposer
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> intentionsRefs(
+    Expression<bool> Function($$IntentionsTableFilterComposer f) f,
+  ) {
+    final $$IntentionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.intentions,
+      getReferencedColumn: (t) => t.personId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$IntentionsTableFilterComposer(
+            $db: $db,
+            $table: $db.intentions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$PeopleTableOrderingComposer
@@ -1778,6 +2521,31 @@ class $$PeopleTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  Expression<T> intentionsRefs<T extends Object>(
+    Expression<T> Function($$IntentionsTableAnnotationComposer a) f,
+  ) {
+    final $$IntentionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.intentions,
+      getReferencedColumn: (t) => t.personId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$IntentionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.intentions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$PeopleTableTableManager
@@ -1791,9 +2559,9 @@ class $$PeopleTableTableManager
           $$PeopleTableAnnotationComposer,
           $$PeopleTableCreateCompanionBuilder,
           $$PeopleTableUpdateCompanionBuilder,
-          (Person, BaseReferences<_$AppDatabase, $PeopleTable, Person>),
+          (Person, $$PeopleTableReferences),
           Person,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool intentionsRefs})
         > {
   $$PeopleTableTableManager(_$AppDatabase db, $PeopleTable table)
     : super(
@@ -1894,15 +2662,37 @@ class $$PeopleTableTableManager
               .map(
                 (e) => (
                   e.readTable<$PeopleTable, Person>(table),
-                  BaseReferences<_$AppDatabase, $PeopleTable, Person>(
-                    db,
-                    table,
-                    e,
-                  ),
+                  $$PeopleTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({intentionsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (intentionsRefs) db.intentions],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (intentionsRefs)
+                    await $_getPrefetchedDataByColumns<
+                      Person,
+                      $PeopleTable,
+                      Intention,
+                      $IntentionsTable
+                    >(
+                      currentTable: table,
+                      referencedTable: $$PeopleTableReferences
+                          ._intentionsRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$PeopleTableReferences(db, table, p0).intentionsRefs,
+                      currentColumn: 'id',
+                      referencedColumn: 'person_id',
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
         ),
       );
 }
@@ -1917,9 +2707,439 @@ typedef $$PeopleTableProcessedTableManager =
       $$PeopleTableAnnotationComposer,
       $$PeopleTableCreateCompanionBuilder,
       $$PeopleTableUpdateCompanionBuilder,
-      (Person, BaseReferences<_$AppDatabase, $PeopleTable, Person>),
+      (Person, $$PeopleTableReferences),
       Person,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool intentionsRefs})
+    >;
+typedef $$IntentionsTableCreateCompanionBuilder = IntentionsCompanion Function({
+  required String id,
+  required String personId,
+  Value<String> note,
+  Value<IntentionKind> kind,
+  Value<IntentionState> state,
+  Value<String?> link,
+  Value<DateTime?> date,
+  Value<Horizon?> horizon,
+  Value<String?> condition,
+  required DateTime createdAt,
+  Value<DateTime?> closedAt,
+  Value<int> rowid,
+});
+typedef $$IntentionsTableUpdateCompanionBuilder = IntentionsCompanion Function({
+  Value<String> id,
+  Value<String> personId,
+  Value<String> note,
+  Value<IntentionKind> kind,
+  Value<IntentionState> state,
+  Value<String?> link,
+  Value<DateTime?> date,
+  Value<Horizon?> horizon,
+  Value<String?> condition,
+  Value<DateTime> createdAt,
+  Value<DateTime?> closedAt,
+  Value<int> rowid,
+});
+
+final class $$IntentionsTableReferences
+    extends BaseReferences<_$AppDatabase, $IntentionsTable, Intention> {
+  $$IntentionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $PeopleTable _personIdTable(_$AppDatabase db) =>
+      db.people.createAlias('intentions__person_id__people__id');
+
+  $$PeopleTableProcessedTableManager get personId {
+    final $_column = $_itemColumn<String>('person_id')!;
+
+    final manager = $$PeopleTableTableManager(
+      $_db,
+      $_db.people,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_personIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$IntentionsTableFilterComposer
+    extends Composer<_$AppDatabase, $IntentionsTable> {
+  $$IntentionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<IntentionKind, IntentionKind, String>
+  get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<IntentionState, IntentionState, String>
+  get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<String> get link => $composableBuilder(
+    column: $table.link,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<Horizon?, Horizon, String> get horizon =>
+      $composableBuilder(
+        column: $table.horizon,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnFilters<String> get condition => $composableBuilder(
+    column: $table.condition,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get closedAt => $composableBuilder(
+    column: $table.closedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$PeopleTableFilterComposer get personId {
+    final $$PeopleTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.personId,
+      referencedTable: $db.people,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PeopleTableFilterComposer(
+            $db: $db,
+            $table: $db.people,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$IntentionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $IntentionsTable> {
+  $$IntentionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get link => $composableBuilder(
+    column: $table.link,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get horizon => $composableBuilder(
+    column: $table.horizon,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get condition => $composableBuilder(
+    column: $table.condition,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get closedAt => $composableBuilder(
+    column: $table.closedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$PeopleTableOrderingComposer get personId {
+    final $$PeopleTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.personId,
+      referencedTable: $db.people,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PeopleTableOrderingComposer(
+            $db: $db,
+            $table: $db.people,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$IntentionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $IntentionsTable> {
+  $$IntentionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get note =>
+      $composableBuilder(column: $table.note, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<IntentionKind, String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<IntentionState, String> get state =>
+      $composableBuilder(column: $table.state, builder: (column) => column);
+
+  GeneratedColumn<String> get link =>
+      $composableBuilder(column: $table.link, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Horizon?, String> get horizon =>
+      $composableBuilder(column: $table.horizon, builder: (column) => column);
+
+  GeneratedColumn<String> get condition =>
+      $composableBuilder(column: $table.condition, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get closedAt =>
+      $composableBuilder(column: $table.closedAt, builder: (column) => column);
+
+  $$PeopleTableAnnotationComposer get personId {
+    final $$PeopleTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.personId,
+      referencedTable: $db.people,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PeopleTableAnnotationComposer(
+            $db: $db,
+            $table: $db.people,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$IntentionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $IntentionsTable,
+          Intention,
+          $$IntentionsTableFilterComposer,
+          $$IntentionsTableOrderingComposer,
+          $$IntentionsTableAnnotationComposer,
+          $$IntentionsTableCreateCompanionBuilder,
+          $$IntentionsTableUpdateCompanionBuilder,
+          (Intention, $$IntentionsTableReferences),
+          Intention,
+          PrefetchHooks Function({bool personId})
+        > {
+  $$IntentionsTableTableManager(_$AppDatabase db, $IntentionsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$IntentionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$IntentionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$IntentionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> personId = const Value.absent(),
+                Value<String> note = const Value.absent(),
+                Value<IntentionKind> kind = const Value.absent(),
+                Value<IntentionState> state = const Value.absent(),
+                Value<String?> link = const Value.absent(),
+                Value<DateTime?> date = const Value.absent(),
+                Value<Horizon?> horizon = const Value.absent(),
+                Value<String?> condition = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> closedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => IntentionsCompanion(
+                id: id,
+                personId: personId,
+                note: note,
+                kind: kind,
+                state: state,
+                link: link,
+                date: date,
+                horizon: horizon,
+                condition: condition,
+                createdAt: createdAt,
+                closedAt: closedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String personId,
+                Value<String> note = const Value.absent(),
+                Value<IntentionKind> kind = const Value.absent(),
+                Value<IntentionState> state = const Value.absent(),
+                Value<String?> link = const Value.absent(),
+                Value<DateTime?> date = const Value.absent(),
+                Value<Horizon?> horizon = const Value.absent(),
+                Value<String?> condition = const Value.absent(),
+                required DateTime createdAt,
+                Value<DateTime?> closedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => IntentionsCompanion.insert(
+                id: id,
+                personId: personId,
+                note: note,
+                kind: kind,
+                state: state,
+                link: link,
+                date: date,
+                horizon: horizon,
+                condition: condition,
+                createdAt: createdAt,
+                closedAt: closedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$IntentionsTable, Intention>(table),
+                  $$IntentionsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({personId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (personId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.personId,
+                        referencedTable: $$IntentionsTableReferences
+                            ._personIdTable(db),
+                        referencedColumn: $$IntentionsTableReferences
+                            ._personIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$IntentionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $IntentionsTable,
+      Intention,
+      $$IntentionsTableFilterComposer,
+      $$IntentionsTableOrderingComposer,
+      $$IntentionsTableAnnotationComposer,
+      $$IntentionsTableCreateCompanionBuilder,
+      $$IntentionsTableUpdateCompanionBuilder,
+      (Intention, $$IntentionsTableReferences),
+      Intention,
+      PrefetchHooks Function({bool personId})
     >;
 
 class $AppDatabaseManager {
@@ -1929,4 +3149,6 @@ class $AppDatabaseManager {
       $$SettingsTableTableManager(_db, _db.settings);
   $$PeopleTableTableManager get people =>
       $$PeopleTableTableManager(_db, _db.people);
+  $$IntentionsTableTableManager get intentions =>
+      $$IntentionsTableTableManager(_db, _db.intentions);
 }

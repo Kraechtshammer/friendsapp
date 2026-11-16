@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kept/domain/demo_data.dart';
+import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
 
 void main() {
@@ -57,5 +58,46 @@ void main() {
     final withBirthday = people.where((p) => p.birthdayMonth != null);
     expect(withBirthday.length, inInclusiveRange(10, 12));
     expect(withBirthday.where((p) => p.birthdayYear == null), isNotEmpty);
+  });
+
+  group('intentions', () {
+    final intentions = demoIntentions(today);
+
+    test('seven open and three done, mixed kinds', () {
+      expect(intentions, hasLength(10));
+      int count(IntentionState s) =>
+          intentions.where((i) => i.state == s).length;
+      expect(count(IntentionState.open), 7);
+      expect(count(IntentionState.done), 3);
+      expect(
+        intentions.map((i) => i.kind).toSet(),
+        IntentionKind.values.toSet(),
+      );
+      expect(intentions.map((i) => i.id).toSet(), hasLength(10));
+    });
+
+    test('refer only to demo people', () {
+      final ids = people.map((p) => p.id).toSet();
+      for (final i in intentions) {
+        expect(ids, contains(i.personId));
+      }
+    });
+
+    test('lie a few days back; done ones closed after they were made', () {
+      for (final i in intentions) {
+        expect(i.createdAt.isBefore(today), isTrue);
+        expect(today.difference(i.createdAt).inDays, lessThan(14));
+        if (i.state == IntentionState.done) {
+          expect(i.closedAt!.isAfter(i.createdAt), isTrue);
+          expect(i.closedAt!.isBefore(today), isTrue);
+        } else {
+          expect(i.closedAt, isNull);
+        }
+      }
+    });
+
+    test('is the same for the same day', () {
+      expect(demoIntentions(DateTime(2026, 12, 30, 8)), intentions);
+    });
   });
 }

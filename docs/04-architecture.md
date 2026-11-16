@@ -99,6 +99,9 @@ Written on 2026-11-16 with the first data code. §1 above describes the state at
 - **People:** `PeopleRepository` gives streams (`watchAll`, `watch`) and `add`, `update`, `delete`. `add` makes the UUID and picks the avatar. Screens read `peopleProvider` and `personProvider(id)` and write through `peopleRepositoryProvider`.
 - **Generated code** (`database.g.dart`) is committed. After changing a table run `dart run build_runner build --delete-conflicting-outputs`. `drift_schemas/` holds a snapshot of schema version 1 for later migration tests; there are no migrations yet.
 
+- **Intentions (M2):** table `intentions` (schema version 2) with `IntentionsRepository` and the providers `openIntentionsProvider` and `personIntentionsProvider(id)`. Enums are in `domain/intention.dart`. The columns `date`, `horizon`, `condition` and `link` are there for later milestones. Deleting a person deletes their intentions; foreign keys are switched on in `beforeOpen`.
+- **Migrations:** as in akai. After changing a table, raise `schemaVersion`, run `dart run drift_dev make-migrations`, write the step in `database.dart` and extend the test in `test/drift/kept/`. The developer has real data on the phone since 2026-11-16, so every schema change needs a tested step.
+
 ### 2.2 Demo database
 
 Two files: `kept.sqlite` (real) and `kept_demo.sqlite`. Settings always come from the real one. People, and later all content, come from the demo one while `demoMode` is on. Switching on refills the demo database from `demoPeople(today)` and the providers move over without a restart. Switching off moves back; the demo file is deleted at the next start. `AppServices.allowDemo` is `kDebugMode`, so a stored `demoMode` does nothing in a release build. The switch is in Settings under "Development", in debug builds only.

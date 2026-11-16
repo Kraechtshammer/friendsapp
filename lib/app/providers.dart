@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/app_settings.dart';
 import '../data/database.dart';
+import '../data/intentions_repository.dart';
 import '../data/people_repository.dart';
 import '../platform/chat_opener.dart';
 import '../platform/contacts.dart';
@@ -50,6 +51,32 @@ final personProvider = StreamProvider.family<Person?, String>((ref, id) async* {
   final services = ref.watch(servicesProvider);
   yield* services.peopleFor(demo: await demo).watch(id);
 });
+
+/// Where intentions are written: the demo or the real database, following
+/// `demoMode`, like [peopleRepositoryProvider].
+final intentionsRepositoryProvider = Provider<IntentionsRepository>((ref) {
+  final demo = ref.watch(
+    settingsProvider.select((s) => s.value?.demoMode ?? false),
+  );
+  return ref.watch(servicesProvider).intentionsFor(demo: demo);
+});
+
+/// The open intentions of everyone, newest first. Waits for the settings,
+/// like [peopleProvider].
+final openIntentionsProvider = StreamProvider<List<Intention>>((ref) async* {
+  final demo = ref.watch(settingsProvider.selectAsync((s) => s.demoMode));
+  final services = ref.watch(servicesProvider);
+  yield* services.intentionsFor(demo: await demo).watchOpen();
+});
+
+/// All intentions of one person, in every state, newest first.
+final personIntentionsProvider = StreamProvider.family<List<Intention>, String>(
+  (ref, personId) async* {
+    final demo = ref.watch(settingsProvider.selectAsync((s) => s.demoMode));
+    final services = ref.watch(servicesProvider);
+    yield* services.intentionsFor(demo: await demo).watchForPerson(personId);
+  },
+);
 
 extension SettingsOrDefault on WidgetRef {
   /// The settings, or the defaults while loading or if the database fails,
