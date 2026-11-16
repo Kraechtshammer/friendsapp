@@ -5,16 +5,16 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
 ## 1. Where things stand
 
 - Phase: **implement**. The app is called **Kept.** with the full stop (running text may write Kept). App ID `de.gartenpa.kept`; debug builds use `de.gartenpa.kept.debug`. Repository and folder are `friendsapp`.
-- **M0 to M10 are all built.** Everything after 0.6.0 is built but not released.
-- **Released** (tags `v0.1.0` to `v0.6.0`, all 2026-11-16, no version skipped):
+- **M0 to M10 are all built.** Everything is released; the newest release is 0.7.0.
+- **Released** (tags `v0.1.0` to `v0.7.0`, all 2026-11-16, no version skipped):
   - 0.1.0: M1, people, contacts import, "Open chat".
   - 0.2.0: M2 and M3, capture, the evening question, Tonight's pick, "Nice one".
   - 0.3.0: M4, birthdays.
   - 0.4.0: M5 and M6, Upcoming and plans, the friend timeline.
   - 0.5.0: schema 4, M7 to M9, owed replies, rhythm and reconnect, stamps and treats.
   - 0.6.0: M10, ideas and sharing into the app.
-- **Built after 0.6.0, not released:** the review changes (02-design.md §8, "Review of Claude's choices"), the first-start flow, the permissions page, refresh from contacts, the licences row, the K. launcher icon, debug builds as a separate app, the in-app update, the evening ping naming its reason, a clean-up of unused code.
-- **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.7.0 next).
+  - 0.7.0: the review changes, the first-start flow, the permissions page, refresh from contacts, the licences row, the K. launcher icon, the in-app update, the evening ping naming its reason, a clean-up of unused code.
+- **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.8.0 next).
 - **The developer's phone** has a debug build of 0.6.0 under the release's app id (schema 4, real data). The developer will uninstall it and start fresh on the release build; debug builds then install beside it as "Kept. debug".
 - **Tried by the developer:** M1 to M4 on the phone (M2 "all worked", M3 "everything else looks good", M4 "so far it looks good"); the evening and birthday notifications are being tried in daily use and have no report yet. The 0.6.0 debug build was installed on 2026-11-16; there is no report on the migration to schema 4 or on M5 onward. **Every database change needs a tested migration.**
 
@@ -88,7 +88,7 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 - **M9, Stamps and treats:** built, in 0.5.0, untried. Stamp rule, Progress tab, treats. How the rule feels over weeks is open.
 - **M10, Ideas and sharing in:** built, in 0.6.0, untried. Ideas per person, share into the app (own Kotlin). Possible issue: with `singleTop` a share from Chrome may open a second Kept; if so, try `singleTask`.
 
-**After M10** (built, not released)
+**After M10** (in 0.7.0, untried on a phone)
 
 - Review changes: tap a thought opens the person; "Did it happen?" third button; "Planning to meet up?"; reconnect span; streak rule with Strict and Friendly; stamp weights (Family 2, gaming with close friends 1).
 - First-start flow (contacts, class per name, notifications, update choice) and the permissions page.
@@ -103,7 +103,7 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 - Review of the German texts (written by subagents).
 - The light theme on a phone.
 - Open questions (section 5).
-- Releases take the next number each time (the next after 0.6.0 is 0.7.0).
+- Releases take the next number each time (the next after 0.7.0 is 0.8.0).
 
 **Ideas for after 1.0.0**
 

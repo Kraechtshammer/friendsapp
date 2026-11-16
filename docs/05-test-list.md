@@ -90,7 +90,7 @@ Tests that run by themselves (`flutter analyze`, `flutter test`, the migration t
 - [ ] Tap a link on an idea or a thought: it opens in the browser.
 - [ ] The pick on Home shows "Idea: ..." for a person who has ideas.
 
-## Review changes, first start, permissions (not released yet)
+## Review changes, first start, permissions (in 0.7.0)
 
 - [ ] Home: tapping a thought opens the person; the three-dot button opens the edit sheet; nothing is crowded.
 - [ ] "Did it happen?": Yes, New date and No each do the right thing.
@@ -105,7 +105,7 @@ Tests that run by themselves (`flutter analyze`, `flutter test`, the migration t
 - [ ] Settings, "About and licences" opens the licence page with the version.
 - [ ] The app icon is the K. on the launcher, also as a themed icon if you use those.
 
-## Evening ping with a reason (not released yet)
+## Evening ping with a reason (in 0.7.0)
 
 - [ ] After updating: only one evening notification on the first evening, not two.
 - [ ] With an owed reply: the title asks "Still owe ... a reply?". With a reconnect person and no owed reply: "This month: ... Got ten minutes?". Otherwise the general question.
@@ -113,7 +113,7 @@ Tests that run by themselves (`flutter analyze`, `flutter test`, the migration t
 - [ ] After a restart of the phone the evening notification still comes.
 - [ ] Change the evening time to earlier than now: one notification may still come at the old time that day (known).
 
-## In-app update (not released yet)
+## In-app update (in 0.7.0)
 
 A real update needs two release-signed builds: install one release, then a newer release gets published.
 
