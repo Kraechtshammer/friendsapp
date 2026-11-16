@@ -205,6 +205,88 @@ void main() {
       await closeDown(tester);
     }
   });
+
+  group('Planning to meet up?', () {
+    testWidgets('a row, closed at first; closing with nothing stores nothing', (
+      tester,
+    ) async {
+      await start(tester, IntentionKind.write);
+      await tapDone(tester);
+      expect(find.text('Planning to meet up?'), findsOneWidget);
+      expect(find.text('Plan it'), findsOneWidget);
+      expect(find.text('Soon'), findsNothing);
+      await tester.tap(find.text('Plan it'));
+      await tester.pumpAndSettle();
+      expect(find.text('Soon'), findsOneWidget);
+      expect(find.text('Later'), findsOneWidget);
+      await tester.tap(find.text('Close'));
+      await tester.pumpAndSettle();
+      expect(await open(tester), isEmpty);
+      await closeDown(tester);
+    });
+
+    testWidgets('a "when" and a text become a meet thought on closing', (
+      tester,
+    ) async {
+      await start(tester, IntentionKind.write);
+      await tapDone(tester);
+      await tester.tap(find.text('Plan it'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Soon'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField).last, 'Cinema');
+      // Nothing is stored before the screen closes.
+      expect(await open(tester), isEmpty);
+      await tester.tap(find.text('Close'));
+      await tester.pumpAndSettle();
+      final planned = (await open(tester)).single;
+      expect(planned.kind, IntentionKind.meet);
+      expect(planned.personId, tom.id);
+      expect(planned.note, 'Cinema');
+      expect(planned.horizon, Horizon.soon);
+      expect(planned.date, isNull);
+      await closeDown(tester);
+    });
+
+    testWidgets('a date is stored as the date of the thought', (tester) async {
+      await start(tester, IntentionKind.write);
+      await tapDone(tester);
+      await tester.tap(find.text('Plan it'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Date'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Close'));
+      await tester.pumpAndSettle();
+      final planned = (await open(tester)).single;
+      expect(planned.kind, IntentionKind.meet);
+      expect(planned.date, isNotNull);
+      expect(planned.note, '');
+      await closeDown(tester);
+    });
+
+    testWidgets('nothing is shown when the person has an open meet plan', (
+      tester,
+    ) async {
+      await start(tester, IntentionKind.write);
+      await tester.runAsync(
+        () => services
+            .intentionsFor(demo: false)
+            .add(
+              personId: tom.id,
+              note: 'Hall',
+              kind: IntentionKind.meet,
+              when: const When.horizon(Horizon.later),
+            ),
+      );
+      await tester.pumpAndSettle();
+      await tapDone(tester);
+      expect(find.byType(NiceOneScreen), findsOneWidget);
+      expect(find.text('Planning to meet up?'), findsNothing);
+      await closeDown(tester);
+    });
+  });
 }
 
 class _NoShortcuts implements AppShortcuts {

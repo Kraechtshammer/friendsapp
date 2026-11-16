@@ -180,9 +180,12 @@ void main() {
     expect(find.text('Choose your next treat'), findsNothing);
     expect(find.text('3 more stamps and it is yours.'), findsOneWidget);
     expect(find.byType(StampMark), findsNWidgets(5));
-    expect(find.text('3 weeks in a row'), findsOneWidget);
+    // Only Ann is beyond the close friends: one week counts.
+    expect(find.text('1 week in a row'), findsOneWidget);
+    expect(find.text('This week counts.'), findsOneWidget);
+    expect(find.text('Longest so far: 1 week'), findsOneWidget);
     expect(
-      find.text('A quiet week pauses it, it never resets.'),
+      find.text('Counts weeks with someone beyond your close friends.'),
       findsOneWidget,
     );
     // Avatars of this week: Tom and Ann.
@@ -192,21 +195,65 @@ void main() {
     await closeDown(tester);
   });
 
-  testWidgets('a quiet week pauses the weeks and never shows a reset', (
+  testWidgets('the running week does not break a run; no reset is shown', (
     tester,
   ) async {
     await pumpApp(tester);
-    final tom = await add(tester, 'Tom');
-    await contact(tester, tom, DateTime(2026, 11, 9, 10));
-    await contact(tester, tom, DateTime(2026, 11, 2, 10));
+    final ann = await add(tester, 'Ann', closeness: Closeness.family);
+    await contact(tester, ann, DateTime(2026, 11, 9, 10));
+    await contact(tester, ann, DateTime(2026, 11, 2, 10));
     await openProgress(tester);
     expect(find.text('2 weeks in a row'), findsOneWidget);
-    expect(
-      find.text('Paused this week so far. Nothing is lost.'),
-      findsOneWidget,
-    );
+    expect(find.text('This week is still open.'), findsOneWidget);
+    expect(find.text('Longest so far: 2 weeks'), findsOneWidget);
     expect(
       find.text('Nobody yet this week. The week is still long.'),
+      findsOneWidget,
+    );
+    await closeDown(tester);
+  });
+
+  testWidgets('strict: an ended run is stated calmly, the longest stays', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    final ann = await add(tester, 'Ann', closeness: Closeness.nowAndThen);
+    final tom = await add(tester, 'Tom');
+    await contact(tester, ann, DateTime(2026, 10, 26, 10));
+    await contact(tester, ann, DateTime(2026, 11, 2, 10));
+    // The week of 9 November has only a close friend: it does not count.
+    await contact(tester, tom, DateTime(2026, 11, 10, 10));
+    await openProgress(tester);
+    expect(find.textContaining('weeks in a row'), findsNothing);
+    expect(
+      find.text(
+        'That run is over. The next week with someone beyond your close '
+        'friends starts a new one.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Longest so far: 2 weeks'), findsOneWidget);
+    await closeDown(tester);
+  });
+
+  testWidgets('friendly: a quiet week only pauses, the label changes', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    await real(
+      tester,
+      () => services.settings.update(
+        (s) => s.copyWith(streakMode: StreakMode.friendly),
+      ),
+    );
+    final ann = await add(tester, 'Ann', closeness: Closeness.nowAndThen);
+    await contact(tester, ann, DateTime(2026, 10, 26, 10));
+    await contact(tester, ann, DateTime(2026, 11, 2, 10));
+    await openProgress(tester);
+    expect(find.text('2 weeks in touch'), findsOneWidget);
+    expect(find.textContaining('Longest so far'), findsNothing);
+    expect(
+      find.text('Paused this week so far. Nothing is lost.'),
       findsOneWidget,
     );
     await closeDown(tester);
@@ -506,6 +553,8 @@ void main() {
       s = await real(tester, services.settings.load);
       expect(s.stampWeights.cardSize, 9);
       expect(find.text('×2'), findsNWidgets(2));
+      expect(find.text('×1'), findsOneWidget);
+      expect(find.text('Gaming with close friends, times'), findsOneWidget);
       expect(find.text('+1'), findsNWidgets(2));
       await closeDown(tester);
     });

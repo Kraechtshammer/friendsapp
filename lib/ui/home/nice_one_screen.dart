@@ -14,11 +14,13 @@ import '../material.dart';
 import '../kept_icon.dart';
 import '../widgets/avatar.dart';
 import '../widgets/kept_switch.dart';
+import '../widgets/grey_button.dart';
 import '../widgets/kept_card.dart';
 import '../widgets/kept_text_field.dart';
 import '../widgets/main_button.dart';
 import '../widgets/section_label.dart';
 import '../widgets/stamps.dart';
+import '../widgets/when_picker.dart';
 
 /// Done on an open thought: stores the contact at once, then shows the
 /// "Nice one" screen for it. Leaving that screen early loses nothing.
@@ -124,13 +126,15 @@ Future<void> _storeAndCelebrate(
 }
 
 /// The screen after a contact is confirmed. See concept V6 · After 'Yes, I
-/// wrote' (docs/concepts/gen_v6.py). The "Planning to meet up?" part
-/// (M5) is not built. The stamps the contact earned are shown under the
+/// wrote' (docs/concepts/gen_v6.py). "Planning to meet up?" is a small
+/// sky row under the line for next time ([_PlanRow]); it is left out when
+/// the person already has an open meet-up thought. The stamps the contact earned are shown under the
 /// card ([_StampsCard]); a contact that earned none shows nothing about
 /// stamps.
 ///
 /// Closing, by the button or back, saves the activity and the line to the
-/// event; with "Remind me" on, the line also becomes a new open thought.
+/// event; with "Remind me" on, the line also becomes a new open thought,
+/// and a meet-up planned in the row becomes a meet thought with its "when".
 class NiceOneScreen extends ConsumerStatefulWidget {
   const NiceOneScreen({
     super.key,
@@ -152,6 +156,8 @@ class NiceOneScreen extends ConsumerStatefulWidget {
 class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
   late final _activity = TextEditingController(text: widget.thought);
   final _line = TextEditingController();
+  final _planNote = TextEditingController();
+  var _planWhen = const When.none();
   var _remind = false;
   var _saved = false;
 
@@ -163,6 +169,7 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
   void dispose() {
     _activity.dispose();
     _line.dispose();
+    _planNote.dispose();
     super.dispose();
   }
 
@@ -184,6 +191,7 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
             note: line,
           ),
     );
+    _savePlan();
     if (_remind && line != null) {
       unawaited(
         ref
@@ -197,10 +205,28 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
     }
   }
 
+  void _savePlan() {
+    final note = _textOrNull(_planNote);
+    if (_planWhen == const When.none() && note == null) return;
+    unawaited(
+      ref
+          .read(intentionsRepositoryProvider)
+          .add(
+            personId: widget.person.id,
+            note: note ?? '',
+            kind: IntentionKind.meet,
+            when: _planWhen,
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final kept = context.kept;
+    final openMeet = (ref.watch(openIntentionsProvider).value ?? const []).any(
+      (i) => i.personId == widget.person.id && i.kind == IntentionKind.meet,
+    );
     return PopScope(
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) _save();
@@ -284,6 +310,12 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
                               ],
                             ),
                           ),
+                          if (!openMeet)
+                            _PlanRow(
+                              note: _planNote,
+                              when: _planWhen,
+                              onWhen: (w) => setState(() => _planWhen = w),
+                            ),
                           _StampsCard(event: widget.event),
                         ],
                       ),
@@ -301,6 +333,79 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// "Planning to meet up?" (concept V6 · After 'Yes, I wrote'): a small sky
+/// row. Tapping "Plan it" opens the when-picker (date, Soon, Later,
+/// When...) and an optional short text; the screen saves the meet thought
+/// when it closes.
+class _PlanRow extends StatefulWidget {
+  const _PlanRow({
+    required this.note,
+    required this.when,
+    required this.onWhen,
+  });
+
+  final TextEditingController note;
+  final When when;
+  final ValueChanged<When> onWhen;
+
+  @override
+  State<_PlanRow> createState() => _PlanRowState();
+}
+
+class _PlanRowState extends State<_PlanRow> {
+  var _open = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final tone = context.kept.skyTone;
+    return KeptCard(
+      tone: tone,
+      small: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 10,
+        children: [
+          Row(
+            spacing: 12,
+            children: [
+              const KeptIcon(KeptIcons.calendar, size: 28),
+              Expanded(
+                child: Text(
+                  l10n.nicePlanTitle,
+                  style: context.text.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: tone.onContainer,
+                  ),
+                ),
+              ),
+              if (!_open)
+                GreyButton(
+                  small: true,
+                  label: l10n.nicePlanAction,
+                  onPressed: () => setState(() => _open = true),
+                ),
+            ],
+          ),
+          if (_open) ...[
+            WhenPicker(
+              value: widget.when,
+              onChanged: widget.onWhen,
+              fieldColor: context.kept.ground,
+            ),
+            KeptTextField(
+              controller: widget.note,
+              hint: l10n.nicePlanHint,
+              fillColor: context.kept.ground,
+              textCapitalization: TextCapitalization.sentences,
+            ),
+          ],
+        ],
       ),
     );
   }

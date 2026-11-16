@@ -14,11 +14,12 @@ class StampWeights {
     this.close = 1,
     this.nowAndThen = 2,
     this.fewTimesAYear = 3,
-    this.family = 1,
+    this.family = 2,
     this.backInTouchBonus = 1,
     this.longGapBonus = 1,
     this.meetMultiplier = 2,
     this.gameMultiplier = 2,
+    this.gameCloseMultiplier = 1,
     this.cardSize = 10,
   });
 
@@ -37,6 +38,10 @@ class StampWeights {
   /// Factors for a meet-up and for gaming together.
   final int meetMultiplier;
   final int gameMultiplier;
+
+  /// The factor for gaming together with a close friend (start value 1:
+  /// no multiplying). Other classes use [gameMultiplier].
+  final int gameCloseMultiplier;
 
   /// How many stamps fill the card of a new treat.
   final int cardSize;
@@ -62,6 +67,7 @@ class StampWeights {
     int? longGapBonus,
     int? meetMultiplier,
     int? gameMultiplier,
+    int? gameCloseMultiplier,
     int? cardSize,
   }) => StampWeights(
     close: close ?? this.close,
@@ -72,6 +78,7 @@ class StampWeights {
     longGapBonus: longGapBonus ?? this.longGapBonus,
     meetMultiplier: meetMultiplier ?? this.meetMultiplier,
     gameMultiplier: gameMultiplier ?? this.gameMultiplier,
+    gameCloseMultiplier: gameCloseMultiplier ?? this.gameCloseMultiplier,
     cardSize: cardSize ?? this.cardSize,
   );
 
@@ -86,6 +93,7 @@ class StampWeights {
       other.longGapBonus == longGapBonus &&
       other.meetMultiplier == meetMultiplier &&
       other.gameMultiplier == gameMultiplier &&
+      other.gameCloseMultiplier == gameCloseMultiplier &&
       other.cardSize == cardSize;
 
   @override
@@ -98,6 +106,7 @@ class StampWeights {
     longGapBonus,
     meetMultiplier,
     gameMultiplier,
+    gameCloseMultiplier,
     cardSize,
   );
 }
@@ -112,7 +121,7 @@ bool earnsStamp(ContactKind kind, ContactDirection direction) =>
 /// the class's weight, plus the bonus for "getting back in touch", plus
 /// the bonus when the contact before was longer ago than the rhythm
 /// ([rhythmDays], null is none: no bonus), then multiplied for a meet-up
-/// and for gaming together. [previous] is the time of the contact before
+/// and for gaming together (with a close friend by its own factor). [previous] is the time of the contact before
 /// this one, or the day the person was added.
 int stampValue({
   required Closeness closeness,
@@ -129,7 +138,11 @@ int stampValue({
     value += weights.longGapBonus;
   }
   if (kind == ContactKind.met) value *= weights.meetMultiplier;
-  if (kind == ContactKind.gamed) value *= weights.gameMultiplier;
+  if (kind == ContactKind.gamed) {
+    value *= closeness == Closeness.close
+        ? weights.gameCloseMultiplier
+        : weights.gameMultiplier;
+  }
   return value;
 }
 
@@ -148,34 +161,4 @@ DateTime weekStart(DateTime t) =>
 DateTime nextWeekStart(DateTime t) {
   final s = weekStart(t);
   return DateTime(s.year, s.month, s.day + 7);
-}
-
-/// "Weeks in a row" (02-design.md §8, M9): the number of weeks in which the
-/// user had at least one contact. It only grows. A week without contact so
-/// far does not reset it: [thisWeekActive] is false and the screen shows a
-/// calm pause.
-class WeeksInARow {
-  const WeeksInARow(this.count, {required this.thisWeekActive});
-
-  final int count;
-  final bool thisWeekActive;
-
-  @override
-  bool operator ==(Object other) =>
-      other is WeeksInARow &&
-      other.count == count &&
-      other.thisWeekActive == thisWeekActive;
-
-  @override
-  int get hashCode => Object.hash(count, thisWeekActive);
-}
-
-/// The weeks of [contacts] (times of the user's own and shared contacts)
-/// counted once each, and whether the week of [now] has one.
-WeeksInARow weeksWithContact(Iterable<DateTime> contacts, DateTime now) {
-  final weeks = {for (final t in contacts) weekStart(t)};
-  return WeeksInARow(
-    weeks.length,
-    thisWeekActive: weeks.contains(weekStart(now)),
-  );
 }

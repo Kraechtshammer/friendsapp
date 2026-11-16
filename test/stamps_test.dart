@@ -67,7 +67,7 @@ void main() {
       expect(value(Closeness.close), 1);
       expect(value(Closeness.nowAndThen), 2);
       expect(value(Closeness.fewTimesAYear), 3);
-      expect(value(Closeness.family), 1);
+      expect(value(Closeness.family), 2);
     });
 
     test('getting back in touch adds one', () {
@@ -84,7 +84,7 @@ void main() {
 
     test('no rhythm means no gap bonus', () {
       final long = monday.subtract(const Duration(days: 400));
-      expect(value(Closeness.family, previous: long, rhythm: null), 1);
+      expect(value(Closeness.family, previous: long, rhythm: null), 2);
     });
 
     test('both bonuses add up, a meet-up doubles the total', () {
@@ -112,8 +112,25 @@ void main() {
 
     test('gaming together doubles, calls and wishes do not', () {
       expect(value(Closeness.nowAndThen, kind: ContactKind.gamed), 4);
+      expect(value(Closeness.family, kind: ContactKind.gamed), 4);
+      expect(value(Closeness.fewTimesAYear, kind: ContactKind.gamed), 6);
       expect(value(Closeness.nowAndThen, kind: ContactKind.called), 2);
       expect(value(Closeness.nowAndThen, kind: ContactKind.birthdayWish), 2);
+    });
+
+    test('gaming with close friends does not multiply, by its own setting', () {
+      expect(value(Closeness.close, kind: ContactKind.gamed), 1);
+      expect(
+        value(Closeness.close, kind: ContactKind.gamed, reconnecting: true),
+        2,
+      );
+      // A meet-up with a close friend still doubles.
+      expect(value(Closeness.close, kind: ContactKind.met), 2);
+      const w = StampWeights(gameCloseMultiplier: 3, gameMultiplier: 4);
+      expect(value(Closeness.close, kind: ContactKind.gamed, weights: w), 3);
+      expect(value(Closeness.family, kind: ContactKind.gamed, weights: w), 8);
+      expect(const StampWeights().gameCloseMultiplier, 1);
+      expect(const StampWeights().family, 2);
     });
 
     test('every weight can be changed', () {
@@ -164,43 +181,6 @@ void main() {
       // Across a month and a year.
       expect(weekStart(DateTime(2027, 1, 1)), DateTime(2026, 12, 28));
       expect(nextWeekStart(DateTime(2026, 12, 31)), DateTime(2027, 1, 4));
-    });
-  });
-
-  group('weeks in a row', () {
-    final now = DateTime(2026, 11, 18, 12);
-
-    test('no contact gives zero and a pause', () {
-      expect(
-        weeksWithContact([], now),
-        const WeeksInARow(0, thisWeekActive: false),
-      );
-    });
-
-    test('counts weeks, not contacts', () {
-      final r = weeksWithContact([
-        DateTime(2026, 11, 16, 9),
-        DateTime(2026, 11, 18, 9),
-        DateTime(2026, 11, 9, 9),
-      ], now);
-      expect(r, const WeeksInARow(2, thisWeekActive: true));
-    });
-
-    test('a quiet week pauses and keeps the number', () {
-      final r = weeksWithContact([
-        DateTime(2026, 11, 9, 9),
-        DateTime(2026, 11, 2, 9),
-        DateTime(2026, 10, 19, 9),
-      ], now);
-      expect(r, const WeeksInARow(3, thisWeekActive: false));
-    });
-
-    test('a contact on Sunday night and one on Monday are two weeks', () {
-      final r = weeksWithContact([
-        DateTime(2026, 11, 15, 23, 59),
-        DateTime(2026, 11, 16),
-      ], now);
-      expect(r.count, 2);
     });
   });
 

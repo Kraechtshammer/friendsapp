@@ -39,17 +39,19 @@ void main() {
       tom = person('tom', reconnecting: false);
   final people = [jonas, kenji, tom];
 
-  ReconnectWeek stateAt(
+  ReconnectState stateAt(
     DateTime today, {
     String? chosen,
     DateTime? week,
     List<ContactEvent> events = const [],
     List<Person>? who,
-  }) => reconnectWeekState(
+    ReconnectSpan span = ReconnectSpan.week,
+  }) => reconnectState(
     people: who ?? people,
     events: events,
     chosenId: chosen,
-    chosenWeek: week,
+    chosenStart: week,
+    span: span,
     today: today,
   );
 
@@ -63,6 +65,113 @@ void main() {
       // Across a month and a year.
       expect(mondayOf(DateTime(2027, 1, 3)), DateTime(2026, 12, 28));
       expect(nextMonday(DateTime(2026, 12, 28)), DateTime(2027, 1, 4));
+    });
+  });
+
+  group('spans', () {
+    test('each span ends after its length', () {
+      final start = DateTime(2026, 11, 16);
+      expect(ReconnectSpan.week.endOf(start), DateTime(2026, 11, 23));
+      expect(ReconnectSpan.twoWeeks.endOf(start), DateTime(2026, 11, 30));
+      expect(ReconnectSpan.month.endOf(start), DateTime(2026, 12, 16));
+      expect(ReconnectSpan.twoMonths.endOf(start), DateTime(2027, 1, 16));
+      expect(ReconnectSpan.threeMonths.endOf(start), DateTime(2027, 2, 16));
+      expect(ReconnectSpan.defaultSpan, ReconnectSpan.month);
+    });
+
+    test('a month from the 31st ends on the last day of a short month', () {
+      expect(
+        ReconnectSpan.month.endOf(DateTime(2026, 1, 31)),
+        DateTime(2026, 2, 28),
+      );
+      expect(
+        ReconnectSpan.month.endOf(DateTime(2028, 1, 31)),
+        DateTime(2028, 2, 29),
+      );
+      expect(
+        ReconnectSpan.twoMonths.endOf(DateTime(2026, 12, 31)),
+        DateTime(2027, 2, 28),
+      );
+      expect(
+        ReconnectSpan.threeMonths.endOf(DateTime(2026, 11, 30)),
+        DateTime(2027, 2, 28),
+      );
+    });
+
+    test('a choice lasts from its start day to the end day, not including', () {
+      final start = DateTime(2026, 11, 18); // a Wednesday, not a Monday
+      ReconnectState at(DateTime today, ReconnectSpan span) =>
+          stateAt(today, chosen: 'kenji', week: start, span: span);
+      expect(
+        at(DateTime(2026, 12, 17, 23, 59), ReconnectSpan.month),
+        isA<ReconnectChosen>(),
+      );
+      expect(
+        at(DateTime(2026, 12, 18), ReconnectSpan.month),
+        isA<ReconnectChoose>(),
+      );
+      expect(
+        at(DateTime(2026, 11, 24, 23), ReconnectSpan.week),
+        isA<ReconnectChosen>(),
+      );
+      expect(
+        at(DateTime(2026, 11, 25), ReconnectSpan.week),
+        isA<ReconnectChoose>(),
+      );
+      expect(
+        at(DateTime(2026, 12, 2), ReconnectSpan.twoWeeks),
+        isA<ReconnectChoose>(),
+      );
+      expect(
+        at(DateTime(2027, 2, 17), ReconnectSpan.threeMonths),
+        isA<ReconnectChosen>(),
+      );
+      expect(
+        at(DateTime(2027, 2, 18), ReconnectSpan.threeMonths),
+        isA<ReconnectChoose>(),
+      );
+    });
+
+    test(
+      'contact before the start day does not count, done lasts to the end',
+      () {
+        final start = DateTime(2026, 11, 18);
+        ReconnectState with_(DateTime at, DateTime today) => stateAt(
+          today,
+          chosen: 'kenji',
+          week: start,
+          span: ReconnectSpan.month,
+          events: [event('kenji', at)],
+        );
+        expect(
+          with_(DateTime(2026, 11, 17, 23), DateTime(2026, 11, 20)),
+          isA<ReconnectChosen>(),
+        );
+        expect(
+          with_(DateTime(2026, 11, 18, 0, 0), DateTime(2026, 12, 17)),
+          isA<ReconnectDone>(),
+        );
+        // The span is over: the card asks again, with no word about it.
+        expect(
+          with_(DateTime(2026, 11, 18, 9), DateTime(2026, 12, 18)),
+          isA<ReconnectChoose>(),
+        );
+      },
+    );
+
+    test('an old stored Monday is a start day: the choice carries on', () {
+      final old = AppSettings.fromMap({
+        'reconnectPerson': 'kenji',
+        'reconnectWeek': '2026-11-16',
+      });
+      expect(old.reconnectSpan, ReconnectSpan.month);
+      final s = stateAt(
+        DateTime(2026, 11, 19),
+        chosen: old.reconnectPersonId,
+        week: old.reconnectStart,
+        span: old.reconnectSpan,
+      );
+      expect((s as ReconnectChosen).person.id, 'kenji');
     });
   });
 
@@ -101,7 +210,7 @@ void main() {
     });
 
     test('a meet-up counts; something that only came in does not', () {
-      ReconnectWeek with_(ContactEvent e) =>
+      ReconnectState with_(ContactEvent e) =>
           stateAt(monday, chosen: 'kenji', week: monday, events: [e]);
       expect(
         with_(
@@ -132,7 +241,7 @@ void main() {
     });
 
     test('Monday boundaries of the week: 00:00 in, next Monday 00:00 out', () {
-      ReconnectWeek with_(DateTime at) => stateAt(
+      ReconnectState with_(DateTime at) => stateAt(
         DateTime(2026, 11, 18),
         chosen: 'kenji',
         week: monday,
@@ -348,9 +457,25 @@ void main() {
   });
 
   group('settings', () {
+    test('the span is stored by name; a broken one falls back to a month', () {
+      final s = const AppSettings().copyWith(
+        reconnectSpan: ReconnectSpan.twoWeeks,
+      );
+      expect(s.toMap()['reconnectSpan'], 'twoWeeks');
+      expect(
+        AppSettings.fromMap({'reconnectSpan': 'twoWeeks'}).reconnectSpan,
+        ReconnectSpan.twoWeeks,
+      );
+      expect(
+        AppSettings.fromMap({'reconnectSpan': 'forever'}).reconnectSpan,
+        ReconnectSpan.month,
+      );
+      expect(const AppSettings().reconnectSpan, ReconnectSpan.month);
+    });
+
     test('the choice and the answers are stored and read back', () {
       final s = const AppSettings()
-          .withReconnectOfWeek('kenji', monday)
+          .withReconnect('kenji', monday)
           .copyWith(backInTouchAnswered: {'b', 'a'});
       expect(s.toMap()['reconnectPerson'], 'kenji');
       expect(s.toMap()['reconnectWeek'], '2026-11-16');
@@ -360,15 +485,15 @@ void main() {
           if (e.value != null) e.key: e.value!,
       });
       expect(back, s);
-      expect(back.reconnectWeek, monday);
+      expect(back.reconnectStart, monday);
     });
 
     test(
       'clearing the choice removes both keys; a broken date is no choice',
       () {
         final s = const AppSettings()
-            .withReconnectOfWeek('kenji', monday)
-            .withReconnectOfWeek(null, null);
+            .withReconnect('kenji', monday)
+            .withReconnect(null, null);
         expect(s.toMap()['reconnectPerson'], isNull);
         expect(s.toMap()['reconnectWeek'], isNull);
         final broken = AppSettings.fromMap({
@@ -376,13 +501,13 @@ void main() {
           'reconnectWeek': 'soon',
         });
         expect(broken.reconnectPersonId, isNull);
-        expect(broken.reconnectWeek, isNull);
+        expect(broken.reconnectStart, isNull);
       },
     );
 
     test('other changes keep the choice', () {
       final s = const AppSettings()
-          .withReconnectOfWeek('kenji', monday)
+          .withReconnect('kenji', monday)
           .copyWith(replyWaitDays: 3)
           .withOwnBirthday(null);
       expect(s.reconnectPersonId, 'kenji');

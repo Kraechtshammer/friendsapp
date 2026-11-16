@@ -98,8 +98,8 @@ void main() {
     expect(rows!.single.kind, IntentionKind.call);
     expect(rows.single.note, 'saw a bouldering video');
 
-    // The row opens the edit sheet; Save closes it.
-    await tester.tap(find.text('saw a bouldering video').last);
+    // The three-dot button opens the edit sheet; Save closes it.
+    await tester.tap(find.byTooltip('Edit thought').last);
     await tester.pumpAndSettle();
     expect(find.text('Edit thought'), findsOneWidget);
     await tester.tap(find.text('Save'));

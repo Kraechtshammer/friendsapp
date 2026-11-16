@@ -80,11 +80,12 @@ class _TonightsPickState extends ConsumerState<TonightsPick> {
     final settings = ref.settings;
     final events =
         ref.watch(allContactEventsProvider).value ?? const <ContactEvent>[];
-    final week = reconnectWeekState(
+    final week = reconnectState(
       people: people,
       events: events,
       chosenId: settings.reconnectPersonId,
-      chosenWeek: settings.reconnectWeek,
+      chosenStart: settings.reconnectStart,
+      span: settings.reconnectSpan,
       today: now,
     );
     final picks = tonightsPicks(
@@ -236,7 +237,7 @@ class _PickCard extends ConsumerWidget {
                         ),
                       ),
                     Text(
-                      _pickText(pick, l10n),
+                      _pickText(pick, l10n, ref.settings.reconnectSpan),
                       style: context.text.bodyLarge?.copyWith(color: kept.text),
                     ),
                     WhenLineOf(pick),
@@ -339,14 +340,14 @@ class _CompactPick extends ConsumerWidget {
                 Text(
                   pick is PlanPick
                       ? l10n.wantSetDate(firstNameOf(person.name))
-                      : _pickText(pick, l10n),
+                      : _pickText(pick, l10n, ref.settings.reconnectSpan),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: context.text.bodyMedium,
                 ),
                 if (pick is PlanPick)
                   Text(
-                    _pickText(pick, l10n),
+                    _pickText(pick, l10n, ref.settings.reconnectSpan),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: context.text.bodySmall?.copyWith(
@@ -398,19 +399,22 @@ KeptIcons _pickIcon(Pick pick) => switch (pick) {
 /// The line under the name: the birthday with the age if known, the
 /// question about an owed reply, or the thought (its kind when it has no
 /// text).
-String _pickText(Pick pick, AppLocalizations l10n) => switch (pick) {
-  BirthdayPick(:final age?) => l10n.birthdayTurns(age),
-  BirthdayPick() => l10n.birthdayToday,
-  ReplyPick(:final person) => l10n.stillOweReply(firstNameOf(person.name)),
-  ReconnectPick(:final person) => l10n.reconnectThisWeek(
-    firstNameOf(person.name),
-  ),
-  HintPick(:final person) => l10n.hintPick(firstNameOf(person.name)),
-  IntentionPick(:final intention) =>
-    intention.note.trim().isEmpty
-        ? kindLabel(intention.kind, l10n)
-        : intention.note.trim(),
-};
+String _pickText(Pick pick, AppLocalizations l10n, ReconnectSpan span) =>
+    switch (pick) {
+      BirthdayPick(:final age?) => l10n.birthdayTurns(age),
+      BirthdayPick() => l10n.birthdayToday,
+      ReplyPick(:final person) => l10n.stillOweReply(firstNameOf(person.name)),
+      ReconnectPick(:final person) => reconnectTitle(
+        span,
+        firstNameOf(person.name),
+        l10n,
+      ),
+      HintPick(:final person) => l10n.hintPick(firstNameOf(person.name)),
+      IntentionPick(:final intention) =>
+        intention.note.trim().isEmpty
+            ? kindLabel(intention.kind, l10n)
+            : intention.note.trim(),
+    };
 
 void _openChat(BuildContext context, WidgetRef ref, Pick pick) =>
     unawaited(switch (pick) {

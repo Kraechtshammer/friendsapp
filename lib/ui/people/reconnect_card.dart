@@ -18,13 +18,13 @@ import '../widgets/kept_card.dart';
 import '../widgets/main_button.dart';
 import '../widgets/tag.dart';
 
-/// The reconnect person of the week, at the top of the People tab (F13;
-/// concept V6 · People, docs/concepts/gen_v6.py). Four states
-/// ([reconnectWeekState]): nothing (no card), "Who do you want to get back
-/// in touch with this week?" with the people in the state to tap, "This
-/// week: NAME" with the messenger button, and a calm done state once the
-/// user has been in touch that week. A new week starts empty; nothing is
-/// said about the last one.
+/// The reconnect person for the span the user set, at the top of the People
+/// tab (F13; concept V6 · People, docs/concepts/gen_v6.py). Four states
+/// ([reconnectState]): nothing (no card), "Who do you want to get back in
+/// touch with now?" with the people in the state to tap, "This month: NAME"
+/// (the words follow the span) with the messenger button, and a calm done
+/// state once the user has been in touch during the span. When the span is
+/// over the card asks again; nothing is said about the last one.
 class ReconnectCard extends ConsumerWidget {
   const ReconnectCard(this.people, {super.key});
 
@@ -36,31 +36,29 @@ class ReconnectCard extends ConsumerWidget {
     final now = ref.watch(clockProvider)();
     final events =
         ref.watch(allContactEventsProvider).value ?? const <ContactEvent>[];
-    final state = reconnectWeekState(
+    final state = reconnectState(
       people: people,
       events: events,
       chosenId: settings.reconnectPersonId,
-      chosenWeek: settings.reconnectWeek,
+      chosenStart: settings.reconnectStart,
+      span: settings.reconnectSpan,
       today: now,
     );
-    final monday = mondayOf(now);
+    final today = DateTime(now.year, now.month, now.day);
     final card = switch (state) {
       ReconnectNone() => null,
       ReconnectChoose(:final candidates, :final suggested) => _Choose(
         candidates,
         suggested,
         onChoose: (p) => unawaited(
-          ref.services.settings.update(
-            (s) => s.withReconnectOfWeek(p.id, monday),
-          ),
+          ref.services.settings.update((s) => s.withReconnect(p.id, today)),
         ),
       ),
       ReconnectChosen(:final person) => _Chosen(
         person,
+        span: settings.reconnectSpan,
         onChange: () => unawaited(
-          ref.services.settings.update(
-            (s) => s.withReconnectOfWeek(null, null),
-          ),
+          ref.services.settings.update((s) => s.withReconnect(null, null)),
         ),
       ),
       ReconnectDone(:final person) => _Done(person),
@@ -195,9 +193,10 @@ class _Candidate extends StatelessWidget {
 }
 
 class _Chosen extends ConsumerWidget {
-  const _Chosen(this.person, {required this.onChange});
+  const _Chosen(this.person, {required this.span, required this.onChange});
 
   final Person person;
+  final ReconnectSpan span;
   final VoidCallback onChange;
 
   @override
@@ -219,7 +218,7 @@ class _Chosen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      l10n.reconnectThisWeek(firstNameOf(person.name)),
+                      reconnectTitle(span, firstNameOf(person.name), l10n),
                       style: context.text.titleLarge?.copyWith(
                         color: tone.onContainer,
                       ),

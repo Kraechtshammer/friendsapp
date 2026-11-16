@@ -2,11 +2,13 @@ import '../data/database.dart';
 import 'contact_event.dart';
 import 'rhythm.dart';
 
-/// The reconnect person of the week (02-design.md §2.4 step 3, F13,
-/// 01-research.md §9.8): people in the "getting back in touch" state are a
-/// short list worked through one at a time. The user chooses one for the
-/// week; a new week starts empty again, and nothing is said about the last
-/// one. Pure rules; the current time is a parameter.
+/// The reconnect person for a span (02-design.md §2.4 step 3, F13,
+/// 01-research.md §9.8, changed in the review of 2026-11-16): people in the
+/// "getting back in touch" state are a short list worked through one at a
+/// time. The user chooses one; the span the user set in the settings starts
+/// on the day of the choice and ends after its length. Then the card asks
+/// again, and nothing is said about the last one. Pure rules; the current
+/// time is a parameter.
 
 /// The Monday (local midnight) of the week that holds [day].
 DateTime mondayOf(DateTime day) =>
@@ -16,37 +18,69 @@ DateTime mondayOf(DateTime day) =>
 DateTime nextMonday(DateTime monday) =>
     DateTime(monday.year, monday.month, monday.day + 7);
 
+/// How long a reconnect choice lasts. The start value is [month].
+enum ReconnectSpan {
+  week(days: 7),
+  twoWeeks(days: 14),
+  month(months: 1),
+  twoMonths(months: 2),
+  threeMonths(months: 3);
+
+  const ReconnectSpan({this.days = 0, this.months = 0});
+
+  final int days;
+  final int months;
+
+  static const defaultSpan = ReconnectSpan.month;
+
+  /// The day (local midnight) on which a span that starts on [start] is
+  /// over. Months are calendar months; a start on the 31st ends on the last
+  /// day of a shorter month, never later than the month asks for.
+  DateTime endOf(DateTime start) {
+    if (months == 0) {
+      return DateTime(start.year, start.month, start.day + days);
+    }
+    final first = DateTime(start.year, start.month + months);
+    final lastDay = DateTime(first.year, first.month + 1, 0).day;
+    return DateTime(
+      first.year,
+      first.month,
+      start.day > lastDay ? lastDay : start.day,
+    );
+  }
+}
+
 /// What the People tab card and the pick order show.
-sealed class ReconnectWeek {
-  const ReconnectWeek();
+sealed class ReconnectState {
+  const ReconnectState();
 }
 
 /// Nobody is in the state, and nobody is chosen: no card.
-class ReconnectNone extends ReconnectWeek {
+class ReconnectNone extends ReconnectState {
   const ReconnectNone();
 }
 
-/// Nobody is chosen for this week, and [candidates] (in the order of the
+/// Nobody is chosen for this span, and [candidates] (in the order of the
 /// people list) are in the state. [suggested] is the one the card may
 /// highlight, moved on every week.
-class ReconnectChoose extends ReconnectWeek {
+class ReconnectChoose extends ReconnectState {
   const ReconnectChoose(this.candidates, this.suggested);
 
   final List<Person> candidates;
   final Person suggested;
 }
 
-/// [person] is the one for this week and the user has not been in touch
+/// [person] is the one for this span and the user has not been in touch
 /// yet.
-class ReconnectChosen extends ReconnectWeek {
+class ReconnectChosen extends ReconnectState {
   const ReconnectChosen(this.person);
 
   final Person person;
 }
 
-/// [person] is the one for this week and the user got in touch: calm, for
+/// [person] is the one for this span and the user got in touch: calm, for
 /// the rest of the week.
-class ReconnectDone extends ReconnectWeek {
+class ReconnectDone extends ReconnectState {
   const ReconnectDone(this.person);
 
   final Person person;
@@ -54,29 +88,34 @@ class ReconnectDone extends ReconnectWeek {
 
 /// The state at [today] (any time of the day).
 ///
-/// [chosenId] and [chosenWeek] are the stored choice. It holds only while
-/// [chosenWeek] is this week's Monday and the person still exists; a choice
-/// from an earlier week counts as no choice. With no choice, the people
-/// with `reconnecting` are the candidates.
+/// [chosenId] and [chosenStart] are the stored choice and the day it began
+/// (an old stored value holds a Monday: it is just an earlier start day, so
+/// the choice carries on). It holds while [today] lies from [chosenStart]
+/// up to, not including, the end of [span] and the person still exists;
+/// after that it counts as no choice. With no choice, the people with
+/// `reconnecting` are the candidates.
 ///
-/// A contact by the user counts when it lies in the week, from Monday
-/// 00:00 up to the next Monday 00:00: any event of the person that is not
-/// `byThem` ([isByUser]).
-ReconnectWeek reconnectWeekState({
+/// A contact by the user counts when it lies in the span, from the start
+/// day 00:00 to its end: any event of the person that is not `byThem`
+/// ([isByUser]).
+ReconnectState reconnectState({
   required List<Person> people,
   required Iterable<ContactEvent> events,
   required String? chosenId,
-  required DateTime? chosenWeek,
+  required DateTime? chosenStart,
+  required ReconnectSpan span,
   required DateTime today,
 }) {
-  final monday = mondayOf(today);
-  if (chosenId != null && chosenWeek == monday) {
-    final matches = people.where((p) => p.id == chosenId);
-    if (matches.isNotEmpty) {
-      final person = matches.first;
-      return hasUserContactInWeek(person.id, events, monday)
-          ? ReconnectDone(person)
-          : ReconnectChosen(person);
+  if (chosenId != null && chosenStart != null) {
+    final end = span.endOf(chosenStart);
+    if (!today.isBefore(chosenStart) && today.isBefore(end)) {
+      final matches = people.where((p) => p.id == chosenId);
+      if (matches.isNotEmpty) {
+        final person = matches.first;
+        return hasUserContactBetween(person.id, events, chosenStart, end)
+            ? ReconnectDone(person)
+            : ReconnectChosen(person);
+      }
     }
   }
   final candidates = [
@@ -84,25 +123,23 @@ ReconnectWeek reconnectWeekState({
       if (p.reconnecting) p,
   ];
   if (candidates.isEmpty) return const ReconnectNone();
-  return ReconnectChoose(candidates, rotateByDay(candidates, monday)!);
+  return ReconnectChoose(candidates, rotateByDay(candidates, mondayOf(today))!);
 }
 
-/// Whether the user had contact with [personId] in the week that starts on
-/// [monday].
-bool hasUserContactInWeek(
+/// Whether the user had contact with [personId] from [start] up to, not
+/// including, [end].
+bool hasUserContactBetween(
   String personId,
   Iterable<ContactEvent> events,
-  DateTime monday,
-) {
-  final end = nextMonday(monday);
-  return events.any(
-    (e) =>
-        e.personId == personId &&
-        isByUser(e) &&
-        !e.at.isBefore(monday) &&
-        e.at.isBefore(end),
-  );
-}
+  DateTime start,
+  DateTime end,
+) => events.any(
+  (e) =>
+      e.personId == personId &&
+      isByUser(e) &&
+      !e.at.isBefore(start) &&
+      e.at.isBefore(end),
+);
 
 /// A contact the user made or shared: not one that only came in.
 bool isByUser(ContactEvent e) => e.direction != ContactDirection.byThem;

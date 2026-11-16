@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart' show mapEquals, setEquals;
 import '../domain/birthdays.dart';
 import '../domain/owed_reply.dart';
 import '../domain/person.dart';
+import '../domain/progress.dart' show StreakMode;
+import '../domain/reconnect_week.dart' show ReconnectSpan;
 import '../domain/rhythm.dart';
 import '../domain/stamps.dart';
 
@@ -28,7 +30,9 @@ class AppSettings {
     this.replyWaitDays = defaultReplyWaitDays,
     this.classRhythms = defaultClassRhythms,
     this.reconnectPersonId,
-    this.reconnectWeek,
+    this.reconnectStart,
+    this.reconnectSpan = ReconnectSpan.defaultSpan,
+    this.streakMode = StreakMode.strict,
     this.backInTouchAnswered = const {},
     this.stampWeights = const StampWeights(),
     this.defaultTreatsInserted = false,
@@ -83,12 +87,21 @@ class AppSettings {
   /// The class's rhythm; null is none.
   int? rhythmOf(Closeness closeness) => classRhythms[closeness];
 
-  /// The person the user chose to get back in touch with, and the Monday
-  /// (local midnight) of the week they chose them (01-research.md §9.8,
-  /// F13). Both null when nobody is chosen. A week that has passed counts
-  /// as nobody ([reconnectWeekState]).
+  /// The person the user chose to get back in touch with, and the day
+  /// (local midnight) the choice began (01-research.md §9.8, F13). Both
+  /// null when nobody is chosen. The choice lasts [reconnectSpan] and then
+  /// counts as nobody ([reconnectState]). The start day is stored under the
+  /// old key `reconnectWeek`, which used to hold a Monday: an old value is
+  /// read as a start day, so the choice carries on.
   final String? reconnectPersonId;
-  final DateTime? reconnectWeek;
+  final DateTime? reconnectStart;
+
+  /// How long a reconnect choice lasts (start value one month).
+  final ReconnectSpan reconnectSpan;
+
+  /// How "weeks in a row" treats a week without a contact beyond the close
+  /// friends (start value strict).
+  final StreakMode streakMode;
 
   /// People whose "You and X are back in touch" card was answered, so it
   /// does not come back.
@@ -146,7 +159,13 @@ class AppSettings {
       reconnectPersonId: _parseDay(m['reconnectWeek']) == null
           ? null
           : m['reconnectPerson'],
-      reconnectWeek: _parseDay(m['reconnectWeek']),
+      reconnectStart: _parseDay(m['reconnectWeek']),
+      reconnectSpan: pick(
+        ReconnectSpan.values,
+        'reconnectSpan',
+        d.reconnectSpan,
+      ),
+      streakMode: pick(StreakMode.values, 'streakMode', d.streakMode),
       backInTouchAnswered: {
         for (final id in (m['backInTouchAnswered'] ?? '').split(','))
           if (id.trim().isNotEmpty) id.trim(),
@@ -200,6 +219,12 @@ class AppSettings {
           StampWeights.minMultiplier,
           StampWeights.maxMultiplier,
         ),
+        gameCloseMultiplier: ranged(
+          'stampGameClose',
+          d.stampWeights.gameCloseMultiplier,
+          StampWeights.minMultiplier,
+          StampWeights.maxMultiplier,
+        ),
         cardSize: ranged(
           'stampCardSize',
           d.stampWeights.cardSize,
@@ -227,17 +252,13 @@ class AppSettings {
     for (final c in Closeness.values)
       'rhythm_${c.name}': classRhythms[c]?.toString() ?? 'none',
     'reconnectPerson': reconnectPersonId,
-    'reconnectWeek': reconnectWeek == null ? null : _formatDay(reconnectWeek!),
+    'reconnectWeek': reconnectStart == null
+        ? null
+        : _formatDay(reconnectStart!),
+    'reconnectSpan': reconnectSpan.name,
+    'streakMode': streakMode.name,
     'backInTouchAnswered': (backInTouchAnswered.toList()..sort()).join(','),
-    'stampClose': '${stampWeights.close}',
-    'stampNowAndThen': '${stampWeights.nowAndThen}',
-    'stampFewTimesAYear': '${stampWeights.fewTimesAYear}',
-    'stampFamily': '${stampWeights.family}',
-    'stampBackInTouch': '${stampWeights.backInTouchBonus}',
-    'stampLongGap': '${stampWeights.longGapBonus}',
-    'stampMeet': '${stampWeights.meetMultiplier}',
-    'stampGame': '${stampWeights.gameMultiplier}',
-    'stampCardSize': '${stampWeights.cardSize}',
+    ..._stampMap(stampWeights),
     'defaultTreatsInserted': '$defaultTreatsInserted',
     'stampsBackfilled': '$stampsBackfilled',
   };
@@ -253,6 +274,8 @@ class AppSettings {
     bool? incomingOn,
     int? replyWaitDays,
     Map<Closeness, int?>? classRhythms,
+    ReconnectSpan? reconnectSpan,
+    StreakMode? streakMode,
     Set<String>? backInTouchAnswered,
     StampWeights? stampWeights,
     bool? defaultTreatsInserted,
@@ -268,6 +291,8 @@ class AppSettings {
     incomingOn: incomingOn,
     replyWaitDays: replyWaitDays,
     classRhythms: classRhythms,
+    reconnectSpan: reconnectSpan,
+    streakMode: streakMode,
     backInTouchAnswered: backInTouchAnswered,
     stampWeights: stampWeights,
     defaultTreatsInserted: defaultTreatsInserted,
@@ -278,10 +303,10 @@ class AppSettings {
   AppSettings withOwnBirthday(Birthday? birthday) =>
       _copy(ownBirthday: birthday);
 
-  /// A copy with [personId] as the reconnect person of the week that
-  /// starts on [week] (a Monday); both null clears the choice.
-  AppSettings withReconnectOfWeek(String? personId, DateTime? week) =>
-      _copy(reconnectPersonId: personId, reconnectWeek: week);
+  /// A copy with [personId] as the reconnect person, the choice beginning
+  /// on [start] (a day); both null clears the choice.
+  AppSettings withReconnect(String? personId, DateTime? start) =>
+      _copy(reconnectPersonId: personId, reconnectStart: start);
 
   /// A copy with [classRhythms] changed for one class; null days is none.
   AppSettings withClassRhythm(Closeness closeness, int? days) =>
@@ -302,7 +327,9 @@ class AppSettings {
     int? replyWaitDays,
     Map<Closeness, int?>? classRhythms,
     Object? reconnectPersonId = _keep,
-    Object? reconnectWeek = _keep,
+    Object? reconnectStart = _keep,
+    ReconnectSpan? reconnectSpan,
+    StreakMode? streakMode,
     Set<String>? backInTouchAnswered,
     StampWeights? stampWeights,
     bool? defaultTreatsInserted,
@@ -325,9 +352,11 @@ class AppSettings {
     reconnectPersonId: identical(reconnectPersonId, _keep)
         ? this.reconnectPersonId
         : reconnectPersonId as String?,
-    reconnectWeek: identical(reconnectWeek, _keep)
-        ? this.reconnectWeek
-        : reconnectWeek as DateTime?,
+    reconnectStart: identical(reconnectStart, _keep)
+        ? this.reconnectStart
+        : reconnectStart as DateTime?,
+    reconnectSpan: reconnectSpan ?? this.reconnectSpan,
+    streakMode: streakMode ?? this.streakMode,
     backInTouchAnswered: backInTouchAnswered ?? this.backInTouchAnswered,
     stampWeights: stampWeights ?? this.stampWeights,
     defaultTreatsInserted: defaultTreatsInserted ?? this.defaultTreatsInserted,
@@ -349,7 +378,9 @@ class AppSettings {
       other.replyWaitDays == replyWaitDays &&
       mapEquals(other.classRhythms, classRhythms) &&
       other.reconnectPersonId == reconnectPersonId &&
-      other.reconnectWeek == reconnectWeek &&
+      other.reconnectStart == reconnectStart &&
+      other.reconnectSpan == reconnectSpan &&
+      other.streakMode == streakMode &&
       setEquals(other.backInTouchAnswered, backInTouchAnswered) &&
       other.stampWeights == stampWeights &&
       other.defaultTreatsInserted == defaultTreatsInserted &&
@@ -369,7 +400,9 @@ class AppSettings {
     replyWaitDays,
     Object.hashAll([for (final c in Closeness.values) classRhythms[c]]),
     reconnectPersonId,
-    reconnectWeek,
+    reconnectStart,
+    reconnectSpan,
+    streakMode,
     Object.hashAllUnordered(backInTouchAnswered),
     stampWeights,
     defaultTreatsInserted,
@@ -378,6 +411,26 @@ class AppSettings {
 }
 
 const _keep = Object();
+
+/// The stored stamp weights. A weight that equals its start value is not
+/// stored (null removes the key), so a later change of a start value
+/// reaches everyone who never chose their own.
+Map<String, String?> _stampMap(StampWeights w) {
+  const d = StampWeights();
+  String? keep(int v, int start) => v == start ? null : '$v';
+  return {
+    'stampClose': keep(w.close, d.close),
+    'stampNowAndThen': keep(w.nowAndThen, d.nowAndThen),
+    'stampFewTimesAYear': keep(w.fewTimesAYear, d.fewTimesAYear),
+    'stampFamily': keep(w.family, d.family),
+    'stampBackInTouch': keep(w.backInTouchBonus, d.backInTouchBonus),
+    'stampLongGap': keep(w.longGapBonus, d.longGapBonus),
+    'stampMeet': keep(w.meetMultiplier, d.meetMultiplier),
+    'stampGame': keep(w.gameMultiplier, d.gameMultiplier),
+    'stampGameClose': keep(w.gameCloseMultiplier, d.gameCloseMultiplier),
+    'stampCardSize': keep(w.cardSize, d.cardSize),
+  };
+}
 
 bool _validRhythm(int? days) => days != null && days >= 1 && days <= 3650;
 

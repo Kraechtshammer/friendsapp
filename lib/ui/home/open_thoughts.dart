@@ -9,14 +9,17 @@ import '../common.dart';
 import '../kept_icon.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
+import '../people/person_screen.dart';
 import '../widgets/grey_button.dart';
+import '../widgets/grey_icon_button.dart';
 import 'nice_one_screen.dart';
 import 'thought_sheet.dart';
 import '../widgets/kept_card.dart';
 import '../widgets/link_row.dart';
 import '../widgets/section_label.dart';
 
-/// The open intentions, newest first, under "On your mind". Nothing is
+/// The open intentions, newest first, under "On your mind". Tapping a row
+/// opens the person; the three-dot button edits the thought. Nothing is
 /// shown as late and there are no dates (02-design.md §2.3). With none,
 /// nothing is shown at all. The pick above it ([TonightsPick]) is the one
 /// the evening question scrolls to.
@@ -58,7 +61,9 @@ class _Row extends ConsumerWidget {
     return KeptCard(
       small: true,
       padding: const EdgeInsets.all(12),
-      onTap: () => showThoughtSheet(context, ref, person, intention),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => PersonScreen(id: person.id)),
+      ),
       child: Row(
         spacing: 12,
         children: [
@@ -101,6 +106,14 @@ class _Row extends ConsumerWidget {
             small: true,
             label: context.l10n.done,
             onPressed: () => completeThought(context, ref, person, intention),
+          ),
+          // The row opens the person; editing is this visible button.
+          GreyIconButton(
+            icon: Icons.more_horiz_rounded,
+            tooltip: context.l10n.editThought,
+            size: 40,
+            radius: 20,
+            onPressed: () => showThoughtSheet(context, ref, person, intention),
           ),
         ],
       ),

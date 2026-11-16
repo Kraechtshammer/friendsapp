@@ -145,7 +145,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reconnectingHint =>
-      'A short list of people you want to get back in touch with. On the People tab you pick one for each week. Switch it off when you are back in touch.';
+      'A short list of people you want to get back in touch with. On the People tab you pick one for a while. Switch it off when you are back in touch.';
 
   @override
   String get editMessenger => 'Main messenger';
@@ -855,7 +855,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reconnectChoose =>
-      'Who do you want to get back in touch with this week?';
+      'Who do you want to get back in touch with now?';
 
   @override
   String get reconnectCardHint => 'Old friends pick up where they left off.';
@@ -865,7 +865,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String reconnectDone(String name) {
-    return 'You got in touch with $name this week.';
+    return 'You got in touch with $name.';
   }
 
   @override
@@ -928,7 +928,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get weeksNote => 'A quiet week pauses it, it never resets.';
+  String get weeksNote => 'This week counts.';
 
   @override
   String get weeksPaused => 'Paused this week so far. Nothing is lost.';
@@ -1189,4 +1189,99 @@ class AppLocalizationsEn extends AppLocalizations {
   String shareSaved(String name) {
     return 'Kept for $name.';
   }
+
+  @override
+  String reconnectTwoWeeks(String name) {
+    return 'These two weeks: $name';
+  }
+
+  @override
+  String reconnectThisMonth(String name) {
+    return 'This month: $name';
+  }
+
+  @override
+  String reconnectTwoMonths(String name) {
+    return 'These two months: $name';
+  }
+
+  @override
+  String reconnectThreeMonths(String name) {
+    return 'These three months: $name';
+  }
+
+  @override
+  String get settingsReconnectSpan => 'Reconnect person for';
+
+  @override
+  String get settingsReconnectSpanHelp =>
+      'How long the person you chose to get back in touch with stays on the People tab before it asks again.';
+
+  @override
+  String weeksInTouch(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count weeks in touch',
+      one: '1 week in touch',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weeksLongest(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Longest so far: $count weeks',
+      one: 'Longest so far: 1 week',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get weeksWho => 'Counts weeks with someone beyond your close friends.';
+
+  @override
+  String get weeksOpen => 'This week is still open.';
+
+  @override
+  String get weeksEnded =>
+      'That run is over. The next week with someone beyond your close friends starts a new one.';
+
+  @override
+  String get settingsStreak => 'Weeks in a row';
+
+  @override
+  String get settingsStreakHelp =>
+      'A week counts when you were in touch with someone beyond your close friends.';
+
+  @override
+  String get streakStrict => 'Strict';
+
+  @override
+  String get streakFriendly => 'Friendly';
+
+  @override
+  String get streakStrictHelp =>
+      'A finished week without such a contact ends the run. The next one starts at 1, and the longest run stays.';
+
+  @override
+  String get streakFriendlyHelp =>
+      'A week without such a contact only pauses the count. It never goes down.';
+
+  @override
+  String get stampGamingClose => 'Gaming with close friends, times';
+
+  @override
+  String get didItNewDate => 'New date';
+
+  @override
+  String get nicePlanTitle => 'Planning to meet up?';
+
+  @override
+  String get nicePlanAction => 'Plan it';
+
+  @override
+  String get nicePlanHint => 'What? (optional)';
 }

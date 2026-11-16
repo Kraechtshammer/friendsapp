@@ -279,7 +279,7 @@ void main() {
       thought: ('Ramen place', IntentionKind.write, 'https://example.org/r'),
     );
     expect(find.byIcon(Icons.link_rounded), findsWidgets);
-    await tester.tap(find.text('Ramen place').last);
+    await tester.tap(find.byTooltip('Edit thought').last);
     await tester.pumpAndSettle();
     expect(find.text('Edit thought'), findsOneWidget);
     await tester.tap(find.text('example.org/r'));

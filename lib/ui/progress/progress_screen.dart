@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../data/database.dart';
+import '../../l10n/app_localizations.dart';
 import '../../domain/progress.dart';
-import '../../domain/stamps.dart';
 import '../../domain/treat.dart';
 import '../common.dart';
 import '../kept_icon.dart';
@@ -20,7 +20,7 @@ import 'treats_screen.dart';
 
 /// The Progress tab (02-design.md §8, M9; concept V6 · Progress and stamp
 /// card): the stamp count that only grows, the current stamp card, treats
-/// that are earned, this week, "weeks in a row" that pause and never reset,
+/// that are earned, this week, "weeks in a row" (calm when a run ends),
 /// and a few numbers for the user's own use. Nothing here is a target, and
 /// nothing is shown as lost or missed.
 class ProgressScreen extends ConsumerWidget {
@@ -39,10 +39,12 @@ class ProgressScreen extends ConsumerWidget {
     final celebrate = treatsIn(treats, TreatState.earned);
     final week = peopleThisWeek(events, now);
     final byId = {for (final p in people) p.id: p};
-    final weeks = weeksWithContact([
-      for (final e in events)
-        if (isOwnContact(e)) e.at,
-    ], now);
+    final weeks = weekStreak(
+      events,
+      {for (final p in people) p.id: p.closeness},
+      now,
+      ref.settings.streakMode,
+    );
     return TabPage(
       title: context.l10n.tabProgress,
       child: ListView(
@@ -66,6 +68,7 @@ class ProgressScreen extends ConsumerWidget {
                 if (byId[id] != null) byId[id]!,
             ],
             weeks: weeks,
+            mode: ref.settings.streakMode,
           ),
           const SizedBox(height: 14),
           _Numbers(numbers: yourNumbers(events, answers, now)),
@@ -163,10 +166,23 @@ class _Earned extends ConsumerWidget {
 /// The people the user was in contact with this week, as avatars, and
 /// "weeks in a row".
 class _ThisWeek extends StatelessWidget {
-  const _ThisWeek({required this.people, required this.weeks});
+  const _ThisWeek({
+    required this.people,
+    required this.weeks,
+    required this.mode,
+  });
 
   final List<Person> people;
-  final WeeksInARow weeks;
+  final WeekStreak weeks;
+  final StreakMode mode;
+
+  /// The calm line under the number. No red, no warning words.
+  String _note(AppLocalizations l10n) {
+    if (weeks.count == 0 && weeks.longest == 0) return l10n.weeksNone;
+    if (weeks.ended) return l10n.weeksEnded;
+    if (weeks.thisWeekCounts) return l10n.weeksNote;
+    return mode == StreakMode.strict ? l10n.weeksOpen : l10n.weeksPaused;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -202,18 +218,25 @@ class _ThisWeek extends StatelessWidget {
                       children: [
                         if (weeks.count > 0)
                           Text(
-                            l10n.weeksInARow(weeks.count),
+                            mode == StreakMode.strict
+                                ? l10n.weeksInARow(weeks.count)
+                                : l10n.weeksInTouch(weeks.count),
                             style: context.text.bodyLarge?.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
                           ),
+                        Text(_note(l10n), style: context.text.bodyMedium),
+                        if (mode == StreakMode.strict && weeks.longest > 0)
+                          Text(
+                            l10n.weeksLongest(weeks.longest),
+                            style: context.text.bodyMedium,
+                          ),
                         Text(
-                          weeks.count == 0
-                              ? l10n.weeksNone
-                              : weeks.thisWeekActive
-                              ? l10n.weeksNote
-                              : l10n.weeksPaused,
-                          style: context.text.bodyMedium,
+                          l10n.weeksWho,
+                          style: context.text.bodyMedium?.copyWith(
+                            fontSize: 13,
+                            color: kept.muted,
+                          ),
                         ),
                       ],
                     ),

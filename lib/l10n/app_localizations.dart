@@ -329,7 +329,7 @@ abstract class AppLocalizations {
   /// No description provided for @reconnectingHint.
   ///
   /// In en, this message translates to:
-  /// **'A short list of people you want to get back in touch with. On the People tab you pick one for each week. Switch it off when you are back in touch.'**
+  /// **'A short list of people you want to get back in touch with. On the People tab you pick one for a while. Switch it off when you are back in touch.'**
   String get reconnectingHint;
 
   /// No description provided for @editMessenger.
@@ -1433,7 +1433,7 @@ abstract class AppLocalizations {
   /// No description provided for @reconnectChoose.
   ///
   /// In en, this message translates to:
-  /// **'Who do you want to get back in touch with this week?'**
+  /// **'Who do you want to get back in touch with now?'**
   String get reconnectChoose;
 
   /// No description provided for @reconnectCardHint.
@@ -1451,7 +1451,7 @@ abstract class AppLocalizations {
   /// No description provided for @reconnectDone.
   ///
   /// In en, this message translates to:
-  /// **'You got in touch with {name} this week.'**
+  /// **'You got in touch with {name}.'**
   String reconnectDone(String name);
 
   /// No description provided for @backInTouchTitle.
@@ -1529,7 +1529,7 @@ abstract class AppLocalizations {
   /// No description provided for @weeksNote.
   ///
   /// In en, this message translates to:
-  /// **'A quiet week pauses it, it never resets.'**
+  /// **'This week counts.'**
   String get weeksNote;
 
   /// No description provided for @weeksPaused.
@@ -1951,6 +1951,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Kept for {name}.'**
   String shareSaved(String name);
+
+  /// No description provided for @reconnectTwoWeeks.
+  ///
+  /// In en, this message translates to:
+  /// **'These two weeks: {name}'**
+  String reconnectTwoWeeks(String name);
+
+  /// No description provided for @reconnectThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This month: {name}'**
+  String reconnectThisMonth(String name);
+
+  /// No description provided for @reconnectTwoMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'These two months: {name}'**
+  String reconnectTwoMonths(String name);
+
+  /// No description provided for @reconnectThreeMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'These three months: {name}'**
+  String reconnectThreeMonths(String name);
+
+  /// No description provided for @settingsReconnectSpan.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect person for'**
+  String get settingsReconnectSpan;
+
+  /// No description provided for @settingsReconnectSpanHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How long the person you chose to get back in touch with stays on the People tab before it asks again.'**
+  String get settingsReconnectSpanHelp;
+
+  /// No description provided for @weeksInTouch.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 week in touch} other{{count} weeks in touch}}'**
+  String weeksInTouch(int count);
+
+  /// No description provided for @weeksLongest.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Longest so far: 1 week} other{Longest so far: {count} weeks}}'**
+  String weeksLongest(int count);
+
+  /// No description provided for @weeksWho.
+  ///
+  /// In en, this message translates to:
+  /// **'Counts weeks with someone beyond your close friends.'**
+  String get weeksWho;
+
+  /// No description provided for @weeksOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'This week is still open.'**
+  String get weeksOpen;
+
+  /// No description provided for @weeksEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'That run is over. The next week with someone beyond your close friends starts a new one.'**
+  String get weeksEnded;
+
+  /// No description provided for @settingsStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Weeks in a row'**
+  String get settingsStreak;
+
+  /// No description provided for @settingsStreakHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A week counts when you were in touch with someone beyond your close friends.'**
+  String get settingsStreakHelp;
+
+  /// No description provided for @streakStrict.
+  ///
+  /// In en, this message translates to:
+  /// **'Strict'**
+  String get streakStrict;
+
+  /// No description provided for @streakFriendly.
+  ///
+  /// In en, this message translates to:
+  /// **'Friendly'**
+  String get streakFriendly;
+
+  /// No description provided for @streakStrictHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A finished week without such a contact ends the run. The next one starts at 1, and the longest run stays.'**
+  String get streakStrictHelp;
+
+  /// No description provided for @streakFriendlyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A week without such a contact only pauses the count. It never goes down.'**
+  String get streakFriendlyHelp;
+
+  /// No description provided for @stampGamingClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Gaming with close friends, times'**
+  String get stampGamingClose;
+
+  /// No description provided for @didItNewDate.
+  ///
+  /// In en, this message translates to:
+  /// **'New date'**
+  String get didItNewDate;
+
+  /// No description provided for @nicePlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Planning to meet up?'**
+  String get nicePlanTitle;
+
+  /// No description provided for @nicePlanAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan it'**
+  String get nicePlanAction;
+
+  /// No description provided for @nicePlanHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What? (optional)'**
+  String get nicePlanHint;
 }
 
 class _AppLocalizationsDelegate

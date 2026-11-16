@@ -11,6 +11,11 @@ import 'package:kept/domain/chat_link.dart';
 import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
+import 'package:kept/domain/reconnect_week.dart';
+import 'package:kept/l10n/app_localizations.dart';
+import 'package:kept/l10n/app_localizations_de.dart';
+import 'package:kept/l10n/app_localizations_en.dart';
+import 'package:kept/l10n/labels.dart';
 import 'package:kept/platform/app_shortcuts.dart';
 import 'package:kept/platform/chat_opener.dart';
 import 'package:kept/ui/material.dart';
@@ -156,6 +161,46 @@ void main() {
     });
   });
 
+  group('reconnect span', () {
+    test('the texts follow the span, in English and German', () {
+      final en = AppLocalizationsEn(), de = AppLocalizationsDe();
+      String t(ReconnectSpan s, AppLocalizations l) =>
+          reconnectTitle(s, 'Kenji', l);
+      expect(t(ReconnectSpan.week, en), 'This week: Kenji');
+      expect(t(ReconnectSpan.twoWeeks, en), 'These two weeks: Kenji');
+      expect(t(ReconnectSpan.month, en), 'This month: Kenji');
+      expect(t(ReconnectSpan.twoMonths, en), 'These two months: Kenji');
+      expect(t(ReconnectSpan.threeMonths, en), 'These three months: Kenji');
+      expect(t(ReconnectSpan.week, de), 'Diese Woche: Kenji');
+      expect(t(ReconnectSpan.twoWeeks, de), 'Diese zwei Wochen: Kenji');
+      expect(t(ReconnectSpan.month, de), 'Diesen Monat: Kenji');
+      expect(t(ReconnectSpan.twoMonths, de), 'Diese zwei Monate: Kenji');
+      expect(t(ReconnectSpan.threeMonths, de), 'Diese drei Monate: Kenji');
+    });
+
+    testWidgets('the Rhythms section has a span row, a month at start', (
+      tester,
+    ) async {
+      await pumpApp(tester);
+      await tester.tap(find.byTooltip('Settings'));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(find.text('Reconnect person for'), 100);
+      expect(find.text('1 month'), findsOneWidget);
+      // Class rhythms come first: the span stepper is the fifth.
+      await tester.tap(find.byTooltip('Longer').at(4));
+      await tester.pumpAndSettle();
+      expect(find.text('2 months'), findsOneWidget);
+      expect((await settings(tester)).reconnectSpan, ReconnectSpan.twoMonths);
+      await tester.tap(find.byTooltip('Shorter').at(4));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('Shorter').at(4));
+      await tester.pumpAndSettle();
+      expect(find.text('2 weeks'), findsWidgets);
+      expect((await settings(tester)).reconnectSpan, ReconnectSpan.twoWeeks);
+      await closeDown(tester);
+    });
+  });
+
   group('edit person', () {
     testWidgets('own rhythm: like the class, or a span; and the switch', (
       tester,
@@ -188,7 +233,7 @@ void main() {
 
       // The switch is its own card with a plain explanation.
       expect(find.text('Getting back in touch'), findsOneWidget);
-      expect(find.textContaining('pick one for each week'), findsOneWidget);
+      expect(find.textContaining('pick one for a while'), findsOneWidget);
       await tester.tap(find.byType(Switch));
       await tester.pumpAndSettle();
 
@@ -304,7 +349,7 @@ void main() {
 
       // Nobody chosen: the question, with the two as avatars.
       expect(
-        find.text('Who do you want to get back in touch with this week?'),
+        find.text('Who do you want to get back in touch with now?'),
         findsOneWidget,
       );
       expect(find.text('Getting back in touch'), findsOneWidget);
@@ -317,8 +362,8 @@ void main() {
       await tester.pumpAndSettle();
       var s = await settings(tester);
       expect(s.reconnectPersonId, kenji.id);
-      expect(s.reconnectWeek, DateTime(2026, 11, 16));
-      expect(find.text('This week: Kenji'), findsOneWidget);
+      expect(s.reconnectStart, DateTime(2026, 11, 18));
+      expect(find.text('This month: Kenji'), findsOneWidget);
       expect(find.text('Open WhatsApp'), findsOneWidget);
       expect(find.text('Someone else'), findsOneWidget);
       expect(find.textContaining('Who do you want'), findsNothing);
@@ -334,18 +379,15 @@ void main() {
       expect((await settings(tester)).reconnectPersonId, isNull);
       await tester.tap(find.text('Ingrid').first);
       await tester.pumpAndSettle();
-      expect(find.text('This week: Ingrid'), findsOneWidget);
+      expect(find.text('This month: Ingrid'), findsOneWidget);
       // No messenger, no Open button.
       expect(find.textContaining('Open '), findsNothing);
 
       // The user gets in touch: a calm done state, no buttons.
       await contact(tester, ingrid, DateTime(2026, 11, 18, 9));
       await tester.pumpAndSettle();
-      expect(
-        find.text('You got in touch with Ingrid this week.'),
-        findsOneWidget,
-      );
-      expect(find.text('This week: Ingrid'), findsNothing);
+      expect(find.text('You got in touch with Ingrid.'), findsOneWidget);
+      expect(find.text('This month: Ingrid'), findsNothing);
       expect(find.text('Someone else'), findsNothing);
       await closeDown(tester);
     });
@@ -357,7 +399,7 @@ void main() {
       await real(
         tester,
         () => services.settings.update(
-          (s) => s.withReconnectOfWeek(kenji.id, DateTime(2026, 11, 16)),
+          (s) => s.withReconnect(kenji.id, DateTime(2026, 11, 16)),
         ),
       );
       await contact(
@@ -368,11 +410,11 @@ void main() {
       );
       await pumpApp(tester);
       await openPeople(tester);
-      expect(find.text('This week: Kenji'), findsOneWidget);
+      expect(find.text('This month: Kenji'), findsOneWidget);
       await closeDown(tester);
     });
 
-    testWidgets('a new week starts empty, with nothing about the last', (
+    testWidgets('a span that is over asks again, with nothing about the last', (
       tester,
     ) async {
       final kenji = await add(tester, 'Kenji Moreau', reconnecting: true);
@@ -380,7 +422,9 @@ void main() {
       await real(
         tester,
         () => services.settings.update(
-          (s) => s.withReconnectOfWeek(kenji.id, DateTime(2026, 11, 16)),
+          (s) => s
+              .withReconnect(kenji.id, DateTime(2026, 11, 16))
+              .copyWith(reconnectSpan: ReconnectSpan.week),
         ),
       );
       await contact(tester, kenji, DateTime(2026, 11, 19, 9));
@@ -404,7 +448,9 @@ void main() {
       await real(
         tester,
         () => services.settings.update(
-          (s) => s.withReconnectOfWeek(k2.id, DateTime(2026, 11, 16)),
+          (s) => s
+              .withReconnect(k2.id, DateTime(2026, 11, 16))
+              .copyWith(reconnectSpan: ReconnectSpan.week),
         ),
       );
       await contact(tester, k2, DateTime(2026, 11, 19, 9));
@@ -513,17 +559,17 @@ void main() {
       await real(
         tester,
         () => services.settings.update(
-          (s) => s.withReconnectOfWeek(kenji.id, DateTime(2026, 11, 16)),
+          (s) => s.withReconnect(kenji.id, DateTime(2026, 11, 16)),
         ),
       );
       await pumpApp(tester);
-      expect(find.text('This week: Kenji'), findsOneWidget);
+      expect(find.text('This month: Kenji'), findsOneWidget);
       expect(find.text('Open WhatsApp'), findsOneWidget);
       expect(find.text('Done'), findsOneWidget);
 
       await contact(tester, kenji, DateTime(2026, 11, 18, 9));
       await tester.pumpAndSettle();
-      expect(find.text('This week: Kenji'), findsNothing);
+      expect(find.text('This month: Kenji'), findsNothing);
       await closeDown(tester);
     });
 
@@ -534,7 +580,9 @@ void main() {
       await real(
         tester,
         () => services.settings.update(
-          (s) => s.withReconnectOfWeek(kenji.id, DateTime(2026, 11, 9)),
+          (s) => s
+              .withReconnect(kenji.id, DateTime(2026, 11, 9))
+              .copyWith(reconnectSpan: ReconnectSpan.week),
         ),
       );
       await pumpApp(tester);
@@ -547,7 +595,7 @@ void main() {
       await real(
         tester,
         () => services.settings.update(
-          (s) => s.withReconnectOfWeek(kenji.id, DateTime(2026, 11, 16)),
+          (s) => s.withReconnect(kenji.id, DateTime(2026, 11, 16)),
         ),
       );
       await pumpApp(tester);

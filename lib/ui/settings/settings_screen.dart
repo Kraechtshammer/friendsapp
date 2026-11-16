@@ -11,6 +11,8 @@ import '../../app/theme.dart';
 import '../../data/app_settings.dart';
 import '../../domain/birthdays.dart';
 import '../../domain/person.dart';
+import '../../domain/progress.dart' show StreakMode;
+import '../../domain/reconnect_week.dart';
 import '../../domain/rhythm.dart';
 import '../../domain/stamps.dart';
 import '../../l10n/labels.dart';
@@ -70,6 +72,8 @@ class SettingsScreen extends ConsumerWidget {
           _Rhythms(settings: settings),
           const SizedBox(height: 32),
           _Stamps(weights: settings.stampWeights),
+          const SizedBox(height: 32),
+          _Streak(mode: settings.streakMode),
           const SizedBox(height: 32),
           _EveningQuestion(settings: settings),
           const SizedBox(height: 32),
@@ -179,6 +183,88 @@ class _Rhythms extends ConsumerWidget {
               ],
             ),
           ),
+        const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Row(
+            spacing: 10,
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.settingsReconnectSpan,
+                  style: context.text.bodyLarge,
+                ),
+              ),
+              SizedBox(
+                width: 196,
+                child: RhythmStepper(
+                  options: [for (final v in ReconnectSpan.values) v.index],
+                  value: settings.reconnectSpan.index,
+                  label: (i) =>
+                      reconnectSpanLabel(ReconnectSpan.values[i!], l10n),
+                  onChanged: (i) => unawaited(
+                    ref.services.settings.update(
+                      (s) =>
+                          s.copyWith(reconnectSpan: ReconnectSpan.values[i!]),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Text(l10n.settingsReconnectSpanHelp, style: context.text.bodyMedium),
+      ],
+    );
+  }
+}
+
+/// How "weeks in a row" treats a week without someone beyond the close
+/// friends: strict (the run ends) or friendly (it only pauses).
+class _Streak extends ConsumerWidget {
+  const _Streak({required this.mode});
+
+  final StreakMode mode;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          l10n.settingsStreak.toUpperCase(),
+          style: context.text.labelMedium,
+        ),
+        const SizedBox(height: 4),
+        Text(l10n.settingsStreakHelp, style: context.text.bodyMedium),
+        const SizedBox(height: 12),
+        SegmentedButton<StreakMode>(
+          showSelectedIcon: false,
+          segments: [
+            ButtonSegment(
+              value: StreakMode.strict,
+              label: Text(l10n.streakStrict),
+            ),
+            ButtonSegment(
+              value: StreakMode.friendly,
+              label: Text(l10n.streakFriendly),
+            ),
+          ],
+          selected: {mode},
+          onSelectionChanged: (chosen) => unawaited(
+            ref.services.settings.update(
+              (s) => s.copyWith(streakMode: chosen.single),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          mode == StreakMode.strict
+              ? l10n.streakStrictHelp
+              : l10n.streakFriendlyHelp,
+          style: context.text.bodyMedium,
+        ),
       ],
     );
   }
@@ -304,6 +390,15 @@ class _Stamps extends ConsumerWidget {
           StampWeights.minMultiplier,
           StampWeights.maxMultiplier,
           (w, v) => w.copyWith(gameMultiplier: v),
+          text: (v) => '×$v',
+        ),
+        row(
+          noIcon,
+          l10n.stampGamingClose,
+          weights.gameCloseMultiplier,
+          StampWeights.minMultiplier,
+          StampWeights.maxMultiplier,
+          (w, v) => w.copyWith(gameCloseMultiplier: v),
           text: (v) => '×$v',
         ),
         row(

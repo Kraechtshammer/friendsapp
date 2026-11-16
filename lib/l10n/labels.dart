@@ -2,6 +2,7 @@ import '../domain/greeting.dart';
 import '../domain/idea.dart';
 import '../domain/intention.dart';
 import '../domain/person.dart';
+import '../domain/reconnect_week.dart';
 import '../domain/rhythm.dart';
 import '../domain/treat.dart';
 import '../ui/kept_icon.dart';
@@ -116,6 +117,22 @@ String whenText(When when, AppLocalizations l10n) {
     final h => horizonLabel(h, l10n),
   };
 }
+
+/// "This month: Anna": the reconnect person with the words of the span.
+String reconnectTitle(ReconnectSpan span, String name, AppLocalizations l10n) =>
+    switch (span) {
+      ReconnectSpan.week => l10n.reconnectThisWeek(name),
+      ReconnectSpan.twoWeeks => l10n.reconnectTwoWeeks(name),
+      ReconnectSpan.month => l10n.reconnectThisMonth(name),
+      ReconnectSpan.twoMonths => l10n.reconnectTwoMonths(name),
+      ReconnectSpan.threeMonths => l10n.reconnectThreeMonths(name),
+    };
+
+/// The length of a reconnect span as text ("2 weeks", "1 month").
+String reconnectSpanLabel(ReconnectSpan span, AppLocalizations l10n) =>
+    span.months > 0
+    ? l10n.rhythmMonths(span.months)
+    : l10n.rhythmWeeks(span.days ~/ 7);
 
 /// A rhythm span as text: weeks up to 8 weeks, months from 3 months on
 /// ([rhythmMonths]), and plain days for a value that is neither (an own

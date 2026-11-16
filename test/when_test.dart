@@ -12,6 +12,7 @@ import 'package:kept/domain/person.dart';
 import 'package:kept/platform/app_shortcuts.dart';
 import 'package:kept/ui/home/nice_one_screen.dart';
 import 'package:kept/ui/material.dart';
+import 'package:kept/ui/people/person_screen.dart';
 
 import 'fake_notifications.dart';
 
@@ -275,9 +276,55 @@ void main() {
     });
   });
 
+  group('a thought row on Home', () {
+    testWidgets('the row opens the person, the three dots edit', (
+      tester,
+    ) async {
+      await start(
+        tester,
+        mode: OpenItemsMode.one,
+        seed: (add) async {
+          await add('Bouldering', created: DateTime(2026, 11, 1));
+          await add('Cinema');
+        },
+      );
+      expect(find.byTooltip('Edit thought'), findsNWidgets(2));
+      expect(find.text('Done'), findsWidgets);
+      await tester.tap(find.text('Cinema').last);
+      await tester.pumpAndSettle();
+      expect(find.byType(PersonScreen), findsOneWidget);
+      expect(find.text('Edit thought'), findsNothing);
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('Edit thought').first);
+      await tester.pumpAndSettle();
+      expect(find.text('Edit thought'), findsOneWidget);
+      expect(find.byType(PersonScreen), findsNothing);
+      await closeDown(tester);
+    });
+
+    testWidgets('fits at 360 px wide with long German labels', (tester) async {
+      tester.platformDispatcher.localesTestValue = const [Locale('de')];
+      addTearDown(tester.platformDispatcher.clearLocalesTestValue);
+      await start(
+        tester,
+        seed: (add) => add(
+          'Donaudampfschifffahrtsgesellschaft besuchen und danach lange reden',
+          when: When.date(DateTime(2026, 11, 21, 11)),
+        ),
+      );
+      tester.view.physicalSize = const Size(360, 2400);
+      await tester.pumpAndSettle();
+      expect(find.byTooltip('Gedanke bearbeiten'), findsOneWidget);
+      expect(find.text('Erledigt'), findsWidgets);
+      expect(tester.takeException(), isNull);
+      await closeDown(tester);
+    });
+  });
+
   group('the edit sheet', () {
     Future<void> openSheet(WidgetTester tester, String note) async {
-      await tester.tap(find.text(note).last);
+      await tester.tap(find.byTooltip('Edit thought').last);
       await tester.pumpAndSettle();
       expect(find.text('Edit thought'), findsOneWidget);
     }
@@ -572,6 +619,43 @@ void main() {
       await tester.tap(find.text('Close'));
       await tester.pumpAndSettle();
       expect(find.text('Did it happen?'), findsNothing);
+      await closeDown(tester);
+    });
+
+    testWidgets('three buttons: Yes, New date and No', (tester) async {
+      await start(tester, seed: seedPassed);
+      expect(find.text('Yes'), findsOneWidget);
+      expect(find.text('New date'), findsOneWidget);
+      expect(find.text('No'), findsOneWidget);
+      await closeDown(tester);
+    });
+
+    testWidgets('New date asks for a day and a time, stores it, card goes', (
+      tester,
+    ) async {
+      await start(tester, seed: seedPassed);
+      await tapText(tester, 'New date');
+      await pickDay(tester, '20');
+      // The time is optional: closing the picker keeps the day alone.
+      expect(find.text('Cancel'), findsOneWidget);
+      await tapText(tester, 'Cancel');
+      final i = (await all(tester)).single;
+      expect(i.state, IntentionState.open);
+      expect(i.date, DateTime(2026, 11, 20));
+      expect(i.horizon, isNull);
+      expect(await events(tester), isEmpty);
+      expect(find.text('Did it happen?'), findsNothing);
+      await closeDown(tester);
+    });
+
+    testWidgets('New date cancelled at the date changes nothing', (
+      tester,
+    ) async {
+      await start(tester, seed: seedPassed);
+      await tapText(tester, 'New date');
+      await tapText(tester, 'Cancel');
+      expect((await all(tester)).single.date, DateTime(2026, 11, 14));
+      expect(find.text('Did it happen?'), findsOneWidget);
       await closeDown(tester);
     });
 
