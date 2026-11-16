@@ -9,16 +9,11 @@ import '../domain/incoming_contact.dart';
 /// Incoming contact (02-design.md §2.6 and §6.9): the app's own
 /// notification listener, behind an interface so tests can fake it.
 ///
-/// Optional part, off by default. For a build without it (Play Store),
-/// delete: this file, lib/app/incoming_sync.dart,
-/// lib/domain/incoming_contact.dart, the "Incoming messages" switch and
-/// access rows in lib/ui/settings/settings_screen.dart, the calls in
-/// lib/ui/home_shell.dart, [incomingListenerProvider] and
-/// [incomingAccessProvider] in lib/app/providers.dart, and on the Android
-/// side IncomingRules.kt, KeptNotificationListener.kt, IncomingChannel.kt,
-/// the `service` entry in AndroidManifest.xml and the IncomingChannel line
-/// in MainActivity.kt. Owed replies from "They wrote" entered by hand keep
-/// working.
+/// Optional part, off by default, and a build flag: only builds with
+/// `--dart-define=KEPT_INCOMING=true` have the listener
+/// (lib/app/build_flags.dart, docs/04-architecture.md). Without it the app
+/// uses [NoIncomingListener] and hides the switch; owed replies from
+/// "They wrote" entered by hand keep working.
 abstract class IncomingListener {
   /// Switches the listener's recording on or off. Off also makes it forget
   /// the watch list and the queue.
@@ -94,4 +89,26 @@ class AndroidIncomingListener implements IncomingListener {
       // Some phones lack the page; the user finds it in the settings.
     }
   }
+}
+
+/// [IncomingListener] for a build without the listener (no KEPT_INCOMING):
+/// records nothing, has no access, opens nothing. So a stored "on" from
+/// an earlier build does no harm.
+class NoIncomingListener implements IncomingListener {
+  const NoIncomingListener();
+
+  @override
+  Future<void> setEnabled(bool on) async {}
+
+  @override
+  Future<void> setWatchList(List<WatchEntry> entries) async {}
+
+  @override
+  Future<List<IncomingEntry>> takeQueue() async => const [];
+
+  @override
+  Future<bool> hasAccess() async => false;
+
+  @override
+  Future<void> openAccessSettings() async {}
 }

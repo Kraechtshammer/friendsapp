@@ -12,8 +12,8 @@ import '../platform/contacts.dart';
 import 'providers.dart';
 
 /// Incoming contact (02-design.md §2.6 and §6.9): keeps the optional
-/// notification listener in step with the app. Optional part; see
-/// lib/platform/incoming_listener.dart for removing it.
+/// notification listener in step with the app. Optional part and a build
+/// flag (lib/app/build_flags.dart); without it the listener is a no-op.
 ///
 /// HomeShell calls [onSettings] when the settings change, [onPeople] when
 /// the real people change and [onResume] when the app comes back. On: the

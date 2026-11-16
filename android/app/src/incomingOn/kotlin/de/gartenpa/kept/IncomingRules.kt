@@ -5,9 +5,10 @@ package de.gartenpa.kept
 // can be tested once Kotlin has a test setup. The listener
 // (KeptNotificationListener.kt) only reads the fields and calls these.
 //
-// Optional part: for a build without the listener, delete IncomingRules.kt,
-// KeptNotificationListener.kt and IncomingChannel.kt, the <service> entry in
-// AndroidManifest.xml and the IncomingChannel line in MainActivity.kt.
+// Optional part, built in only with --dart-define=KEPT_INCOMING=true: this
+// folder (src/incomingOn) and its AndroidManifest.xml are then added by
+// android/app/build.gradle.kts; otherwise src/incomingOff holds a stub
+// IncomingSetup (docs/04-architecture.md).
 
 /** What an incoming notification stands for. Stored by [name] in the queue. */
 enum class IncomingKind { wrote, called }

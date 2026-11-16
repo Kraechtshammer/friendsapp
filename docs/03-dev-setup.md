@@ -127,6 +127,15 @@ The key decides who may update the installed app. If it is lost, updates are no 
    - `ANDROID_KEY_ALIAS`: `kept`
 5. Delete `android/kept-release.jks.base64`.
 
+### Build flag: incoming messages
+
+The notification listener for incoming messages (M7) is a build flag, off by default (02-design.md §8, 2026-11-16). Play Protect blocks installing a sideloaded APK that has a notification listener, so GitHub releases and the tasks above are built without it.
+
+- Without: `flutter build apk --release` (or `--debug`, or `flutter run`). The APK has no listener service and no listener code; the app hides the switch.
+- With: add `--dart-define=KEPT_INCOMING=true`, for example `flutter build apk --release --dart-define=KEPT_INCOMING=true` or `flutter run --dart-define=KEPT_INCOMING=true`. Works for debug and release alike.
+
+The one flag drives both sides: Dart reads it in `lib/app/build_flags.dart`, Gradle in `android/app/build.gradle.kts` (from Flutter's `dart-defines` property). Checked on 2026-11-16 with both release APKs: without the flag the manifest has no `NotificationListenerService`, `classes.dex` has no `KeptNotificationListener` and `libapp.so` has no `de.gartenpa.kept/incoming`; with the flag all three are there. Whether Play Protect accepts the APK without the flag is not checked yet.
+
 ### Make a release
 
 1. In `pubspec.yaml` set `version:` to the new name and a higher build number, for example `0.1.0+2`. The build number must increase, or Android refuses the update.

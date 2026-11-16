@@ -14,7 +14,7 @@ import java.util.Locale
 /**
  * Incoming contact (M7, 02-design.md §2.6 and §6.9). Optional part, off by
  * default; the user grants notification access by hand in the system
- * settings. See IncomingRules.kt for what to delete for a build without it.
+ * settings. Built in only with KEPT_INCOMING=true; see IncomingRules.kt.
  *
  * When the part is on, a notification from a messenger whose title is the
  * name of a watched person is written to a small queue file as

@@ -111,6 +111,7 @@ void main() {
       WidgetTester tester, {
       Widget? home,
       bool firstStart = true,
+      bool builtIn = true,
     }) async {
       tester.view.physicalSize = const Size(360, 6000);
       tester.view.devicePixelRatio = 1;
@@ -122,6 +123,7 @@ void main() {
             firstStartEnabledProvider.overrideWithValue(firstStart),
             notificationsProvider.overrideWithValue(notifications),
             incomingListenerProvider.overrideWithValue(listener),
+            incomingBuiltInProvider.overrideWithValue(builtIn),
             contactsSourceProvider.overrideWithValue(contacts),
             appShortcutsProvider.overrideWithValue(NoShortcuts()),
             updateServiceProvider.overrideWithValue(updates),
@@ -293,6 +295,41 @@ void main() {
       expect(s.eveningOn, isFalse);
       expect(s.firstStartDone, isTrue);
       expect(await people(tester), isEmpty);
+      await closeDown(tester);
+    });
+
+    testWidgets('without the listener built in: no incoming page', (
+      tester,
+    ) async {
+      await start(tester, builtIn: false);
+      await tester.tap(find.text("Let's go"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Add by hand later'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Ask me in the evening'));
+      await tester.pump();
+      await tester.tap(find.text('Continue'));
+      await settle(tester);
+      // Straight from the evening page to the update page, and back.
+      expect(find.text('Notice who wrote or called'), findsNothing);
+      expect(find.text('Check GitHub for new versions'), findsOneWidget);
+      // System back on the update page leads to the evening page.
+      await tester.binding.handlePopRoute();
+      await settle(tester);
+      expect(find.text('Ask me in the evening'), findsOneWidget);
+      await closeDown(tester);
+    });
+
+    testWidgets('without the listener built in: no access card', (
+      tester,
+    ) async {
+      await tester.runAsync(
+        () => services.settings.update((s) => s.copyWith(firstStartDone: true)),
+      );
+      await start(tester, home: const PermissionsScreen(), builtIn: false);
+      expect(find.text('Notification access'), findsNothing);
+      expect(find.text('Notice who wrote or called'), findsNothing);
+      expect(find.text('Update check'), findsOneWidget);
       await closeDown(tester);
     });
 

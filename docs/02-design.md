@@ -460,3 +460,4 @@ Claude's assessment: only Fluent Emoji Flat is a real alternative. It would save
 | 2026-11-16 | **After 1.0.0 (the developer):** backup export and import. |
 | 2026-11-16 | **Unused packages (the developer):** `permission_handler` and `cupertino_icons` are removed; nothing used them. |
 | 2026-11-16 | **1.0.0 (the developer):** not soon. The developer tests the app for days or weeks first. Releases keep taking the next number. |
+| 2026-11-16 | **Incoming messages become a build flag (the developer):** Play Protect blocks sideloaded APKs with a notification listener. GitHub releases are built without it; `--dart-define=KEPT_INCOMING=true` builds it in. Without it the app hides the switch; owed replies from "They wrote" by hand keep working. |

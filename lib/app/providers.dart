@@ -17,6 +17,7 @@ import '../platform/incoming_listener.dart';
 import '../platform/link_opener.dart';
 import '../platform/notifications.dart';
 import '../platform/share_receiver.dart';
+import 'build_flags.dart';
 import 'services.dart';
 
 /// Set in main() with the services created at start.
@@ -65,10 +66,18 @@ final notificationsProvider = Provider<Notifications>(
   (ref) => LocalNotifications(),
 );
 
+/// Whether the optional notification listener is built in (the build flag
+/// [keptIncoming]). False: the UI shows nothing about it; "They wrote" by
+/// hand stays. Tests that are about the listener switch it on.
+final incomingBuiltInProvider = Provider<bool>((ref) => keptIncoming);
+
 /// The optional notification listener for incoming contact. Tests
-/// override it with a fake. See incoming_listener.dart for removing it.
+/// override it with a fake. Without the build flag a no-op, and the
+/// compiler drops [AndroidIncomingListener] and its channel.
 final incomingListenerProvider = Provider<IncomingListener>(
-  (ref) => const AndroidIncomingListener(),
+  (ref) => keptIncoming
+      ? const AndroidIncomingListener()
+      : const NoIncomingListener(),
 );
 
 /// Whether the user has granted notification access to the listener. Read

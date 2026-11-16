@@ -15,8 +15,8 @@ import 'settings_actions.dart';
 /// granted, and the waiting time before a reply counts as owed. The
 /// waiting time also applies to "They wrote" entered by hand, so it shows
 /// with the switch off too. HomeShell passes the switch on to the listener
-/// (IncomingSync). Without the listener (Play build), keep only the
-/// waiting time.
+/// (IncomingSync). In a build without the listener (no KEPT_INCOMING,
+/// [incomingBuiltInProvider]) only the waiting time shows.
 class IncomingSection extends ConsumerStatefulWidget {
   const IncomingSection({super.key, required this.settings});
 
@@ -54,7 +54,8 @@ class IncomingSectionState extends ConsumerState<IncomingSection> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final on = widget.settings.incomingOn;
+    final builtIn = ref.watch(incomingBuiltInProvider);
+    final on = builtIn && widget.settings.incomingOn;
     final wait = widget.settings.replyWaitDays;
     final access = on ? ref.watch(incomingAccessProvider).value : null;
     return Column(
@@ -64,16 +65,18 @@ class IncomingSectionState extends ConsumerState<IncomingSection> {
           l10n.settingsIncoming.toUpperCase(),
           style: context.text.labelMedium,
         ),
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          title: Text(l10n.settingsIncomingSwitch),
-          trailing: KeptSwitch(
-            value: on,
-            onChanged: (v) => unawaited(_switch(v)),
+        if (builtIn) ...[
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l10n.settingsIncomingSwitch),
+            trailing: KeptSwitch(
+              value: on,
+              onChanged: (v) => unawaited(_switch(v)),
+            ),
+            onTap: () => unawaited(_switch(!on)),
           ),
-          onTap: () => unawaited(_switch(!on)),
-        ),
-        Text(l10n.settingsIncomingHelp, style: context.text.bodyMedium),
+          Text(l10n.settingsIncomingHelp, style: context.text.bodyMedium),
+        ],
         if (on) ...[
           ListTile(
             contentPadding: EdgeInsets.zero,

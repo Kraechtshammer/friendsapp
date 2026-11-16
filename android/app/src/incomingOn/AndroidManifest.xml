@@ -1,0 +1,17 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!-- Incoming contact (M7), optional part: reads who wrote or called in a messenger,
+             never the text. Works only after the user grants notification access by hand.
+             Merged in only with the dart-define KEPT_INCOMING=true (android/app/build.gradle.kts):
+             Play Protect blocks sideloaded APKs that have a notification listener. -->
+        <service
+            android:name=".KeptNotificationListener"
+            android:label="${appLabel}"
+            android:exported="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+    </application>
+</manifest>

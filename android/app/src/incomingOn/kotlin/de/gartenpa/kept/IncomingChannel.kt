@@ -10,8 +10,8 @@ import io.flutter.plugin.common.MethodChannel
 
 /**
  * Incoming contact (M7): the method channel between the app and the
- * listener's store (lib/platform/incoming_listener.dart). Optional part; see
- * IncomingRules.kt for what to delete for a build without it.
+ * listener's store (lib/platform/incoming_listener.dart). Built in only with
+ * KEPT_INCOMING=true; see IncomingRules.kt.
  */
 object IncomingChannel {
     private const val NAME = "de.gartenpa.kept/incoming"

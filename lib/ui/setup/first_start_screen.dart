@@ -19,7 +19,8 @@ import '../widgets/kept_switch.dart';
 import '../widgets/main_button.dart';
 
 /// The guided first start (02-design.md §8, permissions): welcome, people,
-/// how close, evening question, incoming messages, update check, done. Shown once on a
+/// how close, evening question, incoming messages (only in a build with the
+/// listener, KEPT_INCOMING), update check, done. Shown once on a
 /// fresh install by HomeShell. Each optional part is switched on here
 /// consciously and says what it is for and what to do without it. "Skip" is
 /// on every page; it leaves the optional parts off.
@@ -100,7 +101,10 @@ class _FirstStartState extends ConsumerState<FirstStartScreen> {
     _eveningDecided = true;
     // Switching on asks for the permission now, not earlier.
     if (_eveningOn) await switchEveningQuestion(ref, true);
-    if (mounted) _go(_Step.incoming);
+    // The incoming page only in a build with the listener (KEPT_INCOMING).
+    if (mounted) {
+      _go(ref.read(incomingBuiltInProvider) ? _Step.incoming : _Step.update);
+    }
   }
 
   Future<void> _pickTime() async {
@@ -143,7 +147,7 @@ class _FirstStartState extends ConsumerState<FirstStartScreen> {
       case _Step.incoming:
         _go(_Step.evening);
       case _Step.update:
-        _go(_Step.incoming);
+        _go(ref.read(incomingBuiltInProvider) ? _Step.incoming : _Step.evening);
       default:
     }
   }

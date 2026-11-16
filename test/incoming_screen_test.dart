@@ -37,6 +37,7 @@ void main() {
   Future<void> start(
     WidgetTester tester, {
     bool on = false,
+    bool builtIn = true,
     AppSettings Function(AppSettings)? settings,
     void Function()? beforePump,
   }) async {
@@ -67,6 +68,7 @@ void main() {
           appShortcutsProvider.overrideWithValue(NoShortcuts()),
           chatOpenerProvider.overrideWithValue(opener),
           incomingListenerProvider.overrideWithValue(listener),
+          incomingBuiltInProvider.overrideWithValue(builtIn),
           contactsSourceProvider.overrideWithValue(_Contacts()),
           clockProvider.overrideWithValue(() => now),
         ],
@@ -288,6 +290,26 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('Still owe Tom a reply?'), findsOneWidget);
+    await closeDown(tester);
+  });
+
+  testWidgets('not built in: only the waiting time, a stored on does nothing', (
+    tester,
+  ) async {
+    await start(tester, on: true, builtIn: false);
+    await addEvent(tester, DateTime(2026, 11, 12));
+    await tester.pumpAndSettle();
+    // Listener entries from an earlier build ask nothing.
+    expect(find.text('Still owe Tom a reply?'), findsNothing);
+
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Ask about a reply after'), 100);
+    await tester.pumpAndSettle();
+    expect(find.text('Notice who wrote or called'), findsNothing);
+    expect(find.textContaining('never reads what they wrote'), findsNothing);
+    expect(find.text('Notification access'), findsNothing);
+    expect(find.text('2 days'), findsOneWidget);
     await closeDown(tester);
   });
 

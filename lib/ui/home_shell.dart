@@ -429,7 +429,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           people: people.value ?? const [],
           events: events.value ?? const [],
           replyWaitDays: settings.replyWaitDays,
-          listenerOn: settings.incomingOn,
+          listenerOn: ref.read(incomingBuiltInProvider) && settings.incomingOn,
           reconnectId: settings.reconnectPersonId,
           reconnectStart: settings.reconnectStart,
           reconnectSpan: settings.reconnectSpan,

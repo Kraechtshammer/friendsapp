@@ -69,7 +69,8 @@ class _PermissionsState extends ConsumerState<PermissionsScreen> {
     final settings = ref.settings;
     final contacts = ref.watch(contactsAccessProvider).value;
     final notifications = ref.watch(notificationsEnabledProvider).value;
-    final access = ref.watch(incomingAccessProvider).value;
+    final builtIn = ref.watch(incomingBuiltInProvider);
+    final access = builtIn ? ref.watch(incomingAccessProvider).value : null;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.permTitle)),
       body: ListView(
@@ -165,39 +166,42 @@ class _PermissionsState extends ConsumerState<PermissionsScreen> {
             without: l10n.permVibrateWithout,
           ),
           const SizedBox(height: 18),
-          _PartCard(
-            icon: KeptIcons.chat,
-            title: l10n.permAccessTitle,
-            state: settings.incomingOn
-                ? (access == false
-                      ? _State(l10n.permStateNotAllowed, null)
-                      : _State(l10n.permStateOn, KeptColors.mint))
-                : _State(l10n.permStateOff, null),
-            use: l10n.permAccessUse,
-            without: l10n.incomingWithout,
-            control: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _SwitchRow(
-                  l10n.settingsIncomingSwitch,
-                  value: settings.incomingOn,
-                  onChanged: (on) => unawaited(switchIncoming(ref, on)),
-                ),
-                if (settings.incomingOn)
-                  Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: GreyButton(
-                      small: true,
-                      label: l10n.settingsIncomingOpenAccess,
-                      onPressed: ref
-                          .read(incomingListenerProvider)
-                          .openAccessSettings,
-                    ),
+          // Only in a build with the listener (KEPT_INCOMING).
+          if (builtIn) ...[
+            _PartCard(
+              icon: KeptIcons.chat,
+              title: l10n.permAccessTitle,
+              state: settings.incomingOn
+                  ? (access == false
+                        ? _State(l10n.permStateNotAllowed, null)
+                        : _State(l10n.permStateOn, KeptColors.mint))
+                  : _State(l10n.permStateOff, null),
+              use: l10n.permAccessUse,
+              without: l10n.incomingWithout,
+              control: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _SwitchRow(
+                    l10n.settingsIncomingSwitch,
+                    value: settings.incomingOn,
+                    onChanged: (on) => unawaited(switchIncoming(ref, on)),
                   ),
-              ],
+                  if (settings.incomingOn)
+                    Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: GreyButton(
+                        small: true,
+                        label: l10n.settingsIncomingOpenAccess,
+                        onPressed: ref
+                            .read(incomingListenerProvider)
+                            .openAccessSettings,
+                      ),
+                    ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 18),
+            const SizedBox(height: 18),
+          ],
           // In-app update, not in a Play build (update_controller.dart).
           _PartCard(
             icon: KeptIcons.gear,

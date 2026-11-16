@@ -1,3 +1,4 @@
+import java.util.Base64
 import java.util.Properties
 
 plugins {
@@ -13,6 +14,18 @@ val releaseKey = Properties().apply {
     if (file.exists()) file.inputStream().use { load(it) }
 }
 val hasReleaseKey = releaseKey.getProperty("storeFile") != null
+
+// Incoming contact (M7), a build flag: `flutter build/run --dart-define=KEPT_INCOMING=true`.
+// Flutter passes the dart-defines as one property, comma-separated, each entry base64 "KEY=value".
+// Without the flag the notification listener (src/incomingOn: Kotlin and its manifest <service>)
+// is left out and src/incomingOff gives MainActivity a stub, because Play Protect blocks
+// sideloaded APKs with a notification listener. The Dart side reads the same flag
+// (lib/app/build_flags.dart).
+val keptIncoming = (project.findProperty("dart-defines") as String?)
+    ?.split(",")
+    ?.filter { it.isNotBlank() }
+    ?.map { String(Base64.getDecoder().decode(it)) }
+    ?.contains("KEPT_INCOMING=true") == true
 
 android {
     namespace = "de.gartenpa.kept"
@@ -66,6 +79,21 @@ android {
             // The release key when android/key.properties exists, otherwise the debug key
             // (fine for local testing, but such an APK can't update one signed with the release key).
             signingConfig = signingConfigs.getByName(if (hasReleaseKey) "release" else "debug")
+        }
+    }
+
+    sourceSets {
+        getByName("main") {
+            java.directories.add(if (keptIncoming) "src/incomingOn/kotlin" else "src/incomingOff/kotlin")
+        }
+    }
+}
+
+// The listener's <service> entry, only with the flag (see keptIncoming above).
+androidComponents {
+    onVariants { variant ->
+        if (keptIncoming) {
+            variant.sources.manifests.addStaticManifestFile("src/incomingOn/AndroidManifest.xml")
         }
     }
 }

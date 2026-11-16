@@ -11,8 +11,9 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        // Incoming contact (M7), optional part: see IncomingRules.kt.
-        IncomingChannel.register(flutterEngine.dartExecutor.binaryMessenger, this)
+        // Incoming contact (M7), optional part: a no-op unless built with
+        // KEPT_INCOMING=true (src/incomingOn or src/incomingOff, build.gradle.kts).
+        IncomingSetup.register(flutterEngine.dartExecutor.binaryMessenger, this)
         // Sharing into the app (M10): see ShareChannel.kt.
         share = ShareChannel(flutterEngine.dartExecutor.binaryMessenger, this)
         // In-app update, not in a Play build: see UpdateChannel.kt.

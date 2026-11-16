@@ -106,7 +106,7 @@ class _TonightsPickState extends ConsumerState<TonightsPick> {
         events,
         now: now,
         waitDays: settings.replyWaitDays,
-        listenerOn: settings.incomingOn,
+        listenerOn: ref.watch(incomingBuiltInProvider) && settings.incomingOn,
       ),
     );
     if (_scrollPending && picks.isNotEmpty) {
