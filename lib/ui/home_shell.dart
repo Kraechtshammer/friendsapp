@@ -11,6 +11,7 @@ import '../domain/birthday_notifications.dart';
 import '../domain/birthdays.dart';
 import '../domain/contact_event.dart';
 import '../domain/evening_question.dart';
+import '../domain/first_start.dart';
 import '../l10n/labels.dart';
 import '../platform/notifications.dart';
 import '../platform/share_receiver.dart';
@@ -22,6 +23,7 @@ import 'home/share_sheet.dart';
 import 'kept_icon.dart';
 import 'material.dart';
 import 'people/people_screen.dart';
+import 'setup/first_start_screen.dart';
 import 'progress/progress_screen.dart';
 import 'upcoming/upcoming_screen.dart';
 
@@ -58,6 +60,8 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   EveningPlan? _scheduled;
   BirthdayPlan? _birthdaysScheduled;
   var _permissionAsked = false;
+  var _firstStartChecked = false;
+  var _firstStartRunning = false;
   var _stampsPrepared = false;
   var _picturesCleaned = false;
   late final AppLifecycleListener _lifecycle;
@@ -79,6 +83,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     ref.listenManual(settingsProvider, (_, next) {
       if (next.value case final settings?) _onSettings(settings);
     });
+    ref.listenManual(peopleProvider, (_, _) => _checkFirstStart());
     ref.listenManual(realPeopleProvider, (_, _) {
       _scheduleBirthdays();
       _incoming.onPeople();
@@ -146,6 +151,49 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     );
     // Not from initState: the texts need the context.
     if (schedule) _scheduleBirthdays();
+  }
+
+  /// Once, when the settings and the people are loaded: a fresh install
+  /// (no people, flag not set) gets the first-start flow. An install that
+  /// already has people never does; its flag is set so that removing
+  /// everyone later does not bring the flow in. Until this is decided the
+  /// notification permission is not asked, because the flow asks for it.
+  void _checkFirstStart() {
+    if (_firstStartChecked || !mounted) return;
+    final settings = ref.read(settingsProvider).value;
+    final people = ref.read(peopleProvider).value;
+    if (settings == null || people == null) return;
+    _firstStartChecked = true;
+    if (ref.read(firstStartEnabledProvider)) {
+      if (showFirstStart(
+        done: settings.firstStartDone,
+        peopleCount: people.length,
+      )) {
+        _firstStartRunning = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          Navigator.of(context)
+              .push(
+                MaterialPageRoute<void>(
+                  fullscreenDialog: true,
+                  builder: (_) => const FirstStartScreen(),
+                ),
+              )
+              .then((_) {
+                _firstStartRunning = false;
+              });
+        });
+        WidgetsBinding.instance.scheduleFrame();
+      } else if (!settings.firstStartDone) {
+        unawaited(
+          ref
+              .read(servicesProvider)
+              .settings
+              .update((s) => s.copyWith(firstStartDone: true)),
+        );
+      }
+    }
+    unawaited(_askPermissionOnce(settings));
   }
 
   void _onResume() {
@@ -301,10 +349,14 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     unawaited(ref.read(notificationsProvider).scheduleEvening(plan));
   }
 
-  /// Asks for the notification permission once, on the first start with
+  /// Asks for the notification permission once, on the first start of an
+  /// install that had people before the first-start flow existed, with
   /// the evening question on. Later only switching it on in Settings asks.
   Future<void> _askPermissionOnce(AppSettings settings) async {
     if (!settings.eveningOn || settings.notificationPermissionAsked) return;
+    // Not before the first-start decision, and never under the flow: it asks
+    // for the permission itself, at the evening page.
+    if (!_firstStartChecked || _firstStartRunning) return;
     if (_permissionAsked) return;
     _permissionAsked = true;
     final services = ref.read(servicesProvider);

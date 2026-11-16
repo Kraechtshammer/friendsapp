@@ -64,6 +64,7 @@ void main() {
       ProviderScope(
         overrides: [
           servicesProvider.overrideWithValue(services),
+          firstStartEnabledProvider.overrideWithValue(false),
           notificationsProvider.overrideWithValue(FakeNotifications()),
           appShortcutsProvider.overrideWithValue(_NoShortcuts()),
           chatOpenerProvider.overrideWithValue(opener),
@@ -319,6 +320,9 @@ Future<void> settle(WidgetTester tester) async {
 }
 
 class _Contacts implements ContactsSource {
+  @override
+  Future<bool> hasAccess() async => true;
+
   @override
   Future<Map<String, String>> displayNames() async => {'c1': 'Tom Berger'};
 

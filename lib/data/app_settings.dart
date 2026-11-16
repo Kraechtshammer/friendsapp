@@ -37,6 +37,8 @@ class AppSettings {
     this.stampWeights = const StampWeights(),
     this.defaultTreatsInserted = false,
     this.stampsBackfilled = false,
+    this.firstStartDone = false,
+    this.familyWeightFixed = false,
   });
 
   /// The shortest and longest waiting time for owed replies, in days.
@@ -117,6 +119,14 @@ class AppSettings {
 
   /// The stamp rule was run over the existing contact events once (M9).
   final bool stampsBackfilled;
+
+  /// The first-start flow was finished or skipped, or the install already
+  /// had people when the flow came in (02-design.md §8, permissions).
+  final bool firstStartDone;
+
+  /// The one-time fix of the Family stamp weight was run: older builds
+  /// stored 1 on every settings save, and Family now counts 2.
+  final bool familyWeightFixed;
 
   /// Reads settings from the stored key-value pairs. Unknown or broken
   /// values fall back to the defaults.
@@ -234,6 +244,8 @@ class AppSettings {
       ),
       defaultTreatsInserted: m['defaultTreatsInserted'] == 'true',
       stampsBackfilled: m['stampsBackfilled'] == 'true',
+      firstStartDone: m['firstStartDone'] == 'true',
+      familyWeightFixed: m['familyWeightFixed'] == 'true',
     );
   }
 
@@ -261,6 +273,8 @@ class AppSettings {
     ..._stampMap(stampWeights),
     'defaultTreatsInserted': '$defaultTreatsInserted',
     'stampsBackfilled': '$stampsBackfilled',
+    'firstStartDone': '$firstStartDone',
+    'familyWeightFixed': '$familyWeightFixed',
   };
 
   AppSettings copyWith({
@@ -280,6 +294,8 @@ class AppSettings {
     StampWeights? stampWeights,
     bool? defaultTreatsInserted,
     bool? stampsBackfilled,
+    bool? firstStartDone,
+    bool? familyWeightFixed,
   }) => _copy(
     themeMode: themeMode,
     demoMode: demoMode,
@@ -297,6 +313,8 @@ class AppSettings {
     stampWeights: stampWeights,
     defaultTreatsInserted: defaultTreatsInserted,
     stampsBackfilled: stampsBackfilled,
+    firstStartDone: firstStartDone,
+    familyWeightFixed: familyWeightFixed,
   );
 
   /// A copy with [birthday] as the user's own birthday; null clears it.
@@ -334,6 +352,8 @@ class AppSettings {
     StampWeights? stampWeights,
     bool? defaultTreatsInserted,
     bool? stampsBackfilled,
+    bool? firstStartDone,
+    bool? familyWeightFixed,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     demoMode: demoMode ?? this.demoMode,
@@ -361,6 +381,8 @@ class AppSettings {
     stampWeights: stampWeights ?? this.stampWeights,
     defaultTreatsInserted: defaultTreatsInserted ?? this.defaultTreatsInserted,
     stampsBackfilled: stampsBackfilled ?? this.stampsBackfilled,
+    firstStartDone: firstStartDone ?? this.firstStartDone,
+    familyWeightFixed: familyWeightFixed ?? this.familyWeightFixed,
   );
 
   @override
@@ -384,10 +406,12 @@ class AppSettings {
       setEquals(other.backInTouchAnswered, backInTouchAnswered) &&
       other.stampWeights == stampWeights &&
       other.defaultTreatsInserted == defaultTreatsInserted &&
-      other.stampsBackfilled == stampsBackfilled;
+      other.stampsBackfilled == stampsBackfilled &&
+      other.firstStartDone == firstStartDone &&
+      other.familyWeightFixed == familyWeightFixed;
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     themeMode,
     demoMode,
     eveningOn,
@@ -407,7 +431,9 @@ class AppSettings {
     stampWeights,
     defaultTreatsInserted,
     stampsBackfilled,
-  );
+    firstStartDone,
+    familyWeightFixed,
+  ]);
 }
 
 const _keep = Object();

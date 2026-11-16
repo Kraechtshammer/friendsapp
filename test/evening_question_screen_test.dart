@@ -26,6 +26,7 @@ void main() {
       ProviderScope(
         overrides: [
           servicesProvider.overrideWithValue(services),
+          firstStartEnabledProvider.overrideWithValue(false),
           notificationsProvider.overrideWithValue(fake),
           clockProvider.overrideWithValue(() => DateTime(2026, 11, 16, 14)),
         ],

@@ -82,6 +82,7 @@ void main() {
       ProviderScope(
         overrides: [
           servicesProvider.overrideWithValue(services),
+          firstStartEnabledProvider.overrideWithValue(false),
           notificationsProvider.overrideWithValue(notifications),
           appShortcutsProvider.overrideWithValue(_NoShortcuts()),
           chatOpenerProvider.overrideWithValue(opener),

@@ -4,17 +4,13 @@ import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/database.dart';
 import '../../domain/person.dart';
-import '../../domain/phone_number.dart';
-import '../../l10n/labels.dart';
 import '../../platform/contacts.dart';
 import '../common.dart';
-import '../kept_icon.dart';
+import 'class_chooser.dart';
 import '../material.dart';
-import '../widgets/choice_chips.dart';
 import '../widgets/grey_button.dart';
 import '../widgets/kept_text_field.dart';
 import '../widgets/main_button.dart';
-import '../widgets/section_label.dart';
 
 /// Opens the import of people from the phone's contacts.
 Future<void> openImportContacts(BuildContext context) => Navigator.of(
@@ -22,9 +18,13 @@ Future<void> openImportContacts(BuildContext context) => Navigator.of(
 ).push(MaterialPageRoute<void>(builder: (_) => const ImportContactsScreen()));
 
 /// Step 1 of the import: pick contacts. Step 2 is [_ClassStep]. The
-/// permission is asked for when the screen opens.
+/// permission is asked for when the screen opens. With [returnPicked] the
+/// screen pops with the chosen contacts instead (the first-start flow
+/// does step 2 itself).
 class ImportContactsScreen extends ConsumerStatefulWidget {
-  const ImportContactsScreen({super.key});
+  const ImportContactsScreen({super.key, this.returnPicked = false});
+
+  final bool returnPicked;
 
   @override
   ConsumerState<ImportContactsScreen> createState() => _PickState();
@@ -77,6 +77,10 @@ class _PickState extends ConsumerState<ImportContactsScreen> {
       for (final c in _contacts)
         if (_picked.contains(c.id)) c,
     ];
+    if (widget.returnPicked) {
+      Navigator.of(context).pop(chosen);
+      return;
+    }
     await Navigator.of(context)
         .push(MaterialPageRoute<void>(builder: (_) => _ClassStep(chosen)));
   }
@@ -282,20 +286,12 @@ class _ClassState extends ConsumerState<_ClassStep> {
     if (_saving) return;
     setState(() => _saving = true);
     final navigator = Navigator.of(context);
-    final repo = ref.read(peopleRepositoryProvider);
-    // One after the other, so each person sees the avatars before.
-    for (final c in widget.contacts) {
-      await repo.add(
-        name: c.name,
-        contactId: c.id,
-        closeness: _closeness[c.id]!,
-        mainMessenger: _messenger,
-        phone: c.phones.isEmpty ? null : normalisePhone(c.phones.first),
-        birthdayMonth: c.birthdayMonth,
-        birthdayDay: c.birthdayDay,
-        birthdayYear: c.birthdayYear,
-      );
-    }
+    await addContactsAsPeople(
+      ref.read(peopleRepositoryProvider),
+      widget.contacts,
+      _closeness,
+      _messenger,
+    );
     navigator.popUntil((route) => route.isFirst);
   }
 
@@ -310,24 +306,13 @@ class _ClassState extends ConsumerState<_ClassStep> {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               children: [
-                SectionLabel(l10n.importMessengerAll),
-                const SizedBox(height: 8),
-                ChoiceChips<Messenger?>(
-                  options: [
-                    ChipOption(null, l10n.messengerNone),
-                    for (final m in Messenger.values)
-                      ChipOption(m, messengerLabel(m, l10n)),
-                  ],
-                  value: _messenger,
-                  onChanged: (v) => setState(() => _messenger = v),
+                ClassAssignment(
+                  contacts: widget.contacts,
+                  closeness: _closeness,
+                  messenger: _messenger,
+                  onCloseness: (id, v) => setState(() => _closeness[id] = v),
+                  onMessenger: (v) => setState(() => _messenger = v),
                 ),
-                const SizedBox(height: 12),
-                for (final c in widget.contacts)
-                  _ClassRow(
-                    c.name,
-                    value: _closeness[c.id]!,
-                    onChanged: (v) => setState(() => _closeness[c.id] = v),
-                  ),
               ],
             ),
           ),
@@ -345,55 +330,4 @@ class _ClassState extends ConsumerState<_ClassStep> {
       ),
     );
   }
-}
-
-/// A name and the four class icons as a single choice.
-class _ClassRow extends StatelessWidget {
-  const _ClassRow(this.name, {required this.value, required this.onChanged});
-
-  final String name;
-  final Closeness value;
-  final ValueChanged<Closeness> onChanged;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 6),
-    child: Row(
-      spacing: 8,
-      children: [
-        Expanded(
-          child: Text(
-            name,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: context.text.bodyLarge?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        for (final c in Closeness.values)
-          Tooltip(
-            message: closenessLabel(c, context.l10n),
-            child: Semantics(
-              selected: c == value,
-              button: true,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(22),
-                onTap: () => onChanged(c),
-                child: Container(
-                  width: 44,
-                  height: 44,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(22),
-                    color: c == value ? KeptColors.sun : Colors.transparent,
-                  ),
-                  child: KeptIcon(closenessIcon(c), size: 26),
-                ),
-              ),
-            ),
-          ),
-      ],
-    ),
-  );
 }

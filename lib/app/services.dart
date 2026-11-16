@@ -70,6 +70,11 @@ class AppServices {
       openDemo: openDemoDatabase,
     );
     try {
+      await services.settings.fixFamilyStampWeight();
+    } catch (e) {
+      debugPrint('Family stamp weight not fixed: ${e.runtimeType}');
+    }
+    try {
       // A demo file left from a session that ended with demo mode off is
       // not needed any more. Switching demo mode on fills it from scratch.
       final demo = (await services.settings.load()).demoMode;

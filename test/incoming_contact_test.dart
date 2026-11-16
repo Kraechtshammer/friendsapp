@@ -28,6 +28,9 @@ class _Contacts implements ContactsSource {
   var asked = 0;
 
   @override
+  Future<bool> hasAccess() async => true;
+
+  @override
   Future<Map<String, String>> displayNames() async {
     asked++;
     return names;

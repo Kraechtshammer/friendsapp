@@ -8,7 +8,10 @@ import 'providers.dart';
 import 'theme.dart';
 
 class KeptApp extends ConsumerWidget {
-  const KeptApp({super.key});
+  const KeptApp({super.key, this.home});
+
+  /// Replaces the start screen; for tests that look at one screen.
+  final Widget? home;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +32,7 @@ class KeptApp extends ConsumerWidget {
         AppLocalizations.delegate,
         ...GlobalMaterialLocalizations.delegates,
       ],
-      home: const HomeShell(),
+      home: home ?? const HomeShell(),
     );
   }
 }

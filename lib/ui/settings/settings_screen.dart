@@ -21,10 +21,14 @@ import '../home/congratulated_screen.dart';
 import '../kept_icon.dart';
 import '../material.dart';
 import '../widgets/grey_icon_button.dart';
+import '../widgets/kept_card.dart';
 import '../widgets/kept_switch.dart';
 import '../widgets/kept_text_field.dart';
 import '../widgets/number_stepper.dart';
 import '../widgets/rhythm_stepper.dart';
+import 'about.dart';
+import 'permissions_screen.dart';
+import 'settings_actions.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -38,6 +42,27 @@ class SettingsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          KeptCard(
+            small: true,
+            onTap: () => openPermissions(context),
+            child: Row(
+              spacing: 12,
+              children: [
+                const KeptIcon(KeptIcons.check, size: 28),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(l10n.permTitle, style: context.text.titleLarge),
+                      Text(l10n.permRowHelp, style: context.text.bodyMedium),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right_rounded),
+              ],
+            ),
+          ),
+          const SizedBox(height: 32),
           Text(
             l10n.settingsTheme.toUpperCase(),
             style: context.text.labelMedium,
@@ -80,6 +105,13 @@ class SettingsScreen extends ConsumerWidget {
           _OwnBirthday(birthday: settings.ownBirthday),
           const SizedBox(height: 32),
           _IncomingMessages(settings: settings),
+          const SizedBox(height: 32),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l10n.settingsAbout),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => openAbout(context),
+          ),
           if (kDebugMode) _Development(demoMode: settings.demoMode),
         ],
       ),
@@ -445,19 +477,7 @@ class _EveningQuestionState extends ConsumerState<_EveningQuestion> {
   }
 
   Future<void> _switch(bool on) async {
-    final services = ref.read(servicesProvider);
-    final notifications = ref.read(notificationsProvider);
-    await services.settings.update(
-      (s) => s.copyWith(
-        eveningOn: on,
-        notificationPermissionAsked: on ? true : null,
-      ),
-    );
-    if (!on) return;
-    // Switching on asks again; Android itself stops showing the dialog
-    // after the user has said no twice.
-    await notifications.requestPermission();
-    if (mounted) ref.invalidate(notificationsEnabledProvider);
+    await switchEveningQuestion(ref, on);
   }
 
   Future<void> _pickTime() async {
@@ -580,10 +600,7 @@ class _IncomingMessagesState extends ConsumerState<_IncomingMessages> {
     super.dispose();
   }
 
-  Future<void> _switch(bool on) => ref
-      .read(servicesProvider)
-      .settings
-      .update((s) => s.copyWith(incomingOn: on));
+  Future<void> _switch(bool on) => switchIncoming(ref, on);
 
   Future<void> _setWait(int days) => ref
       .read(servicesProvider)

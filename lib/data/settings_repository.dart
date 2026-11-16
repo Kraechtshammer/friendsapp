@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart' show mapEquals;
 
 import 'app_settings.dart';
+import '../domain/stamps.dart';
 import 'database.dart';
 
 /// Reads and writes [AppSettings] in the settings table.
@@ -40,6 +41,21 @@ class SettingsRepository {
       return next;
     });
   }
+
+  /// Once: older builds stored the Family stamp weight as 1 on every save,
+  /// also when the user never changed it. Family counts 2 now, so a stored
+  /// 1 is removed and the start value applies. Remembered in the settings.
+  Future<void> fixFamilyStampWeight() => update((s) {
+    if (s.familyWeightFixed) return s;
+    final weights = s.stampWeights;
+    return s.copyWith(
+      familyWeightFixed: true,
+      // A weight equal to its start value is not stored (see AppSettings).
+      stampWeights: weights.family == 1
+          ? weights.copyWith(family: const StampWeights().family)
+          : null,
+    );
+  });
 
   Map<String, String> _toMap(List<SettingEntry> rows) => {
     for (final row in rows) row.key: row.value,

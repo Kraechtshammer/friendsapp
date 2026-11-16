@@ -1292,4 +1292,229 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get nicePlanHint => 'Was? (optional)';
+
+  @override
+  String get firstStartSkip => 'Überspringen';
+
+  @override
+  String get fsWelcomeTitle => 'Willkommen bei Kept.';
+
+  @override
+  String get fsWelcomeBody =>
+      'Kept. hilft dir, mit Freunden in Kontakt zu bleiben und zu alten wieder zu finden. Es erinnert dich sanft, damit niemand verloren geht.';
+
+  @override
+  String get fsWelcomePrivacy =>
+      'Alles, was du eingibst, bleibt auf diesem Handy. Kein Konto, kein Server.';
+
+  @override
+  String get fsStart => 'Los geht\'s';
+
+  @override
+  String get fsPeopleTitle => 'Füge deine Leute hinzu';
+
+  @override
+  String get fsPeopleBody =>
+      'Kept. kann deine Kontakte lesen, um Namen, Nummern und Geburtstage zu übernehmen. Vorher fragt Android dich um Erlaubnis. Nichts wird irgendwohin gesendet, und du kannst Leute immer auch von Hand hinzufügen.';
+
+  @override
+  String get fsByHandLater => 'Später von Hand hinzufügen';
+
+  @override
+  String get classLegendHint => 'Wähle für jede Person ein Symbol:';
+
+  @override
+  String get fsEveningTitle => 'Eine Frage am Abend';
+
+  @override
+  String get fsEveningBody =>
+      'Jeden Abend kann Kept. dir eine Frage stellen: Möchtest du jemandem schreiben? Sie kommt als Benachrichtigung zur Uhrzeit, die du wählst.';
+
+  @override
+  String get fsEveningOff =>
+      'Ohne sie wartet alles auf der Startseite, wenn du die App öffnest.';
+
+  @override
+  String get fsEveningAsk =>
+      'Beim Einschalten fragt Android, ob Kept. Benachrichtigungen zeigen darf.';
+
+  @override
+  String get fsContinue => 'Weiter';
+
+  @override
+  String get fsIncomingTitle => 'Merken, wer geschrieben oder angerufen hat';
+
+  @override
+  String get fsIncomingBody =>
+      'Optional. Kept. kann bemerken, wenn jemand aus deinen Leuten dir in WhatsApp, Telegram, Signal oder Discord schreibt oder dich anruft. Es liest, wer und wann, nie den Text. Dafür braucht es einen besonderen Zugriff, den du in den Systemeinstellungen erteilst. Nichts wird irgendwohin gesendet.';
+
+  @override
+  String get incomingWithout =>
+      'Ohne das tippst du auf der Seite einer Person selbst auf „Hat geschrieben“ oder „Hat angerufen“.';
+
+  @override
+  String get fsNotNow => 'Jetzt nicht';
+
+  @override
+  String get fsDoneTitle => 'Alles bereit';
+
+  @override
+  String get fsDoneBody =>
+      'Das kannst du später alles in den Einstellungen ändern, unter Berechtigungen und Datenschutz.';
+
+  @override
+  String get fsDoneButton => 'Zur Startseite';
+
+  @override
+  String get permTitle => 'Berechtigungen und Datenschutz';
+
+  @override
+  String get permRowHelp => 'Was Kept. nutzen darf und wofür';
+
+  @override
+  String get permNothingLeaves =>
+      'Alles, was du eingibst, bleibt auf diesem Handy. Kein Konto, kein Server.';
+
+  @override
+  String get permNothingSent => 'Nichts wird irgendwohin gesendet.';
+
+  @override
+  String get permStateAllowed => 'Erlaubt';
+
+  @override
+  String get permStateNotAllowed => 'Nicht erlaubt';
+
+  @override
+  String get permStateOn => 'An';
+
+  @override
+  String get permStateOff => 'Aus';
+
+  @override
+  String get permStateAlways => 'Immer erlaubt';
+
+  @override
+  String get permContactsTitle => 'Kontakte (nur lesen)';
+
+  @override
+  String get permContactsUse =>
+      'Wird gebraucht, um Leute zu importieren und ihre Namen, Nummern und Geburtstage zu aktualisieren. Deine Kontakte werden nie verändert.';
+
+  @override
+  String get permContactsWithout =>
+      'Ohne: Leute von Hand hinzufügen und bearbeiten.';
+
+  @override
+  String get permContactsAllow => 'Kontakte erlauben';
+
+  @override
+  String get permNotifTitle => 'Benachrichtigungen';
+
+  @override
+  String get permNotifUse =>
+      'Für die Abendfrage und die Geburtstagserinnerungen. Sie entstehen auf diesem Handy.';
+
+  @override
+  String get permNotifWithout =>
+      'Ohne sie steht alles auf der Startseite, wenn du die App öffnest.';
+
+  @override
+  String get permBootTitle => 'Start nach einem Neustart';
+
+  @override
+  String get permBootUse =>
+      'Damit die Erinnerungen nach einem Neustart des Handys zurückkommen. Android erlaubt das immer, es gibt keine Abfrage.';
+
+  @override
+  String get permBootWithout =>
+      'Ohne das kämen Erinnerungen erst zurück, wenn du die App das nächste Mal öffnest.';
+
+  @override
+  String get permAccessTitle => 'Zugriff auf Benachrichtigungen';
+
+  @override
+  String get permAccessUse =>
+      'Wird gebraucht, um zu merken, wer dir in WhatsApp, Telegram, Signal oder Discord geschrieben oder dich angerufen hat. Es liest, wer und wann, nie den Text. Gruppen und alle, die nicht zu deinen Leuten gehören, bleiben außen vor. Ein besonderer Zugriff, den du in den Systemeinstellungen erteilst.';
+
+  @override
+  String get permRefreshTitle => 'Leute aus den Kontakten aktualisieren';
+
+  @override
+  String get permRefreshUse =>
+      'Vergleicht die importierten Leute mit deinen Kontakten und übernimmt nur die Änderungen, die du annimmst.';
+
+  @override
+  String get permRefreshButton => 'Leute aktualisieren';
+
+  @override
+  String get permNotUsedTitle => 'Was Kept. nicht nutzt';
+
+  @override
+  String get permNotUsedList =>
+      'Standort, Mikrofon, Kamera, Speicher und deine Anrufliste. Kept. fragt nie danach.';
+
+  @override
+  String get refreshTitle => 'Aus Kontakten aktualisieren';
+
+  @override
+  String get refreshPersonButton => 'Aus Kontakt aktualisieren';
+
+  @override
+  String get refreshNothing =>
+      'Nichts zu aktualisieren. Diese Person stimmt mit dem Kontakt überein.';
+
+  @override
+  String get refreshGone =>
+      'Dieser Kontakt ist nicht mehr in deinem Adressbuch.';
+
+  @override
+  String get refreshFieldName => 'Name';
+
+  @override
+  String get refreshFieldPhone => 'Telefonnummer';
+
+  @override
+  String get refreshFieldBirthday => 'Geburtstag';
+
+  @override
+  String get refreshOld => 'In Kept.';
+
+  @override
+  String get refreshNew => 'In den Kontakten';
+
+  @override
+  String get refreshNone => 'keine Angabe';
+
+  @override
+  String get refreshApply => 'Übernehmen';
+
+  @override
+  String get refreshSkip => 'Überspringen';
+
+  @override
+  String get refreshAcceptAll => 'Alle übernehmen';
+
+  @override
+  String get refreshAllIntro =>
+      'Unterschiede in deinen Kontakten gefunden. Nichts ändert sich, bevor du zustimmst.';
+
+  @override
+  String get refreshAllNothing => 'Alle sind aktuell.';
+
+  @override
+  String get refreshAllDone => 'Alles erledigt.';
+
+  @override
+  String get settingsAbout => 'Über Kept. und Lizenzen';
+
+  @override
+  String get permVibrateTitle => 'Vibrieren';
+
+  @override
+  String get permVibrateUse =>
+      'Damit eine Erinnerung vibrieren kann. Android erlaubt das immer, es gibt keine Abfrage.';
+
+  @override
+  String get permVibrateWithout =>
+      'Ohne das würden Erinnerungen nur einen Ton machen.';
 }

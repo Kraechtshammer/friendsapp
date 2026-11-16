@@ -24,9 +24,19 @@ final servicesProvider = Provider<AppServices>(
   (ref) => throw UnimplementedError('Overridden in main()'),
 );
 
+/// Whether HomeShell may show the first-start flow. Tests that are about
+/// something else switch it off.
+final firstStartEnabledProvider = Provider<bool>((ref) => true);
+
 /// The phone's contacts. Tests override it with a fake.
 final contactsSourceProvider = Provider<ContactsSource>(
   (ref) => const DeviceContacts(),
+);
+
+/// Whether the contacts permission is granted. Read again when the app
+/// comes back to the front.
+final contactsAccessProvider = FutureProvider.autoDispose<bool>(
+  (ref) => ref.watch(contactsSourceProvider).hasAccess(),
 );
 
 /// Opens chats in the messenger apps. Tests override it with a fake.

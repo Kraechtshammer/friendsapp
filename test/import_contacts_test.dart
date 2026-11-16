@@ -20,6 +20,9 @@ class _FakeContacts implements ContactsSource {
   var settingsOpened = false;
 
   @override
+  Future<bool> hasAccess() async => true;
+
+  @override
   Future<bool> requestAccess() async => granted;
 
   @override
@@ -58,6 +61,7 @@ void main() {
       ProviderScope(
         overrides: [
           servicesProvider.overrideWithValue(services),
+          firstStartEnabledProvider.overrideWithValue(false),
           notificationsProvider.overrideWithValue(FakeNotifications()),
           contactsSourceProvider.overrideWithValue(fake),
         ],

@@ -41,12 +41,16 @@ class GreyButton extends StatelessWidget {
             child: Center(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: small ? 16 : 20),
-                child: Text(
-                  label,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.text.labelLarge?.copyWith(
-                    color: kept.text,
-                    fontSize: small ? 15 : null,
+                // Shrinks a long label to fit instead of cutting it off.
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    style: context.text.labelLarge?.copyWith(
+                      color: kept.text,
+                      fontSize: small ? 15 : null,
+                    ),
                   ),
                 ),
               ),

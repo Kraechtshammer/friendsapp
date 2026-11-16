@@ -12,12 +12,14 @@ import '../common.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
 import '../widgets/choice_chips.dart';
+import '../widgets/grey_button.dart';
 import '../widgets/kept_card.dart';
 import '../widgets/kept_switch.dart';
 import '../widgets/kept_text_field.dart';
 import '../widgets/main_button.dart';
 import '../widgets/rhythm_stepper.dart';
 import '../widgets/section_label.dart';
+import 'refresh_contacts_screen.dart';
 
 /// Opens the form for a new person.
 Future<void> openEditPerson(BuildContext context) => Navigator.of(context)
@@ -206,6 +208,27 @@ class _FormState extends ConsumerState<_Form> {
     navigator.pop();
   }
 
+  /// Reads the linked contact; if the user confirms the differences, they
+  /// are stored and the form's fields follow, so a later Save does not put
+  /// the old values back.
+  Future<void> _refreshFromContact() async {
+    final person = widget.person!;
+    final repo = ref.read(peopleRepositoryProvider);
+    final diff = await showRefreshPerson(context, person);
+    if (diff == null) return;
+    await repo.update(diff.apply());
+    if (!mounted) return;
+    setState(() {
+      if (diff.name != null) _name.text = diff.name!;
+      if (diff.phone != null) _phone.text = diff.phone!;
+      if (diff.birthday case final b?) {
+        _day.text = '${b.day}';
+        _month.text = '${b.month}';
+        _year.text = b.year?.toString() ?? '';
+      }
+    });
+  }
+
   Future<void> _remove() async {
     final person = widget.person!;
     final navigator = Navigator.of(context);
@@ -266,6 +289,16 @@ class _FormState extends ConsumerState<_Form> {
                     size: 84,
                   ),
                 ),
+                if (widget.person?.contactId != null) ...[
+                  const SizedBox(height: 14),
+                  Center(
+                    child: GreyButton(
+                      small: true,
+                      label: l10n.refreshPersonButton,
+                      onPressed: _refreshFromContact,
+                    ),
+                  ),
+                ],
                 if (_editing) ...[
                   const SizedBox(height: 14),
                   _group(l10n.editLook, [

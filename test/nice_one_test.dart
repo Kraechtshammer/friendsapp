@@ -43,6 +43,7 @@ void main() {
       ProviderScope(
         overrides: [
           servicesProvider.overrideWithValue(services),
+          firstStartEnabledProvider.overrideWithValue(false),
           notificationsProvider.overrideWithValue(FakeNotifications()),
           appShortcutsProvider.overrideWithValue(_NoShortcuts()),
         ],

@@ -2083,6 +2083,408 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'What? (optional)'**
   String get nicePlanHint;
+
+  /// No description provided for @firstStartSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get firstStartSkip;
+
+  /// No description provided for @fsWelcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Kept.'**
+  String get fsWelcomeTitle;
+
+  /// No description provided for @fsWelcomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept. helps you stay in touch with friends and find your way back to old ones. It nudges you gently, so nobody slips away.'**
+  String get fsWelcomeBody;
+
+  /// No description provided for @fsWelcomePrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything you enter stays on this phone. No account, no server.'**
+  String get fsWelcomePrivacy;
+
+  /// No description provided for @fsStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s go'**
+  String get fsStart;
+
+  /// No description provided for @fsPeopleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your people'**
+  String get fsPeopleTitle;
+
+  /// No description provided for @fsPeopleBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept. can read your contacts to copy names, numbers and birthdays. Android asks you for permission first. Nothing is sent anywhere, and you can always add people by hand instead.'**
+  String get fsPeopleBody;
+
+  /// No description provided for @fsByHandLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Add by hand later'**
+  String get fsByHandLater;
+
+  /// No description provided for @classLegendHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick one icon for each person:'**
+  String get classLegendHint;
+
+  /// No description provided for @fsEveningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A question in the evening'**
+  String get fsEveningTitle;
+
+  /// No description provided for @fsEveningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Each evening Kept. can ask you one question: is there someone you would like to write to? It comes as a notification at the time you choose.'**
+  String get fsEveningBody;
+
+  /// No description provided for @fsEveningOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Without it, everything waits on Home for when you open the app.'**
+  String get fsEveningOff;
+
+  /// No description provided for @fsEveningAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Switching it on makes Android ask whether Kept. may show notifications.'**
+  String get fsEveningAsk;
+
+  /// No description provided for @fsContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get fsContinue;
+
+  /// No description provided for @fsIncomingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notice who wrote or called'**
+  String get fsIncomingTitle;
+
+  /// No description provided for @fsIncomingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional. Kept. can notice when someone from your people writes or calls you in WhatsApp, Telegram, Signal or Discord. It reads who and when, never the text. It needs a special access that you grant in the system settings. Nothing is sent anywhere.'**
+  String get fsIncomingBody;
+
+  /// No description provided for @incomingWithout.
+  ///
+  /// In en, this message translates to:
+  /// **'Without it, you tap “They wrote” or “They called” on a person\'s page yourself.'**
+  String get incomingWithout;
+
+  /// No description provided for @fsNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get fsNotNow;
+
+  /// No description provided for @fsDoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You are all set'**
+  String get fsDoneTitle;
+
+  /// No description provided for @fsDoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change all of this later in Settings, under Permissions and privacy.'**
+  String get fsDoneBody;
+
+  /// No description provided for @fsDoneButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Home'**
+  String get fsDoneButton;
+
+  /// No description provided for @permTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions and privacy'**
+  String get permTitle;
+
+  /// No description provided for @permRowHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'What Kept. may use, and what for'**
+  String get permRowHelp;
+
+  /// No description provided for @permNothingLeaves.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything you enter stays on this phone. No account, no server.'**
+  String get permNothingLeaves;
+
+  /// No description provided for @permNothingSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is sent anywhere.'**
+  String get permNothingSent;
+
+  /// No description provided for @permStateAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed'**
+  String get permStateAllowed;
+
+  /// No description provided for @permStateNotAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Not allowed'**
+  String get permStateNotAllowed;
+
+  /// No description provided for @permStateOn.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get permStateOn;
+
+  /// No description provided for @permStateOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get permStateOff;
+
+  /// No description provided for @permStateAlways.
+  ///
+  /// In en, this message translates to:
+  /// **'Always allowed'**
+  String get permStateAlways;
+
+  /// No description provided for @permContactsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Contacts (read only)'**
+  String get permContactsTitle;
+
+  /// No description provided for @permContactsUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Used to import people and to refresh their names, numbers and birthdays. Your contacts are never changed.'**
+  String get permContactsUse;
+
+  /// No description provided for @permContactsWithout.
+  ///
+  /// In en, this message translates to:
+  /// **'Without it: add and edit people by hand.'**
+  String get permContactsWithout;
+
+  /// No description provided for @permContactsAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow contacts'**
+  String get permContactsAllow;
+
+  /// No description provided for @permNotifTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get permNotifTitle;
+
+  /// No description provided for @permNotifUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Used for the evening question and for birthday reminders. They are made on this phone.'**
+  String get permNotifUse;
+
+  /// No description provided for @permNotifWithout.
+  ///
+  /// In en, this message translates to:
+  /// **'Without them, everything shows on Home when you open the app.'**
+  String get permNotifWithout;
+
+  /// No description provided for @permBootTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start after a restart'**
+  String get permBootTitle;
+
+  /// No description provided for @permBootUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Lets the reminders come back after you restart the phone. Android always allows this, so there is no question.'**
+  String get permBootUse;
+
+  /// No description provided for @permBootWithout.
+  ///
+  /// In en, this message translates to:
+  /// **'Without it, reminders would return when you next open the app.'**
+  String get permBootWithout;
+
+  /// No description provided for @permAccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification access'**
+  String get permAccessTitle;
+
+  /// No description provided for @permAccessUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Used to notice who wrote or called you in WhatsApp, Telegram, Signal or Discord. It reads who and when, never the text. Groups and everyone not in your people are left out. A special access that you grant in the system settings.'**
+  String get permAccessUse;
+
+  /// No description provided for @permRefreshTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh people from contacts'**
+  String get permRefreshTitle;
+
+  /// No description provided for @permRefreshUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Checks the people you imported against your contacts and takes over only the changes you accept.'**
+  String get permRefreshUse;
+
+  /// No description provided for @permRefreshButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh people'**
+  String get permRefreshButton;
+
+  /// No description provided for @permNotUsedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What Kept. does not use'**
+  String get permNotUsedTitle;
+
+  /// No description provided for @permNotUsedList.
+  ///
+  /// In en, this message translates to:
+  /// **'Location, microphone, camera, storage and your call log. Kept. never asks for them.'**
+  String get permNotUsedList;
+
+  /// No description provided for @refreshTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh from contacts'**
+  String get refreshTitle;
+
+  /// No description provided for @refreshPersonButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh from contact'**
+  String get refreshPersonButton;
+
+  /// No description provided for @refreshNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to update. This person matches the contact.'**
+  String get refreshNothing;
+
+  /// No description provided for @refreshGone.
+  ///
+  /// In en, this message translates to:
+  /// **'This contact is not in your address book any more.'**
+  String get refreshGone;
+
+  /// No description provided for @refreshFieldName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get refreshFieldName;
+
+  /// No description provided for @refreshFieldPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get refreshFieldPhone;
+
+  /// No description provided for @refreshFieldBirthday.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday'**
+  String get refreshFieldBirthday;
+
+  /// No description provided for @refreshOld.
+  ///
+  /// In en, this message translates to:
+  /// **'In Kept.'**
+  String get refreshOld;
+
+  /// No description provided for @refreshNew.
+  ///
+  /// In en, this message translates to:
+  /// **'In contacts'**
+  String get refreshNew;
+
+  /// No description provided for @refreshNone.
+  ///
+  /// In en, this message translates to:
+  /// **'none'**
+  String get refreshNone;
+
+  /// No description provided for @refreshApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get refreshApply;
+
+  /// No description provided for @refreshSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get refreshSkip;
+
+  /// No description provided for @refreshAcceptAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept all'**
+  String get refreshAcceptAll;
+
+  /// No description provided for @refreshAllIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Differences found in your contacts. Nothing changes until you accept.'**
+  String get refreshAllIntro;
+
+  /// No description provided for @refreshAllNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone is up to date.'**
+  String get refreshAllNothing;
+
+  /// No description provided for @refreshAllDone.
+  ///
+  /// In en, this message translates to:
+  /// **'All done.'**
+  String get refreshAllDone;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About and licences'**
+  String get settingsAbout;
+
+  /// No description provided for @permVibrateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibrate'**
+  String get permVibrateTitle;
+
+  /// No description provided for @permVibrateUse.
+  ///
+  /// In en, this message translates to:
+  /// **'So a reminder can vibrate. Android always allows this, so there is no question.'**
+  String get permVibrateUse;
+
+  /// No description provided for @permVibrateWithout.
+  ///
+  /// In en, this message translates to:
+  /// **'Without it, reminders would only make a sound.'**
+  String get permVibrateWithout;
 }
 
 class _AppLocalizationsDelegate

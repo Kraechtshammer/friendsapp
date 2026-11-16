@@ -24,6 +24,9 @@ abstract class ContactsSource {
   /// Asks for the read-only contacts permission. False if denied.
   Future<bool> requestAccess();
 
+  /// Whether the read permission is granted now. Never asks.
+  Future<bool> hasAccess();
+
   /// All contacts that have a name, sorted by name.
   Future<List<PhoneContact>> load();
 
@@ -46,6 +49,15 @@ class DeviceContacts implements ContactsSource {
     );
     return status == PermissionStatus.granted ||
         status == PermissionStatus.limited;
+  }
+
+  @override
+  Future<bool> hasAccess() async {
+    try {
+      return await FlutterContacts.permissions.has(PermissionType.read);
+    } catch (_) {
+      return false;
+    }
   }
 
   @override
