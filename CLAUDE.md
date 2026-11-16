@@ -34,7 +34,7 @@ Research, then design, then implement. Do not start a phase until the developer 
 - Personal tool for now, possibly published later. Before anything that could risk Google Play compatibility or adds a permission, discuss it with the developer. Experiments on the developer's own phone are fine once agreed.
 - Keep token use low. Fable does the reasoning and the synthesis. Hand simple or bulky work (web research, file sweeps, mechanical edits) to Haiku, Sonnet or Opus subagents with a narrow written brief, then check their results yourself. Use the smallest model that keeps the quality, and keep messages to the developer short. Never let two agents edit the same files.
 - Docs are the project's memory. Update HANDOFF.md and the phase doc in the same step as the work they describe.
-- Commits: small increments, one finished step each, never half the project in one commit. Subject prefixed with Feature / Bugfix / Improvement / Docs / Dev / Release. Keep messages short: if a message needs a long body to list what was done, the commit is too big. Push only when the developer asks.
+- Commits: small increments, one finished step each, never half the project in one commit. Subject prefixed with Feature / Bugfix / Improvement / Docs / Dev / Release. Keep messages short: if a message needs a long body to list what was done, the commit is too big. The subject after Feature, Bugfix or Improvement is shown to users in the app's "What's new" popup: write it for the user, not for developers. Push only when the developer asks.
 - Tags are releases: every tag is `v<version>` matching pubspec.yaml and publishes a GitHub release. No other tags.
 - Report honestly what was checked and what was not.
 - Secrets never go into git, chat or docs.
