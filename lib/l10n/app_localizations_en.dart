@@ -293,6 +293,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kindMeet => 'Meet';
 
   @override
+  String get kindGame => 'Game';
+
+  @override
   String captureSave(String name) {
     return 'Save for $name';
   }

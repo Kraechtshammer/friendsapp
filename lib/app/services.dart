@@ -1,8 +1,10 @@
 import 'package:drift/drift.dart' show driftRuntimeOptions;
 import 'package:flutter/foundation.dart';
 
+import '../data/contact_events_repository.dart';
 import '../data/database.dart';
 import '../data/database_connection.dart';
+import '../data/day_answers_repository.dart';
 import '../data/intentions_repository.dart';
 import '../data/people_repository.dart';
 import '../data/settings_repository.dart';
@@ -25,7 +27,9 @@ class AppServices {
     this.allowDemo = kDebugMode,
   }) : settings = SettingsRepository(db),
        _realPeople = PeopleRepository(db),
-       _realIntentions = IntentionsRepository(db) {
+       _realIntentions = IntentionsRepository(db),
+       _realContactEvents = ContactEventsRepository(db),
+       _realDayAnswers = DayAnswersRepository(db) {
     // Two AppDatabase instances on two files are intended here; drift
     // warns about any second instance in debug builds.
     driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -38,9 +42,13 @@ class AppServices {
   final AppDatabase Function() _openDemo;
   final PeopleRepository _realPeople;
   final IntentionsRepository _realIntentions;
+  final ContactEventsRepository _realContactEvents;
+  final DayAnswersRepository _realDayAnswers;
   AppDatabase? _demoDb;
   PeopleRepository? _demoPeople;
   IntentionsRepository? _demoIntentions;
+  ContactEventsRepository? _demoContactEvents;
+  DayAnswersRepository? _demoDayAnswers;
 
   /// Opens the real database file. Can't throw: the database opens lazily,
   /// so a broken file only shows up in later queries and the app still
@@ -70,6 +78,17 @@ class AppServices {
   /// The intentions of the same content database as [peopleFor].
   IntentionsRepository intentionsFor({required bool demo}) =>
       demo && allowDemo ? _demoIntentionsRepository() : _realIntentions;
+
+  /// The contact events of the same content database as [peopleFor].
+  ContactEventsRepository contactEventsFor({required bool demo}) =>
+      demo && allowDemo
+      ? _demoContactEvents ??= ContactEventsRepository(_demoDatabase())
+      : _realContactEvents;
+
+  /// The day answers of the same content database as [peopleFor].
+  DayAnswersRepository dayAnswersFor({required bool demo}) => demo && allowDemo
+      ? _demoDayAnswers ??= DayAnswersRepository(_demoDatabase())
+      : _realDayAnswers;
 
   /// Switches demo mode. On: the demo database is filled with the demo set
   /// (people, then their intentions) from scratch first, so the screens

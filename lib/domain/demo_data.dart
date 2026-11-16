@@ -198,7 +198,7 @@ List<Intention> demoIntentions(DateTime today) {
       20,
       null,
     ),
-    ('Felix Grünberg', '', IntentionKind.meet, 9, 17, null),
+    ('Felix Grünberg', '', IntentionKind.game, 9, 17, null),
     ('Sofia Lindqvist', 'return the book', IntentionKind.meet, 8, 10, 2),
     ('Amira Haddad', 'congrats on the flat', IntentionKind.write, 10, 9, 7),
     ('Malik Osei', 'match on Saturday', IntentionKind.call, 12, 22, 11),

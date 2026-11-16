@@ -135,6 +135,7 @@
   "kindWrite": "Write",
   "kindCall": "Call",
   "kindMeet": "Meet",
+  "kindGame": "Game",
   "captureSave": "Save for {name}",
   "@captureSave": {
     "placeholders": {

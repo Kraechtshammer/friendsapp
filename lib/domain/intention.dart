@@ -4,7 +4,7 @@
 library;
 
 /// What the user wants to do. Picked at capture; the default is [write].
-enum IntentionKind { write, call, meet }
+enum IntentionKind { write, call, meet, game }
 
 /// Open until the user does it or lets it go.
 enum IntentionState { open, done, dropped }

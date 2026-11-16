@@ -5,7 +5,7 @@ The first thing a new session reads. Last rewritten on 2026-11-16, at the end of
 ## 1. Where things stand
 
 - Phase: **implement**. The app is called **Kept.** with the full stop (app label and titles; running text may write Kept). App ID `de.gartenpa.kept` (final). Repository and folder are `friendsapp`.
-- **M0 and M1 are done. M2 (Capture) is built but not yet tried by the developer.** See section 4.
+- **M0, M1 and M2 are done. M3 is started (schema 3 is in).** See section 4.
 - **Released: 0.1.0** (tag `v0.1.0`, the state at the end of M1). The release workflow ran for the first time and passed: signed APK `kept-0.1.0.apk` on the public GitHub release.
 - Everything up to the M2 capture UI is pushed (2026-11-16).
 - The developer uses the app with real people on their Pixel 7 Pro since 2026-11-16. **Every database change needs a tested migration.**
@@ -73,13 +73,19 @@ Details of what was built are in [04-architecture.md](04-architecture.md); decis
 
 **M1, People: done** (2026-11-16). Database with settings and people, demo database behind a debug switch, People tab, person page top, add and edit, import from contacts, "Open chat", class shown as a growing plant. The developer tried it on the phone: "all worked well". Not confirmed by the developer: that "Open <messenger>" lands in the right chat from the final code.
 
-**M2, Capture: built, to be tried** (2026-11-16).
+**M2, Capture: done, not released** (2026-11-16).
 
 - Done: `intentions` table with the migration from schema 1 to 2; capture card on Home (text, person from the recent four or through "More", kind, Save); open thoughts listed on Home and on the person page with Done and Drop; greeting by time of day; long-press shortcut "Capture a thought" (`quick_actions`); the class badge on avatars on Home. Checked: analyze, 73 tests, debug build installed on the phone. **Not checked: Claude has not looked at the capture screens, in a picture or on the phone; the developer has not tried them; the long-press shortcut and the database upgrade on the phone are untested.**
 - Next: the developer tries capture on the phone. Fix what they find. Then raise the version to 0.2.0+2 in pubspec.yaml, commit ("Release: 0.2.0"), tag `v0.2.0` and push, if the developer agrees.
 - Known gaps: recent people are ordered by open intentions only; German texts in M1 and M2 were written by subagents and not all reviewed by the developer.
 
-**Next milestone: M3, evening question and open items** (02-design.md §5): the daily notification, Yes leads to the open items, "Did you write?" and the "Nice one" screen, contact events stored. Needs a contact events table (migration to schema 3) and the notification code. Ask the developer before fixing the data model. M3 is the first version for daily use and becomes 0.3.0.
+- Tried by the developer on 2026-11-16: "all worked". The developer chose not to release 0.2.0 yet.
+
+**M3, evening question and open items: started** (2026-11-16). 02-design.md §5; decisions of the day in §8 (kind "game", activity text, line for next time with a "Remind me" switch, Done records a contact).
+
+- Done: schema 3 with `contact_events` and `day_answers`, their repositories, the kind `game` (label Game / Zocken, shown with the meet icon for now). Checked: analyze, 92 tests, among them the upgrade from 2 to 3 with people, intentions and settings compared row by row. **Not checked: the upgrade on the phone; no screen uses the new tables yet.**
+- Open: the developer picks the game icon from `docs/concepts/game-icon/preview.png` (Claude recommends the controller); then it goes into the app's icon set.
+- Next: Done on an open thought records a contact; the "Nice one" screen with activity (for meet and game, prefilled from the thought's text, Claude's layout), line for next time and "Remind me"; "Did you write?" after Open chat; the open item (one or three, by setting); the daily notification with Yes and Not today (start from the M0 throwaway commit; the notification package is a dependency, ask first). M3 becomes 0.3.0.
 
 ## 5. Open questions for the developer
 

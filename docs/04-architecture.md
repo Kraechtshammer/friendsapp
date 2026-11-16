@@ -100,6 +100,7 @@ Written on 2026-11-16 with the first data code. §1 above describes the state at
 - **Generated code** (`database.g.dart`) is committed. After changing a table run `dart run build_runner build --delete-conflicting-outputs`. `drift_schemas/` holds a snapshot of schema version 1 for later migration tests; there are no migrations yet.
 
 - **Intentions (M2):** table `intentions` (schema version 2) with `IntentionsRepository` and the providers `openIntentionsProvider` and `personIntentionsProvider(id)`. Enums are in `domain/intention.dart`. The columns `date`, `horizon`, `condition` and `link` are there for later milestones. Deleting a person deletes their intentions; foreign keys are switched on in `beforeOpen`.
+- **Contact events and day answers (M3):** tables `contact_events` and `day_answers` (schema version 3) with `ContactEventsRepository` and `DayAnswersRepository`. Enums and the mapping from an intention's kind to a contact's kind and direction are in `domain/contact_event.dart`. `completeIntention` marks an intention done and stores the linked event in one transaction. Deleting a person deletes their events; deleting an intention keeps the event and clears the link. No screen uses them yet.
 - **Migrations:** as in akai. After changing a table, raise `schemaVersion`, run `dart run drift_dev make-migrations`, write the step in `database.dart` and extend the test in `test/drift/kept/`. The developer has real data on the phone since 2026-11-16, so every schema change needs a tested step.
 
 ### 2.2 Demo database

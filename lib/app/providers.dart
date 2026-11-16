@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/app_settings.dart';
+import '../data/contact_events_repository.dart';
 import '../data/database.dart';
+import '../data/day_answers_repository.dart';
 import '../data/intentions_repository.dart';
 import '../data/people_repository.dart';
 import '../platform/app_shortcuts.dart';
@@ -99,6 +101,46 @@ final personIntentionsProvider = StreamProvider.family<List<Intention>, String>(
     yield* services.intentionsFor(demo: await demo).watchForPerson(personId);
   },
 );
+
+/// Where contact events are written: the demo or the real database,
+/// following `demoMode`, like [peopleRepositoryProvider].
+final contactEventsRepositoryProvider = Provider<ContactEventsRepository>((
+  ref,
+) {
+  final demo = ref.watch(
+    settingsProvider.select((s) => s.value?.demoMode ?? false),
+  );
+  return ref.watch(servicesProvider).contactEventsFor(demo: demo);
+});
+
+/// All contact events of one person, newest first.
+final personContactEventsProvider =
+    StreamProvider.family<List<ContactEvent>, String>((ref, personId) async* {
+      final demo = ref.watch(settingsProvider.selectAsync((s) => s.demoMode));
+      final services = ref.watch(servicesProvider);
+      yield* services
+          .contactEventsFor(demo: await demo)
+          .watchForPerson(personId);
+    });
+
+/// The person's newest non-empty contact note; null if there is none.
+final personLatestNoteProvider = StreamProvider.family<String?, String>((
+  ref,
+  personId,
+) async* {
+  final demo = ref.watch(settingsProvider.selectAsync((s) => s.demoMode));
+  final services = ref.watch(servicesProvider);
+  yield* services.contactEventsFor(demo: await demo).watchLatestNote(personId);
+});
+
+/// Where day answers are written: the demo or the real database, following
+/// `demoMode`, like [peopleRepositoryProvider].
+final dayAnswersRepositoryProvider = Provider<DayAnswersRepository>((ref) {
+  final demo = ref.watch(
+    settingsProvider.select((s) => s.value?.demoMode ?? false),
+  );
+  return ref.watch(servicesProvider).dayAnswersFor(demo: demo);
+});
 
 extension SettingsOrDefault on WidgetRef {
   /// The settings, or the defaults while loading or if the database fails,

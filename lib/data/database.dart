@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 
+import '../domain/contact_event.dart';
 import '../domain/intention.dart';
 import '../domain/person.dart';
 import 'database.steps.dart';
@@ -101,9 +102,61 @@ class Intentions extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+/// A contact that happened with a person: written, called, met, gamed or
+/// a birthday wish (02-design.md §3). Added in schema version 3.
+@DataClassName('ContactEvent')
+class ContactEvents extends Table {
+  /// UUID v4, made by ContactEventsRepository.
+  TextColumn get id => text()();
+
+  /// Deleting the person deletes their events (foreign keys are on, see
+  /// AppDatabase.migration).
+  TextColumn get personId =>
+      text().references(People, #id, onDelete: KeyAction.cascade)();
+
+  /// When the contact happened.
+  DateTimeColumn get at => dateTime()();
+  TextColumn get kind => textEnum<ContactKind>()();
+  TextColumn get direction => textEnum<ContactDirection>()();
+  TextColumn get source => textEnum<ContactSource>()();
+
+  /// What they did together ("bouldering", a game's name, a restaurant).
+  TextColumn get activity => text().nullable()();
+
+  /// The one line for next time ("new job in March").
+  TextColumn get note => text().nullable()();
+
+  /// The intention this contact closed. Deleting the intention keeps the
+  /// event and clears the link.
+  TextColumn get intentionId => text().nullable().references(
+    Intentions,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
+
+  DateTimeColumn get createdAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// The user's answer for one local day. Added in schema version 3.
+@DataClassName('DayAnswer')
+class DayAnswers extends Table {
+  /// The local day as `YYYY-MM-DD`.
+  TextColumn get day => text()();
+  TextColumn get answer => textEnum<DayAnswerValue>()();
+  DateTimeColumn get answeredAt => dateTime().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {day};
+}
+
 /// One schema for both files: the real database (settings and the user's
 /// people) and the demo database (invented people only).
-@DriftDatabase(tables: [Settings, People, Intentions])
+@DriftDatabase(
+  tables: [Settings, People, Intentions, ContactEvents, DayAnswers],
+)
 class AppDatabase extends _$AppDatabase {
   /// [executor]: a file database (`database_connection.dart`) or an
   /// in-memory one in tests. Opening the file lives elsewhere so drift's
@@ -116,7 +169,7 @@ class AppDatabase extends _$AppDatabase {
   /// `drift_schemas/`, updates `database.steps.dart` and the schema test
   /// helpers in `test/drift/` (as in akai-timetrack).
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   /// Steps come from the snapshots in `drift_schemas/`; each one only adds.
   /// The real database on the developer's phone holds people from version
@@ -127,6 +180,11 @@ class AppDatabase extends _$AppDatabase {
       from1To2: (m, schema) async {
         // Intentions (M2, capture).
         await m.createTable(schema.intentions);
+      },
+      from2To3: (m, schema) async {
+        // Contact events and day answers (M3).
+        await m.createTable(schema.contactEvents);
+        await m.createTable(schema.dayAnswers);
       },
     ),
     beforeOpen: (details) async {

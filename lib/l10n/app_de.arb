@@ -107,6 +107,7 @@
   "kindWrite": "Schreiben",
   "kindCall": "Anrufen",
   "kindMeet": "Treffen",
+  "kindGame": "Zocken",
   "captureSave": "Für {name} speichern",
   "captureSaved": "Für {name} gespeichert.",
   "captureNoPeople": "Füge zuerst die Menschen hinzu, mit denen du in Kontakt bleiben willst.",

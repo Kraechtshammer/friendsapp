@@ -590,6 +590,12 @@ abstract class AppLocalizations {
   /// **'Meet'**
   String get kindMeet;
 
+  /// No description provided for @kindGame.
+  ///
+  /// In en, this message translates to:
+  /// **'Game'**
+  String get kindGame;
+
   /// No description provided for @captureSave.
   ///
   /// In en, this message translates to:
