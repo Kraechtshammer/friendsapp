@@ -48,6 +48,8 @@ Imports that go against a strict order: `app/app.dart` imports `ui/home_shell.da
   Lilac, sky and pink have no Material role; they are only in `KeptColors`.
 - **Type:** Roboto (Android's own font) is the default. `outfit(size, weight, {color})` returns an Outfit `TextStyle`. `assets/fonts/Outfit.ttf` is a variable font, so the weight is also set through `FontVariation.weight`. The text theme maps `displayLarge` (68, big number), `headlineLarge` (30, screen title), `titleLarge` (21, card title), `labelLarge` (17, button) and `labelMedium` (13, section label, letter spacing 0.08 em) to Outfit. Body text stays Roboto at 16 and 14 (`bodyMedium` is muted).
 - **Component themes** set so far: app bar, icon buttons (`StyleVariant.material3Expressive`), navigation bar (height 76, surface colour, surface-high stadium indicator, 12 px labels, 26 px icons) and snack bars (floating).
+- Page transitions: `buildTheme` sets `PredictiveBackPageTransitionsBuilder` for Android (the manifest opts in with `enableOnBackInvokedCallback`). The two `PopScope`s (first start, Nice one) work with it; no `WillPopScope`.
+- Language: `AppSettings.language` (`AppLanguage` system/en/de, stored like `themeMode`) becomes `MaterialApp.locale` through `localeFor` in `app/app.dart`. `res/xml/locales_config.xml` lists en and de for Android 13+ (App languages); that per-app language and the in-app setting are separate and not synced.
 - Theme mode lives in `themeModeProvider` (`app/providers.dart`), a `Notifier<ThemeMode>` that starts at `ThemeMode.system`.
 
 ### 1.4 UI

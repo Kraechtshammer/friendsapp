@@ -168,6 +168,12 @@ ThemeData buildTheme(Brightness brightness) {
   final base = ThemeData(colorScheme: scheme, extensions: [c]);
   return base.copyWith(
     scaffoldBackgroundColor: c.ground,
+    // Android's back-gesture peek; other platforms keep their default.
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+      },
+    ),
     // ui-style.md §4. Roboto is Android's own font and stays the default.
     textTheme: base.textTheme.copyWith(
       displayLarge: outfit(68, FontWeight.w700, color: c.text), // big number

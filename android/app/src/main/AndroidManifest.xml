@@ -16,6 +16,7 @@
         android:label="${appLabel}"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true"
         android:localeConfig="@xml/locales_config">
         <!-- localeConfig lists the languages for Android 13+ (System settings > App languages).
              That per-app language and the in-app Language setting are separate; we do not sync them. -->

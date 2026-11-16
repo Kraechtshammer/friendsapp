@@ -141,3 +141,9 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Settings shows eight rows (nine in a debug build), each with its icon and one line; every row opens its own page and Back returns to the list.
 - [ ] Changes on the pages still work and stick: evening time and days, rhythms, stamp values, theme (Look), your birthday.
 - [ ] When an update is found, the "App update" row says so, and tapping it opens the update page.
+
+## Language and back gesture (not released yet)
+
+- [ ] Settings, Look, Language: switch System, English, Deutsch; all texts change at once and the choice survives a restart.
+- [ ] Android System settings > Apps > Kept. > Language lists English and Deutsch. (This is separate from the in-app setting.)
+- [ ] Swipe back slowly from the screen edge on a settings page: the page peeks away and the one below shows; release to cancel or finish.
