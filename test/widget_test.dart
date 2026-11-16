@@ -20,13 +20,16 @@ void main() {
     );
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [servicesProvider.overrideWithValue(services)],
+        overrides: [
+          servicesProvider.overrideWithValue(services),
+          clockProvider.overrideWithValue(() => DateTime(2026, 11, 16, 14)),
+        ],
         child: const KeptApp(),
       ),
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Kept.'), findsOneWidget);
+    expect(find.text('Hello'), findsOneWidget);
     for (final tab in ['Home', 'Upcoming', 'People', 'Progress']) {
       expect(find.text(tab), findsWidgets);
     }
@@ -36,7 +39,7 @@ void main() {
 
     await tester.tap(find.text('People'));
     await tester.pumpAndSettle();
-    expect(find.text('Kept.'), findsNothing);
+    expect(find.text('Hello'), findsNothing);
 
     await tester.tap(find.text('Home'));
     await tester.pumpAndSettle();

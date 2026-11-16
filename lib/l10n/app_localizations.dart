@@ -535,6 +535,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{Add 1 person} other{Add {count} people}}'**
   String importAdd(int count);
+
+  /// No description provided for @greetingMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get greetingMorning;
+
+  /// No description provided for @greetingDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello'**
+  String get greetingDay;
+
+  /// No description provided for @greetingEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get greetingEvening;
+
+  /// No description provided for @captureTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Who\'s on your mind?'**
+  String get captureTitle;
+
+  /// No description provided for @captureHint.
+  ///
+  /// In en, this message translates to:
+  /// **'saw a bouldering video…'**
+  String get captureHint;
+
+  /// No description provided for @captureMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get captureMore;
+
+  /// No description provided for @kindWrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Write'**
+  String get kindWrite;
+
+  /// No description provided for @kindCall.
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get kindCall;
+
+  /// No description provided for @kindMeet.
+  ///
+  /// In en, this message translates to:
+  /// **'Meet'**
+  String get kindMeet;
+
+  /// No description provided for @captureSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save for {name}'**
+  String captureSave(String name);
+
+  /// No description provided for @captureSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved for {name}.'**
+  String captureSaved(String name);
+
+  /// No description provided for @captureNoPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the people you want to keep in touch with first.'**
+  String get captureNoPeople;
+
+  /// No description provided for @captureAddPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'Add people'**
+  String get captureAddPeople;
+
+  /// No description provided for @onYourMind.
+  ///
+  /// In en, this message translates to:
+  /// **'On your mind'**
+  String get onYourMind;
+
+  /// No description provided for @pickerSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search people'**
+  String get pickerSearchHint;
+
+  /// No description provided for @pickerNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody found.'**
+  String get pickerNoMatch;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// No description provided for @drop.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop'**
+  String get drop;
+
+  /// No description provided for @shortcutCapture.
+  ///
+  /// In en, this message translates to:
+  /// **'Capture a thought'**
+  String get shortcutCapture;
 }
 
 class _AppLocalizationsDelegate

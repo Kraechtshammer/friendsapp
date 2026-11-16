@@ -1,3 +1,6 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../app/providers.dart';
 import 'common.dart';
 import 'home/home_screen.dart';
 import 'kept_icon.dart';
@@ -8,15 +11,36 @@ import 'upcoming/upcoming_screen.dart';
 
 /// The four tabs: Home, Upcoming, People, Progress. Settings open from the
 /// gear on Home.
-class HomeShell extends StatefulWidget {
+class HomeShell extends ConsumerStatefulWidget {
   const HomeShell({super.key});
 
   @override
-  State<HomeShell> createState() => _HomeShellState();
+  ConsumerState<HomeShell> createState() => _HomeShellState();
 }
 
-class _HomeShellState extends State<HomeShell> {
+class _HomeShellState extends ConsumerState<HomeShell> {
   var _tab = 0;
+  String? _shortcutTitle;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Register the launcher shortcut, again if the language changes.
+    final title = context.l10n.shortcutCapture;
+    if (title == _shortcutTitle) return;
+    _shortcutTitle = title;
+    ref
+        .read(appShortcutsProvider)
+        .setUp(captureTitle: title, onCapture: _openCapture);
+  }
+
+  /// The launcher shortcut: Home, with the capture field focused.
+  void _openCapture() {
+    if (!mounted) return;
+    Navigator.of(context).popUntil((route) => route.isFirst);
+    setState(() => _tab = 0);
+    ref.read(captureFocusProvider.notifier).request();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +50,11 @@ class _HomeShellState extends State<HomeShell> {
         bottom: false,
         child: IndexedStack(
           index: _tab,
-          children: const [
-            HomeScreen(),
-            UpcomingScreen(),
-            PeopleScreen(),
-            ProgressScreen(),
+          children: [
+            HomeScreen(onAddPeople: () => setState(() => _tab = 2)),
+            const UpcomingScreen(),
+            const PeopleScreen(),
+            const ProgressScreen(),
           ],
         ),
       ),

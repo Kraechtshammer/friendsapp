@@ -77,11 +77,6 @@ Path _scallop(double side, {int lobes = 8, double depth = .05}) {
   return path..close();
 }
 
-/// Throwaway: whether the People tab shows the class badge, set under
-/// "Development" in Settings, so the developer can see it on the phone.
-/// Remove once a screen with mixed people shows the badge.
-final badgePreview = ValueNotifier<bool>(false);
-
 /// A person's initial on their accent, in their shape, with a hard drop
 /// shadow that follows the shape (ui-style.md §5 and §6).
 class Avatar extends StatelessWidget {

@@ -19,6 +19,8 @@ class KeptTextField extends StatelessWidget {
     this.minLines,
     this.onChanged,
     this.hasError = false,
+    this.focusNode,
+    this.fillColor,
   });
 
   final TextEditingController controller;
@@ -31,6 +33,10 @@ class KeptTextField extends StatelessWidget {
   final int? minLines;
   final ValueChanged<String>? onChanged;
   final bool hasError;
+  final FocusNode? focusNode;
+
+  /// Defaults to the surface colour; use the ground colour on a card.
+  final Color? fillColor;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +48,7 @@ class KeptTextField extends StatelessWidget {
     );
     return TextField(
       controller: controller,
+      focusNode: focusNode,
       keyboardType: keyboardType,
       textCapitalization: textCapitalization,
       inputFormatters: inputFormatters,
@@ -57,7 +64,7 @@ class KeptTextField extends StatelessWidget {
         floatingLabelStyle: context.text.bodyMedium,
         hintStyle: context.text.bodyMedium,
         filled: true,
-        fillColor: kept.surface,
+        fillColor: fillColor ?? kept.surface,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 18,
           vertical: 14,

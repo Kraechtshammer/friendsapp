@@ -109,9 +109,54 @@
   "importLoadError": "Your contacts could not be read.",
   "openSettings": "Open settings",
   "importNext": "Next ({count})",
-  "@importNext": {"placeholders": {"count": {"type": "int"}}},
+  "@importNext": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "importClassTitle": "How close are you?",
   "importMessengerAll": "Main messenger for all",
   "importAdd": "{count, plural, =1{Add 1 person} other{Add {count} people}}",
-  "@importAdd": {"placeholders": {"count": {"type": "int"}}}
+  "@importAdd": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "greetingMorning": "Good morning",
+  "greetingDay": "Hello",
+  "greetingEvening": "Good evening",
+  "captureTitle": "Who's on your mind?",
+  "captureHint": "saw a bouldering video…",
+  "captureMore": "More",
+  "kindWrite": "Write",
+  "kindCall": "Call",
+  "kindMeet": "Meet",
+  "captureSave": "Save for {name}",
+  "@captureSave": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "captureSaved": "Saved for {name}.",
+  "@captureSaved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "captureNoPeople": "Add the people you want to keep in touch with first.",
+  "captureAddPeople": "Add people",
+  "onYourMind": "On your mind",
+  "pickerSearchHint": "Search people",
+  "pickerNoMatch": "Nobody found.",
+  "done": "Done",
+  "drop": "Drop",
+  "shortcutCapture": "Capture a thought"
 }

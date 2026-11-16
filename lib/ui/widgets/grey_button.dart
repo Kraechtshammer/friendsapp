@@ -5,10 +5,18 @@ import '../material.dart';
 /// hard shadow 4 in the grey edge colour. For the quiet choice next to a
 /// [MainButton].
 class GreyButton extends StatelessWidget {
-  const GreyButton({super.key, required this.label, required this.onPressed});
+  const GreyButton({
+    super.key,
+    required this.label,
+    required this.onPressed,
+    this.small = false,
+  });
 
   final String label;
   final VoidCallback? onPressed;
+
+  /// A 40 high version for use inside a card.
+  final bool small;
 
   static const _radius = BorderRadius.all(Radius.circular(26));
 
@@ -29,14 +37,17 @@ class GreyButton extends StatelessWidget {
           borderRadius: _radius,
           onTap: onPressed,
           child: SizedBox(
-            height: 52,
+            height: small ? 40 : 52,
             child: Center(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.symmetric(horizontal: small ? 16 : 20),
                 child: Text(
                   label,
                   overflow: TextOverflow.ellipsis,
-                  style: context.text.labelLarge?.copyWith(color: kept.text),
+                  style: context.text.labelLarge?.copyWith(
+                    color: kept.text,
+                    fontSize: small ? 15 : null,
+                  ),
                 ),
               ),
             ),

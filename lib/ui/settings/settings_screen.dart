@@ -7,7 +7,6 @@ import '../../app/providers.dart';
 import '../../data/app_settings.dart';
 import '../common.dart';
 import '../material.dart';
-import '../widgets/avatar.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -79,17 +78,6 @@ class _Development extends ConsumerWidget {
           ),
           value: demoMode,
           onChanged: (on) => unawaited(ref.services.setDemoMode(on)),
-        ),
-        // Throwaway, see [badgePreview].
-        ValueListenableBuilder(
-          valueListenable: badgePreview,
-          builder: (context, on, _) => SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: const Text('Class badge on the People tab'),
-            subtitle: const Text('Preview only.'),
-            value: on,
-            onChanged: (value) => badgePreview.value = value,
-          ),
         ),
       ],
     );

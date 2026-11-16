@@ -264,4 +264,66 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get greetingMorning => 'Good morning';
+
+  @override
+  String get greetingDay => 'Hello';
+
+  @override
+  String get greetingEvening => 'Good evening';
+
+  @override
+  String get captureTitle => 'Who\'s on your mind?';
+
+  @override
+  String get captureHint => 'saw a bouldering video…';
+
+  @override
+  String get captureMore => 'More';
+
+  @override
+  String get kindWrite => 'Write';
+
+  @override
+  String get kindCall => 'Call';
+
+  @override
+  String get kindMeet => 'Meet';
+
+  @override
+  String captureSave(String name) {
+    return 'Save for $name';
+  }
+
+  @override
+  String captureSaved(String name) {
+    return 'Saved for $name.';
+  }
+
+  @override
+  String get captureNoPeople =>
+      'Add the people you want to keep in touch with first.';
+
+  @override
+  String get captureAddPeople => 'Add people';
+
+  @override
+  String get onYourMind => 'On your mind';
+
+  @override
+  String get pickerSearchHint => 'Search people';
+
+  @override
+  String get pickerNoMatch => 'Nobody found.';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get drop => 'Drop';
+
+  @override
+  String get shortcutCapture => 'Capture a thought';
 }

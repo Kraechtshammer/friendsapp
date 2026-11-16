@@ -264,4 +264,66 @@ class AppLocalizationsDe extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get greetingMorning => 'Guten Morgen';
+
+  @override
+  String get greetingDay => 'Hallo';
+
+  @override
+  String get greetingEvening => 'Guten Abend';
+
+  @override
+  String get captureTitle => 'Wer geht dir durch den Kopf?';
+
+  @override
+  String get captureHint => 'Boulder-Video gesehen…';
+
+  @override
+  String get captureMore => 'Mehr';
+
+  @override
+  String get kindWrite => 'Schreiben';
+
+  @override
+  String get kindCall => 'Anrufen';
+
+  @override
+  String get kindMeet => 'Treffen';
+
+  @override
+  String captureSave(String name) {
+    return 'Für $name speichern';
+  }
+
+  @override
+  String captureSaved(String name) {
+    return 'Für $name gespeichert.';
+  }
+
+  @override
+  String get captureNoPeople =>
+      'Füge zuerst die Menschen hinzu, mit denen du in Kontakt bleiben willst.';
+
+  @override
+  String get captureAddPeople => 'Menschen hinzufügen';
+
+  @override
+  String get onYourMind => 'Gerade im Kopf';
+
+  @override
+  String get pickerSearchHint => 'Menschen suchen';
+
+  @override
+  String get pickerNoMatch => 'Niemand gefunden.';
+
+  @override
+  String get done => 'Erledigt';
+
+  @override
+  String get drop => 'Loslassen';
+
+  @override
+  String get shortcutCapture => 'Gedanken festhalten';
 }

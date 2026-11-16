@@ -5,10 +5,13 @@ import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/database.dart';
 import '../../domain/chat_link.dart';
+import '../../domain/intention.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
+import '../kept_icon.dart';
+import '../widgets/grey_button.dart';
 import '../widgets/grey_icon_button.dart';
 import '../widgets/kept_card.dart';
 import '../widgets/main_button.dart';
@@ -106,9 +109,80 @@ class _Body extends ConsumerWidget {
                     ],
                   ),
                 ),
+              _OpenIntentions(person.id),
             ],
           ),
         ),
+      ],
+    );
+  }
+}
+
+/// This person's open intentions, each with Done and Drop (02-design.md
+/// §2.3). Neutral: no dates, nothing is late.
+class _OpenIntentions extends ConsumerWidget {
+  const _OpenIntentions(this.personId);
+
+  final String personId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final all = ref.watch(personIntentionsProvider(personId)).value ?? const [];
+    final open = [
+      for (final i in all)
+        if (i.state == IntentionState.open) i,
+    ];
+    if (open.isEmpty) return const SizedBox.shrink();
+    final l10n = context.l10n;
+    final repo = ref.read(intentionsRepositoryProvider);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 12,
+      children: [
+        const SizedBox(height: 4),
+        SectionLabel(l10n.onYourMind),
+        for (final i in open)
+          KeptCard(
+            small: true,
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 10,
+              children: [
+                Row(
+                  spacing: 10,
+                  children: [
+                    KeptIcon(kindIcon(i.kind), size: 22),
+                    Expanded(
+                      child: Text(
+                        i.note.trim().isEmpty
+                            ? kindLabel(i.kind, l10n)
+                            : i.note.trim(),
+                        style: context.text.bodyLarge,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  spacing: 10,
+                  children: [
+                    GreyButton(
+                      small: true,
+                      label: l10n.done,
+                      onPressed: () => repo.setState(i.id, IntentionState.done),
+                    ),
+                    GreyButton(
+                      small: true,
+                      label: l10n.drop,
+                      onPressed: () =>
+                          repo.setState(i.id, IntentionState.dropped),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
       ],
     );
   }

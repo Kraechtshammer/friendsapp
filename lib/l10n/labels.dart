@@ -1,3 +1,5 @@
+import '../domain/greeting.dart';
+import '../domain/intention.dart';
 import '../domain/person.dart';
 import '../ui/kept_icon.dart';
 import 'app_localizations.dart';
@@ -50,3 +52,22 @@ String birthdayLabel(int month, int day, int? year, AppLocalizations l10n) =>
     // 2000 is a leap year, so 29 February works.
     ? l10n.birthdayDayMonth(DateTime(2000, month, day))
     : l10n.birthdayFull(DateTime(year, month, day));
+
+String greetingLabel(Greeting greeting, AppLocalizations l10n) =>
+    switch (greeting) {
+      Greeting.morning => l10n.greetingMorning,
+      Greeting.day => l10n.greetingDay,
+      Greeting.evening => l10n.greetingEvening,
+    };
+
+String kindLabel(IntentionKind kind, AppLocalizations l10n) => switch (kind) {
+  IntentionKind.write => l10n.kindWrite,
+  IntentionKind.call => l10n.kindCall,
+  IntentionKind.meet => l10n.kindMeet,
+};
+
+KeptIcons kindIcon(IntentionKind kind) => switch (kind) {
+  IntentionKind.write => KeptIcons.chat,
+  IntentionKind.call => KeptIcons.phone,
+  IntentionKind.meet => KeptIcons.mountain,
+};

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../data/database.dart';
 import '../../domain/person.dart';
+import '../../domain/person_name.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../kept_icon.dart';
@@ -158,7 +159,7 @@ class _PersonBlob extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final firstName = person.name.trim().split(RegExp(r'\s+')).first;
+    final firstName = firstNameOf(person.name);
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       onTap: () => Navigator.of(context).push(
@@ -170,12 +171,7 @@ class _PersonBlob extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           spacing: 4,
           children: [
-            // Throwaway badge preview, see [badgePreview].
-            ValueListenableBuilder(
-              valueListenable: badgePreview,
-              builder: (context, badge, _) =>
-                  Avatar.person(person, size: 54, classBadge: badge),
-            ),
+            Avatar.person(person, size: 54),
             Text(
               firstName,
               maxLines: 1,

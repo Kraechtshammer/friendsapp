@@ -4,6 +4,7 @@ import '../data/app_settings.dart';
 import '../data/database.dart';
 import '../data/intentions_repository.dart';
 import '../data/people_repository.dart';
+import '../platform/app_shortcuts.dart';
 import '../platform/chat_opener.dart';
 import '../platform/contacts.dart';
 import 'services.dart';
@@ -21,6 +22,27 @@ final contactsSourceProvider = Provider<ContactsSource>(
 /// Opens chats in the messenger apps. Tests override it with a fake.
 final chatOpenerProvider = Provider<ChatOpener>(
   (ref) => const AndroidChatOpener(),
+);
+
+/// The launcher icon's shortcuts. Tests override it with a fake.
+final appShortcutsProvider = Provider<AppShortcuts>(
+  (ref) => const QuickActionsShortcuts(),
+);
+
+/// The current time, for the greeting. Tests override it with a fixed time.
+final clockProvider = Provider<DateTime Function()>((ref) => DateTime.now);
+
+/// Counts requests to focus the capture field (the launcher shortcut). The
+/// capture card listens and takes the focus when the number changes.
+class CaptureFocusRequests extends Notifier<int> {
+  @override
+  int build() => 0;
+
+  void request() => state++;
+}
+
+final captureFocusProvider = NotifierProvider<CaptureFocusRequests, int>(
+  CaptureFocusRequests.new,
 );
 
 /// All settings, from the real database.
