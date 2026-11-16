@@ -6,8 +6,8 @@ The first thing a new session reads. Last rewritten on 2026-11-16, at the end of
 
 - Phase: **implement**. The app is called **Kept.** with the full stop (app label and titles; running text may write Kept). App ID `de.gartenpa.kept` (final). Repository and folder are `friendsapp`.
 - **M0 to M3 are done.** M3 was tried by the developer except the evening notification. See section 4.
-- **Released: 0.3.0** (tag `v0.3.0`, 2026-11-16, the state at the end of M3; 0.2.0 was skipped because M2 was not released by itself). Before it: 0.1.0 at the end of M1.
-- Everything up to the 0.3.0 release commit is pushed (2026-11-16).
+- **Released: 0.2.0** (tag `v0.2.0`, 2026-11-16, the state at the end of M3, with M2 in it). Before it: 0.1.0 at the end of M1. It was first tagged `v0.3.0` by mistake (a skipped version); that tag was replaced by `v0.2.0` the same day.
+- Everything up to the 0.2.0 release commit is pushed (2026-11-16).
 - The developer uses the app with real people on their Pixel 7 Pro since 2026-11-16. **Every database change needs a tested migration.**
 
 ## 2. What to read, and how much
@@ -76,12 +76,12 @@ Details of what was built are in [04-architecture.md](04-architecture.md); decis
 **M2, Capture: done, not released** (2026-11-16).
 
 - Done: `intentions` table with the migration from schema 1 to 2; capture card on Home (text, person from the recent four or through "More", kind, Save); open thoughts listed on Home and on the person page with Done and Drop; greeting by time of day; long-press shortcut "Capture a thought" (`quick_actions`); the class badge on avatars on Home. Checked: analyze, 73 tests, debug build installed on the phone. **Not checked: Claude has not looked at the capture screens, in a picture or on the phone; the developer has not tried them; the long-press shortcut and the database upgrade on the phone are untested.**
-- M2 was not released by itself; it went out with 0.3.0.
+- M2 was not released by itself; it went out together with M3 in 0.2.0.
 - Known gaps: recent people are ordered by open intentions only; German texts in M1 and M2 were written by subagents and not all reviewed by the developer.
 
 - Tried by the developer on 2026-11-16: "all worked". The developer chose not to release 0.2.0 yet.
 
-**M3, evening question and open items: done, released as 0.3.0** (2026-11-16). 02-design.md §5; decisions of the day in §8 (kind "game", activity text, line for next time with a "Remind me" switch, Done records a contact).
+**M3, evening question and open items: done, released as 0.2.0** (2026-11-16). 02-design.md §5; decisions of the day in §8 (kind "game", activity text, line for next time with a "Remind me" switch, Done records a contact).
 
 - Done: schema 3 with `contact_events` and `day_answers`, their repositories, the kind `game` (label Game / Zocken, shown with the meet icon for now). Checked: analyze, 92 tests, among them the upgrade from 2 to 3 with people, intentions and settings compared row by row. **Not checked: the upgrade on the phone; no screen uses the new tables yet.**
 - Done: Done on an open thought (Home and person page) stores a contact with source "by hand" and opens the "Nice one" screen: activity for meet and game (prefilled from the thought's text), line for next time, "Remind me" switch; "Last time: ..." under open thoughts. The controller is the Game icon (`assets/icons/controller.svg`). Checked: analyze, 100 tests, Claude looked at a rendered picture of the screen (`build/screens/`). **Not checked: on the phone; the developer has not seen the screen.** Left out against the concept: the "High five!" tag, "Planning to meet up?" (M5), stamps (M9), motion. The button reads "Close" (Claude's choice). German texts by a subagent, not reviewed.
@@ -91,7 +91,7 @@ Details of what was built are in [04-architecture.md](04-architecture.md); decis
 - Done: "Tonight's pick" on Home (one item with Open chat, Another one, Done; or three, by setting) from the open thoughts, oldest first, one per person (Claude's order until other sources exist); "Did you write to Tom?" after any Open chat (pick or person page), worded by kind, Yes leads to "Nice one". Checked: analyze, 133 tests, Claude looked at rendered pictures (`build/screens/home-one.png`, `chat-question.png`). **Not checked: on the phone, above all that the question appears when coming back from the messenger.** Against the concept: Another one and Done are text buttons under a full-width Open button; Yes says "Yes"; no "High five!" tag.
 - Still open in M3: the evening notification is untried on the phone, in debug and in the release build (points above). German texts of M3 are by subagents and not reviewed.
 
-**Next milestone: M4, birthdays** (02-design.md §5): evening follow-up on birthdays, "You congratulated" recorded, the user's own birthday in settings and who congratulated. Becomes 0.4.0. Ask the developer before fixing anything in the data model.
+**Next milestone: M4, birthdays** (02-design.md §5): evening follow-up on birthdays, "You congratulated" recorded, the user's own birthday in settings and who congratulated. The next release is 0.3.0. Ask the developer before fixing anything in the data model.
 
 ## 5. Open questions for the developer
 
@@ -116,7 +116,7 @@ Details of what was built are in [04-architecture.md](04-architecture.md); decis
 - **Git runs in WSL** in `/home/paga/Projects/friendsapp`. Push works through the Windows Git Credential Manager (set per repository). Push only when the developer asks.
 - **Commits:** small, one finished step each, subject with prefix (the hook checks it), short messages. End each message with the attribution line the session gives.
 - **Token use:** keep it low, and keep messages to the developer short. The main session plans, writes the briefs, reviews and decides. Building goes to subagents, the smallest model that keeps the quality: Sonnet for screens and edits with a precise brief, Opus only for work where a mistake is costly (database and migrations, native code), Haiku for mechanical doc edits with the exact text given. One agent per set of files; each brief names what must not be touched and asks for a short report. Check every result yourself: rerun analyze and tests, read the risky parts.
-- **Tags are releases.** Every tag is `v<version>` matching pubspec.yaml; pushing it runs the release workflow (signed APK, public GitHub release). No other tags. The minor number follows the milestones (M3 is 0.3.0); 1.0.0 is the first real release. The build number after the `+` goes up with every release.
+- **Tags are releases.** Every tag is `v<version>` matching pubspec.yaml; pushing it runs the release workflow (signed APK, public GitHub release). No other tags. **No version is ever skipped** (the developer, 2026-11-16): each release is the next number after the last one, whatever milestones it holds; the minor number does not follow the milestone numbers. 1.0.0 is the first real release. The build number after the `+` goes up with every release.
 - **Ask first** before design trade-offs, new dependencies, names, and anything touching permissions or Play.
 - **Secrets:** never read `android/key.properties` beyond single non-secret lines, never print the keystore, never put secrets into git, chat or docs.
 - **Papers** in `docs/papers/` are local only.
