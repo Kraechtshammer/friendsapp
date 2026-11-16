@@ -20,6 +20,14 @@ class FakeNotifications implements Notifications {
 
   /// Every cancelled birthday notification id, in order.
   final cancelled = <int>[];
+
+  /// The pending evening notifications by id, kept as the plugin would:
+  /// [scheduleEvening] applies [eveningChanges] to it. A test may put old
+  /// ones in first.
+  final pendingEvening = <int, EveningAlarm>{};
+
+  /// Every cancelled evening notification id, in order.
+  final cancelledEvening = <int>[];
   var permissionRequests = 0;
   var settingsOpened = 0;
   ValueChanged<DayAnswerValue>? _onAnswer;
@@ -41,7 +49,17 @@ class FakeNotifications implements Notifications {
   }
 
   @override
-  Future<void> scheduleEvening(EveningPlan plan) async => plans.add(plan);
+  Future<void> scheduleEvening(EveningPlan plan) async {
+    plans.add(plan);
+    final changes = eveningChanges(plan, pendingEvening.keys.toList());
+    for (final id in changes.cancel) {
+      pendingEvening.remove(id);
+      cancelledEvening.add(id);
+    }
+    for (final a in changes.schedule) {
+      pendingEvening[a.id] = a;
+    }
+  }
 
   @override
   Future<void> scheduleBirthdays(BirthdayPlan plan) async =>

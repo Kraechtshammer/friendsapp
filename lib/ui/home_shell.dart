@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app/debouncer.dart';
 import '../app/incoming_sync.dart';
 import '../app/providers.dart';
 import '../app/update_controller.dart';
@@ -12,7 +13,9 @@ import '../domain/birthday_notifications.dart';
 import '../domain/birthdays.dart';
 import '../domain/contact_event.dart';
 import '../domain/evening_question.dart';
+import '../domain/evening_reason.dart';
 import '../domain/first_start.dart';
+import '../domain/person_name.dart';
 import '../l10n/labels.dart';
 import '../platform/notifications.dart';
 import '../platform/share_receiver.dart';
@@ -32,9 +35,13 @@ import 'upcoming/upcoming_screen.dart';
 /// The four tabs: Home, Upcoming, People, Progress. Settings open from the
 /// gear on Home.
 ///
-/// It also keeps the evening question (02-design.md §2.2) scheduled: at
-/// every start, after every change of its settings and when the language
-/// changes. And it handles "Yes" on it.
+/// It also keeps the evening question (02-design.md §2.2) scheduled, each
+/// day with its predicted reason (§8, review of 2026-11-16, point 1;
+/// [eveningDays]): at every start and return to the app, after every change
+/// of the settings (also the reconnect choice), the real people (also an
+/// owed reply cleared) and the real contact events (also incoming ones
+/// read from the queue), and when the language changes. A burst of changes
+/// schedules once ([eveningDebounce]). And it handles "Yes" on it.
 ///
 /// The same goes for the birthday notifications (02-design.md §8, birthdays
 /// M4): planned again at every start, when the real people, the evening
@@ -53,6 +60,10 @@ import 'upcoming/upcoming_screen.dart';
 /// The in-app update (02-design.md §8) is looked for on start and on every
 /// return to the app ([_lookForUpdate]); with the check switched off that
 /// does nothing. Not part of a Play build (see update_controller.dart).
+/// How long the evening question waits for more changes before it is
+/// scheduled again.
+const eveningDebounce = Duration(milliseconds: 500);
+
 class HomeShell extends ConsumerStatefulWidget {
   const HomeShell({super.key});
 
@@ -73,6 +84,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   var _updatePopupOpen = false;
   late final AppLifecycleListener _lifecycle;
   late final _incoming = IncomingSync(ref);
+  final _eveningDebouncer = Debouncer(eveningDebounce);
 
   /// The day whose birthday wishes are watched, and the subscription.
   DateTime? _wishDay;
@@ -93,8 +105,10 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     ref.listenManual(peopleProvider, (_, _) => _checkFirstStart());
     ref.listenManual(realPeopleProvider, (_, _) {
       _scheduleBirthdays();
+      _requestEvening();
       _incoming.onPeople();
     });
+    ref.listenManual(realContactEventsProvider, (_, _) => _requestEvening());
     _watchWishes(schedule: false);
     unawaited(ref.read(shareReceiverProvider).listen(_onShare));
     WidgetsBinding.instance.addPostFrameCallback(
@@ -171,6 +185,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   @override
   void dispose() {
     _lifecycle.dispose();
+    _eveningDebouncer.cancel();
     _wishes?.close();
     super.dispose();
   }
@@ -243,6 +258,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     _incoming.onResume();
     _askPendingQuestion();
     _watchWishes();
+    _requestEvening();
   }
 
   /// Back from a messenger after "Open chat": ask "Did you write?" once
@@ -300,7 +316,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     _prepareStamps();
     _cleanPictures(settings);
     _incoming.onSettings(settings);
-    _scheduleEvening(settings);
+    _requestEvening();
     _scheduleBirthdays();
     unawaited(_askPermissionOnce(settings));
   }
@@ -374,18 +390,58 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     await openChat(context, ref, person, birthday: true);
   }
 
-  void _scheduleEvening(AppSettings settings) {
+  /// Schedules the evening question once the changes have settled.
+  void _requestEvening() => _eveningDebouncer(_scheduleEvening);
+
+  /// Plans the evening question from the settings and the real people and
+  /// contact events (also in demo mode, as the birthdays: answers go to the
+  /// real database). Waits until they are loaded; if the people or events
+  /// cannot be read, it still schedules, with the general question.
+  void _scheduleEvening() {
+    if (!mounted) return;
+    final settings = ref.read(settingsProvider).value;
+    final people = ref.read(realPeopleProvider);
+    final events = ref.read(realContactEventsProvider);
+    if (settings == null) return;
+    if ((people.isLoading && !people.hasValue) ||
+        (events.isLoading && !events.hasValue)) {
+      return;
+    }
+    final now = ref.read(clockProvider)();
     final l10n = context.l10n;
+    final weekdays = eveningWeekdays(
+      on: settings.eveningOn,
+      excluded: settings.eveningExcludedDays,
+    );
     final plan = EveningPlan(
-      weekdays: eveningWeekdays(
-        on: settings.eveningOn,
-        excluded: settings.eveningExcludedDays,
-      ),
+      weekdays: weekdays,
       minute: settings.eveningMinute,
       title: l10n.eveningQuestion,
       yes: l10n.eveningYes,
       notToday: l10n.eveningNotToday,
       channelName: l10n.eveningChannel,
+      start: DateTime(now.year, now.month, now.day),
+      days: eveningDays(
+        now: now,
+        weekdays: weekdays,
+        minute: settings.eveningMinute,
+        inputs: EveningInputs(
+          people: people.value ?? const [],
+          events: events.value ?? const [],
+          replyWaitDays: settings.replyWaitDays,
+          listenerOn: settings.incomingOn,
+          reconnectId: settings.reconnectPersonId,
+          reconnectStart: settings.reconnectStart,
+          reconnectSpan: settings.reconnectSpan,
+        ),
+        texts: EveningTexts(
+          general: l10n.eveningQuestion,
+          owedReply: l10n.stillOweReply,
+          reconnect: (span, name) =>
+              l10n.eveningReconnect(reconnectTitle(span, name, l10n)),
+        ),
+        nameOf: firstNameOf,
+      ),
     );
     if (plan == _scheduled) return;
     _scheduled = plan;

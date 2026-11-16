@@ -31,8 +31,9 @@ abstract class Notifications {
     required ValueChanged<BirthdayResponse> onBirthday,
   });
 
-  /// Makes the scheduled evening notifications match [plan]: one weekly
-  /// notification per weekday in it, none on the others.
+  /// Makes the scheduled evening notifications match [plan]: a one-off
+  /// notification with its own text on each day in it, and after those one
+  /// weekly general notification per allowed weekday ([eveningChanges]).
   Future<void> scheduleEvening(EveningPlan plan);
 
   /// Makes the scheduled birthday notifications match [plan]: each alarm
@@ -64,9 +65,6 @@ class LocalNotifications implements Notifications {
 
   static const _channelId = 'evening';
   static const _birthdayChannelId = 'birthdays';
-
-  /// Ids 101 to 107, one per weekday (Monday 1 to Sunday 7).
-  static const _baseId = 100;
 
   /// The small white-on-transparent icon in res/drawable.
   static const _icon = 'ic_stat_kept';
@@ -135,9 +133,9 @@ class LocalNotifications implements Notifications {
           importance: Importance.high,
         ),
       );
-      final pending = {
+      final pending = [
         for (final p in await _plugin.pendingNotificationRequests()) p.id,
-      };
+      ];
       final details = NotificationDetails(
         android: AndroidNotificationDetails(
           _channelId,
@@ -157,39 +155,53 @@ class LocalNotifications implements Notifications {
           ],
         ),
       );
-      final now = DateTime.now();
-      for (var day = DateTime.monday; day <= DateTime.sunday; day++) {
-        final id = _baseId + day;
-        if (!plan.weekdays.contains(day)) {
-          // Only cancel what is scheduled: cancel also removes a shown one.
-          if (pending.contains(id)) await _plugin.cancel(id: id);
-          continue;
+      final changes = eveningChanges(plan, pending);
+      // Only pending ones: cancel also removes a notification that is shown.
+      for (final id in changes.cancel) {
+        await _plugin.cancel(id: id);
+      }
+      // Scheduled again on every change: this replaces an alarm with the
+      // same id without removing a notification that is shown now, and
+      // brings back alarms the phone dropped (for example after a force
+      // stop). The weekly ones come first, so that ids 101 to 107 from an
+      // older version, which repeat from now, are moved behind the one-off
+      // days before those are added.
+      for (final a in changes.schedule) {
+        try {
+          await _scheduleEveningAlarm(a, details);
+        } catch (e) {
+          // One that fails (for example a time that just passed) must not
+          // stop the others.
+          debugPrint('Evening notification not scheduled: $e');
         }
-        // Scheduled again on every start: this replaces the alarm without
-        // removing a notification that is shown now, and brings back alarms
-        // the phone dropped (for example after a force stop).
-        final at = nextEvening(now, day, plan.minute);
-        await _plugin.zonedSchedule(
-          id: id,
-          title: plan.title,
-          scheduledDate: tz.TZDateTime(
-            tz.local,
-            at.year,
-            at.month,
-            at.day,
-            at.hour,
-            at.minute,
-          ),
-          notificationDetails: details,
-          androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-          matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
-          payload: eveningPayload,
-        );
       }
     } catch (e) {
       debugPrint('Evening question not scheduled: $e');
     }
   }
+
+  Future<void> _scheduleEveningAlarm(
+    EveningAlarm a,
+    NotificationDetails details,
+  ) => _plugin.zonedSchedule(
+    id: a.id,
+    title: a.title,
+    body: a.body,
+    scheduledDate: tz.TZDateTime(
+      tz.local,
+      a.at.year,
+      a.at.month,
+      a.at.day,
+      a.at.hour,
+      a.at.minute,
+    ),
+    notificationDetails: details,
+    androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+    matchDateTimeComponents: a.weekly
+        ? DateTimeComponents.dayOfWeekAndTime
+        : null,
+    payload: eveningPayload,
+  );
 
   @override
   Future<void> scheduleBirthdays(BirthdayPlan plan) async {

@@ -253,6 +253,13 @@ final realPeopleProvider = StreamProvider<List<Person>>(
   (ref) => ref.watch(servicesProvider).peopleFor(demo: false).watchAll(),
 );
 
+/// All contact events of everyone in the real database, newest first, also
+/// in demo mode; see [realPeopleProvider]. The evening question's reasons
+/// are predicted from them.
+final realContactEventsProvider = StreamProvider<List<ContactEvent>>(
+  (ref) => ref.watch(servicesProvider).contactEventsFor(demo: false).watchAll(),
+);
+
 /// The user's birthday wishes on one local day (midnight) in the real
 /// database, also in demo mode; see [realPeopleProvider].
 final realWishesByUserProvider =

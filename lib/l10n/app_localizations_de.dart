@@ -363,6 +363,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eveningQuestion => 'Hast du heute zehn Minuten für jemanden?';
 
   @override
+  String eveningReconnect(String title) {
+    return '$title. Hast du zehn Minuten?';
+  }
+
+  @override
   String get eveningYes => 'Ja';
 
   @override

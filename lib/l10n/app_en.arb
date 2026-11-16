@@ -177,6 +177,8 @@
     }
   },
   "eveningQuestion": "Got ten minutes for someone today?",
+  "eveningReconnect": "{title}. Got ten minutes?",
+  "@eveningReconnect": {"description": "The evening notification when the reconnect person is its reason. title is for example \"This month: Anna\".", "placeholders": {"title": {"type": "String"}}},
   "eveningYes": "Yes",
   "eveningNotToday": "Not today",
   "eveningChannel": "Evening question",

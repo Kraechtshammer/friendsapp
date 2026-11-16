@@ -363,6 +363,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eveningQuestion => 'Got ten minutes for someone today?';
 
   @override
+  String eveningReconnect(String title) {
+    return '$title. Got ten minutes?';
+  }
+
+  @override
   String get eveningYes => 'Yes';
 
   @override

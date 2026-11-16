@@ -716,6 +716,12 @@ abstract class AppLocalizations {
   /// **'Got ten minutes for someone today?'**
   String get eveningQuestion;
 
+  /// The evening notification when the reconnect person is its reason. title is for example "This month: Anna".
+  ///
+  /// In en, this message translates to:
+  /// **'{title}. Got ten minutes?'**
+  String eveningReconnect(String title);
+
   /// No description provided for @eveningYes.
   ///
   /// In en, this message translates to:

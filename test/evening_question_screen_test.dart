@@ -6,6 +6,7 @@ import 'package:kept/app/providers.dart';
 import 'package:kept/app/services.dart';
 import 'package:kept/data/database.dart';
 import 'package:kept/domain/contact_event.dart';
+import 'package:kept/domain/person.dart';
 import 'package:kept/ui/material.dart';
 import 'package:kept/ui/widgets/kept_switch.dart';
 
@@ -41,6 +42,16 @@ void main() {
     await tester.pumpWidget(const SizedBox());
     await tester.pump(const Duration(seconds: 1));
     await tester.runAsync(services.close);
+  }
+
+  /// Lets the database streams deliver, then waits out the debounce.
+  Future<void> settleSchedule(WidgetTester tester) async {
+    await tester.pumpAndSettle();
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 50)),
+    );
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 1));
   }
 
   Future<void> openSettings(WidgetTester tester) async {
@@ -164,6 +175,75 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Hello'), findsOneWidget);
     expect((await answers.forDay(DateTime.now()))?.answer, DayAnswerValue.yes);
+
+    await finish(tester);
+  });
+
+  testWidgets('each day names its reason; a burst schedules once', (
+    tester,
+  ) async {
+    final people = services.peopleFor(demo: false);
+    final events = services.contactEventsFor(demo: false);
+    late Person jonas;
+    late Person mia;
+    await tester.runAsync(() async {
+      jonas = await people.add(name: 'Jonas Berg', closeness: Closeness.close);
+      mia = await people.add(name: 'Mia Lang', closeness: Closeness.nowAndThen);
+      await events.add(
+        personId: jonas.id,
+        at: DateTime(2026, 11, 13, 10),
+        kind: ContactKind.wrote,
+        direction: ContactDirection.byThem,
+        source: ContactSource.manual,
+      );
+      await services.settings.update(
+        (s) => s.withReconnect(mia.id, DateTime(2026, 11, 16)),
+      );
+    });
+    final fake = FakeNotifications();
+    await pumpApp(tester, fake);
+    await settleSchedule(tester);
+
+    var plan = fake.plans.last;
+    expect(plan.title, 'Got ten minutes for someone today?');
+    expect(plan.days, hasLength(21));
+    expect(plan.days.first.at, DateTime(2026, 11, 16, 19));
+    expect(plan.days.first.title, 'Still owe Jonas a reply?');
+
+    // "Already answered": Mia is next.
+    await tester.runAsync(
+      () => people.setReplyClearedAt(jonas.id, DateTime(2026, 11, 16, 13)),
+    );
+    await settleSchedule(tester);
+    plan = fake.plans.last;
+    expect(plan.days.first.title, 'This month: Mia. Got ten minutes?');
+
+    // Three contacts with Mia in a row: one new schedule, the general
+    // question.
+    final before = fake.plans.length;
+    // Each write in its own runAsync, with a short pump between that
+    // lets the database streams deliver, well within the debounce time.
+    for (var i = 0; i < 3; i++) {
+      await tester.runAsync(
+        () => events.add(
+          personId: mia.id,
+          at: DateTime(2026, 11, 16, 9 + i),
+          kind: ContactKind.wrote,
+          direction: ContactDirection.byUser,
+          source: ContactSource.manual,
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(fake.plans.length, before);
+    await settleSchedule(tester);
+    expect(fake.plans.length, before + 1);
+    expect(
+      fake.plans.last.days.map((d) => d.title),
+      everyElement('Got ten minutes for someone today?'),
+    );
+    // No evening day has two notifications.
+    expect(fake.pendingEvening, hasLength(28));
 
     await finish(tester);
   });
