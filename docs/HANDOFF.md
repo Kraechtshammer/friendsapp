@@ -13,8 +13,8 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
   - 0.4.0: M5 and M6, Upcoming and plans, the friend timeline.
   - 0.5.0: schema 4, M7 to M9, owed replies, rhythm and reconnect, stamps and treats.
   - 0.6.0: M10, ideas and sharing into the app.
-- **Built after 0.6.0, not released:** the review changes (02-design.md §8, "Review of Claude's choices"), the first-start flow, the permissions page, refresh from contacts, the licences row, the K. launcher icon, debug builds as a separate app, the in-app update.
-- **In progress:** the evening notification naming its reason (an owed reply or the reconnect person). Uncommitted work; see git log for whether it landed.
+- **Built after 0.6.0, not released:** the review changes (02-design.md §8, "Review of Claude's choices"), the first-start flow, the permissions page, refresh from contacts, the licences row, the K. launcher icon, debug builds as a separate app, the in-app update, the evening ping naming its reason, a clean-up of unused code.
+- **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.7.0 next).
 - **The developer's phone** has a debug build of 0.6.0 under the release's app id (schema 4, real data). The developer will uninstall it and start fresh on the release build; debug builds then install beside it as "Kept. debug".
 - **Tried by the developer:** M1 to M4 on the phone (M2 "all worked", M3 "everything else looks good", M4 "so far it looks good"); the evening and birthday notifications are being tried in daily use and have no report yet. The 0.6.0 debug build was installed on 2026-11-16; there is no report on the migration to schema 4 or on M5 onward. **Every database change needs a tested migration.**
 
@@ -95,7 +95,7 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 - Refresh from contacts, per person and for everyone. "About and licences" row.
 - The K. launcher icon. Debug builds as the separate app "Kept. debug".
 - The in-app update from GitHub releases, with a "What's new" popup. Not run against a real newer release yet (unverified).
-- In progress: the evening ping naming its reason.
+- The evening ping names its reason (an owed reply, else the reconnect person); 21 days are scheduled ahead with predicted texts.
 
 **Left before 1.0.0** (the developer's call)
 
@@ -122,7 +122,6 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 - Other companies' logos (messenger icons) touch brand rules in a published app. Look at this before a Play release.
 - Claude's "not confirmed" rows in 02-design.md §8 for M5 to M10 that the review did not cover. The review covered only the nine points of its own row; the rest stands until overruled.
 - The repository is public and 01-research.md describes the developer's own situation (§5, §9.7, §9.8). Mention it once more if the repository gets promoted.
-- Two packages, `permission_handler` and `cupertino_icons`, are declared but unused (04-architecture.md). Removing them is a dependency change.
 
 ## 6. Not tested yet
 

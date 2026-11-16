@@ -105,6 +105,14 @@ Tests that run by themselves (`flutter analyze`, `flutter test`, the migration t
 - [ ] Settings, "About and licences" opens the licence page with the version.
 - [ ] The app icon is the K. on the launcher, also as a themed icon if you use those.
 
+## Evening ping with a reason (not released yet)
+
+- [ ] After updating: only one evening notification on the first evening, not two.
+- [ ] With an owed reply: the title asks "Still owe ... a reply?". With a reconnect person and no owed reply: "This month: ... Got ten minutes?". Otherwise the general question.
+- [ ] Yes still opens Home at the pick; Not today still closes it without opening the app.
+- [ ] After a restart of the phone the evening notification still comes.
+- [ ] Change the evening time to earlier than now: one notification may still come at the old time that day (known).
+
 ## In-app update (not released yet)
 
 A real update needs two release-signed builds: install one release, then a newer release gets published.
