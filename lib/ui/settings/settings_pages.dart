@@ -9,6 +9,7 @@ import 'incoming_section.dart';
 import 'look_section.dart';
 import 'open_items_section.dart';
 import 'own_birthday_row.dart';
+import 'picture_tip.dart';
 import 'rhythms_section.dart';
 import 'stamps_section.dart';
 import 'streak_section.dart';
@@ -56,7 +57,8 @@ class EveningPage extends ConsumerWidget {
   }
 }
 
-/// Settings › Friends: rhythms, then incoming messages.
+/// Settings › Friends: rhythms, then incoming messages, then a tip on
+/// sharing a photo into the app.
 class FriendsPage extends ConsumerWidget {
   const FriendsPage({super.key});
 
@@ -68,6 +70,7 @@ class FriendsPage extends ConsumerWidget {
       sections: [
         RhythmsSection(settings: settings),
         IncomingSection(settings: settings),
+        const PictureTip(),
       ],
     );
   }

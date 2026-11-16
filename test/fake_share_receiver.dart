@@ -32,6 +32,12 @@ class FakeShareReceiver implements ShareReceiver {
 
   @override
   Future<Directory?> picturesDirectory() async => directory;
+
+  /// How often the app asked to close its screen.
+  var finished = 0;
+
+  @override
+  Future<void> finish() async => finished++;
 }
 
 /// [LinkOpener] that records the links.

@@ -8,7 +8,6 @@ import '../../data/ideas_repository.dart';
 import '../../domain/idea.dart';
 import '../../domain/ideas.dart';
 import '../../domain/intention.dart';
-import '../../domain/person_name.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/labels.dart';
 import '../../platform/share_receiver.dart';
@@ -22,6 +21,7 @@ import '../widgets/main_button.dart';
 import '../widgets/picture_thumb.dart';
 import '../widgets/section_label.dart';
 import 'person_choice_row.dart';
+import 'share_picture_screen.dart';
 
 /// What a shared thing becomes.
 enum ShareTarget { ideaToDo, ideaToTalk, thought }
@@ -38,6 +38,11 @@ String _targetLabel(ShareTarget t, AppLocalizations l10n) => switch (t) {
 /// note confirms it; the screen behind stays as it was. Cancelling deletes a
 /// copied picture again.
 Future<void> showShareSheet(BuildContext context, SharedItem item) async {
+  // A picture first asks what it is for: someone's picture, or an idea.
+  if (item case SharedImage(:final path)) {
+    final keepAsIdea = await showSharedPicture(context, path);
+    if (!keepAsIdea || !context.mounted) return;
+  }
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
   final savedFor = await showModalBottomSheet<String>(
@@ -116,7 +121,7 @@ class _ShareSheetState extends ConsumerState<_ShareSheet> {
               link: _split.link,
             );
     }
-    navigator.pop(firstNameOf(person.name));
+    navigator.pop(ref.readShortName(person));
   }
 
   @override
@@ -207,7 +212,7 @@ class _ShareSheetState extends ConsumerState<_ShareSheet> {
             ),
           if (selected != null)
             MainButton(
-              label: l10n.shareSave(firstNameOf(selected.name)),
+              label: l10n.shareSave(ref.shortName(selected)),
               onPressed: () => unawaited(_save(selected!)),
             ),
           GreyButton(

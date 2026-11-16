@@ -299,6 +299,12 @@ void main() {
       shares.send(item);
       await tester.pump();
       await tester.pumpAndSettle();
+      if (item is SharedImage) {
+        // A picture first asks what it is for.
+        await tester.tap(find.text('Keep as an idea'));
+        await tester.pump();
+        await tester.pumpAndSettle();
+      }
       expect(find.text('Keep this for…'), findsOneWidget);
     }
 
@@ -389,7 +395,9 @@ void main() {
     testWidgets('cancelling deletes the copied picture', (tester) async {
       final file = File('${tmp.path}/b.png')..writeAsBytesSync([1, 2, 3]);
       await start(tester);
-      await share(tester, SharedImage(file.path));
+      shares.send(SharedImage(file.path));
+      await tester.pump();
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Cancel'));
       await settleWrite(tester);
       await tester.pumpAndSettle();

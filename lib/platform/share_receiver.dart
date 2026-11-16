@@ -33,6 +33,10 @@ abstract class ShareReceiver {
   /// The folder shared pictures are copied to; null if there is none (not
   /// Android).
   Future<Directory?> picturesDirectory();
+
+  /// Closes the app's screen so the app the share came from is in front
+  /// again ("Done" after a picture was set).
+  Future<void> finish();
 }
 
 /// [ShareReceiver] on the method channel of ShareChannel.kt. Kotlin keeps a
@@ -70,6 +74,9 @@ class AndroidShareReceiver implements ShareReceiver {
       return null;
     }
   }
+
+  @override
+  Future<void> finish() => SystemNavigator.pop();
 }
 
 /// Reads the map Kotlin sends: `{type: text, text: ...}` or
