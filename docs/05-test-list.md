@@ -129,5 +129,9 @@ A real update needs two release-signed builds: install one release, then a newer
 
 ## Release builds
 
+- [ ] `kept-<v>.apk` from the GitHub release installs from the browser without the Play Protect block, and shows nothing about incoming messages.
+- [ ] `kept-<v>-listener.apk` installed over adb: incoming messages work as before (the M7 points).
+- [ ] On the listener build, the in-app update installs the next `-listener` APK (not blocked by Play Protect, the listener still works afterwards).
+
 - [ ] Uninstall the old debug build that still carries the release's name (your decision of 2026-11-16: start fresh), then install the APK from the GitHub release. From then on debug builds install beside it as "Kept. debug".
 - [ ] The notification icon shows in the release build.
