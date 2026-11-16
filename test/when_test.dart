@@ -9,12 +9,12 @@ import 'package:kept/data/database.dart';
 import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
-import 'package:kept/platform/app_shortcuts.dart';
 import 'package:kept/ui/home/nice_one_screen.dart';
 import 'package:kept/ui/material.dart';
 import 'package:kept/ui/people/person_screen.dart';
 
 import 'fake_notifications.dart';
+import 'support/fakes.dart';
 
 /// Monday 16 November 2026, 14:00.
 final now = DateTime(2026, 11, 16, 14);
@@ -92,7 +92,7 @@ void main() {
           firstStartEnabledProvider.overrideWithValue(false),
           notificationsProvider.overrideWithValue(FakeNotifications()),
           clockProvider.overrideWithValue(() => now),
-          appShortcutsProvider.overrideWithValue(_NoShortcuts()),
+          appShortcutsProvider.overrideWithValue(NoShortcuts()),
         ],
         child: const KeptApp(),
       ),
@@ -782,11 +782,3 @@ void main() {
 /// The three fields of the "when", for short expectations.
 (DateTime?, Horizon?, String?) whenFields(Intention i) =>
     (i.date, i.horizon, i.condition);
-
-class _NoShortcuts implements AppShortcuts {
-  @override
-  Future<void> setUp({
-    required String captureTitle,
-    required VoidCallback onCapture,
-  }) async {}
-}

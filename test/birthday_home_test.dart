@@ -8,17 +8,15 @@ import 'package:kept/data/app_settings.dart';
 import 'package:kept/data/database.dart';
 import 'package:kept/domain/birthday_notifications.dart';
 import 'package:kept/domain/birthdays.dart';
-import 'package:kept/domain/chat_link.dart';
 import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/person.dart';
-import 'package:kept/platform/app_shortcuts.dart';
-import 'package:kept/platform/chat_opener.dart';
 import 'package:kept/ui/home/chat_question_screen.dart';
 import 'package:kept/ui/home/congratulated_screen.dart';
 import 'package:kept/ui/home/nice_one_screen.dart';
 import 'package:kept/ui/material.dart';
 
 import 'fake_notifications.dart';
+import 'support/fakes.dart';
 
 /// Monday 16 November 2026, 14:00: Lena's birthday.
 final now = DateTime(2026, 11, 16, 14);
@@ -27,7 +25,7 @@ void main() {
   late AppServices services;
   late FakeNotifications notifications;
   late Person lena, tom;
-  final opener = _FakeOpener();
+  final opener = FakeChatOpener();
 
   setUp(() {
     opener.opened.clear();
@@ -84,7 +82,7 @@ void main() {
           servicesProvider.overrideWithValue(services),
           firstStartEnabledProvider.overrideWithValue(false),
           notificationsProvider.overrideWithValue(notifications),
-          appShortcutsProvider.overrideWithValue(_NoShortcuts()),
+          appShortcutsProvider.overrideWithValue(NoShortcuts()),
           chatOpenerProvider.overrideWithValue(opener),
           clockProvider.overrideWithValue(() => now),
         ],
@@ -382,22 +380,4 @@ void main() {
     expect(find.text('Not set'), findsOneWidget);
     await closeDown(tester);
   });
-}
-
-class _FakeOpener implements ChatOpener {
-  final opened = <ChatLink>[];
-
-  @override
-  Future<bool> open(ChatLink link) async {
-    opened.add(link);
-    return true;
-  }
-}
-
-class _NoShortcuts implements AppShortcuts {
-  @override
-  Future<void> setUp({
-    required String captureTitle,
-    required VoidCallback onCapture,
-  }) async {}
 }

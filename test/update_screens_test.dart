@@ -10,20 +10,20 @@ import 'package:kept/data/database.dart';
 import 'package:kept/data/settings_repository.dart';
 import 'package:kept/domain/app_update.dart';
 import 'package:kept/domain/person.dart';
-import 'package:kept/platform/app_shortcuts.dart';
 import 'package:kept/platform/app_update.dart' show releasesPageUrl;
-import 'package:kept/platform/link_opener.dart';
 import 'package:kept/ui/material.dart';
 import 'package:kept/ui/settings/settings_screen.dart';
 
 import 'fake_incoming_listener.dart';
 import 'fake_notifications.dart';
+import 'fake_share_receiver.dart';
 import 'fake_update_service.dart';
+import 'support/fakes.dart';
 
 void main() {
   late AppServices services;
   late FakeUpdateService fake;
-  late _FakeLinks links;
+  late FakeLinkOpener links;
 
   setUp(() {
     services = AppServices(
@@ -31,7 +31,7 @@ void main() {
       openDemo: () => AppDatabase(NativeDatabase.memory()),
     );
     fake = FakeUpdateService();
-    links = _FakeLinks();
+    links = FakeLinkOpener();
   });
 
   /// One person, the first start done; [settings] changes more.
@@ -60,7 +60,7 @@ void main() {
           updateServiceProvider.overrideWithValue(fake),
           notificationsProvider.overrideWithValue(FakeNotifications()),
           incomingListenerProvider.overrideWithValue(FakeIncomingListener()),
-          appShortcutsProvider.overrideWithValue(_NoShortcuts()),
+          appShortcutsProvider.overrideWithValue(NoShortcuts()),
           linkOpenerProvider.overrideWithValue(links),
         ],
         child: KeptApp(home: home),
@@ -243,24 +243,6 @@ void main() {
       await closeDown(tester);
     });
   });
-}
-
-class _FakeLinks implements LinkOpener {
-  final opened = <String>[];
-
-  @override
-  Future<bool> open(String link) async {
-    opened.add(link);
-    return true;
-  }
-}
-
-class _NoShortcuts implements AppShortcuts {
-  @override
-  Future<void> setUp({
-    required String captureTitle,
-    required VoidCallback onCapture,
-  }) async {}
 }
 
 Future<void> settle(WidgetTester tester) async {

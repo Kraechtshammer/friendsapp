@@ -8,10 +8,10 @@ import 'package:kept/data/database.dart';
 import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
-import 'package:kept/platform/app_shortcuts.dart';
 import 'package:kept/ui/material.dart';
 
 import 'fake_notifications.dart';
+import 'support/fakes.dart';
 
 /// The friend timeline on the person page, "They wrote" and "They called",
 /// and the edit sheet (M6).
@@ -85,7 +85,7 @@ void main() {
           servicesProvider.overrideWithValue(services),
           firstStartEnabledProvider.overrideWithValue(false),
           notificationsProvider.overrideWithValue(FakeNotifications()),
-          appShortcutsProvider.overrideWithValue(_NoShortcuts()),
+          appShortcutsProvider.overrideWithValue(NoShortcuts()),
         ],
         child: const KeptApp(),
       ),
@@ -270,12 +270,4 @@ void main() {
     expect(find.text('Edit entry'), findsNothing);
     await closeDown(tester);
   });
-}
-
-class _NoShortcuts implements AppShortcuts {
-  @override
-  Future<void> setUp({
-    required String captureTitle,
-    required VoidCallback onCapture,
-  }) async {}
 }

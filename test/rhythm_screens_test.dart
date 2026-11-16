@@ -1,13 +1,9 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kept/app/app.dart';
-import 'package:kept/app/providers.dart';
 import 'package:kept/app/services.dart';
 import 'package:kept/data/app_settings.dart';
 import 'package:kept/data/database.dart';
-import 'package:kept/domain/chat_link.dart';
 import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
@@ -16,17 +12,16 @@ import 'package:kept/l10n/app_localizations.dart';
 import 'package:kept/l10n/app_localizations_de.dart';
 import 'package:kept/l10n/app_localizations_en.dart';
 import 'package:kept/l10n/labels.dart';
-import 'package:kept/platform/app_shortcuts.dart';
-import 'package:kept/platform/chat_opener.dart';
 import 'package:kept/ui/material.dart';
 import 'package:kept/ui/people/edit_person_screen.dart';
 
-import 'fake_notifications.dart';
+import 'support/fakes.dart';
+import 'support/pump_app.dart';
 
 void main() {
   late AppServices services;
   late DateTime now;
-  final opener = _FakeOpener();
+  final opener = FakeChatOpener();
 
   setUp(() {
     opener.opened.clear();
@@ -39,21 +34,12 @@ void main() {
   });
 
   Future<void> pumpApp(WidgetTester tester) async {
-    tester.view.physicalSize = const Size(400, 1800);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.reset);
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          servicesProvider.overrideWithValue(services),
-          firstStartEnabledProvider.overrideWithValue(false),
-          notificationsProvider.overrideWithValue(FakeNotifications()),
-          appShortcutsProvider.overrideWithValue(_NoShortcuts()),
-          chatOpenerProvider.overrideWithValue(opener),
-          clockProvider.overrideWithValue(() => now),
-        ],
-        child: const KeptApp(),
-      ),
+    await pumpKeptApp(
+      tester,
+      services: services,
+      clock: () => now,
+      viewSize: const Size(400, 1800),
+      opener: opener,
     );
     await tester.pumpAndSettle();
   }
@@ -686,22 +672,4 @@ void main() {
       await closeDown(tester);
     });
   });
-}
-
-class _FakeOpener implements ChatOpener {
-  final opened = <ChatLink>[];
-
-  @override
-  Future<bool> open(ChatLink link) async {
-    opened.add(link);
-    return true;
-  }
-}
-
-class _NoShortcuts implements AppShortcuts {
-  @override
-  Future<void> setUp({
-    required String captureTitle,
-    required VoidCallback onCapture,
-  }) async {}
 }

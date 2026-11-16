@@ -5,18 +5,18 @@ import 'package:kept/app/app.dart';
 import 'package:kept/app/providers.dart';
 import 'package:kept/app/services.dart';
 import 'package:kept/domain/chat_link.dart';
-import 'package:kept/platform/chat_opener.dart';
 import 'package:kept/data/database.dart';
 import 'package:kept/domain/person.dart';
 import 'package:kept/ui/material.dart';
 import 'package:kept/ui/people/person_screen.dart';
 
 import 'fake_notifications.dart';
+import 'support/fakes.dart';
 
 void main() {
   late AppServices services;
 
-  final opener = _FakeOpener();
+  final opener = FakeChatOpener();
 
   setUp(() {
     opener
@@ -142,15 +142,4 @@ void main() {
     expect(find.text('Your people will show up here.'), findsOneWidget);
     await closeDown(tester);
   });
-}
-
-class _FakeOpener implements ChatOpener {
-  final opened = <ChatLink>[];
-  bool result = true;
-
-  @override
-  Future<bool> open(ChatLink link) async {
-    opened.add(link);
-    return result;
-  }
 }

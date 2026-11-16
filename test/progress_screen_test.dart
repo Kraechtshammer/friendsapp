@@ -1,8 +1,5 @@
 import 'package:drift/native.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kept/app/app.dart';
-import 'package:kept/app/providers.dart';
 import 'package:kept/app/services.dart';
 import 'package:kept/data/database.dart';
 import 'package:kept/domain/contact_event.dart';
@@ -13,14 +10,13 @@ import 'package:kept/domain/stamps.dart';
 import 'package:kept/domain/treat.dart';
 import 'package:kept/l10n/app_localizations_en.dart';
 import 'package:kept/l10n/labels.dart';
-import 'package:kept/platform/app_shortcuts.dart';
 import 'package:kept/ui/home/nice_one_screen.dart';
 import 'package:kept/ui/material.dart';
 import 'package:kept/ui/progress/progress_screen.dart';
 import 'package:kept/ui/progress/treats_screen.dart';
 import 'package:kept/ui/widgets/stamps.dart';
 
-import 'fake_notifications.dart';
+import 'support/pump_app.dart';
 
 void main() {
   late AppServices services;
@@ -45,25 +41,16 @@ void main() {
   }
 
   Future<void> pumpApp(WidgetTester tester) async {
-    tester.view.physicalSize = const Size(900, 3000);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.reset);
     // The first start (default treats, backfill) done before the app is up,
     // so the tests do not race it.
     await tester.runAsync(
       () => services.ensureStampsReady(defaultTreatNames(AppLocalizationsEn())),
     );
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          servicesProvider.overrideWithValue(services),
-          firstStartEnabledProvider.overrideWithValue(false),
-          notificationsProvider.overrideWithValue(FakeNotifications()),
-          appShortcutsProvider.overrideWithValue(_NoShortcuts()),
-          clockProvider.overrideWithValue(() => now),
-        ],
-        child: const KeptApp(),
-      ),
+    await pumpKeptApp(
+      tester,
+      services: services,
+      clock: () => now,
+      viewSize: const Size(900, 3000),
     );
     // Database work the app started under the test clock needs both real
     // time and pumps to finish; do not leave a transaction open.
@@ -560,12 +547,4 @@ void main() {
       await closeDown(tester);
     });
   });
-}
-
-class _NoShortcuts implements AppShortcuts {
-  @override
-  Future<void> setUp({
-    required String captureTitle,
-    required VoidCallback onCapture,
-  }) async {}
 }

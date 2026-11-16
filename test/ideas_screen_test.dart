@@ -10,12 +10,12 @@ import 'package:kept/data/database.dart';
 import 'package:kept/domain/idea.dart';
 import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
-import 'package:kept/platform/app_shortcuts.dart';
 import 'package:kept/platform/share_receiver.dart';
 import 'package:kept/ui/material.dart';
 
 import 'fake_notifications.dart';
 import 'fake_share_receiver.dart';
+import 'support/fakes.dart';
 
 /// M10: the ideas on the person page, the idea line on a pick, the link on
 /// a thought, and "Keep this for…" after a share.
@@ -85,7 +85,7 @@ void main() {
           servicesProvider.overrideWithValue(services),
           firstStartEnabledProvider.overrideWithValue(false),
           notificationsProvider.overrideWithValue(FakeNotifications()),
-          appShortcutsProvider.overrideWithValue(_NoShortcuts()),
+          appShortcutsProvider.overrideWithValue(NoShortcuts()),
           shareReceiverProvider.overrideWithValue(shares),
           linkOpenerProvider.overrideWithValue(links),
         ],
@@ -399,12 +399,4 @@ void main() {
       await closeDown(tester);
     });
   });
-}
-
-class _NoShortcuts implements AppShortcuts {
-  @override
-  Future<void> setUp({
-    required String captureTitle,
-    required VoidCallback onCapture,
-  }) async {}
 }

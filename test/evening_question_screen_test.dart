@@ -1,8 +1,5 @@
 import 'package:drift/native.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kept/app/app.dart';
-import 'package:kept/app/providers.dart';
 import 'package:kept/app/services.dart';
 import 'package:kept/data/database.dart';
 import 'package:kept/domain/contact_event.dart';
@@ -11,6 +8,7 @@ import 'package:kept/ui/material.dart';
 import 'package:kept/ui/widgets/kept_switch.dart';
 
 import 'fake_notifications.dart';
+import 'support/pump_app.dart';
 
 void main() {
   late AppServices services;
@@ -23,16 +21,11 @@ void main() {
   });
 
   Future<void> pumpApp(WidgetTester tester, FakeNotifications fake) async {
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          servicesProvider.overrideWithValue(services),
-          firstStartEnabledProvider.overrideWithValue(false),
-          notificationsProvider.overrideWithValue(fake),
-          clockProvider.overrideWithValue(() => DateTime(2026, 11, 16, 14)),
-        ],
-        child: const KeptApp(),
-      ),
+    await pumpKeptApp(
+      tester,
+      services: services,
+      clock: () => DateTime(2026, 11, 16, 14),
+      notifications: fake,
     );
     await tester.pumpAndSettle();
   }

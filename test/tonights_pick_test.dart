@@ -6,22 +6,20 @@ import 'package:kept/app/providers.dart';
 import 'package:kept/app/services.dart';
 import 'package:kept/data/app_settings.dart';
 import 'package:kept/data/database.dart';
-import 'package:kept/domain/chat_link.dart';
 import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
-import 'package:kept/platform/app_shortcuts.dart';
-import 'package:kept/platform/chat_opener.dart';
 import 'package:kept/ui/home/chat_question_screen.dart';
 import 'package:kept/ui/home/nice_one_screen.dart';
 import 'package:kept/ui/material.dart';
 
 import 'fake_notifications.dart';
+import 'support/fakes.dart';
 
 void main() {
   late AppServices services;
   late Person tom, anna, jonas;
-  final opener = _FakeOpener();
+  final opener = FakeChatOpener();
 
   setUp(() {
     opener
@@ -89,7 +87,7 @@ void main() {
           servicesProvider.overrideWithValue(services),
           firstStartEnabledProvider.overrideWithValue(false),
           notificationsProvider.overrideWithValue(FakeNotifications()),
-          appShortcutsProvider.overrideWithValue(_NoShortcuts()),
+          appShortcutsProvider.overrideWithValue(NoShortcuts()),
           chatOpenerProvider.overrideWithValue(opener),
         ],
         child: const KeptApp(),
@@ -331,23 +329,4 @@ void main() {
     expect(await open(tester), hasLength(3));
     await closeDown(tester);
   });
-}
-
-class _FakeOpener implements ChatOpener {
-  final opened = <ChatLink>[];
-  bool result = true;
-
-  @override
-  Future<bool> open(ChatLink link) async {
-    opened.add(link);
-    return result;
-  }
-}
-
-class _NoShortcuts implements AppShortcuts {
-  @override
-  Future<void> setUp({
-    required String captureTitle,
-    required VoidCallback onCapture,
-  }) async {}
 }

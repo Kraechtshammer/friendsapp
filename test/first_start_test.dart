@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,27 +14,17 @@ import 'package:kept/data/database.dart';
 import 'package:kept/data/settings_repository.dart';
 import 'package:kept/domain/first_start.dart';
 import 'package:kept/domain/person.dart';
-import 'package:kept/platform/app_shortcuts.dart';
 import 'package:kept/platform/contacts.dart';
 import 'package:kept/ui/material.dart';
 import 'package:kept/ui/settings/permissions_screen.dart';
 import 'package:kept/ui/settings/settings_screen.dart';
 import 'package:kept/ui/widgets/grey_button.dart';
 
-import 'dart:io';
-
 import 'fake_contacts.dart';
 import 'fake_incoming_listener.dart';
 import 'fake_notifications.dart';
 import 'fake_update_service.dart';
-
-class _NoShortcuts implements AppShortcuts {
-  @override
-  Future<void> setUp({
-    required String captureTitle,
-    required VoidCallback onCapture,
-  }) async {}
-}
+import 'support/fakes.dart';
 
 void main() {
   test('the first-start rule', () {
@@ -131,7 +123,7 @@ void main() {
             notificationsProvider.overrideWithValue(notifications),
             incomingListenerProvider.overrideWithValue(listener),
             contactsSourceProvider.overrideWithValue(contacts),
-            appShortcutsProvider.overrideWithValue(_NoShortcuts()),
+            appShortcutsProvider.overrideWithValue(NoShortcuts()),
             updateServiceProvider.overrideWithValue(updates),
           ],
           child: KeptApp(home: home),
