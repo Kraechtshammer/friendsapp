@@ -1,4 +1,5 @@
 import '../domain/greeting.dart';
+import '../domain/idea.dart';
 import '../domain/intention.dart';
 import '../domain/person.dart';
 import '../domain/rhythm.dart';
@@ -74,6 +75,18 @@ KeptIcons kindIcon(IntentionKind kind) => switch (kind) {
   IntentionKind.call => KeptIcons.phone,
   IntentionKind.meet => KeptIcons.people,
   IntentionKind.game => KeptIcons.controller,
+};
+
+/// The kind of an idea, as a group heading and a chip ("Do together").
+String ideaKindLabel(IdeaKind kind, AppLocalizations l10n) => switch (kind) {
+  IdeaKind.toDo => l10n.ideaToDo,
+  IdeaKind.toTalk => l10n.ideaToTalk,
+};
+
+/// Doing together has the meet-up's icon, talking the chat bubble.
+KeptIcons ideaKindIcon(IdeaKind kind) => switch (kind) {
+  IdeaKind.toDo => KeptIcons.people,
+  IdeaKind.toTalk => KeptIcons.chat,
 };
 
 String horizonLabel(Horizon horizon, AppLocalizations l10n) =>

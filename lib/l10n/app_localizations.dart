@@ -1813,6 +1813,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A class or workshop'**
   String get defaultTreat12;
+
+  /// No description provided for @ideasSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Ideas'**
+  String get ideasSection;
+
+  /// No description provided for @ideaToDo.
+  ///
+  /// In en, this message translates to:
+  /// **'Do together'**
+  String get ideaToDo;
+
+  /// No description provided for @ideaToTalk.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk about'**
+  String get ideaToTalk;
+
+  /// No description provided for @ideaAddHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an idea…'**
+  String get ideaAddHint;
+
+  /// No description provided for @ideaAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get ideaAdd;
+
+  /// No description provided for @ideasDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 done} other{{count} done}}'**
+  String ideasDone(int count);
+
+  /// No description provided for @ideaTickOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick off'**
+  String get ideaTickOff;
+
+  /// No description provided for @ideaReopen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open again'**
+  String get ideaReopen;
+
+  /// No description provided for @editIdea.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit idea'**
+  String get editIdea;
+
+  /// No description provided for @ideaTextHint.
+  ///
+  /// In en, this message translates to:
+  /// **'bouldering hall in Altona…'**
+  String get ideaTextHint;
+
+  /// No description provided for @linkHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Link (optional)'**
+  String get linkHint;
+
+  /// No description provided for @openLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Open link'**
+  String get openLink;
+
+  /// No description provided for @linkNotOpened.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the link.'**
+  String get linkNotOpened;
+
+  /// No description provided for @ideaPicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Picture'**
+  String get ideaPicture;
+
+  /// No description provided for @ideaOnPick.
+  ///
+  /// In en, this message translates to:
+  /// **'Idea: {text}'**
+  String ideaOnPick(String text);
+
+  /// No description provided for @shareTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep this for…'**
+  String get shareTitle;
+
+  /// No description provided for @shareKeepAs.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it as'**
+  String get shareKeepAs;
+
+  /// No description provided for @shareIdeaToDo.
+  ///
+  /// In en, this message translates to:
+  /// **'Idea to do'**
+  String get shareIdeaToDo;
+
+  /// No description provided for @shareIdeaToTalk.
+  ///
+  /// In en, this message translates to:
+  /// **'Idea to talk about'**
+  String get shareIdeaToTalk;
+
+  /// No description provided for @shareThought.
+  ///
+  /// In en, this message translates to:
+  /// **'Thought'**
+  String get shareThought;
+
+  /// No description provided for @shareTextHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What about it?'**
+  String get shareTextHint;
+
+  /// No description provided for @shareSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep for {name}'**
+  String shareSave(String name);
+
+  /// No description provided for @shareSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept for {name}.'**
+  String shareSaved(String name);
 }
 
 class _AppLocalizationsDelegate

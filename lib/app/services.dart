@@ -5,6 +5,7 @@ import '../data/contact_events_repository.dart';
 import '../data/database.dart';
 import '../data/database_connection.dart';
 import '../data/day_answers_repository.dart';
+import '../data/ideas_repository.dart';
 import '../data/intentions_repository.dart';
 import '../data/people_repository.dart';
 import '../data/treats_repository.dart';
@@ -30,7 +31,8 @@ class AppServices {
        _realPeople = PeopleRepository(db),
        _realIntentions = IntentionsRepository(db),
        _realTreats = TreatsRepository(db),
-       _realDayAnswers = DayAnswersRepository(db) {
+       _realDayAnswers = DayAnswersRepository(db),
+       _realIdeas = IdeasRepository(db) {
     _realContactEvents = ContactEventsRepository(
       db,
       loadSettings: settings.load,
@@ -50,7 +52,9 @@ class AppServices {
   late final ContactEventsRepository _realContactEvents;
   final TreatsRepository _realTreats;
   final DayAnswersRepository _realDayAnswers;
+  final IdeasRepository _realIdeas;
   AppDatabase? _demoDb;
+  IdeasRepository? _demoIdeas;
   PeopleRepository? _demoPeople;
   IntentionsRepository? _demoIntentions;
   ContactEventsRepository? _demoContactEvents;
@@ -106,6 +110,19 @@ class AppServices {
       ? _demoDayAnswers ??= DayAnswersRepository(_demoDatabase())
       : _realDayAnswers;
 
+  /// The ideas of the same content database as [peopleFor].
+  IdeasRepository ideasFor({required bool demo}) => demo && allowDemo
+      ? _demoIdeas ??= IdeasRepository(_demoDatabase())
+      : _realIdeas;
+
+  /// The picture paths of the ideas in the real database and, with
+  /// [demo] on (and allowed), the demo one. For the start-up cleanup of
+  /// `shared/`.
+  Future<List<String>> ideaPicturePaths({required bool demo}) async => [
+    ...await _realIdeas.imagePaths(),
+    if (demo && allowDemo) ...await ideasFor(demo: true).imagePaths(),
+  ];
+
   /// Switches demo mode. On: the demo database is filled with the demo set
   /// (people, then their intentions) from scratch first, so the screens
   /// switch straight to it. Off: back
@@ -120,6 +137,7 @@ class AppServices {
         await _demoIntentionsRepository().replaceAll(demoIntentions(day));
         await contactEventsFor(demo: true).replaceAll(demoContactEvents(day));
         await dayAnswersFor(demo: true).replaceAll(demoDayAnswers(day));
+        await ideasFor(demo: true).replaceAll(demoIdeas(day));
         await _seedDemoTreats(day);
       });
     }

@@ -17,15 +17,17 @@ import '../kept_icon.dart';
 import '../widgets/grey_button.dart';
 import '../widgets/grey_icon_button.dart';
 import '../widgets/kept_card.dart';
+import '../widgets/link_row.dart';
 import '../widgets/main_button.dart';
 import '../widgets/section_label.dart';
 import '../widgets/tag.dart';
 import 'edit_person_screen.dart';
+import 'ideas_section.dart';
 import 'incoming_buttons.dart';
 import 'person_timeline_view.dart';
 
-/// One person: the tonal header, the button that opens their chat, and
-/// their notes, then the friend timeline with the "They wrote" and "They
+/// One person: the tonal header, the button that opens their chat, their
+/// notes, open thoughts and ideas (M10), then the friend timeline with the "They wrote" and "They
 /// called" buttons. The page scrolls as one. See concept V6 · One person
 /// (docs/concepts/gen_v6.py).
 class PersonScreen extends ConsumerWidget {
@@ -102,6 +104,7 @@ class _Body extends ConsumerWidget {
                   ),
                 ),
               _OpenIntentions(person),
+              IdeasSection(person),
               IncomingButtons(person),
               PersonTimelineView(person),
             ],
@@ -166,6 +169,7 @@ class _OpenIntentions extends ConsumerWidget {
                         ],
                       ),
                     ),
+                    if (i.link != null) const LinkMark(),
                   ],
                 ),
                 Row(

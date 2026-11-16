@@ -2,6 +2,7 @@ import '../data/database.dart';
 import 'avatar_pick.dart';
 import 'birthdays.dart';
 import 'contact_event.dart';
+import 'idea.dart';
 import 'intention.dart';
 import 'person.dart';
 
@@ -287,6 +288,59 @@ List<Intention> demoIntentions(DateTime today) {
         horizon: w.horizon,
         condition: w.condition,
         createdAt: at(back, 15),
+      ),
+  ];
+}
+
+/// The invented ideas of the demo database (M10): things to do and to talk
+/// about for four people, one with a link, one ticked off. No pictures.
+/// Deterministic for a given [today].
+List<Idea> demoIdeas(DateTime today) {
+  final day = DateTime(today.year, today.month, today.day);
+  final ids = {for (final p in demoPeople(today)) p.name: p.id};
+  DateTime at(int daysBack) =>
+      DateTime(day.year, day.month, day.day - daysBack, 20);
+  final rows = <(String, String, IdeaKind, String?, int, int?)>[
+    // Name, text, kind, link, days back, done how many days back.
+    (
+      'Malik Osei',
+      'bouldering hall in Altona',
+      IdeaKind.toDo,
+      'https://example.org/boulderhalle-altona',
+      6,
+      null,
+    ),
+    ('Malik Osei', 'his trip to Ghana', IdeaKind.toTalk, null, 12, null),
+    ('Malik Osei', 'pub quiz on Thursdays', IdeaKind.toDo, null, 40, 20),
+    ('Lena Hartwig', 'the new ramen place', IdeaKind.toDo, null, 9, null),
+    (
+      'Lena Hartwig',
+      'how the half marathon went',
+      IdeaKind.toTalk,
+      null,
+      3,
+      null,
+    ),
+    ('Paulina Brandt', 'her pottery pieces', IdeaKind.toTalk, null, 5, null),
+    (
+      'Kenji Moreau',
+      'film night, something by Ghibli',
+      IdeaKind.toDo,
+      null,
+      8,
+      null,
+    ),
+  ];
+  return [
+    for (final (i, (name, note, kind, link, back, doneBack)) in rows.indexed)
+      Idea(
+        id: 'demo-d${(i + 1).toString().padLeft(2, '0')}',
+        personId: ids[name]!,
+        note: note,
+        kind: kind,
+        link: link,
+        createdAt: at(back),
+        doneAt: doneBack == null ? null : at(doneBack),
       ),
   ];
 }

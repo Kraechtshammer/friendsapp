@@ -21,6 +21,8 @@ class KeptTextField extends StatelessWidget {
     this.hasError = false,
     this.focusNode,
     this.fillColor,
+    this.onSubmitted,
+    this.textInputAction,
   });
 
   final TextEditingController controller;
@@ -37,6 +39,9 @@ class KeptTextField extends StatelessWidget {
 
   /// Defaults to the surface colour; use the ground colour on a card.
   final Color? fillColor;
+
+  final ValueChanged<String>? onSubmitted;
+  final TextInputAction? textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +60,8 @@ class KeptTextField extends StatelessWidget {
       maxLines: maxLines,
       minLines: minLines,
       onChanged: onChanged,
+      onSubmitted: onSubmitted,
+      textInputAction: textInputAction,
       style: context.text.bodyLarge,
       cursorColor: kept.text,
       decoration: InputDecoration(

@@ -13,6 +13,7 @@ import '../widgets/grey_button.dart';
 import 'nice_one_screen.dart';
 import 'thought_sheet.dart';
 import '../widgets/kept_card.dart';
+import '../widgets/link_row.dart';
 import '../widgets/section_label.dart';
 
 /// The open intentions, newest first, under "On your mind". Nothing is
@@ -81,6 +82,7 @@ class _Row extends ConsumerWidget {
                       ),
                     ),
                     KeptIcon(kindIcon(intention.kind), size: 22),
+                    if (intention.link != null) const LinkMark(),
                   ],
                 ),
                 if (note.isNotEmpty)

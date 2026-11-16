@@ -6,16 +6,19 @@ import '../app/incoming_sync.dart';
 import '../app/providers.dart';
 import '../data/app_settings.dart';
 import '../data/database.dart';
+import '../data/ideas_repository.dart';
 import '../domain/birthday_notifications.dart';
 import '../domain/birthdays.dart';
 import '../domain/contact_event.dart';
 import '../domain/evening_question.dart';
 import '../l10n/labels.dart';
 import '../platform/notifications.dart';
+import '../platform/share_receiver.dart';
 import 'common.dart';
 import 'home/chat_question_screen.dart';
 import 'home/home_screen.dart';
 import 'home/open_chat.dart';
+import 'home/share_sheet.dart';
 import 'kept_icon.dart';
 import 'material.dart';
 import 'people/people_screen.dart';
@@ -38,6 +41,10 @@ import 'upcoming/upcoming_screen.dart';
 /// And it keeps the optional notification listener in step ([IncomingSync],
 /// M7): at start, on every return to the app and when the settings or the
 /// real people change.
+///
+/// Shares from other apps (M10) open "Keep this for…" over whatever is on
+/// screen ([showShareSheet]). Once per start, pictures in `shared/` that no
+/// idea refers to are removed ([removeOrphanPictures]).
 class HomeShell extends ConsumerStatefulWidget {
   const HomeShell({super.key});
 
@@ -52,6 +59,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   BirthdayPlan? _birthdaysScheduled;
   var _permissionAsked = false;
   var _stampsPrepared = false;
+  var _picturesCleaned = false;
   late final AppLifecycleListener _lifecycle;
   late final _incoming = IncomingSync(ref);
 
@@ -76,6 +84,41 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       _incoming.onPeople();
     });
     _watchWishes(schedule: false);
+    unawaited(ref.read(shareReceiverProvider).listen(_onShare));
+  }
+
+  /// A share from another app: "Keep this for…" once the frame is built.
+  void _onShare(SharedItem item) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        if (item case SharedImage(:final path)) {
+          unawaited(deletePictureFile(path));
+        }
+        return;
+      }
+      unawaited(showShareSheet(context, item));
+    });
+    // An idle app draws no frame by itself.
+    WidgetsBinding.instance.scheduleFrame();
+  }
+
+  /// Once per start, after the settings are loaded: removes pictures no
+  /// idea refers to (ideas deleted with their person leave theirs).
+  void _cleanPictures(AppSettings settings) {
+    if (_picturesCleaned) return;
+    _picturesCleaned = true;
+    final services = ref.read(servicesProvider);
+    final receiver = ref.read(shareReceiverProvider);
+    unawaited(() async {
+      try {
+        final dir = await receiver.picturesDirectory();
+        if (dir == null) return;
+        final paths = await services.ideaPicturePaths(demo: settings.demoMode);
+        await removeOrphanPictures(dir, paths);
+      } catch (e) {
+        debugPrint('Pictures not cleaned: ${e.runtimeType}');
+      }
+    }());
   }
 
   @override
@@ -164,6 +207,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
 
   void _onSettings(AppSettings settings) {
     _prepareStamps();
+    _cleanPictures(settings);
     _incoming.onSettings(settings);
     _scheduleEvening(settings);
     _scheduleBirthdays();

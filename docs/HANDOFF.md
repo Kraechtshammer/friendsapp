@@ -5,9 +5,9 @@ The first thing a new session reads. Last rewritten on 2026-11-16, at the end of
 ## 1. Where things stand
 
 - Phase: **implement**. The app is called **Kept.** with the full stop (app label and titles; running text may write Kept). App ID `de.gartenpa.kept` (final). Repository and folder are `friendsapp`.
-- **M0 to M9 are built.** The developer has tried up to M4; notifications (M3, M4) are being tried in daily use. M5 to M9 are untried on a phone; what to check is in [05-test-list.md](05-test-list.md). See section 4.
-- **Released: 0.5.0** (tag `v0.5.0`, 2026-11-16: schema 4, M7, M8, M9). Before it: 0.4.0 (M5, M6), 0.3.0 (M4), 0.2.0 (M2, M3), 0.1.0 (M1). The developer's phone has the M4 debug build (schema 3); nothing later was installed there.
-- Everything up to the 0.5.0 release commit is pushed (2026-11-16).
+- **M0 to M10 are built, so every planned milestone.** The developer has tried up to M4; notifications (M3, M4) are being tried in daily use. M5 to M10 are untried on a phone; what to check is in [05-test-list.md](05-test-list.md). See section 4.
+- **Released: 0.6.0** (tag `v0.6.0`, 2026-11-16: M10). Before it: 0.5.0 (schema 4, M7 to M9), 0.4.0 (M5, M6), 0.3.0 (M4), 0.2.0 (M2, M3), 0.1.0 (M1). The developer's phone has the M4 debug build (schema 3); nothing later was installed there.
+- Everything up to the 0.6.0 release commit is pushed (2026-11-16).
 - The developer uses the app with real people on their Pixel 7 Pro since 2026-11-16. **Every database change needs a tested migration.**
 
 ## 2. What to read, and how much
@@ -118,7 +118,19 @@ Details of what was built are in [04-architecture.md](04-architecture.md); decis
 - Done: the stamp rule with editable weights; awarding in one place for every way a contact is stored; twelve default treats; the current stamp card, carry-over and loose stamps; a one-time backfill of stamps for older contacts; the Progress tab (growing count, stamp card, this week, weeks in a row that pause, treats, "Your numbers"); stamps on the "Nice one" screen; a Stamps section in Settings. Checked: analyze, 407 tests, Claude looked at the Progress render (`build/screens/m9-progress.png`). **Not checked: on the phone, and how the rule feels over weeks.**
 - Claude's choices, not confirmed: Family counts 1; gaming doubles like a meet-up; a more valuable contact later in the week raises that week's stamp; deleting a contact keeps its stamp; "weeks in a row" counts every week with contact. See 02-design.md §8.
 - Schema 4, M7, M8 and M9 are released together as 0.5.0.
-- Next: M10, ideas and sharing in.
+**M10, ideas and sharing in: built, not tried** (2026-11-16). Uses the schema 4 `ideas` table.
+
+- Done: ideas per person (to do together, to talk about; optional link and picture; tick off, edit, delete) on the person page; one "Idea: ..." line on the single pick card; an optional link on a thought; sharing a link, text or one picture into the app from other apps, with the "Keep this for..." sheet (person, then idea or thought). No new permission, no new package. Checked: analyze, 436 tests, debug APK builds, Claude read the Kotlin share code and looked at the share sheet render (`build/screens/m10-share-sheet.png`). **Not checked: on the phone; all Kotlin is untested.** Possible issue: with `singleTop`, a share from Chrome may open a second Kept inside Chrome's task; if so, try `singleTask`.
+- Released as 0.6.0.
+
+**All milestones M0 to M10 are built.** What is left before 1.0.0, which is the developer's call:
+
+- The developer works through [05-test-list.md](05-test-list.md) on the phone; Claude fixes what comes up. The phone still has the M4 debug build (schema 3); the next install runs the migration to schema 4 on real data.
+- Review of the German texts (all written by subagents).
+- The light theme on a phone.
+- Claude's unconfirmed choices in 02-design.md §8 (rows marked "Claude, not confirmed").
+- The open questions in section 5, and before any Play release: the messenger logos and the notification listener part (04-architecture.md says what to delete).
+- Ideas noted for after 1.0.0: rotating praise and example texts; an icon per activity; "two come closer" badge; groups; quick "do soon" items.
 
 ## 5. Open questions for the developer
 

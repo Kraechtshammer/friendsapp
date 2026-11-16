@@ -209,7 +209,11 @@ void main() {
     await tester.tap(find.text('You wrote'));
     await tester.pumpAndSettle();
     expect(find.text('Edit entry'), findsOneWidget);
-    final fields = find.byType(TextField);
+    // The sheet's fields, not the ideas field on the page behind.
+    final fields = find.descendant(
+      of: find.byType(BottomSheet),
+      matching: find.byType(TextField),
+    );
     expect(
       tester.widget<TextField>(fields.last).controller!.text,
       'New job is going well.',

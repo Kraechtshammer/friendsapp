@@ -39,6 +39,7 @@ class IntentionsRepository {
     String note = '',
     IntentionKind kind = IntentionKind.write,
     When when = const When.none(),
+    String? link,
     DateTime? now,
   }) async {
     final intention = Intention(
@@ -50,24 +51,28 @@ class IntentionsRepository {
       date: when.date == null ? null : _wholeSeconds(when.date!),
       horizon: when.horizon,
       condition: _condition(when),
+      link: _link(link),
       createdAt: _wholeSeconds(now ?? DateTime.now()),
     );
     await _db.into(_db.intentions).insert(intention);
     return intention;
   }
 
-  /// Changes the text, the kind and the "when" of an intention in one
-  /// step, as the edit sheet does. A date and a horizon never go together;
-  /// the condition is kept only for "when…" and only if it has text.
+  /// Changes the text, the kind, the "when" and the link of an intention in
+  /// one step, as the edit sheet does. A date and a horizon never go
+  /// together; the condition is kept only for "when…" and only if it has
+  /// text. An empty [link] is stored as null.
   Future<void> update(
     String id, {
     required String note,
     required IntentionKind kind,
     required When when,
+    String? link,
   }) => (_db.update(_db.intentions)..where((t) => t.id.equals(id))).write(
     IntentionsCompanion(
       note: Value(note),
       kind: Value(kind),
+      link: Value(_link(link)),
       date: Value(when.date == null ? null : _wholeSeconds(when.date!)),
       horizon: Value(when.horizon),
       condition: Value(_condition(when)),
@@ -88,6 +93,11 @@ class IntentionsRepository {
   /// Soon, so the thought is an undated plan again. Nothing else is stored.
   Future<void> moveBackToPlans(String id) =>
       setWhen(id, const When.horizon(Horizon.soon));
+
+  static String? _link(String? link) {
+    final text = link?.trim();
+    return text == null || text.isEmpty ? null : text;
+  }
 
   static String? _condition(When when) {
     final text = when.condition?.trim();

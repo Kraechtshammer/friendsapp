@@ -1106,4 +1106,87 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get defaultTreat12 => 'A class or workshop';
+
+  @override
+  String get ideasSection => 'Ideas';
+
+  @override
+  String get ideaToDo => 'Do together';
+
+  @override
+  String get ideaToTalk => 'Talk about';
+
+  @override
+  String get ideaAddHint => 'Add an idea…';
+
+  @override
+  String get ideaAdd => 'Add';
+
+  @override
+  String ideasDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count done',
+      one: '1 done',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ideaTickOff => 'Tick off';
+
+  @override
+  String get ideaReopen => 'Open again';
+
+  @override
+  String get editIdea => 'Edit idea';
+
+  @override
+  String get ideaTextHint => 'bouldering hall in Altona…';
+
+  @override
+  String get linkHint => 'Link (optional)';
+
+  @override
+  String get openLink => 'Open link';
+
+  @override
+  String get linkNotOpened => 'Couldn\'t open the link.';
+
+  @override
+  String get ideaPicture => 'Picture';
+
+  @override
+  String ideaOnPick(String text) {
+    return 'Idea: $text';
+  }
+
+  @override
+  String get shareTitle => 'Keep this for…';
+
+  @override
+  String get shareKeepAs => 'Keep it as';
+
+  @override
+  String get shareIdeaToDo => 'Idea to do';
+
+  @override
+  String get shareIdeaToTalk => 'Idea to talk about';
+
+  @override
+  String get shareThought => 'Thought';
+
+  @override
+  String get shareTextHint => 'What about it?';
+
+  @override
+  String shareSave(String name) {
+    return 'Keep for $name';
+  }
+
+  @override
+  String shareSaved(String name) {
+    return 'Kept for $name.';
+  }
 }

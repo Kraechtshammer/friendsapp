@@ -82,6 +82,14 @@ Tests that run by themselves (`flutter analyze`, `flutter test`, the migration t
 - [ ] Over some weeks: do daily chats with close friends fill cards too fast or too slowly? Rebalance in Settings, "Stamps".
 - [ ] Is "weeks in a row" the right wording for a number that counts every week with contact?
 
+## M10, ideas and sharing in (in 0.6.0)
+
+- [ ] Person page, "Ideas": add one of each kind, edit, tick off, delete.
+- [ ] Share a link from the browser into Kept, once with Kept closed and once with it open: the "Keep this for..." sheet appears with the link. Does a second Kept window appear inside the browser?
+- [ ] Share a photo: save it as an idea, then tap the thumbnail. Share another and cancel.
+- [ ] Tap a link on an idea or a thought: it opens in the browser.
+- [ ] The pick on Home shows "Idea: ..." for a person who has ideas.
+
 ## Release builds
 
 - [ ] The APK from the GitHub release installs over the debug build or over the last release, and keeps the data. (A debug build and a release build are signed differently; Android may refuse one over the other. Do not uninstall to get around it: that deletes the data. Tell Claude instead.)

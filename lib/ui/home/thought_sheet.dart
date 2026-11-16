@@ -13,12 +13,14 @@ import '../widgets/avatar.dart';
 import '../widgets/choice_chips.dart';
 import '../widgets/grey_button.dart';
 import '../widgets/kept_text_field.dart';
+import '../widgets/link_row.dart';
 import '../widgets/main_button.dart';
 import '../widgets/section_label.dart';
 import '../widgets/when_picker.dart';
 import 'nice_one_screen.dart';
 
-/// Opens the sheet that edits an open thought: text, kind and "when", with
+/// Opens the sheet that edits an open thought: text, kind, "when" and an
+/// optional link (M10, opened from the sheet), with
 /// Save, Done and Drop. Tapping a thought on Home, on the person page and
 /// on the Upcoming tab opens it. Done stores the changes first and then
 /// goes on as the Done button does ([completeThought]).
@@ -54,10 +56,12 @@ class _ThoughtSheetState extends ConsumerState<_ThoughtSheet> {
   late final _note = TextEditingController(text: widget.intention.note);
   late var _kind = widget.intention.kind;
   late var _when = whenOf(widget.intention);
+  late final _link = TextEditingController(text: widget.intention.link ?? '');
 
   @override
   void dispose() {
     _note.dispose();
+    _link.dispose();
     super.dispose();
   }
 
@@ -66,9 +70,11 @@ class _ThoughtSheetState extends ConsumerState<_ThoughtSheet> {
   Future<Intention> _store() async {
     final old = widget.intention;
     final note = _note.text.trim();
+    final link = _link.text.trim().isEmpty ? null : _link.text.trim();
     final updated = old.copyWith(
       note: note,
       kind: _kind,
+      link: Value(link),
       date: Value(_when.date),
       horizon: Value(_when.horizon),
       condition: Value(
@@ -78,10 +84,13 @@ class _ThoughtSheetState extends ConsumerState<_ThoughtSheet> {
             : null,
       ),
     );
-    if (note != old.note || _kind != old.kind || _when != whenOf(old)) {
+    if (note != old.note ||
+        _kind != old.kind ||
+        _when != whenOf(old) ||
+        link != old.link) {
       await ref
           .read(intentionsRepositoryProvider)
-          .update(old.id, note: note, kind: _kind, when: _when);
+          .update(old.id, note: note, kind: _kind, when: _when, link: link);
     }
     return updated;
   }
@@ -160,6 +169,14 @@ class _ThoughtSheetState extends ConsumerState<_ThoughtSheet> {
             value: _kind,
             onChanged: (k) => setState(() => _kind = k),
           ),
+          KeptTextField(
+            controller: _link,
+            hint: l10n.linkHint,
+            fillColor: kept.ground,
+            keyboardType: TextInputType.url,
+            onChanged: (_) => setState(() {}),
+          ),
+          if (_link.text.trim().isNotEmpty) LinkRow(_link.text.trim()),
           SectionLabel(l10n.whenSection),
           WhenPicker(
             value: _when,

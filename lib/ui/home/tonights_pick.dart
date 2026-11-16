@@ -8,6 +8,7 @@ import '../../data/app_settings.dart';
 import '../../data/database.dart';
 import '../../domain/birthdays.dart';
 import '../../domain/contact_event.dart';
+import '../../domain/ideas.dart';
 import '../../domain/intention.dart';
 import '../../domain/owed_reply.dart';
 import '../../domain/person_name.dart';
@@ -18,6 +19,7 @@ import '../../l10n/labels.dart';
 import '../common.dart';
 import '../kept_icon.dart';
 import '../material.dart';
+import '../people/idea_sheet.dart';
 import '../people/person_screen.dart';
 import '../widgets/avatar.dart';
 import '../widgets/grey_button.dart';
@@ -239,6 +241,7 @@ class _PickCard extends ConsumerWidget {
                     ),
                     WhenLineOf(pick),
                     LastTimeLine(person.id),
+                    IdeaLine(pick),
                   ],
                 ),
               ),
@@ -455,6 +458,30 @@ class WhenLineOf extends StatelessWidget {
     IntentionPick(:final intention) => WhenLine(intention),
     _ => const SizedBox.shrink(),
   };
+}
+
+/// One calm line with an idea that helps with [pick] (M10): "Idea:
+/// bouldering hall in Altona" ([ideaForPick]). Nothing when there is none.
+class IdeaLine extends ConsumerWidget {
+  const IdeaLine(this.pick, {super.key});
+
+  final Pick pick;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (ideaKindFor(pick) == null) return const SizedBox.shrink();
+    final ideas =
+        ref.watch(personIdeasProvider(pick.person.id)).value ?? const [];
+    final idea = ideaForPick(pick, ideas);
+    if (idea == null) return const SizedBox.shrink();
+    final l10n = context.l10n;
+    return Text(
+      l10n.ideaOnPick(ideaText(idea, l10n)),
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: context.text.bodyMedium?.copyWith(color: context.kept.muted),
+    );
+  }
 }
 
 /// The label of the last button: "Congratulated" on a birthday pick,

@@ -4,6 +4,7 @@ import '../data/app_settings.dart';
 import '../data/contact_events_repository.dart';
 import '../data/database.dart';
 import '../data/day_answers_repository.dart';
+import '../data/ideas_repository.dart';
 import '../data/intentions_repository.dart';
 import '../data/people_repository.dart';
 import '../data/treats_repository.dart';
@@ -13,7 +14,9 @@ import '../platform/app_shortcuts.dart';
 import '../platform/chat_opener.dart';
 import '../platform/contacts.dart';
 import '../platform/incoming_listener.dart';
+import '../platform/link_opener.dart';
 import '../platform/notifications.dart';
+import '../platform/share_receiver.dart';
 import 'services.dart';
 
 /// Set in main() with the services created at start.
@@ -29,6 +32,16 @@ final contactsSourceProvider = Provider<ContactsSource>(
 /// Opens chats in the messenger apps. Tests override it with a fake.
 final chatOpenerProvider = Provider<ChatOpener>(
   (ref) => const AndroidChatOpener(),
+);
+
+/// Opens links in the browser. Tests override it with a fake.
+final linkOpenerProvider = Provider<LinkOpener>(
+  (ref) => const AndroidLinkOpener(),
+);
+
+/// Shares from other apps (M10). Tests override it with a fake.
+final shareReceiverProvider = Provider<ShareReceiver>(
+  (ref) => const AndroidShareReceiver(),
 );
 
 /// The launcher icon's shortcuts. Tests override it with a fake.
@@ -289,6 +302,25 @@ final eventStampsProvider = StreamProvider.family<List<Stamp>, String>((
   final demo = ref.watch(settingsProvider.selectAsync((s) => s.demoMode));
   final services = ref.watch(servicesProvider);
   yield* services.treatsFor(demo: await demo).watchForEvent(eventId);
+});
+
+/// Where ideas are written: the demo or the real database, following
+/// `demoMode`, like [peopleRepositoryProvider].
+final ideasRepositoryProvider = Provider<IdeasRepository>((ref) {
+  final demo = ref.watch(
+    settingsProvider.select((s) => s.value?.demoMode ?? false),
+  );
+  return ref.watch(servicesProvider).ideasFor(demo: demo);
+});
+
+/// All ideas of one person, open and done, newest first.
+final personIdeasProvider = StreamProvider.family<List<Idea>, String>((
+  ref,
+  personId,
+) async* {
+  final demo = ref.watch(settingsProvider.selectAsync((s) => s.demoMode));
+  final services = ref.watch(servicesProvider);
+  yield* services.ideasFor(demo: await demo).watchForPerson(personId);
 });
 
 extension SettingsOrDefault on WidgetRef {
