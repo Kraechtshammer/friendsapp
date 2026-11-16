@@ -333,6 +333,8 @@ void main() {
     await start(tester);
     await tester.tap(find.byTooltip('Settings'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('Birthdays'));
+    await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text('Your birthday'), 100);
     await tester.pumpAndSettle();
     expect(find.text('Not set'), findsOneWidget);

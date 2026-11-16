@@ -109,6 +109,8 @@ void main() {
       await pumpApp(tester);
       await tester.tap(find.byTooltip('Settings'));
       await tester.pumpAndSettle();
+      await tester.tap(find.text('Friends'));
+      await tester.pumpAndSettle();
       await tester.scrollUntilVisible(find.text('RHYTHMS'), 100);
       expect(find.text('RHYTHMS'), findsOneWidget);
       expect(find.text('2 weeks'), findsOneWidget);
@@ -170,6 +172,8 @@ void main() {
     ) async {
       await pumpApp(tester);
       await tester.tap(find.byTooltip('Settings'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Friends'));
       await tester.pumpAndSettle();
       await tester.scrollUntilVisible(find.text('Reconnect person for'), 100);
       expect(find.text('1 month'), findsOneWidget);

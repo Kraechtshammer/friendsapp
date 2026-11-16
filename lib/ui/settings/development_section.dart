@@ -19,7 +19,6 @@ class DevelopmentSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: 32),
         Text('DEVELOPMENT', style: context.text.labelMedium),
         SwitchListTile(
           contentPadding: EdgeInsets.zero,

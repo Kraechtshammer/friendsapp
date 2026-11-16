@@ -4,109 +4,137 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
-import '../../data/app_settings.dart';
+import '../../app/update_controller.dart';
 import '../common.dart';
 import '../kept_icon.dart';
 import '../material.dart';
 import '../widgets/kept_card.dart';
 import 'about.dart';
-import 'development_section.dart';
-import 'evening_section.dart';
-import 'incoming_section.dart';
-import 'open_items_section.dart';
-import 'own_birthday_row.dart';
 import 'permissions_screen.dart';
-import 'rhythms_section.dart';
-import 'stamps_section.dart';
-import 'streak_section.dart';
-import 'update_tiles.dart';
+import 'settings_pages.dart';
 
+/// Settings as a list of categories: a coloured icon, a title, one muted
+/// line about what is inside, and a chevron. Each row opens its own page
+/// (04-architecture.md §2.4).
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final settings = ref.settings;
+    final latest = ref.watch(updateProvider).latest;
+    final builtIn = ref.watch(incomingBuiltInProvider);
+
+    void open(Widget page) => unawaited(
+      Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page)),
+    );
+
+    final rows = <Widget>[
+      _CategoryRow(
+        icon: KeptIcons.moon,
+        title: l10n.settingsEvening,
+        line: l10n.settingsCatEveningLine,
+        onTap: () => open(const EveningPage()),
+      ),
+      _CategoryRow(
+        icon: KeptIcons.people,
+        title: l10n.settingsCatFriends,
+        line: builtIn
+            ? l10n.settingsCatFriendsLine
+            : l10n.settingsCatFriendsLineNoListener,
+        onTap: () => open(const FriendsPage()),
+      ),
+      _CategoryRow(
+        icon: KeptIcons.cake,
+        title: l10n.settingsCatBirthdays,
+        line: l10n.settingsCatBirthdaysLine,
+        onTap: () => open(const BirthdaysPage()),
+      ),
+      _CategoryRow(
+        icon: KeptIcons.stamp,
+        title: l10n.settingsCatStamps,
+        line: l10n.settingsCatStampsLine,
+        onTap: () => open(const StampsPage()),
+      ),
+      _CategoryRow(
+        icon: KeptIcons.palette,
+        title: l10n.settingsCatLook,
+        line: l10n.settingsCatLookLine,
+        onTap: () => open(const LookPage()),
+      ),
+      _CategoryRow(
+        icon: KeptIcons.shield,
+        title: l10n.permTitle,
+        line: l10n.permRowHelp,
+        onTap: () => openPermissions(context),
+      ),
+      _CategoryRow(
+        icon: KeptIcons.download,
+        title: l10n.updateSection,
+        line: latest == null
+            ? l10n.settingsCatUpdatesLine
+            : l10n.updateAvailableTile('${latest.version}'),
+        onTap: () => open(const UpdatesPage()),
+      ),
+      _CategoryRow(
+        icon: KeptIcons.info,
+        title: l10n.settingsAbout,
+        line: l10n.settingsCatAboutLine,
+        onTap: () => unawaited(openAbout(context, ref)),
+      ),
+      if (kDebugMode)
+        _CategoryRow(
+          icon: KeptIcons.wasd,
+          title: 'Development',
+          line: 'Demo data',
+          onTap: () => open(const DevelopmentPage()),
+        ),
+    ];
+
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settings)),
-      body: ListView(
+      body: ListView.separated(
         padding: const EdgeInsets.all(16),
+        itemCount: rows.length,
+        separatorBuilder: (_, _) => const SizedBox(height: 12),
+        itemBuilder: (_, i) => rows[i],
+      ),
+    );
+  }
+}
+
+class _CategoryRow extends StatelessWidget {
+  const _CategoryRow({
+    required this.icon,
+    required this.title,
+    required this.line,
+    required this.onTap,
+  });
+
+  final KeptIcons icon;
+  final String title;
+  final String line;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return KeptCard(
+      small: true,
+      onTap: onTap,
+      child: Row(
+        spacing: 12,
         children: [
-          KeptCard(
-            small: true,
-            onTap: () => openPermissions(context),
-            child: Row(
-              spacing: 12,
+          KeptIcon(icon, size: 28),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const KeptIcon(KeptIcons.check, size: 28),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(l10n.permTitle, style: context.text.titleLarge),
-                      Text(l10n.permRowHelp, style: context.text.bodyMedium),
-                    ],
-                  ),
-                ),
-                const Icon(Icons.chevron_right_rounded),
+                Text(title, style: context.text.titleLarge),
+                Text(line, style: context.text.bodyMedium),
               ],
             ),
           ),
-          const SizedBox(height: 32),
-          Text(
-            l10n.settingsTheme.toUpperCase(),
-            style: context.text.labelMedium,
-          ),
-          const SizedBox(height: 12),
-          SegmentedButton<AppThemeMode>(
-            showSelectedIcon: false,
-            segments: [
-              ButtonSegment(
-                value: AppThemeMode.system,
-                label: Text(l10n.themeSystem),
-              ),
-              ButtonSegment(
-                value: AppThemeMode.light,
-                label: Text(l10n.themeLight),
-              ),
-              ButtonSegment(
-                value: AppThemeMode.dark,
-                label: Text(l10n.themeDark),
-              ),
-            ],
-            selected: {settings.themeMode},
-            onSelectionChanged: (chosen) => unawaited(
-              ref.services.settings.update(
-                (s) => s.copyWith(themeMode: chosen.single),
-              ),
-            ),
-          ),
-          const SizedBox(height: 32),
-          OpenItemsSection(mode: settings.openItems),
-          const SizedBox(height: 32),
-          RhythmsSection(settings: settings),
-          const SizedBox(height: 32),
-          StampsSection(weights: settings.stampWeights),
-          const SizedBox(height: 32),
-          StreakSection(mode: settings.streakMode),
-          const SizedBox(height: 32),
-          EveningSection(settings: settings),
-          const SizedBox(height: 32),
-          OwnBirthdayRow(birthday: settings.ownBirthday),
-          const SizedBox(height: 32),
-          IncomingSection(settings: settings),
-          const SizedBox(height: 32),
-          // In-app update, not in a Play build (update_controller.dart).
-          const UpdateSection(),
-          const SizedBox(height: 32),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(l10n.settingsAbout),
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => unawaited(openAbout(context, ref)),
-          ),
-          if (kDebugMode) DevelopmentSection(demoMode: settings.demoMode),
+          const Icon(Icons.chevron_right_rounded),
         ],
       ),
     );

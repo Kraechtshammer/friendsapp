@@ -55,7 +55,7 @@ Imports that go against a strict order: `app/app.dart` imports `ui/home_shell.da
 - **`ui/material.dart`** is the single import for UI files. It re-exports `material_ui` and `material_3_expressive` and hides the name clash (`CornerRounding`, `RoundedPolygon`; the Expressive ones win). UI files do not import `package:flutter/material.dart`.
 - **`ui/common.dart`:** the `ContextHelpers` extension on `BuildContext` (`l10n`, `colors`, `kept`, `text`); `TabPage` (screen title, optional action buttons, content; padding 16 / 22 / 16 / 0); `EmptyHint` (the text "Nothing here yet.", for screens not built yet).
 - **`ui/home_shell.dart`:** `HomeShell` is a `StatefulWidget` that holds the tab index. The body is an `IndexedStack` of Home, Upcoming, People and Progress. The bottom bar is a `NavigationBar` with four destinations. The tab folders `ui/home`, `ui/upcoming`, `ui/people` and `ui/progress` each hold one screen, still a `TabPage` with an `EmptyHint`. Home has the gear that opens `ui/settings/settings_screen.dart`.
-- **Settings** has one control: a `SegmentedButton<ThemeMode>` (System, Light, Dark) bound to `themeModeProvider`.
+- **Settings** is a list of category rows (`ui/settings/settings_screen.dart`); the theme choice lives on the Look page (`look_section.dart`).
 - **Icons** (`ui/kept_icon.dart`): the enum `KeptIcons` has one value per SVG file in `assets/icons/` (18 now) and `asset` gives the path. `KeptIcon(icon, size: 24, shadow: true)` shows it with the small shadow from ui-style.md §5. `flutter_svg` has no drop-shadow filter, so the shadow is a second copy of the same SVG, tinted black at 30 % with a `ColorFilter`, drawn 2 px lower in a `Stack`. New icons follow [style/icon-style.md](style/icon-style.md): add the file and the enum value together; a test checks that they match.
 
 ### 1.5 Localisation
@@ -138,6 +138,8 @@ In-memory drift databases. `test/demo_mode_test.dart` shows how to build `AppSer
 - `ui/home/` (M2): `capture_card.dart` (text, person, kind, Save), `person_picker.dart` (the searchable sheet behind "More"), `open_thoughts.dart` (open intentions). `domain/greeting.dart` picks the greeting from `clockProvider`, which tests fix. `platform/app_shortcuts.dart` wraps `quick_actions` behind `appShortcutsProvider`; the shortcut focuses the capture field through `captureFocusProvider`. `HomeShell` owns the tab index and registers the shortcut.
 - `l10n/labels.dart` turns enums into texts and formats birthdays. It imports `ui/kept_icon.dart` for the messenger icon, as akai's does.
 - Looking at screens without a phone: a throwaway widget test can load the real fonts (`FontLoader`, Roboto from Flutter's cache and `assets/fonts/Outfit.ttf`), pump the app with in-memory services in demo mode and write pictures with `matchesGoldenFile` and `--update-goldens`. Material icons show as boxes there. Delete the test afterwards.
+
+- `ui/settings/` (settings as categories): `SettingsScreen` shows only rows (coloured icon, title, one muted line, chevron); each row opens a page from `settings_pages.dart` (Evening question, Friends, Birthdays, Stamps and streak, Look, App update, Development in debug builds). Permissions and About open their own screens. The sections keep their own files and are only placed on the pages. The Updates row names a found update in its line.
 
 ### 2.5 Planned, not built
 

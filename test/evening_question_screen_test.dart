@@ -50,6 +50,8 @@ void main() {
   Future<void> openSettings(WidgetTester tester) async {
     await tester.tap(find.byTooltip('Settings'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('Evening question'));
+    await tester.pumpAndSettle();
     // The section at the top of the screen. Scrolling to "Days" would put
     // it under the app bar now that the page is longer (M7).
     await tester.scrollUntilVisible(find.text('EVENING QUESTION'), 100);

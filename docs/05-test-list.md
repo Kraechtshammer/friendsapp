@@ -135,3 +135,9 @@ A real update needs two release-signed builds: install one release, then a newer
 
 - [ ] Uninstall the old debug build that still carries the release's name (your decision of 2026-11-16: start fresh), then install the APK from the GitHub release. From then on debug builds install beside it as "Kept. debug".
 - [ ] The notification icon shows in the release build.
+
+## Settings as categories (not released yet)
+
+- [ ] Settings shows eight rows (nine in a debug build), each with its icon and one line; every row opens its own page and Back returns to the list.
+- [ ] Changes on the pages still work and stick: evening time and days, rhythms, stamp values, theme (Look), your birthday.
+- [ ] When an update is found, the "App update" row says so, and tapping it opens the update page.

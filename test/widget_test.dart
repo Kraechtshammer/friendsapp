@@ -50,16 +50,18 @@ void main() {
     await tester.tap(find.byTooltip('Settings'));
     await tester.pumpAndSettle();
     expect(find.text('Settings'), findsOneWidget);
+    await tester.tap(find.text('Look'));
+    await tester.pumpAndSettle();
 
     // The theme choice switches the app to dark and back to light.
     await tester.tap(find.text('Dark'));
     await tester.pumpAndSettle();
-    final context = tester.element(find.text('Settings'));
+    final context = tester.element(find.text('Look'));
     expect(Theme.of(context).extension<KeptColors>(), KeptColors.dark);
     await tester.tap(find.text('Light'));
     await tester.pumpAndSettle();
     expect(
-      Theme.of(tester.element(find.text('Settings'))).extension<KeptColors>(),
+      Theme.of(tester.element(find.text('Look'))).extension<KeptColors>(),
       KeptColors.light,
     );
     // The choice is stored in the database.

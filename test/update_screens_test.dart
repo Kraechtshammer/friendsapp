@@ -177,6 +177,8 @@ void main() {
 
   group('Settings', () {
     Future<void> openSection(WidgetTester tester) async {
+      await tester.tap(find.text('App update'));
+      await settle(tester);
       await tester.scrollUntilVisible(find.text('Releases on GitHub'), 300);
       await settle(tester);
     }

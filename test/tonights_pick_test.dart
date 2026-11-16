@@ -198,6 +198,8 @@ void main() {
     await start(tester);
     await tester.tap(find.byTooltip('Settings'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('Evening question'));
+    await tester.pumpAndSettle();
     expect(find.text('OPEN ITEMS'), findsOneWidget);
     await tester.tap(find.text('Three'));
     await tester.pumpAndSettle();

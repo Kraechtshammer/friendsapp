@@ -28,6 +28,45 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settings => 'Einstellungen';
 
   @override
+  String get settingsCatEveningLine => 'Uhrzeit, freie Tage, einer oder drei';
+
+  @override
+  String get settingsCatFriends => 'Freunde';
+
+  @override
+  String get settingsCatFriendsLine =>
+      'Rhythmen, wieder in Kontakt, eingehende Nachrichten';
+
+  @override
+  String get settingsCatFriendsLineNoListener =>
+      'Rhythmen, wieder in Kontakt, offene Antworten';
+
+  @override
+  String get settingsCatBirthdays => 'Geburtstage';
+
+  @override
+  String get settingsCatBirthdaysLine => 'Dein Geburtstag';
+
+  @override
+  String get settingsCatStamps => 'Stempel und Wochen in Folge';
+
+  @override
+  String get settingsCatStampsLine =>
+      'Stempelwerte, Kartengröße, Regel für Wochen in Folge';
+
+  @override
+  String get settingsCatLook => 'Design';
+
+  @override
+  String get settingsCatLookLine => 'Dunkel, hell oder System';
+
+  @override
+  String get settingsCatUpdatesLine => 'Update-Suche, Was ist neu?';
+
+  @override
+  String get settingsCatAboutLine => 'Version und Lizenzen';
+
+  @override
   String get settingsTheme => 'Design';
 
   @override

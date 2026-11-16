@@ -133,6 +133,8 @@ void main() {
 
     await tester.tap(find.byTooltip('Settings'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('Friends'));
+    await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text('Ask about a reply after'), 100);
     await tester.pumpAndSettle();
     expect(find.text('INCOMING MESSAGES'), findsOneWidget);
@@ -303,6 +305,8 @@ void main() {
     expect(find.text('Still owe Tom a reply?'), findsNothing);
 
     await tester.tap(find.byTooltip('Settings'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Friends'));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text('Ask about a reply after'), 100);
     await tester.pumpAndSettle();

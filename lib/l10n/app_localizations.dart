@@ -134,6 +134,78 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settings;
 
+  /// No description provided for @settingsCatEveningLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Time, days off, one pick or three'**
+  String get settingsCatEveningLine;
+
+  /// No description provided for @settingsCatFriends.
+  ///
+  /// In en, this message translates to:
+  /// **'Friends'**
+  String get settingsCatFriends;
+
+  /// No description provided for @settingsCatFriendsLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Rhythms, reconnect, incoming messages'**
+  String get settingsCatFriendsLine;
+
+  /// No description provided for @settingsCatFriendsLineNoListener.
+  ///
+  /// In en, this message translates to:
+  /// **'Rhythms, reconnect, owed replies'**
+  String get settingsCatFriendsLineNoListener;
+
+  /// No description provided for @settingsCatBirthdays.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthdays'**
+  String get settingsCatBirthdays;
+
+  /// No description provided for @settingsCatBirthdaysLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own birthday'**
+  String get settingsCatBirthdaysLine;
+
+  /// No description provided for @settingsCatStamps.
+  ///
+  /// In en, this message translates to:
+  /// **'Stamps and streak'**
+  String get settingsCatStamps;
+
+  /// No description provided for @settingsCatStampsLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Stamp values, card size, streak rule'**
+  String get settingsCatStampsLine;
+
+  /// No description provided for @settingsCatLook.
+  ///
+  /// In en, this message translates to:
+  /// **'Look'**
+  String get settingsCatLook;
+
+  /// No description provided for @settingsCatLookLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark, light or system'**
+  String get settingsCatLookLine;
+
+  /// No description provided for @settingsCatUpdatesLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Update check, what\'s new'**
+  String get settingsCatUpdatesLine;
+
+  /// No description provided for @settingsCatAboutLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Version and licences'**
+  String get settingsCatAboutLine;
+
   /// No description provided for @settingsTheme.
   ///
   /// In en, this message translates to:
