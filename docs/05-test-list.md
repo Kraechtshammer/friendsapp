@@ -90,7 +90,36 @@ Tests that run by themselves (`flutter analyze`, `flutter test`, the migration t
 - [ ] Tap a link on an idea or a thought: it opens in the browser.
 - [ ] The pick on Home shows "Idea: ..." for a person who has ideas.
 
+## Review changes, first start, permissions (not released yet)
+
+- [ ] Home: tapping a thought opens the person; the three-dot button opens the edit sheet; nothing is crowded.
+- [ ] "Did it happen?": Yes, New date and No each do the right thing.
+- [ ] "Nice one" screen: "Planning to meet up?" saves a meet plan.
+- [ ] People tab: the reconnect card says "This month: ..." and the span can be changed in Settings.
+- [ ] Progress: the streak counts weeks beyond close friends; try Strict and Friendly in Settings.
+- [ ] Settings, Stamps: Family shows 2 (the one-time fix), gaming with close friends 1.
+- [ ] The birthday pick card: "Congratulated" is fully readable.
+- [ ] A fresh install (the release, or "Kept. debug"): the first-start flow runs; every page can be skipped; nothing is switched on that you did not choose.
+- [ ] Settings, "Permissions and privacy": every card shows the right state and its button or switch works.
+- [ ] Edit person: "Refresh from contact" shows old and new; Settings: refresh for everyone, accept one, skip one.
+- [ ] Settings, "About and licences" opens the licence page with the version.
+- [ ] The app icon is the K. on the launcher, also as a themed icon if you use those.
+
+## In-app update (not released yet)
+
+A real update needs two release-signed builds: install one release, then a newer release gets published.
+
+- [ ] With the check off: no popup, and Settings says the check is off.
+- [ ] Switch it on (first start page, Home card or Settings): after the next start the popup for a newer version comes once.
+- [ ] The download shows progress.
+- [ ] Android asks to allow installs from Kept.; after coming back the update carries on by itself.
+- [ ] Cancel Android's install dialog, then retry: no second download.
+- [ ] The update installs and your data is still there.
+- [ ] "What's new" shows once after the update.
+- [ ] "Releases on GitHub" in Settings opens the browser.
+- [ ] A "Kept. debug" build does not try to replace the release.
+
 ## Release builds
 
-- [ ] The APK from the GitHub release installs over the debug build or over the last release, and keeps the data. (A debug build and a release build are signed differently; Android may refuse one over the other. Do not uninstall to get around it: that deletes the data. Tell Claude instead.)
+- [ ] Uninstall the old debug build that still carries the release's name (your decision of 2026-11-16: start fresh), then install the APK from the GitHub release. From then on debug builds install beside it as "Kept. debug".
 - [ ] The notification icon shows in the release build.
