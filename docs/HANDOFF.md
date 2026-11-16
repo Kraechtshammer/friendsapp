@@ -7,7 +7,7 @@ The first thing a new session reads. Last rewritten on 2026-11-16, at the end of
 - Phase: **implement**. The app is called **Kept.** with the full stop (app label and titles; running text may write Kept). App ID `de.gartenpa.kept` (final). Repository and folder are `friendsapp`.
 - **M0 and M1 are done. M2 (Capture) is built but not yet tried by the developer.** See section 4.
 - **Released: 0.1.0** (tag `v0.1.0`, the state at the end of M1). The release workflow ran for the first time and passed: signed APK `kept-0.1.0.apk` on the public GitHub release.
-- Pushed up to the M2 data layer. The capture UI and this handoff are committed locally and not pushed.
+- Everything up to the M2 capture UI is pushed (2026-11-16).
 - The developer uses the app with real people on their Pixel 7 Pro since 2026-11-16. **Every database change needs a tested migration.**
 
 ## 2. What to read, and how much
