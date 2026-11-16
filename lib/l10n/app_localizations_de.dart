@@ -743,4 +743,56 @@ class AppLocalizationsDe extends AppLocalizations {
 
     return '$dateString';
   }
+
+  @override
+  String stillOweReply(String name) {
+    return 'Schuldest du $name noch eine Antwort?';
+  }
+
+  @override
+  String get alreadyAnswered => 'Schon geantwortet';
+
+  @override
+  String get settingsIncoming => 'Eingehende Nachrichten';
+
+  @override
+  String get settingsIncomingSwitch =>
+      'Merken, wer geschrieben oder angerufen hat';
+
+  @override
+  String get settingsIncomingHelp =>
+      'Kept liest die Benachrichtigungen von WhatsApp, Telegram, Signal und Discord, um zu sehen, wer von deinen Leuten dir geschrieben oder dich angerufen hat und wann. Was geschrieben wurde, liest Kept nie. Gruppenchats und alle anderen bleiben außen vor.';
+
+  @override
+  String get settingsIncomingAccess => 'Zugriff auf Benachrichtigungen';
+
+  @override
+  String get settingsIncomingAccessOn => 'Erlaubt';
+
+  @override
+  String get settingsIncomingAccessOff => 'Noch nicht erlaubt';
+
+  @override
+  String get settingsIncomingOpenAccess =>
+      'Zugriff auf Benachrichtigungen öffnen';
+
+  @override
+  String get settingsReplyWait => 'Nach einer Antwort fragen nach';
+
+  @override
+  String replyWaitDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Tage',
+      one: '1 Tag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shorter => 'Kürzer';
+
+  @override
+  String get longer => 'Länger';
 }

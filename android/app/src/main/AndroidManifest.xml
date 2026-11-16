@@ -43,6 +43,18 @@
             </intent-filter>
         </receiver>
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver" />
+        <!-- Incoming contact (M7), optional part: reads who wrote or called in a messenger,
+             never the text. Works only after the user grants notification access by hand.
+             Remove for a build without it (see IncomingRules.kt). -->
+        <service
+            android:name=".KeptNotificationListener"
+            android:label="Kept."
+            android:exported="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

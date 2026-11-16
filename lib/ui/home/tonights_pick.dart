@@ -9,6 +9,7 @@ import '../../data/database.dart';
 import '../../domain/birthdays.dart';
 import '../../domain/contact_event.dart';
 import '../../domain/intention.dart';
+import '../../domain/owed_reply.dart';
 import '../../domain/person_name.dart';
 import '../../domain/pick_order.dart';
 import '../../l10n/app_localizations.dart';
@@ -32,7 +33,8 @@ import 'open_thoughts.dart';
 /// concept V6 · Home): one card with "Another one", or three compact
 /// cards, depending on the setting `openItems`. The picks come from
 /// [tonightsPicks]: today's birthdays not congratulated yet come first,
-/// then the open thoughts. With nothing to pick, nothing is shown.
+/// then the owed replies ([owedReplies]), then the open thoughts. With
+/// nothing to pick, nothing is shown.
 ///
 /// "Yes" on the evening question scrolls Home here
 /// ([openThoughtsRequestProvider]). If the thoughts are still loading, the
@@ -70,6 +72,9 @@ class _TonightsPickState extends ConsumerState<TonightsPick> {
       birthdayWishesProvider((ContactDirection.byUser, today)),
     );
     final people = ref.watch(peopleProvider).value ?? const <Person>[];
+    final settings = ref.settings;
+    final events =
+        ref.watch(allContactEventsProvider).value ?? const <ContactEvent>[];
     final picks = tonightsPicks(
       people: people,
       intentions: loaded.value ?? const <Intention>[],
@@ -80,6 +85,13 @@ class _TonightsPickState extends ConsumerState<TonightsPick> {
       congratulated: wishes.hasValue
           ? congratulatedIds(wishes.requireValue, today)
           : {for (final p in people) p.id},
+      owed: owedReplies(
+        people,
+        events,
+        now: now,
+        waitDays: settings.replyWaitDays,
+        listenerOn: settings.incomingOn,
+      ),
     );
     if (_scrollPending && picks.isNotEmpty) {
       _scrollPending = false;
@@ -96,7 +108,7 @@ class _TonightsPickState extends ConsumerState<TonightsPick> {
       _scrollPending = false;
     }
     if (picks.isEmpty) return const SizedBox.shrink();
-    final mode = ref.settings.openItems;
+    final mode = settings.openItems;
     return Padding(
       padding: const EdgeInsets.only(top: 22),
       child: switch (mode) {
@@ -242,9 +254,7 @@ class _PickCard extends ConsumerWidget {
                       ),
                     Expanded(
                       child: GreyButton(
-                        label: pick is BirthdayPick
-                            ? l10n.congratulated
-                            : l10n.done,
+                        label: _completeLabel(pick, l10n),
                         onPressed: () => _complete(context, ref, pick),
                       ),
                     ),
@@ -345,7 +355,7 @@ class _CompactPick extends ConsumerWidget {
             ),
           _SquareButton(
             size: 48,
-            tooltip: pick is BirthdayPick ? l10n.congratulated : l10n.done,
+            tooltip: _completeLabel(pick, l10n),
             icon: KeptIcons.check,
             onPressed: () => _complete(context, ref, pick),
           ),
@@ -355,17 +365,21 @@ class _CompactPick extends ConsumerWidget {
   }
 }
 
-/// The icon next to the name: the cake for a birthday, else the kind.
+/// The icon next to the name: the cake for a birthday, the chat bubble for
+/// an owed reply, else the kind.
 KeptIcons _pickIcon(Pick pick) => switch (pick) {
   BirthdayPick() => KeptIcons.cake,
+  ReplyPick() => KeptIcons.chat,
   IntentionPick(:final intention) => kindIcon(intention.kind),
 };
 
-/// The line under the name: the birthday with the age if known, or the
-/// thought (its kind when it has no text).
+/// The line under the name: the birthday with the age if known, the
+/// question about an owed reply, or the thought (its kind when it has no
+/// text).
 String _pickText(Pick pick, AppLocalizations l10n) => switch (pick) {
   BirthdayPick(:final age?) => l10n.birthdayTurns(age),
   BirthdayPick() => l10n.birthdayToday,
+  ReplyPick(:final person) => l10n.stillOweReply(firstNameOf(person.name)),
   IntentionPick(:final intention) =>
     intention.note.trim().isEmpty
         ? kindLabel(intention.kind, l10n)
@@ -380,6 +394,8 @@ void _openChat(BuildContext context, WidgetRef ref, Pick pick) =>
         person,
         birthday: true,
       ),
+      // Opening the chat also clears the owed reply (openChat).
+      ReplyPick(:final person) => openChat(context, ref, person),
       IntentionPick(:final person, :final intention) => openChat(
         context,
         ref,
@@ -416,10 +432,24 @@ class WhenLineOf extends StatelessWidget {
   };
 }
 
-/// "Congratulated" on a birthday pick, "Done" on a thought.
+/// The label of the last button: "Congratulated" on a birthday pick,
+/// "Already answered" on an owed reply, "Done" on a thought.
+String _completeLabel(Pick pick, AppLocalizations l10n) => switch (pick) {
+  BirthdayPick() => l10n.congratulated,
+  ReplyPick() => l10n.alreadyAnswered,
+  IntentionPick() => l10n.done,
+};
+
+/// "Congratulated" on a birthday pick, "Done" on a thought. "Already
+/// answered" on an owed reply only notes the time (`replyClearedAt`) and
+/// stores nothing else (02-design.md §2.6).
 void _complete(BuildContext context, WidgetRef ref, Pick pick) =>
     unawaited(switch (pick) {
       BirthdayPick(:final person) => completeBirthday(context, ref, person),
+      ReplyPick(:final person) =>
+        ref
+            .read(peopleRepositoryProvider)
+            .setReplyClearedAt(person.id, ref.read(clockProvider)()),
       IntentionPick(:final person, :final intention) => completeThought(
         context,
         ref,

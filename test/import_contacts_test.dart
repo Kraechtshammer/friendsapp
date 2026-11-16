@@ -38,6 +38,9 @@ class _FakeContacts implements ContactsSource {
 
   @override
   Future<void> openSettings() async => settingsOpened = true;
+
+  @override
+  Future<Map<String, String>> displayNames() async => const {};
 }
 
 void main() {

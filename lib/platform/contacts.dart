@@ -29,6 +29,10 @@ abstract class ContactsSource {
 
   /// Opens the app settings, for when access was denied for good.
   Future<void> openSettings();
+
+  /// The display name of every contact, by contact id. Never asks for
+  /// access: without it, or on any error, the map is empty.
+  Future<Map<String, String>> displayNames();
 }
 
 /// [ContactsSource] on top of `flutter_contacts` 2.x (read only).
@@ -87,4 +91,24 @@ class DeviceContacts implements ContactsSource {
 
   @override
   Future<void> openSettings() => FlutterContacts.permissions.openSettings();
+
+  @override
+  Future<Map<String, String>> displayNames() async {
+    try {
+      if (!await FlutterContacts.permissions.has(PermissionType.read)) {
+        return const {};
+      }
+      final contacts = await FlutterContacts.getAll(
+        properties: {ContactProperty.name},
+      );
+      return {
+        for (final c in contacts)
+          if (c.id case final id?)
+            if (c.displayName?.trim() case final name? when name.isNotEmpty)
+              id: name,
+      };
+    } catch (_) {
+      return const {};
+    }
+  }
 }

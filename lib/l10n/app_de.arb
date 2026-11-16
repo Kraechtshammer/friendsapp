@@ -240,5 +240,18 @@
   "dateDayMonth": "{date}",
   "@dateDayMonth": {"placeholders": {"date": {"type": "DateTime", "format": "d MMM", "isCustomDateFormat": "true"}}},
   "dateDayMonthYear": "{date}",
-  "@dateDayMonthYear": {"placeholders": {"date": {"type": "DateTime", "format": "d MMM yy", "isCustomDateFormat": "true"}}}
+  "@dateDayMonthYear": {"placeholders": {"date": {"type": "DateTime", "format": "d MMM yy", "isCustomDateFormat": "true"}}},
+  "stillOweReply": "Schuldest du {name} noch eine Antwort?",
+  "alreadyAnswered": "Schon geantwortet",
+  "settingsIncoming": "Eingehende Nachrichten",
+  "settingsIncomingSwitch": "Merken, wer geschrieben oder angerufen hat",
+  "settingsIncomingHelp": "Kept liest die Benachrichtigungen von WhatsApp, Telegram, Signal und Discord, um zu sehen, wer von deinen Leuten dir geschrieben oder dich angerufen hat und wann. Was geschrieben wurde, liest Kept nie. Gruppenchats und alle anderen bleiben außen vor.",
+  "settingsIncomingAccess": "Zugriff auf Benachrichtigungen",
+  "settingsIncomingAccessOn": "Erlaubt",
+  "settingsIncomingAccessOff": "Noch nicht erlaubt",
+  "settingsIncomingOpenAccess": "Zugriff auf Benachrichtigungen öffnen",
+  "settingsReplyWait": "Nach einer Antwort fragen nach",
+  "replyWaitDays": "{count, plural, =1{1 Tag} other{{count} Tage}}",
+  "shorter": "Kürzer",
+  "longer": "Länger"
 }

@@ -11,6 +11,7 @@ import '../domain/contact_event.dart';
 import '../platform/app_shortcuts.dart';
 import '../platform/chat_opener.dart';
 import '../platform/contacts.dart';
+import '../platform/incoming_listener.dart';
 import '../platform/notifications.dart';
 import 'services.dart';
 
@@ -38,6 +39,18 @@ final appShortcutsProvider = Provider<AppShortcuts>(
 /// a fake.
 final notificationsProvider = Provider<Notifications>(
   (ref) => LocalNotifications(),
+);
+
+/// The optional notification listener for incoming contact (M7). Tests
+/// override it with a fake. See incoming_listener.dart for removing it.
+final incomingListenerProvider = Provider<IncomingListener>(
+  (ref) => const AndroidIncomingListener(),
+);
+
+/// Whether the user has granted notification access to the listener. Read
+/// again when Settings comes back to the front.
+final incomingAccessProvider = FutureProvider.autoDispose<bool>(
+  (ref) => ref.watch(incomingListenerProvider).hasAccess(),
 );
 
 /// Whether the app may show notifications. Read again when the app comes
@@ -173,6 +186,16 @@ final personContactEventsProvider =
           .contactEventsFor(demo: await demo)
           .watchForPerson(personId);
     });
+
+/// All contact events of everyone, newest first, from the content database
+/// (demo or real). For the owed replies.
+final allContactEventsProvider = StreamProvider<List<ContactEvent>>((
+  ref,
+) async* {
+  final demo = ref.watch(settingsProvider.selectAsync((s) => s.demoMode));
+  final services = ref.watch(servicesProvider);
+  yield* services.contactEventsFor(demo: await demo).watchAll();
+});
 
 /// The person's newest non-empty contact note; null if there is none.
 final personLatestNoteProvider = StreamProvider.family<String?, String>((

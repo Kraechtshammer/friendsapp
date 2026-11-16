@@ -47,6 +47,22 @@ Tests that run by themselves (`flutter analyze`, `flutter test`, the migration t
 - [ ] "They wrote" and "They called": the entry appears, Undo removes it, a second tap the same day says it is already noted.
 - [ ] Tap a history entry: edit the note, delete the entry.
 
+## Schema 4 (not released yet)
+
+- [ ] The first install of a build with schema 4: all people, thoughts, history and settings are still there. (Tested automatically row by row, but never run on your phone.)
+
+## M7, incoming messages and owed replies (not released yet)
+
+- [ ] Settings, "Incoming messages": switch on, grant notification access, the state shows "Allowed".
+- [ ] A WhatsApp message from one person on your list appears in their timeline as "<Name> wrote", once per day.
+- [ ] A message in a WhatsApp group is not recorded.
+- [ ] An incoming WhatsApp call shows as "<Name> called"; your own outgoing call is not recorded.
+- [ ] The same for Telegram, Signal and Discord, as far as you use them (group detection there is unsure).
+- [ ] A person whose name in the messenger differs from the name in Kept: are they still recognised?
+- [ ] Two days after an unanswered message: "Still owe ... a reply?" is the pick on Home. Try Open chat and Already answered.
+- [ ] Switching the part off stops the recording.
+- [ ] Do you miss a notification for owed replies? (There is none, by Claude's choice.)
+
 ## Release builds
 
 - [ ] The APK from the GitHub release installs over the debug build or over the last release, and keeps the data. (A debug build and a release build are signed differently; Android may refuse one over the other. Do not uninstall to get around it: that deletes the data. Tell Claude instead.)

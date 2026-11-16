@@ -105,7 +105,11 @@ Details of what was built are in [04-architecture.md](04-architecture.md); decis
 - Done: the compact timeline on the person page (upcoming, a Today mark, history with who did what, activity and note, birthdays in both directions, "Added to your people"); "They wrote" and "They called" buttons (once per day, with Undo); a sheet to edit or delete a history entry. Checked: analyze, 248 tests, Claude looked at the dark render (`build/screens/m6-timeline-dark.png`). **Not checked: on the phone. The small direction arrows show as empty boxes in the test render (the test font lacks them); whether they show on the phone is open.**
 - M5 and M6 are released together as 0.4.0.
 - **Schema 4 is in** (2026-11-16): one adding-only step for M7 to M10 (two nullable columns; tables treats, stamps, ideas). Checked: 253 tests, the 3-to-4 migration test compares every old table row by row and there is a 1-to-4 run. **Not run on the developer's phone: the phone is at schema 3 with the M4 debug build. Claude does not install there unasked.**
-- Next: M7.
+**M7, owed replies and incoming contact: built, not tried** (2026-11-16).
+
+- Done: the optional listener (Settings, "Incoming messages", off at start, needs notification access granted by hand) records who wrote or called in WhatsApp, Telegram, Signal and Discord, once per person, kind and day; the pick "Still owe ... a reply?" with Open chat and Already answered, second in the pick order, after a waiting time (start 2 days, 1 to 14 in Settings). Checked: analyze, 279 tests, debug APK builds, Claude read the Kotlin listener: it never reads the message text. **Not checked: everything on the phone; the Kotlin code has no tests.** Group chat detection is fairly sure for WhatsApp and Signal, unsure for Telegram and Discord.
+- Claude's choices, not confirmed: no notification of its own for owed replies; no "Did Jonas answer?" fallback question (the "They wrote" button covers entering by hand); "Already answered" stores no contact.
+- Next: M8, rhythm and reconnect.
 
 ## 5. Open questions for the developer
 

@@ -87,6 +87,23 @@ class PeopleRepository {
   /// `person.copyWith(...)`; nullable ones take `Value(null)` to clear.
   Future<void> update(Person person) => _db.update(_db.people).replace(person);
 
+  /// Sets only `replyClearedAt` of person [id] to [at]: "Already answered"
+  /// or the chat was opened (02-design.md §2.6). Nothing else changes, so a
+  /// stale copy of the person cannot overwrite newer fields.
+  Future<void> setReplyClearedAt(String id, DateTime at) =>
+      (_db.update(_db.people)..where((t) => t.id.equals(id))).write(
+        PeopleCompanion(
+          replyClearedAt: Value(
+            at.subtract(
+              Duration(
+                milliseconds: at.millisecond,
+                microseconds: at.microsecond,
+              ),
+            ),
+          ),
+        ),
+      );
+
   Future<void> delete(String id) =>
       (_db.delete(_db.people)..where((t) => t.id.equals(id))).go();
 

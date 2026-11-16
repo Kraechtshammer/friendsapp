@@ -1,10 +1,11 @@
 import '../data/database.dart';
 import 'birthdays.dart';
+import 'owed_reply.dart';
 import 'plans.dart';
 
-/// Where a pick comes from (02-design.md §2.4). Owed replies, the
-/// reconnect person and rhythms will add their own kinds.
-enum PickKind { birthday, intention, plan }
+/// Where a pick comes from (02-design.md §2.4). The reconnect person and
+/// rhythms will add their own kinds.
+enum PickKind { birthday, reply, intention, plan }
 
 /// One thing to suggest tonight: a person and the reason.
 sealed class Pick {
@@ -25,6 +26,18 @@ class BirthdayPick extends Pick {
 
   @override
   PickKind get kind => PickKind.birthday;
+}
+
+/// [person] wrote and may still wait for a reply (§2.4, step 2; §2.6): the
+/// card asks "Still owe NAME a reply?". [since] is the time of their
+/// message ([owedSince]).
+class ReplyPick extends Pick {
+  const ReplyPick(super.person, {required this.since});
+
+  final DateTime since;
+
+  @override
+  PickKind get kind => PickKind.reply;
 }
 
 /// One of the user's own open intentions (§2.4, step 4).
@@ -48,16 +61,17 @@ class PlanPick extends IntentionPick {
 }
 
 /// Tonight's picks, in order: birthdays on the local day of [today] of
-/// people not in [congratulated] (in the order of [people]), then the plain
+/// people not in [congratulated] (in the order of [people]), then the owed
+/// replies [owed] (from [owedReplies], longest owed first), then the plain
 /// thoughts and the due plans ([intentionPicks]). At most one pick per
-/// person: a person with a birthday pick has no other pick until the
-/// birthday pick is gone. [now] is the time for the due plans; it
-/// defaults to [today].
+/// person: a person with an earlier pick has no later one until that is
+/// gone. [now] is the time for the due plans; it defaults to [today].
 List<Pick> tonightsPicks({
   required List<Person> people,
   required List<Intention> intentions,
   required DateTime today,
   required Set<String> congratulated,
+  List<OwedReply> owed = const [],
   DateTime? now,
 }) {
   final birthdays = [
@@ -66,8 +80,13 @@ List<Pick> tonightsPicks({
         BirthdayPick(p, age: ageTurned(p.birthdayYear, today)),
   ];
   final taken = {for (final b in birthdays) b.person.id};
+  final replies = [
+    for (final o in owed)
+      if (taken.add(o.person.id)) ReplyPick(o.person, since: o.since),
+  ];
   return [
     ...birthdays,
+    ...replies,
     for (final i in intentionPicks(people, intentions, now: now ?? today))
       if (!taken.contains(i.person.id)) i,
   ];

@@ -297,5 +297,20 @@
   "dateDayMonth": "{date}",
   "@dateDayMonth": {"placeholders": {"date": {"type": "DateTime", "format": "d MMM", "isCustomDateFormat": "true"}}},
   "dateDayMonthYear": "{date}",
-  "@dateDayMonthYear": {"placeholders": {"date": {"type": "DateTime", "format": "d MMM yy", "isCustomDateFormat": "true"}}}
+  "@dateDayMonthYear": {"placeholders": {"date": {"type": "DateTime", "format": "d MMM yy", "isCustomDateFormat": "true"}}},
+  "stillOweReply": "Still owe {name} a reply?",
+  "@stillOweReply": {"placeholders": {"name": {"type": "String"}}},
+  "alreadyAnswered": "Already answered",
+  "settingsIncoming": "Incoming messages",
+  "settingsIncomingSwitch": "Notice who wrote or called",
+  "settingsIncomingHelp": "Kept reads the notifications of WhatsApp, Telegram, Signal and Discord to see who from your people wrote or called you, and when. It never reads what they wrote. Group chats and everyone else are left out.",
+  "settingsIncomingAccess": "Notification access",
+  "settingsIncomingAccessOn": "Allowed",
+  "settingsIncomingAccessOff": "Not allowed yet",
+  "settingsIncomingOpenAccess": "Open notification access",
+  "settingsReplyWait": "Ask about a reply after",
+  "replyWaitDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@replyWaitDays": {"placeholders": {"count": {"type": "int"}}},
+  "shorter": "Shorter",
+  "longer": "Longer"
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart' show setEquals;
 
 import '../domain/birthdays.dart';
+import '../domain/owed_reply.dart';
 
 /// Dark, light or as the phone says.
 enum AppThemeMode { system, light, dark }
@@ -20,7 +21,13 @@ class AppSettings {
     this.notificationPermissionAsked = false,
     this.openItems = OpenItemsMode.one,
     this.ownBirthday,
+    this.incomingOn = false,
+    this.replyWaitDays = defaultReplyWaitDays,
   });
+
+  /// The shortest and longest waiting time for owed replies, in days.
+  static const minReplyWaitDays = 1;
+  static const maxReplyWaitDays = 14;
 
   /// 19:00, as minutes after midnight.
   static const defaultEveningMinute = 19 * 60;
@@ -52,6 +59,13 @@ class AppSettings {
   /// set. Stored as `MM-DD` or `YYYY-MM-DD` under `ownBirthday`.
   final Birthday? ownBirthday;
 
+  /// The optional notification listener records who wrote or called
+  /// (02-design.md §2.6, M7). Off at start.
+  final bool incomingOn;
+
+  /// Days after an incoming message before a reply counts as owed.
+  final int replyWaitDays;
+
   /// Reads settings from the stored key-value pairs. Unknown or broken
   /// values fall back to the defaults.
   factory AppSettings.fromMap(Map<String, String> m) {
@@ -72,6 +86,11 @@ class AppSettings {
       notificationPermissionAsked: m['notificationPermissionAsked'] == 'true',
       openItems: pick(OpenItemsMode.values, 'openItems', d.openItems),
       ownBirthday: Birthday.parse(m['ownBirthday']),
+      incomingOn: flag('incomingOn', d.incomingOn),
+      replyWaitDays: switch (int.tryParse(m['replyWaitDays'] ?? '')) {
+        final v? when v >= minReplyWaitDays && v <= maxReplyWaitDays => v,
+        _ => d.replyWaitDays,
+      },
     );
   }
 
@@ -85,6 +104,8 @@ class AppSettings {
     'notificationPermissionAsked': '$notificationPermissionAsked',
     'openItems': openItems.name,
     'ownBirthday': ownBirthday?.format(),
+    'incomingOn': '$incomingOn',
+    'replyWaitDays': '$replyWaitDays',
   };
 
   AppSettings copyWith({
@@ -95,6 +116,8 @@ class AppSettings {
     Set<int>? eveningExcludedDays,
     bool? notificationPermissionAsked,
     OpenItemsMode? openItems,
+    bool? incomingOn,
+    int? replyWaitDays,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     demoMode: demoMode ?? this.demoMode,
@@ -105,6 +128,8 @@ class AppSettings {
         notificationPermissionAsked ?? this.notificationPermissionAsked,
     openItems: openItems ?? this.openItems,
     ownBirthday: ownBirthday,
+    incomingOn: incomingOn ?? this.incomingOn,
+    replyWaitDays: replyWaitDays ?? this.replyWaitDays,
   );
 
   /// A copy with [birthday] as the user's own birthday; null clears it.
@@ -117,6 +142,8 @@ class AppSettings {
     notificationPermissionAsked: notificationPermissionAsked,
     openItems: openItems,
     ownBirthday: birthday,
+    incomingOn: incomingOn,
+    replyWaitDays: replyWaitDays,
   );
 
   @override
@@ -129,7 +156,9 @@ class AppSettings {
       setEquals(other.eveningExcludedDays, eveningExcludedDays) &&
       other.notificationPermissionAsked == notificationPermissionAsked &&
       other.openItems == openItems &&
-      other.ownBirthday == ownBirthday;
+      other.ownBirthday == ownBirthday &&
+      other.incomingOn == incomingOn &&
+      other.replyWaitDays == replyWaitDays;
 
   @override
   int get hashCode => Object.hash(
@@ -141,6 +170,8 @@ class AppSettings {
     notificationPermissionAsked,
     openItems,
     ownBirthday,
+    incomingOn,
+    replyWaitDays,
   );
 }
 

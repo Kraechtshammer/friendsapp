@@ -1285,6 +1285,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{date}'**
   String dateDayMonthYear(DateTime date);
+
+  /// No description provided for @stillOweReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Still owe {name} a reply?'**
+  String stillOweReply(String name);
+
+  /// No description provided for @alreadyAnswered.
+  ///
+  /// In en, this message translates to:
+  /// **'Already answered'**
+  String get alreadyAnswered;
+
+  /// No description provided for @settingsIncoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Incoming messages'**
+  String get settingsIncoming;
+
+  /// No description provided for @settingsIncomingSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Notice who wrote or called'**
+  String get settingsIncomingSwitch;
+
+  /// No description provided for @settingsIncomingHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept reads the notifications of WhatsApp, Telegram, Signal and Discord to see who from your people wrote or called you, and when. It never reads what they wrote. Group chats and everyone else are left out.'**
+  String get settingsIncomingHelp;
+
+  /// No description provided for @settingsIncomingAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification access'**
+  String get settingsIncomingAccess;
+
+  /// No description provided for @settingsIncomingAccessOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed'**
+  String get settingsIncomingAccessOn;
+
+  /// No description provided for @settingsIncomingAccessOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Not allowed yet'**
+  String get settingsIncomingAccessOff;
+
+  /// No description provided for @settingsIncomingOpenAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Open notification access'**
+  String get settingsIncomingOpenAccess;
+
+  /// No description provided for @settingsReplyWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask about a reply after'**
+  String get settingsReplyWait;
+
+  /// No description provided for @replyWaitDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String replyWaitDays(int count);
+
+  /// No description provided for @shorter.
+  ///
+  /// In en, this message translates to:
+  /// **'Shorter'**
+  String get shorter;
+
+  /// No description provided for @longer.
+  ///
+  /// In en, this message translates to:
+  /// **'Longer'**
+  String get longer;
 }
 
 class _AppLocalizationsDelegate

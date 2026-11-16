@@ -49,6 +49,11 @@ class ContactEventsRepository {
             ..orderBy(_newestFirst))
           .watch();
 
+  /// All events of everyone, newest first. For the owed replies
+  /// (domain/owed_reply.dart).
+  Stream<List<ContactEvent>> watchAll() =>
+      (_db.select(_db.contactEvents)..orderBy(_newestFirst)).watch();
+
   /// The note of the person's newest event that has a non-empty one; null
   /// if there is none.
   Stream<String?> watchLatestNote(String personId) =>
@@ -166,13 +171,16 @@ class ContactEventsRepository {
   }
 
   /// "They wrote" or "They called": adds an event of [kind] from the
-  /// person (direction byThem, source manual) at [at], unless one of that
-  /// kind is already stored from them on the same local day; then null is
-  /// returned and nothing is added. So a second tap on a day does nothing.
+  /// person (direction byThem, by default source manual) at [at], unless
+  /// one of that kind is already stored from them on the same local day,
+  /// from any source; then null is returned and nothing is added. So a
+  /// second tap on a day does nothing, and the notification listener
+  /// ([ContactSource.listener]) adds at most one per person, kind and day.
   Future<ContactEvent?> addByThemOnce({
     required String personId,
     required ContactKind kind,
     required DateTime at,
+    ContactSource source = ContactSource.manual,
     DateTime? now,
   }) {
     final start = DateTime(at.year, at.month, at.day);
@@ -194,7 +202,7 @@ class ContactEventsRepository {
         at: at,
         kind: kind,
         direction: ContactDirection.byThem,
-        source: ContactSource.manual,
+        source: source,
         now: now,
       );
     });

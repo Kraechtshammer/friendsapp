@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app/incoming_sync.dart';
 import '../app/providers.dart';
 import '../data/app_settings.dart';
 import '../data/database.dart';
@@ -32,6 +33,10 @@ import 'upcoming/upcoming_screen.dart';
 /// settings, the language or today's wishes change, and when the app comes
 /// back on a new day. "Open chat" and a tap open Home at the birthday
 /// pick.
+///
+/// And it keeps the optional notification listener in step ([IncomingSync],
+/// M7): at start, on every return to the app and when the settings or the
+/// real people change.
 class HomeShell extends ConsumerStatefulWidget {
   const HomeShell({super.key});
 
@@ -46,6 +51,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   BirthdayPlan? _birthdaysScheduled;
   var _permissionAsked = false;
   late final AppLifecycleListener _lifecycle;
+  late final _incoming = IncomingSync(ref);
 
   /// The day whose birthday wishes are watched, and the subscription.
   DateTime? _wishDay;
@@ -63,7 +69,10 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     ref.listenManual(settingsProvider, (_, next) {
       if (next.value case final settings?) _onSettings(settings);
     });
-    ref.listenManual(realPeopleProvider, (_, _) => _scheduleBirthdays());
+    ref.listenManual(realPeopleProvider, (_, _) {
+      _scheduleBirthdays();
+      _incoming.onPeople();
+    });
     _watchWishes(schedule: false);
   }
 
@@ -95,6 +104,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   }
 
   void _onResume() {
+    _incoming.onResume();
     _askPendingQuestion();
     _watchWishes();
   }
@@ -134,6 +144,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   }
 
   void _onSettings(AppSettings settings) {
+    _incoming.onSettings(settings);
     _scheduleEvening(settings);
     _scheduleBirthdays();
     unawaited(_askPermissionOnce(settings));

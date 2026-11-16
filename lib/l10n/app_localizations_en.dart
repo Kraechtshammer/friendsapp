@@ -739,4 +739,54 @@ class AppLocalizationsEn extends AppLocalizations {
 
     return '$dateString';
   }
+
+  @override
+  String stillOweReply(String name) {
+    return 'Still owe $name a reply?';
+  }
+
+  @override
+  String get alreadyAnswered => 'Already answered';
+
+  @override
+  String get settingsIncoming => 'Incoming messages';
+
+  @override
+  String get settingsIncomingSwitch => 'Notice who wrote or called';
+
+  @override
+  String get settingsIncomingHelp =>
+      'Kept reads the notifications of WhatsApp, Telegram, Signal and Discord to see who from your people wrote or called you, and when. It never reads what they wrote. Group chats and everyone else are left out.';
+
+  @override
+  String get settingsIncomingAccess => 'Notification access';
+
+  @override
+  String get settingsIncomingAccessOn => 'Allowed';
+
+  @override
+  String get settingsIncomingAccessOff => 'Not allowed yet';
+
+  @override
+  String get settingsIncomingOpenAccess => 'Open notification access';
+
+  @override
+  String get settingsReplyWait => 'Ask about a reply after';
+
+  @override
+  String replyWaitDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shorter => 'Shorter';
+
+  @override
+  String get longer => 'Longer';
 }
