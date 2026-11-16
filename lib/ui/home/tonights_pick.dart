@@ -96,6 +96,10 @@ class _TonightsPickState extends ConsumerState<TonightsPick> {
       reconnect: week is ReconnectChosen ? week.person : null,
       events: events,
       classRhythms: settings.classRhythms,
+      groupMembers: {
+        for (final c in ref.watch(couplesProvider).value ?? const [])
+          c.group.id: [for (final p in c.members) p.id],
+      },
       // Until the wishes are loaded nobody counts as having a birthday
       // pick, so one already congratulated never shows for a moment.
       congratulated: wishes.hasValue
@@ -186,7 +190,7 @@ class _PickCard extends ConsumerWidget {
                           children: [
                             Flexible(
                               child: Text(
-                                firstNameOf(person.name),
+                                _pickName(pick),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: context.text.titleLarge?.copyWith(
@@ -231,7 +235,7 @@ class _PickCard extends ConsumerWidget {
                   children: [
                     if (pick is PlanPick)
                       Text(
-                        l10n.wantSetDate(firstNameOf(person.name)),
+                        l10n.wantSetDate(_pickName(pick)),
                         style: context.text.labelLarge?.copyWith(
                           color: kept.text,
                         ),
@@ -326,7 +330,7 @@ class _CompactPick extends ConsumerWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        firstNameOf(person.name),
+                        _pickName(pick),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: context.text.labelLarge?.copyWith(
@@ -339,7 +343,7 @@ class _CompactPick extends ConsumerWidget {
                 ),
                 Text(
                   pick is PlanPick
-                      ? l10n.wantSetDate(firstNameOf(person.name))
+                      ? l10n.wantSetDate(_pickName(pick))
                       : _pickText(pick, l10n, ref.settings.reconnectSpan),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -385,6 +389,15 @@ class _CompactPick extends ConsumerWidget {
     );
   }
 }
+
+/// The name on a pick: the person's first name, or for a couple's thought
+/// the members' first names joined with " & " (a plain fallback until the
+/// couple UI comes).
+String _pickName(Pick pick) => switch (pick) {
+  IntentionPick(:final members) when members.length > 1 =>
+    members.map((p) => firstNameOf(p.name)).join(' & '),
+  _ => firstNameOf(pick.person.name),
+};
 
 /// The icon next to the name: the cake for a birthday, the chat bubble for
 /// an owed reply, else the kind.

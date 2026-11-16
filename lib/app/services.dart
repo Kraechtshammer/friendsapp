@@ -5,6 +5,7 @@ import '../data/contact_events_repository.dart';
 import '../data/database.dart';
 import '../data/database_connection.dart';
 import '../data/day_answers_repository.dart';
+import '../data/groups_repository.dart';
 import '../data/ideas_repository.dart';
 import '../data/intentions_repository.dart';
 import '../data/people_repository.dart';
@@ -30,6 +31,7 @@ class AppServices {
   }) : settings = SettingsRepository(db),
        _realPeople = PeopleRepository(db),
        _realIntentions = IntentionsRepository(db),
+       _realGroups = GroupsRepository(db),
        _realTreats = TreatsRepository(db),
        _realDayAnswers = DayAnswersRepository(db),
        _realIdeas = IdeasRepository(db) {
@@ -49,6 +51,7 @@ class AppServices {
   final AppDatabase Function() _openDemo;
   final PeopleRepository _realPeople;
   final IntentionsRepository _realIntentions;
+  final GroupsRepository _realGroups;
   late final ContactEventsRepository _realContactEvents;
   final TreatsRepository _realTreats;
   final DayAnswersRepository _realDayAnswers;
@@ -57,6 +60,7 @@ class AppServices {
   IdeasRepository? _demoIdeas;
   PeopleRepository? _demoPeople;
   IntentionsRepository? _demoIntentions;
+  GroupsRepository? _demoGroups;
   ContactEventsRepository? _demoContactEvents;
   DayAnswersRepository? _demoDayAnswers;
   TreatsRepository? _demoTreats;
@@ -94,6 +98,11 @@ class AppServices {
   /// The intentions of the same content database as [peopleFor].
   IntentionsRepository intentionsFor({required bool demo}) =>
       demo && allowDemo ? _demoIntentionsRepository() : _realIntentions;
+
+  /// The groups (couples) of the same content database as [peopleFor].
+  GroupsRepository groupsFor({required bool demo}) => demo && allowDemo
+      ? _demoGroups ??= GroupsRepository(_demoDatabase())
+      : _realGroups;
 
   /// The contact events of the same content database as [peopleFor].
   ContactEventsRepository contactEventsFor({required bool demo}) =>

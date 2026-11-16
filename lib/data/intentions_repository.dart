@@ -28,24 +28,42 @@ class IntentionsRepository {
             ..orderBy(_newestFirst))
           .watch();
 
+  /// All intentions of one group (a couple), in every state, newest first.
+  Stream<List<Intention>> watchForGroup(String groupId) =>
+      (_db.select(_db.intentions)
+            ..where((t) => t.groupId.equals(groupId))
+            ..orderBy(_newestFirst))
+          .watch();
+
   static final _newestFirst = <OrderClauseGenerator<$IntentionsTable>>[
     (t) => OrderingTerm.desc(t.createdAt),
     // drift stores whole seconds; the id keeps the order stable.
     (t) => OrderingTerm.desc(t.id),
   ];
 
-  /// Adds an open intention with a new id. [now] is for tests.
+  /// Adds an open intention with a new id, for one person ([personId]) or
+  /// for a couple ([groupId]): exactly one of the two must be given, else
+  /// an [ArgumentError] is thrown (the table's CHECK says the same). [now]
+  /// is for tests.
   Future<Intention> add({
-    required String personId,
+    String? personId,
+    String? groupId,
     String note = '',
     IntentionKind kind = IntentionKind.write,
     When when = const When.none(),
     String? link,
     DateTime? now,
   }) async {
+    if ((personId == null) == (groupId == null)) {
+      throw ArgumentError(
+        'An intention is for a person or a group: give exactly one of '
+        'personId ($personId) and groupId ($groupId).',
+      );
+    }
     final intention = Intention(
       id: _uuid.v4(),
       personId: personId,
+      groupId: groupId,
       note: note,
       kind: kind,
       state: IntentionState.open,

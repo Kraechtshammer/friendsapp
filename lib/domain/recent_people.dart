@@ -11,10 +11,11 @@ List<Person> recentPeople(
 }) {
   final latest = <String, DateTime>{};
   for (final i in intentions) {
-    final seen = latest[i.personId];
-    if (seen == null || i.createdAt.isAfter(seen)) {
-      latest[i.personId] = i.createdAt;
-    }
+    // A couple's intention (no personId) does not count here.
+    final id = i.personId;
+    if (id == null) continue;
+    final seen = latest[id];
+    if (seen == null || i.createdAt.isAfter(seen)) latest[id] = i.createdAt;
   }
   int byName(Person a, Person b) {
     final c = a.name.toLowerCase().compareTo(b.name.toLowerCase());

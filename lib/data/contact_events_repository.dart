@@ -42,6 +42,8 @@ class ContactEventsRepository {
     String? activity,
     String? note,
     String? intentionId,
+    String? groupId,
+    String? sharedId,
     DateTime? now,
   }) async {
     final event = ContactEvent(
@@ -55,6 +57,8 @@ class ContactEventsRepository {
       note: note,
       intentionId: intentionId,
       createdAt: wholeSeconds(now ?? DateTime.now()),
+      groupId: groupId,
+      sharedId: sharedId,
     );
     final settings = await _loadSettings();
     await _db.transaction(() async {
@@ -62,6 +66,52 @@ class ContactEventsRepository {
       await _treats.awardFor(event, settings, now: event.createdAt);
     });
     return event;
+  }
+
+  /// A contact with a group (meeting a couple): one row per member, in the
+  /// members' order, all with the same time, kind, note, [groupId] and a
+  /// new `sharedId`, in one transaction. Each row goes through [add], so
+  /// every member's timeline shows it and each gets their stamp by the one
+  /// rule. Throws a [StateError] if the group has no members.
+  Future<List<ContactEvent>> addForGroup({
+    required String groupId,
+    required DateTime at,
+    required ContactKind kind,
+    required ContactDirection direction,
+    required ContactSource source,
+    String? activity,
+    String? note,
+    String? intentionId,
+    DateTime? now,
+  }) {
+    final time = now ?? DateTime.now();
+    final sharedId = _uuid.v4();
+    return _db.transaction(() async {
+      final members =
+          await (_db.select(_db.groupMembers)
+                ..where((m) => m.groupId.equals(groupId))
+                ..orderBy([(m) => OrderingTerm.asc(m.position)]))
+              .get();
+      if (members.isEmpty) {
+        throw StateError('Group $groupId has no members');
+      }
+      return [
+        for (final m in members)
+          await add(
+            personId: m.personId,
+            at: at,
+            kind: kind,
+            direction: direction,
+            source: source,
+            activity: activity,
+            note: note,
+            intentionId: intentionId,
+            groupId: groupId,
+            sharedId: sharedId,
+            now: time,
+          ),
+      ];
+    });
   }
 
   /// All events of one person, newest first.
@@ -232,8 +282,10 @@ class ContactEventsRepository {
 
   /// Marks the intention [intentionId] done and adds the contact event that
   /// did it, linked to it, in one transaction. Kind and direction follow
-  /// from the intention's kind (contactKindFor, contactDirectionFor).
-  /// [at] defaults to now; [now] is for tests.
+  /// from the intention's kind (contactKindFor, contactDirectionFor). A
+  /// couple's intention adds the event for the group ([addForGroup]) and
+  /// returns the first member's row. [at] defaults to now; [now] is for
+  /// tests.
   Future<ContactEvent> completeIntention(
     String intentionId, {
     ContactSource source = ContactSource.confirmed,
@@ -255,8 +307,23 @@ class ContactEventsRepository {
           closedAt: Value(wholeSeconds(time)),
         ),
       );
+      final groupId = intention.groupId;
+      if (groupId != null) {
+        final rows = await addForGroup(
+          groupId: groupId,
+          at: at ?? time,
+          kind: contactKindFor(intention.kind),
+          direction: contactDirectionFor(intention.kind),
+          source: source,
+          activity: activity,
+          note: note,
+          intentionId: intentionId,
+          now: time,
+        );
+        return rows.first;
+      }
       return add(
-        personId: intention.personId,
+        personId: intention.personId!,
         at: at ?? time,
         kind: contactKindFor(intention.kind),
         direction: contactDirectionFor(intention.kind),
@@ -270,14 +337,39 @@ class ContactEventsRepository {
   }
 
   /// Sets the activity and the note of an event. Both are replaced, so
-  /// null clears one. Nothing else of an event can change.
+  /// null clears one. Nothing else of an event can change. For a shared
+  /// event (a meeting with a couple) every row of it changes, so all
+  /// timelines show the same.
   Future<void> update(String id, {String? activity, String? note}) =>
-      (_db.update(_db.contactEvents)..where((t) => t.id.equals(id))).write(
-        ContactEventsCompanion(activity: Value(activity), note: Value(note)),
-      );
+      _db.transaction(() async {
+        final ids = await sharedRowIds(id);
+        await (_db.update(
+          _db.contactEvents,
+        )..where((t) => t.id.isIn(ids))).write(
+          ContactEventsCompanion(activity: Value(activity), note: Value(note)),
+        );
+      });
 
-  Future<void> delete(String id) =>
-      (_db.delete(_db.contactEvents)..where((t) => t.id.equals(id))).go();
+  /// Deletes an event; for a shared event every row of it. Stamps stay.
+  Future<void> delete(String id) => _db.transaction(() async {
+    final ids = await sharedRowIds(id);
+    await (_db.delete(_db.contactEvents)..where((t) => t.id.isIn(ids))).go();
+  });
+
+  /// The ids of all rows of the event [id]: the rows with its `sharedId`,
+  /// or only [id] for an event with one person (or an unknown id).
+  Future<List<String>> sharedRowIds(String id) async {
+    final row = await (_db.select(
+      _db.contactEvents,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
+    final sharedId = row?.sharedId;
+    if (sharedId == null) return [id];
+    return (_db.selectOnly(_db.contactEvents)
+          ..addColumns([_db.contactEvents.id])
+          ..where(_db.contactEvents.sharedId.equals(sharedId)))
+        .map((r) => r.read(_db.contactEvents.id)!)
+        .get();
+  }
 
   /// Replaces all events with [events] in one step. For the demo database;
   /// the people they refer to must be there already.

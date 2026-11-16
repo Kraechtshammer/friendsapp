@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../domain/contact_event.dart';
+import '../domain/group.dart';
 import '../domain/idea.dart';
 import '../domain/intention.dart';
 import '../domain/person.dart';
@@ -65,8 +66,50 @@ class People extends Table {
   /// Added in schema version 4.
   DateTimeColumn get replyClearedAt => dateTime().nullable()();
 
+  /// What the user calls the person, if not by their name. Added in schema
+  /// version 5.
+  TextColumn get nickname => text().nullable()();
+
+  /// The person's picture: a file name inside the app's avatar folder
+  /// (platform/photo_store.dart). null = the drawn avatar. Added in schema
+  /// version 5.
+  TextColumn get photo => text().nullable()();
+
   @override
   Set<Column> get primaryKey => {id};
+}
+
+/// A group of people; for now only couples (GroupKind). Added in schema
+/// version 5.
+@DataClassName('PersonGroup')
+class Groups extends Table {
+  /// UUID v4, made by GroupsRepository.
+  TextColumn get id => text()();
+  TextColumn get kind => textEnum<GroupKind>()();
+
+  /// The group's own name. null = show the members' names.
+  TextColumn get name => text().nullable()();
+  DateTimeColumn get createdAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// Who is in which group. Deleting a person removes their membership;
+/// GroupsRepository then dissolves a couple left with one member. Added in
+/// schema version 5.
+@DataClassName('GroupMember')
+class GroupMembers extends Table {
+  TextColumn get groupId =>
+      text().references(Groups, #id, onDelete: KeyAction.cascade)();
+  TextColumn get personId =>
+      text().references(People, #id, onDelete: KeyAction.cascade)();
+
+  /// The order of the members, from 0.
+  IntColumn get position => integer()();
+
+  @override
+  Set<Column> get primaryKey => {groupId, personId};
 }
 
 /// Something the user wants to do with a person: a thought caught at
@@ -76,10 +119,19 @@ class Intentions extends Table {
   /// UUID v4, made by IntentionsRepository.
   TextColumn get id => text()();
 
-  /// Deleting the person deletes their intentions. Needs
-  /// `PRAGMA foreign_keys = ON` (AppDatabase.migration, beforeOpen).
+  /// The person the intention is for, or null when it is for a group
+  /// ([groupId]); exactly one of the two is set (the CHECK below, and
+  /// IntentionsRepository). Deleting the person deletes their intentions.
+  /// Needs `PRAGMA foreign_keys = ON` (AppDatabase.migration, beforeOpen).
+  /// Nullable since schema version 5.
   TextColumn get personId =>
-      text().references(People, #id, onDelete: KeyAction.cascade)();
+      text().nullable().references(People, #id, onDelete: KeyAction.cascade)();
+
+  /// The group (a couple) the intention is for. GroupsRepository moves the
+  /// intentions to a member before it deletes a group; the cascade is only
+  /// a safety net. Added in schema version 5.
+  TextColumn get groupId =>
+      text().nullable().references(Groups, #id, onDelete: KeyAction.cascade)();
 
   /// What came to mind ("saw a bouldering video"). May be empty.
   TextColumn get note => text().withDefault(const Constant(''))();
@@ -106,6 +158,12 @@ class Intentions extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+
+  /// A person or a group, never both, never neither (schema version 5).
+  @override
+  List<String> get customConstraints => [
+    'CHECK ((person_id IS NULL) <> (group_id IS NULL))',
+  ];
 }
 
 /// A contact that happened with a person: written, called, met, gamed or
@@ -145,6 +203,18 @@ class ContactEvents extends Table {
   /// The name of an icon for the activity (a later feature). Added in
   /// schema version 4.
   TextColumn get activityIcon => text().nullable()();
+
+  /// The couple that was met, when the contact was with a group. Cleared
+  /// when the group is dissolved; the rows stay. Added in schema version 5.
+  TextColumn get groupId =>
+      text().nullable().references(Groups, #id, onDelete: KeyAction.setNull)();
+
+  /// Ties the rows of one shared contact together: meeting a couple is one
+  /// row per member (so each timeline and stamp works as for one person),
+  /// all with the same [sharedId]. Editing or deleting one edits or deletes
+  /// all (ContactEventsRepository). null = a contact with one person. Added
+  /// in schema version 5.
+  TextColumn get sharedId => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -238,6 +308,8 @@ class Ideas extends Table {
   tables: [
     Settings,
     People,
+    Groups,
+    GroupMembers,
     Intentions,
     ContactEvents,
     DayAnswers,
@@ -253,16 +325,19 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Raise this and add a migration step for every schema change. Only add
-  /// tables or nullable columns; never rename or reuse a column. Then run
+  /// tables or nullable columns; never rename or reuse a column. A table
+  /// rebuild (schema 5, intentions) goes through `m.alterTable`, which
+  /// copies every row. Then run
   /// `dart run drift_dev make-migrations`: it saves a snapshot in
   /// `drift_schemas/`, updates `database.steps.dart` and the schema test
   /// helpers in `test/drift/` (as in akai-timetrack).
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
-  /// Steps come from the snapshots in `drift_schemas/`; each one only adds.
-  /// The real database on the developer's phone holds people from version
-  /// 1, so a step must never drop or rebuild a table with data.
+  /// Steps come from the snapshots in `drift_schemas/`. The real database
+  /// on the developer's phone holds people from version 1, so a step must
+  /// never lose a row: it adds, or rebuilds a table with every row copied
+  /// (4 to 5), tested in `test/drift/kept/migration_test.dart`.
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onUpgrade: stepByStep(
@@ -285,6 +360,26 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(schema.treats);
         await m.createTable(schema.stamps);
         await m.createTable(schema.ideas);
+      },
+      from4To5: (m, schema) async {
+        // Nicknames and pictures, couples as groups, couple thoughts and
+        // shared contacts.
+        await m.addColumn(schema.people, schema.people.nickname);
+        await m.addColumn(schema.people, schema.people.photo);
+        await m.createTable(schema.groups);
+        await m.createTable(schema.groupMembers);
+        // person_id becomes nullable and the CHECK is added: SQLite cannot
+        // change a column, so the table is rebuilt (create, copy every row,
+        // drop, rename). alterTable switches foreign keys off for it, so
+        // dropping the old table does not clear contact_events.intention_id.
+        await m.alterTable(
+          TableMigration(
+            schema.intentions,
+            newColumns: [schema.intentions.groupId],
+          ),
+        );
+        await m.addColumn(schema.contactEvents, schema.contactEvents.groupId);
+        await m.addColumn(schema.contactEvents, schema.contactEvents.sharedId);
       },
     ),
     beforeOpen: (details) async {

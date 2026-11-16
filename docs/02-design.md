@@ -95,6 +95,8 @@ Fallback without this part: some days after the user opened a chat from the app,
 
 Later, with groups (F12): a contact event can belong to several people, so a shared meet-up shows everyone's bubble.
 
+Since schema 5 (2026-11-16, §8): a person also has an optional nickname and picture. A **group** (for now only a couple) has a kind, an optional name and its members in order; a person is in at most one couple. An intention belongs to a person or to a group. Meeting a group is stored as one contact event per member, tied together by a shared id, so each person's timeline and stamp work as for one person.
+
 The friend timeline is not stored. It is built from the person's contact events (history) and their birthday and dated intentions (upcoming). The Upcoming tab is built the same way across all people.
 
 All data stays on the phone. No account, no server.
@@ -461,3 +463,4 @@ Claude's assessment: only Fluent Emoji Flat is a real alternative. It would save
 | 2026-11-16 | **Unused packages (the developer):** `permission_handler` and `cupertino_icons` are removed; nothing used them. |
 | 2026-11-16 | **1.0.0 (the developer):** not soon. The developer tests the app for days or weeks first. Releases keep taking the next number. |
 | 2026-11-16 | **Incoming messages become a build flag (the developer):** Play Protect blocks sideloaded APKs with a notification listener. GitHub releases are built without it; `--dart-define=KEPT_INCOMING=true` builds it in. Without it the app hides the switch; owed replies from "They wrote" by hand keep working. |
+| 2026-11-16 | **Couples (the developer):** two people can be linked as a couple; stored as a general group so friend circles can follow. A thought can belong to a couple; meeting a couple is one entry on both timelines and a stamp for each. Nicknames and pictures per person (schema 5). |

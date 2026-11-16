@@ -60,11 +60,14 @@ class HintPick extends Pick {
   PickKind get kind => PickKind.hint;
 }
 
-/// One of the user's own open intentions (§2.4, step 4).
+/// One of the user's own open intentions (§2.4, step 4). For a couple's
+/// intention [person] is the first member and [members] are all of them,
+/// in order; for one person's intention [members] is empty.
 class IntentionPick extends Pick {
-  const IntentionPick(super.person, this.intention);
+  const IntentionPick(super.person, this.intention, {this.members = const []});
 
   final Intention intention;
+  final List<Person> members;
 
   @override
   PickKind get kind => PickKind.intention;
@@ -74,7 +77,7 @@ class IntentionPick extends Pick {
 /// asks "Want to set a date with NAME?". It is an [IntentionPick] too, so
 /// Open chat, Done and the rest work as for a thought.
 class PlanPick extends IntentionPick {
-  const PlanPick(super.person, super.intention);
+  const PlanPick(super.person, super.intention, {super.members});
 
   @override
   PickKind get kind => PickKind.plan;
@@ -91,8 +94,9 @@ class PlanPick extends IntentionPick {
 /// ([hintPersonFor]), leaving out everyone with an earlier pick and
 /// everyone with an open thought or plan in [intentions], with or without
 /// a date. At most one pick per person: a person with an earlier pick has
-/// no later one until that is gone. [now] is the time for the due plans and
-/// the hint; it defaults to [today].
+/// no later one until that is gone. A couple's thought ([groupMembers]:
+/// group id to member ids in order) counts for all its members here. [now]
+/// is the time for the due plans and the hint; it defaults to [today].
 List<Pick> tonightsPicks({
   required List<Person> people,
   required List<Intention> intentions,
@@ -102,6 +106,7 @@ List<Pick> tonightsPicks({
   Person? reconnect,
   Iterable<ContactEvent> events = const [],
   Map<Closeness, int?>? classRhythms,
+  Map<String, List<String>> groupMembers = const {},
   DateTime? now,
 }) {
   final birthdays = [
@@ -117,13 +122,20 @@ List<Pick> tonightsPicks({
   final reconnectPick = reconnect == null || !taken.add(reconnect.id)
       ? null
       : ReconnectPick(reconnect);
+  Iterable<String> whoOf(Intention i) =>
+      i.personId != null ? [i.personId!] : groupMembers[i.groupId] ?? const [];
   final thoughts = [
-    for (final i in intentionPicks(people, intentions, now: now ?? today))
-      if (!taken.contains(i.person.id)) i,
+    for (final i in intentionPicks(
+      people,
+      intentions,
+      now: now ?? today,
+      groupMembers: groupMembers,
+    ))
+      if (!whoOf(i.intention).any(taken.contains)) i,
   ];
   taken
-    ..addAll(thoughts.map((i) => i.person.id))
-    ..addAll(intentions.map((i) => i.personId));
+    ..addAll(thoughts.expand((i) => whoOf(i.intention)))
+    ..addAll(intentions.expand(whoOf));
   final hint = classRhythms == null
       ? null
       : hintPersonFor([
@@ -157,16 +169,33 @@ List<Pick> tonightsPicks({
 /// and anything not open. Without [now] no plan is due. Intentions of
 /// people that are not in [people] are left out. Ties go by id, so the
 /// order is stable.
+///
+/// A couple's intention (`groupId` set) is treated like a person's, keyed
+/// by the group: at most one pick per group. Its members come from
+/// [groupMembers] (group id to member ids in order); those not in [people]
+/// are left out, and a group without any is left out.
 List<IntentionPick> intentionPicks(
   List<Person> people,
   List<Intention> intentions, {
   DateTime? now,
+  Map<String, List<String>> groupMembers = const {},
 }) {
   final byId = {for (final p in people) p.id: p};
+  List<Person> membersOf(Intention i) => [
+    for (final id in groupMembers[i.groupId] ?? const <String>[]) ?byId[id],
+  ];
+  // The person or group an intention is for; null if not known.
+  String? keyOf(Intention i) {
+    if (i.personId != null) {
+      return byId.containsKey(i.personId) ? 'p:${i.personId}' : null;
+    }
+    return membersOf(i).isEmpty ? null : 'g:${i.groupId}';
+  }
+
   final sorted =
       [
         for (final i in intentions)
-          if (byId.containsKey(i.personId) &&
+          if (keyOf(i) != null &&
               (isPlainThought(i) || (now != null && isPlanDue(i, now))))
             i,
       ]..sort((a, b) {
@@ -176,9 +205,14 @@ List<IntentionPick> intentionPicks(
   final seen = <String>{};
   return [
     for (final i in sorted)
-      if (seen.add(i.personId))
-        isPlainThought(i)
-            ? IntentionPick(byId[i.personId]!, i)
-            : PlanPick(byId[i.personId]!, i),
+      if (seen.add(keyOf(i)!))
+        if (i.personId != null)
+          isPlainThought(i)
+              ? IntentionPick(byId[i.personId]!, i)
+              : PlanPick(byId[i.personId]!, i)
+        else
+          isPlainThought(i)
+              ? IntentionPick(membersOf(i).first, i, members: membersOf(i))
+              : PlanPick(membersOf(i).first, i, members: membersOf(i)),
   ];
 }

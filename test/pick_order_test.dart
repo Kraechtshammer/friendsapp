@@ -117,4 +117,58 @@ void main() {
       expect(picks.every((p) => p.kind == PickKind.intention), isTrue);
     });
   });
+  group('couple thoughts', () {
+    Intention coupleThought(String id, String groupId, int day) => Intention(
+      id: id,
+      groupId: groupId,
+      note: id,
+      kind: IntentionKind.meet,
+      state: IntentionState.open,
+      createdAt: DateTime(2026, 11, day),
+    );
+    const members = {
+      'g1': ['anna', 'jonas'],
+    };
+
+    test('one pick per couple, with its members, beside person picks', () {
+      final picks = intentionPicks(people, [
+        coupleThought('g-new', 'g1', 6),
+        thought('a1', 'anna', 4),
+        coupleThought('g-old', 'g1', 3),
+      ], groupMembers: members);
+      expect(picks.map((p) => p.intention.id), ['g-old', 'a1']);
+      expect(picks.first.person.id, 'anna');
+      expect(picks.first.members.map((p) => p.id), ['anna', 'jonas']);
+      expect(picks.last.members, isEmpty);
+    });
+
+    test('a couple without known members is left out', () {
+      expect(intentionPicks(people, [coupleThought('g', 'g1', 3)]), isEmpty);
+      expect(
+        intentionPicks(
+          people,
+          [coupleThought('g', 'g2', 3)],
+          groupMembers: const {
+            'g2': ['nobody'],
+          },
+        ),
+        isEmpty,
+      );
+    });
+
+    test('a member with an earlier pick holds the couple pick back', () {
+      final today = DateTime(2026, 11, 16);
+      final lena = person('lena', month: 11, day: 16);
+      final picks = tonightsPicks(
+        people: [lena, ...people],
+        intentions: [coupleThought('g', 'g1', 3)],
+        today: today,
+        congratulated: const {},
+        groupMembers: const {
+          'g1': ['lena', 'tom'],
+        },
+      );
+      expect(picks.map((p) => p.kind), [PickKind.birthday]);
+    });
+  });
 }

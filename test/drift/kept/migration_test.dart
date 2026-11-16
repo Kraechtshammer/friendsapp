@@ -5,9 +5,11 @@ import 'package:drift_dev/api/migrations_native.dart';
 import 'package:kept/data/contact_events_repository.dart';
 import 'package:kept/data/database.dart';
 import 'package:kept/data/day_answers_repository.dart';
+import 'package:kept/data/groups_repository.dart';
 import 'package:kept/data/intentions_repository.dart';
 import 'package:kept/data/people_repository.dart';
 import 'package:kept/domain/contact_event.dart';
+import 'package:kept/domain/group.dart';
 import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,6 +20,7 @@ import 'generated/schema_v1.dart' as v1;
 import 'generated/schema_v2.dart' as v2;
 import 'generated/schema_v3.dart' as v3;
 import 'generated/schema_v4.dart' as v4;
+import 'generated/schema_v5.dart' as v5;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -679,5 +682,321 @@ void main() {
         expect(await newDb.select(newDb.stamps).get(), isEmpty);
       },
     );
+  });
+  // v4 -> v5 adds people.nickname and people.photo, the tables groups and
+  // group_members, contact_events.group_id and shared_id, and rebuilds
+  // intentions (person_id nullable, new group_id, a CHECK). The rebuild
+  // drops and re-creates the table, so this checks every row of every
+  // table, and that the links into intentions (contact_events.intention_id)
+  // and from stamps survive it.
+  test('migration from v4 to v5 keeps every old row', () async {
+    final created =
+        DateTime.utc(2026, 11, 16, 9).millisecondsSinceEpoch ~/ 1000;
+    final oldSettings = [
+      const v4.SettingsData(key: 'themeMode', value: 'dark'),
+      const v4.SettingsData(key: 'eveningTime', value: '20:30'),
+      const v4.SettingsData(key: 'defaultTreatsInserted', value: 'true'),
+    ];
+    final oldPeople = [
+      v4.PeopleData(
+        id: 'p1',
+        name: 'Anna Example',
+        contactId: '17',
+        closeness: 'close',
+        reconnecting: 1,
+        rhythmDays: 9,
+        mainMessenger: 'whatsapp',
+        phone: '+490000000101',
+        telegramUsername: 'anna_t',
+        signalLink: 'https://signal.me/#p/x',
+        discordUserId: '123',
+        birthdayMonth: 2,
+        birthdayDay: 29,
+        birthdayYear: 1992,
+        avatarShape: 'scallop',
+        avatarColor: 'coral',
+        notes: 'Likes calls.',
+        createdAt: created,
+        replyClearedAt: created + 30,
+      ),
+      v4.PeopleData(
+        id: 'p2',
+        name: 'Ben Example',
+        closeness: 'fewTimesAYear',
+        reconnecting: 0,
+        avatarShape: 'leaf',
+        avatarColor: 'mint',
+        notes: '',
+        createdAt: created + 60,
+      ),
+    ];
+    final oldIntentions = [
+      v4.IntentionsData(
+        id: 'i1',
+        personId: 'p1',
+        note: 'saw a bouldering video',
+        kind: 'meet',
+        state: 'done',
+        link: 'https://example.org',
+        date: created + 86400,
+        horizon: 'whenCondition',
+        condition: 'when she is back',
+        createdAt: created + 120,
+        closedAt: created + 240,
+      ),
+      v4.IntentionsData(
+        id: 'i2',
+        personId: 'p2',
+        note: '',
+        kind: 'write',
+        state: 'open',
+        createdAt: created + 180,
+      ),
+    ];
+    final oldEvents = [
+      v4.ContactEventsData(
+        id: 'e1',
+        personId: 'p1',
+        at: created + 240,
+        kind: 'met',
+        direction: 'together',
+        source: 'confirmed',
+        activity: 'bouldering',
+        note: 'new job in March',
+        intentionId: 'i1',
+        createdAt: created + 240,
+        activityIcon: 'climbing',
+      ),
+      v4.ContactEventsData(
+        id: 'e2',
+        personId: 'p2',
+        at: created + 300,
+        kind: 'wrote',
+        direction: 'byThem',
+        source: 'manual',
+        createdAt: created + 300,
+      ),
+    ];
+    final oldDayAnswers = [
+      v4.DayAnswersData(
+        day: '2026-11-15',
+        answer: 'notToday',
+        answeredAt: created - 3600,
+      ),
+      const v4.DayAnswersData(day: '2026-11-16', answer: 'yes'),
+    ];
+    final oldTreats = [
+      v4.TreatsData(
+        id: 't1',
+        name: 'Ice cream',
+        stampsNeeded: 5,
+        state: 'earned',
+        position: 0,
+        createdAt: created,
+        earnedAt: created + 400,
+      ),
+      v4.TreatsData(
+        id: 't2',
+        name: 'Day trip',
+        stampsNeeded: 12,
+        state: 'current',
+        position: 1,
+        createdAt: created + 1,
+      ),
+    ];
+    final oldStamps = [
+      v4.StampsData(
+        id: 's1',
+        at: created + 240,
+        value: 3,
+        personId: 'p1',
+        contactEventId: 'e1',
+        treatId: 't1',
+        createdAt: created + 240,
+      ),
+      // A loose piece whose person, event and card are gone.
+      v4.StampsData(id: 's2', at: created + 250, value: 1, createdAt: 0),
+    ];
+    final oldIdeas = [
+      v4.IdeasData(
+        id: 'd1',
+        personId: 'p1',
+        note: 'climbing hall in town',
+        kind: 'toDo',
+        link: 'https://example.org/hall',
+        imagePath: 'shared/a.jpg',
+        createdAt: created + 530,
+        doneAt: created + 600,
+      ),
+    ];
+
+    await verifier.testWithDataIntegrity(
+      oldVersion: 4,
+      newVersion: 5,
+      createOld: v4.DatabaseAtV4.new,
+      createNew: v5.DatabaseAtV5.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) {
+        batch.insertAll(oldDb.settings, oldSettings);
+        batch.insertAll(oldDb.people, oldPeople);
+        batch.insertAll(oldDb.intentions, oldIntentions);
+        batch.insertAll(oldDb.contactEvents, oldEvents);
+        batch.insertAll(oldDb.dayAnswers, oldDayAnswers);
+        batch.insertAll(oldDb.treats, oldTreats);
+        batch.insertAll(oldDb.stamps, oldStamps);
+        batch.insertAll(oldDb.ideas, oldIdeas);
+      },
+      validateItems: (newDb) async {
+        // Each old row read back through JSON is the row expected after the
+        // upgrade, field by field; the new columns are missing from the old
+        // JSON and so must be null.
+        expect(await newDb.select(newDb.settings).get(), [
+          for (final r in oldSettings) v5.SettingsData.fromJson(r.toJson()),
+        ]);
+        final people = await newDb.select(newDb.people).get();
+        expect(people, [
+          for (final r in oldPeople) v5.PeopleData.fromJson(r.toJson()),
+        ]);
+        expect(people.map((p) => p.nickname), everyElement(isNull));
+        expect(people.map((p) => p.photo), everyElement(isNull));
+        final intentions = await newDb.select(newDb.intentions).get();
+        expect(intentions, [
+          for (final r in oldIntentions) v5.IntentionsData.fromJson(r.toJson()),
+        ]);
+        expect(intentions.map((i) => i.personId), ['p1', 'p2']);
+        expect(intentions.map((i) => i.groupId), everyElement(isNull));
+        final events = await newDb.select(newDb.contactEvents).get();
+        expect(events, [
+          for (final r in oldEvents) v5.ContactEventsData.fromJson(r.toJson()),
+        ]);
+        expect(events.first.intentionId, 'i1');
+        expect(events.map((e) => e.groupId), everyElement(isNull));
+        expect(events.map((e) => e.sharedId), everyElement(isNull));
+        expect(await newDb.select(newDb.dayAnswers).get(), [
+          for (final r in oldDayAnswers) v5.DayAnswersData.fromJson(r.toJson()),
+        ]);
+        expect(await newDb.select(newDb.treats).get(), [
+          for (final r in oldTreats) v5.TreatsData.fromJson(r.toJson()),
+        ]);
+        expect(await newDb.select(newDb.stamps).get(), [
+          for (final r in oldStamps) v5.StampsData.fromJson(r.toJson()),
+        ]);
+        expect(await newDb.select(newDb.ideas).get(), [
+          for (final r in oldIdeas) v5.IdeasData.fromJson(r.toJson()),
+        ]);
+        expect(await newDb.select(newDb.groups).get(), isEmpty);
+        expect(await newDb.select(newDb.groupMembers).get(), isEmpty);
+        expect(
+          await newDb.customSelect('PRAGMA foreign_key_check').get(),
+          isEmpty,
+        );
+
+        // The rebuilt table has the CHECK: a person or a group, not both,
+        // not neither.
+        await newDb.customStatement('PRAGMA foreign_keys = ON');
+        await expectLater(
+          newDb
+              .into(newDb.intentions)
+              .insert(
+                v5.IntentionsCompanion.insert(id: 'bad', createdAt: created),
+              ),
+          throwsA(isA<Exception>()),
+        );
+        await newDb
+            .into(newDb.groups)
+            .insert(
+              v5.GroupsCompanion.insert(
+                id: 'g1',
+                kind: 'couple',
+                createdAt: created + 700,
+              ),
+            );
+        await expectLater(
+          newDb
+              .into(newDb.intentions)
+              .insert(
+                v5.IntentionsCompanion.insert(
+                  id: 'bad',
+                  personId: const Value('p1'),
+                  groupId: const Value('g1'),
+                  createdAt: created,
+                ),
+              ),
+          throwsA(isA<Exception>()),
+        );
+        await newDb
+            .into(newDb.intentions)
+            .insert(
+              v5.IntentionsCompanion.insert(
+                id: 'i3',
+                groupId: const Value('g1'),
+                createdAt: created + 710,
+              ),
+            );
+
+        // The foreign keys of the rebuilt table still work: deleting the
+        // intention clears the event's link, deleting the person deletes
+        // their intentions.
+        await (newDb.delete(
+          newDb.intentions,
+        )..where((i) => i.id.equals('i1'))).go();
+        final e1 = await (newDb.select(
+          newDb.contactEvents,
+        )..where((e) => e.id.equals('e1'))).getSingle();
+        expect(e1.intentionId, isNull);
+        await (newDb.delete(
+          newDb.people,
+        )..where((p) => p.id.equals('p2'))).go();
+        final left = await newDb.select(newDb.intentions).get();
+        expect(left.map((i) => i.id), ['i3']);
+      },
+    );
+  });
+
+  // The app's own code on a file upgraded from v4: a couple of two old
+  // people, a thought for the couple, and meeting them as one shared entry
+  // with a stamp each.
+  test('the app works on a database upgraded from v4', () async {
+    final schema = await verifier.schemaAt(4);
+    final created = DateTime(2026, 11, 16, 9);
+    final secs = created.millisecondsSinceEpoch ~/ 1000;
+    final old = v4.DatabaseAtV4(schema.newConnection());
+    for (final (id, name) in [('p1', 'Anna Example'), ('p2', 'Ben Example')]) {
+      await old
+          .into(old.people)
+          .insert(
+            v4.PeopleData(
+              id: id,
+              name: name,
+              closeness: 'close',
+              reconnecting: 0,
+              avatarShape: 'scallop',
+              avatarColor: 'coral',
+              notes: '',
+              createdAt: secs,
+            ),
+          );
+    }
+    await old.close();
+
+    final db = AppDatabase(schema.newConnection());
+    final groups = GroupsRepository(db);
+    final intentions = IntentionsRepository(db);
+    final events = ContactEventsRepository(db);
+    final couple = await groups.createCouple('p1', 'p2', now: created);
+    expect((await groups.coupleOf('p2'))?.group.id, couple.id);
+    final thought = await intentions.add(
+      groupId: couple.id,
+      note: 'dinner',
+      kind: IntentionKind.meet,
+    );
+    final met = await events.completeIntention(thought.id, now: created);
+    expect(met.groupId, couple.id);
+    expect(await events.watchForPerson('p1').first, hasLength(1));
+    expect(await events.watchForPerson('p2').first, hasLength(1));
+    final stamps = await db.select(db.stamps).get();
+    expect(stamps.map((s) => s.personId).toSet(), {'p1', 'p2'});
+    expect(couple.kind, GroupKind.couple);
+    await db.close();
   });
 }

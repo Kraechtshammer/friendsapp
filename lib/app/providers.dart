@@ -4,18 +4,21 @@ import '../data/app_settings.dart';
 import '../data/contact_events_repository.dart';
 import '../data/database.dart';
 import '../data/day_answers_repository.dart';
+import '../data/groups_repository.dart';
 import '../data/ideas_repository.dart';
 import '../data/intentions_repository.dart';
 import '../data/people_repository.dart';
 import '../data/treats_repository.dart';
 import '../domain/chat_question.dart';
 import '../domain/contact_event.dart';
+import '../domain/group.dart';
 import '../platform/app_shortcuts.dart';
 import '../platform/chat_opener.dart';
 import '../platform/contacts.dart';
 import '../platform/incoming_listener.dart';
 import '../platform/link_opener.dart';
 import '../platform/notifications.dart';
+import '../platform/photo_store.dart';
 import '../platform/share_receiver.dart';
 import 'build_flags.dart';
 import 'services.dart';
@@ -64,6 +67,12 @@ final appShortcutsProvider = Provider<AppShortcuts>(
 /// a fake.
 final notificationsProvider = Provider<Notifications>(
   (ref) => LocalNotifications(),
+);
+
+/// People's pictures (platform/photo_store.dart). Tests override it with
+/// a fake.
+final photoStoreProvider = Provider<PhotoStore>(
+  (ref) => const FilePhotoStore(),
 );
 
 /// Whether the optional notification listener is built in (the build flag
@@ -171,6 +180,33 @@ final personProvider = StreamProvider.family<Person?, String>((ref, id) async* {
   final demo = ref.watch(settingsProvider.selectAsync((s) => s.demoMode));
   final services = ref.watch(servicesProvider);
   yield* services.peopleFor(demo: await demo).watch(id);
+});
+
+/// Where groups (couples) are written: the demo or the real database,
+/// following `demoMode`, like [peopleRepositoryProvider].
+final groupsRepositoryProvider = Provider<GroupsRepository>((ref) {
+  final demo = ref.watch(
+    settingsProvider.select((s) => s.value?.demoMode ?? false),
+  );
+  return ref.watch(servicesProvider).groupsFor(demo: demo);
+});
+
+/// All couples with their members, oldest first. Waits for the settings,
+/// like [peopleProvider].
+final couplesProvider = StreamProvider<List<GroupWithMembers>>((ref) async* {
+  final demo = ref.watch(settingsProvider.selectAsync((s) => s.demoMode));
+  final services = ref.watch(servicesProvider);
+  yield* services.groupsFor(demo: await demo).watchCouples();
+});
+
+/// The couple a person is in; null if none.
+final personCoupleProvider = StreamProvider.family<GroupWithMembers?, String>((
+  ref,
+  personId,
+) async* {
+  final demo = ref.watch(settingsProvider.selectAsync((s) => s.demoMode));
+  final services = ref.watch(servicesProvider);
+  yield* services.groupsFor(demo: await demo).watchCoupleOf(personId);
 });
 
 /// Where intentions are written: the demo or the real database, following

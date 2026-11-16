@@ -4,13 +4,15 @@ import 'package:uuid/uuid.dart';
 import '../domain/avatar_pick.dart';
 import '../domain/person.dart';
 import 'database.dart';
+import 'groups_repository.dart';
 
 /// Reads and writes the people of one database: the real one or, in demo
 /// mode, the demo one (AppServices.peopleFor). See docs/02-design.md §3.
 class PeopleRepository {
-  PeopleRepository(this._db);
+  PeopleRepository(this._db) : _groups = GroupsRepository(_db);
 
   final AppDatabase _db;
+  final GroupsRepository _groups;
   static const _uuid = Uuid();
 
   /// Everyone, ordered by name without regard to case.
@@ -43,6 +45,8 @@ class PeopleRepository {
     int? birthdayDay,
     int? birthdayYear,
     String notes = '',
+    String? nickname,
+    String? photo,
     DateTime? now,
   }) => _db.transaction(() async {
     // In the transaction, so two quick adds see each other's avatar.
@@ -72,6 +76,8 @@ class PeopleRepository {
       avatarShape: avatar.shape,
       avatarColor: avatar.color,
       notes: notes,
+      nickname: nickname,
+      photo: photo,
       createdAt: created.subtract(
         Duration(
           milliseconds: created.millisecond,
@@ -104,6 +110,12 @@ class PeopleRepository {
         ),
       );
 
+  /// Sets only `photo` of person [id]: a file name in the avatar folder
+  /// (platform/photo_store.dart), or null for the drawn avatar.
+  Future<void> setPhoto(String id, String? photo) => (_db.update(
+    _db.people,
+  )..where((t) => t.id.equals(id))).write(PeopleCompanion(photo: Value(photo)));
+
   /// Sets only `reconnecting` of person [id]: "Done" on "You and X are back
   /// in touch" switches it off (02-design.md §2.4). The class stays.
   Future<void> setReconnecting(String id, bool value) =>
@@ -111,11 +123,20 @@ class PeopleRepository {
         PeopleCompanion(reconnecting: Value(value)),
       );
 
-  Future<void> delete(String id) =>
-      (_db.delete(_db.people)..where((t) => t.id.equals(id))).go();
+  /// Deletes the person; the cascade removes their intentions, events,
+  /// ideas and memberships. A couple left with one member is dissolved in
+  /// the same transaction (GroupsRepository.dissolveIfTooSmall), so its
+  /// thoughts move to the other person.
+  Future<void> delete(String id) => _db.transaction(() async {
+    final groupIds = await _groups.groupIdsOf(id);
+    await (_db.delete(_db.people)..where((t) => t.id.equals(id))).go();
+    await _groups.dissolveIfTooSmall(groupIds);
+  });
 
-  /// Replaces everyone with [people] in one step. For the demo database.
+  /// Replaces everyone with [people] in one step. For the demo database;
+  /// the groups go too.
   Future<void> replaceAll(List<Person> people) => _db.transaction(() async {
+    await _groups.deleteAll();
     await _db.delete(_db.people).go();
     await _db.batch((b) => b.insertAll(_db.people, people));
   });
