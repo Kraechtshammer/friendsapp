@@ -31,6 +31,13 @@ enum KeptIcons {
   wasd,
   bench,
 
+  // Settings categories.
+  moon,
+  palette,
+  shield,
+  download,
+  info,
+
   // The class badge on an avatar: a plant that grows with the class.
   sprout,
   bud,
