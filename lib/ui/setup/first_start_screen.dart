@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
+import '../../app/update_controller.dart';
 import '../../data/app_settings.dart';
 import '../../domain/person.dart';
 import '../../platform/contacts.dart';
@@ -18,7 +19,7 @@ import '../widgets/kept_switch.dart';
 import '../widgets/main_button.dart';
 
 /// The guided first start (02-design.md §8, permissions): welcome, people,
-/// how close, evening question, incoming messages, done. Shown once on a
+/// how close, evening question, incoming messages, update check, done. Shown once on a
 /// fresh install by HomeShell. Each optional part is switched on here
 /// consciously and says what it is for and what to do without it. "Skip" is
 /// on every page; it leaves the optional parts off.
@@ -29,7 +30,7 @@ class FirstStartScreen extends ConsumerStatefulWidget {
   ConsumerState<FirstStartScreen> createState() => _FirstStartState();
 }
 
-enum _Step { welcome, people, close, evening, incoming, done }
+enum _Step { welcome, people, close, evening, incoming, update, done }
 
 class _FirstStartState extends ConsumerState<FirstStartScreen> {
   var _step = _Step.welcome;
@@ -119,6 +120,8 @@ class _FirstStartState extends ConsumerState<FirstStartScreen> {
   /// question off: nothing is switched on without the user's say.
   Future<void> _finish() async {
     final navigator = Navigator.of(context);
+    // A fresh install shows no "What's new" for the version it started with.
+    await ref.read(updateProvider.notifier).markVersionSeen();
     await ref
         .read(servicesProvider)
         .settings
@@ -139,6 +142,8 @@ class _FirstStartState extends ConsumerState<FirstStartScreen> {
         _go(_Step.people);
       case _Step.incoming:
         _go(_Step.evening);
+      case _Step.update:
+        _go(_Step.incoming);
       default:
     }
   }
@@ -333,7 +338,36 @@ class _FirstStartState extends ConsumerState<FirstStartScreen> {
           actions: [
             MainButton(
               label: on ? l10n.fsContinue : l10n.fsNotNow,
-              onPressed: () => _go(_Step.done),
+              onPressed: () => _go(_Step.update),
+            ),
+          ],
+        );
+      case _Step.update:
+        // In-app update, not in a Play build (update_controller.dart).
+        final on =
+            ref.watch(settingsProvider).value?.updateCheckEnabled ?? false;
+        final update = ref.read(updateProvider.notifier);
+        return _Page(
+          icon: KeptIcons.gear,
+          title: l10n.updateAskTitle,
+          body: [
+            Text(l10n.updateAskBody, style: context.text.bodyLarge),
+            KeptCard(
+              child: _SwitchRow(
+                l10n.updateSwitch,
+                value: on,
+                onChanged: (v) => unawaited(update.setEnabled(v)),
+              ),
+            ),
+          ],
+          actions: [
+            MainButton(
+              label: on ? l10n.fsContinue : l10n.fsNotNow,
+              onPressed: () async {
+                // Either way the question is answered, so Home won't ask.
+                await update.setEnabled(on);
+                if (mounted) _go(_Step.done);
+              },
             ),
           ],
         );

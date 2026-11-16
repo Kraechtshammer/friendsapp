@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../app/theme.dart';
+import '../../app/update_controller.dart';
 import '../../l10n/app_localizations.dart';
 import '../common.dart';
 import '../kept_icon.dart';
@@ -197,6 +198,24 @@ class _PermissionsState extends ConsumerState<PermissionsScreen> {
             ),
           ),
           const SizedBox(height: 18),
+          // In-app update, not in a Play build (update_controller.dart).
+          _PartCard(
+            icon: KeptIcons.gear,
+            title: l10n.permUpdateTitle,
+            state: settings.updateCheckEnabled
+                ? _State(l10n.permStateOn, KeptColors.mint)
+                : _State(l10n.permStateOff, null),
+            use: l10n.permUpdateUse,
+            sent: l10n.permUpdateSent,
+            without: l10n.permUpdateWithout,
+            control: _SwitchRow(
+              l10n.updateSwitch,
+              value: settings.updateCheckEnabled,
+              onChanged: (on) =>
+                  unawaited(ref.read(updateProvider.notifier).setEnabled(on)),
+            ),
+          ),
+          const SizedBox(height: 18),
           _PartCard(
             icon: KeptIcons.stamp,
             title: l10n.permRefreshTitle,
@@ -250,13 +269,15 @@ class _SwitchRow extends StatelessWidget {
 }
 
 /// One part: icon, title and state tag, what it is for, that nothing is
-/// sent, what to do by hand without it, and the control.
+/// sent (or, with [sent], what is), what to do by hand without it, and the
+/// control.
 class _PartCard extends StatelessWidget {
   const _PartCard({
     required this.icon,
     required this.title,
     required this.use,
     this.without,
+    this.sent,
     this.state,
     this.control,
   });
@@ -266,6 +287,7 @@ class _PartCard extends StatelessWidget {
   final _State? state;
   final String use;
   final String? without;
+  final String? sent;
   final Widget? control;
 
   @override
@@ -285,7 +307,7 @@ class _PartCard extends StatelessWidget {
             ],
           ),
           Text(use, style: context.text.bodyMedium),
-          Text(l10n.permNothingSent, style: context.text.bodyMedium),
+          Text(sent ?? l10n.permNothingSent, style: context.text.bodyMedium),
           if (without != null)
             Text(
               without!,

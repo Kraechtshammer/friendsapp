@@ -29,6 +29,7 @@ import '../widgets/rhythm_stepper.dart';
 import 'about.dart';
 import 'permissions_screen.dart';
 import 'settings_actions.dart';
+import 'update_tiles.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -106,11 +107,14 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 32),
           _IncomingMessages(settings: settings),
           const SizedBox(height: 32),
+          // In-app update, not in a Play build (update_controller.dart).
+          const UpdateSection(),
+          const SizedBox(height: 32),
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(l10n.settingsAbout),
             trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => openAbout(context),
+            onTap: () => unawaited(openAbout(context, ref)),
           ),
           if (kDebugMode) _Development(demoMode: settings.demoMode),
         ],

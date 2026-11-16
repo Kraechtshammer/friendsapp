@@ -16,7 +16,9 @@ class SettingsRepository {
   Stream<AppSettings> watch() => _db
       .select(_db.settings)
       .watch()
-      .map(_toMap)
+      // Status entries change often and are no settings: they must not
+      // rebuild the screens.
+      .map((rows) => _toMap(rows)..removeWhere((k, _) => k.startsWith(_status)))
       .distinct(mapEquals)
       .map(AppSettings.fromMap);
 
@@ -56,6 +58,25 @@ class SettingsRepository {
           : null,
     );
   });
+
+  /// Status entries of the in-app update (02-design.md §8): the time of the
+  /// last check, the version the popup was shown for, the version that ran
+  /// last (for "What's new") and the cached notes. Stored in the settings
+  /// table under keys starting with `status.`, outside [AppSettings].
+  static const lastUpdateCheck = '${_status}lastUpdateCheck';
+  static const updatePopupShown = '${_status}updatePopupShown';
+  static const lastRunVersion = '${_status}lastRunVersion';
+  static const whatsNew = '${_status}whatsNew';
+  static const _status = 'status.';
+
+  /// A status entry; null if not stored.
+  Future<String?> status(String key) async => (await (_db.select(
+    _db.settings,
+  )..where((s) => s.key.equals(key))).getSingleOrNull())?.value;
+
+  Future<void> setStatus(String key, String value) => _db
+      .into(_db.settings)
+      .insertOnConflictUpdate(SettingsCompanion.insert(key: key, value: value));
 
   Map<String, String> _toMap(List<SettingEntry> rows) => {
     for (final row in rows) row.key: row.value,

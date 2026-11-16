@@ -5,6 +5,13 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- Reads the phone contacts for "Add from contacts". Read-only. -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- In-app update (02-design.md §8), both permissions: INTERNET for asking GitHub for the
+         newest release and downloading its APK (only while the user has switched the check on;
+         release builds don't get INTERNET from Flutter), REQUEST_INSTALL_PACKAGES for handing the
+         APK to Android's installer. For a Play build remove both lines (and UpdateChannel.kt):
+         Google Play does not allow apps that update themselves. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <application
         android:label="${appLabel}"
         android:name="${applicationName}"

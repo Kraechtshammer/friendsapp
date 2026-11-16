@@ -14,6 +14,7 @@ import 'congratulated_screen.dart';
 import 'did_it_happen.dart';
 import 'open_thoughts.dart';
 import 'tonights_pick.dart';
+import 'update_ask_card.dart';
 
 /// Home: a greeting, quick capture, "Did it happen?", tonight's pick, what is
 /// coming up and the open thoughts. The whole tab scrolls. See 02-design.md §2.1 and the concept V6b · Capturing
@@ -54,6 +55,8 @@ class HomeScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 14),
         CaptureCard(onAddPeople: onAddPeople),
+        // In-app update, not in a Play build (update_controller.dart).
+        const UpdateAskCard(),
         const OwnBirthdayCard(),
         const DidItHappen(),
         const BackInTouchCard(),

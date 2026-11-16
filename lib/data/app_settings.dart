@@ -39,6 +39,8 @@ class AppSettings {
     this.stampsBackfilled = false,
     this.firstStartDone = false,
     this.familyWeightFixed = false,
+    this.updateCheckEnabled = false,
+    this.updateCheckAsked = false,
   });
 
   /// The shortest and longest waiting time for owed replies, in days.
@@ -127,6 +129,15 @@ class AppSettings {
   /// The one-time fix of the Family stamp weight was run: older builds
   /// stored 1 on every settings save, and Family now counts 2.
   final bool familyWeightFixed;
+
+  /// In-app update (02-design.md §8): Kept. asks GitHub for a newer
+  /// version. Off until the user switches it on; while off, the app makes no
+  /// network request at all (`UpdateController`).
+  final bool updateCheckEnabled;
+
+  /// The user was asked about the update check (first start or the card on
+  /// Home), so the card does not come back.
+  final bool updateCheckAsked;
 
   /// Reads settings from the stored key-value pairs. Unknown or broken
   /// values fall back to the defaults.
@@ -246,6 +257,8 @@ class AppSettings {
       stampsBackfilled: m['stampsBackfilled'] == 'true',
       firstStartDone: m['firstStartDone'] == 'true',
       familyWeightFixed: m['familyWeightFixed'] == 'true',
+      updateCheckEnabled: m['updateCheckEnabled'] == 'true',
+      updateCheckAsked: m['updateCheckAsked'] == 'true',
     );
   }
 
@@ -275,6 +288,8 @@ class AppSettings {
     'stampsBackfilled': '$stampsBackfilled',
     'firstStartDone': '$firstStartDone',
     'familyWeightFixed': '$familyWeightFixed',
+    'updateCheckEnabled': '$updateCheckEnabled',
+    'updateCheckAsked': '$updateCheckAsked',
   };
 
   AppSettings copyWith({
@@ -296,6 +311,8 @@ class AppSettings {
     bool? stampsBackfilled,
     bool? firstStartDone,
     bool? familyWeightFixed,
+    bool? updateCheckEnabled,
+    bool? updateCheckAsked,
   }) => _copy(
     themeMode: themeMode,
     demoMode: demoMode,
@@ -315,6 +332,8 @@ class AppSettings {
     stampsBackfilled: stampsBackfilled,
     firstStartDone: firstStartDone,
     familyWeightFixed: familyWeightFixed,
+    updateCheckEnabled: updateCheckEnabled,
+    updateCheckAsked: updateCheckAsked,
   );
 
   /// A copy with [birthday] as the user's own birthday; null clears it.
@@ -354,6 +373,8 @@ class AppSettings {
     bool? stampsBackfilled,
     bool? firstStartDone,
     bool? familyWeightFixed,
+    bool? updateCheckEnabled,
+    bool? updateCheckAsked,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     demoMode: demoMode ?? this.demoMode,
@@ -383,6 +404,8 @@ class AppSettings {
     stampsBackfilled: stampsBackfilled ?? this.stampsBackfilled,
     firstStartDone: firstStartDone ?? this.firstStartDone,
     familyWeightFixed: familyWeightFixed ?? this.familyWeightFixed,
+    updateCheckEnabled: updateCheckEnabled ?? this.updateCheckEnabled,
+    updateCheckAsked: updateCheckAsked ?? this.updateCheckAsked,
   );
 
   @override
@@ -408,7 +431,9 @@ class AppSettings {
       other.defaultTreatsInserted == defaultTreatsInserted &&
       other.stampsBackfilled == stampsBackfilled &&
       other.firstStartDone == firstStartDone &&
-      other.familyWeightFixed == familyWeightFixed;
+      other.familyWeightFixed == familyWeightFixed &&
+      other.updateCheckEnabled == updateCheckEnabled &&
+      other.updateCheckAsked == updateCheckAsked;
 
   @override
   int get hashCode => Object.hashAll([
@@ -433,6 +458,8 @@ class AppSettings {
     stampsBackfilled,
     firstStartDone,
     familyWeightFixed,
+    updateCheckEnabled,
+    updateCheckAsked,
   ]);
 }
 

@@ -6,6 +6,7 @@ import 'package:kept/app/licences.dart';
 import 'package:kept/app/providers.dart';
 import 'package:kept/app/theme.dart';
 import 'package:kept/app/services.dart';
+import 'package:kept/app/update_controller.dart';
 import 'package:kept/data/app_settings.dart';
 import 'package:kept/data/database.dart';
 import 'package:kept/data/settings_repository.dart';
@@ -23,6 +24,7 @@ import 'dart:io';
 import 'fake_contacts.dart';
 import 'fake_incoming_listener.dart';
 import 'fake_notifications.dart';
+import 'fake_update_service.dart';
 
 class _NoShortcuts implements AppShortcuts {
   @override
@@ -96,8 +98,10 @@ void main() {
     late FakeNotifications notifications;
     late FakeIncomingListener listener;
     late FakeContacts contacts;
+    late FakeUpdateService updates;
 
     setUp(() {
+      updates = FakeUpdateService(installed: appVersion)..failOnNetwork = true;
       services = AppServices(
         db: AppDatabase(NativeDatabase.memory()),
         openDemo: () => AppDatabase(NativeDatabase.memory()),
@@ -128,6 +132,7 @@ void main() {
             incomingListenerProvider.overrideWithValue(listener),
             contactsSourceProvider.overrideWithValue(contacts),
             appShortcutsProvider.overrideWithValue(_NoShortcuts()),
+            updateServiceProvider.overrideWithValue(updates),
           ],
           child: KeptApp(home: home),
         ),
@@ -153,6 +158,7 @@ void main() {
       await start(tester);
       expect(find.text('Welcome to Kept.'), findsOneWidget);
       expect(find.textContaining('No account, no server'), findsOneWidget);
+      expect(find.textContaining('only if you switch it on'), findsOneWidget);
       expect(notifications.permissionRequests, 0);
       await closeDown(tester);
     });
@@ -222,6 +228,13 @@ void main() {
       expect(find.text('Not now'), findsOneWidget);
       await tester.tap(find.text('Not now'));
       await tester.pumpAndSettle();
+
+      // Update page: off, "Not now" is the main button.
+      expect(find.text('Check GitHub for new versions?'), findsOneWidget);
+      expect(find.textContaining('none of your data is ever sent'), findsOne);
+      expect(find.textContaining('Android will ask once'), findsOne);
+      await tester.tap(find.text('Not now'));
+      await settle(tester);
       expect(find.text('You are all set'), findsOneWidget);
       await tester.tap(find.text('Go to Home'));
       await settle(tester);
@@ -230,6 +243,17 @@ void main() {
       expect(s.firstStartDone, isTrue);
       expect(s.eveningOn, isTrue);
       expect(s.incomingOn, isFalse);
+      expect(s.updateCheckEnabled, isFalse);
+      expect(s.updateCheckAsked, isTrue);
+      // Asked here, so Home shows no card; the version counts as seen.
+      expect(find.text('Check GitHub for new versions?'), findsNothing);
+      expect(
+        await tester.runAsync(
+          () => services.settings.status(SettingsRepository.lastRunVersion),
+        ),
+        appVersion,
+      );
+      expect(updates.networkRequests, isEmpty);
       expect(listener.accessSettingsOpened, 0);
       final saved = await people(tester);
       expect(saved.map((p) => p.name), ['Anna Adler', 'Ben Bauer']);
@@ -262,9 +286,18 @@ void main() {
       expect(find.textContaining('Not allowed yet'), findsOneWidget);
       await tester.tap(find.text('Continue'));
       await tester.pumpAndSettle();
+
+      // Update page: switched on, then Continue.
+      await tester.tap(find.text('Check GitHub for new versions'));
+      await settle(tester);
+      expect((await settings(tester)).updateCheckEnabled, isTrue);
+      await tester.tap(find.text('Continue'));
+      await settle(tester);
       await tester.tap(find.text('Go to Home'));
       await settle(tester);
       final s = await settings(tester);
+      expect(s.updateCheckEnabled, isTrue);
+      expect(s.updateCheckAsked, isTrue);
       expect(s.eveningOn, isFalse);
       expect(s.firstStartDone, isTrue);
       expect(await people(tester), isEmpty);
@@ -279,6 +312,7 @@ void main() {
       expect(s.firstStartDone, isTrue);
       expect(s.eveningOn, isFalse);
       expect(s.incomingOn, isFalse);
+      expect(s.updateCheckEnabled, isFalse);
       expect(notifications.permissionRequests, 0);
       expect(find.text('Welcome to Kept.'), findsNothing);
       await closeDown(tester);
@@ -293,7 +327,22 @@ void main() {
       contacts.granted = false;
       await start(tester, home: const PermissionsScreen());
       expect(find.textContaining('No account, no server'), findsOneWidget);
-      expect(find.textContaining('internet'), findsNothing);
+      // The only request: the version check, off until switched on.
+      expect(find.textContaining('only if you switch it on'), findsOneWidget);
+      expect(find.text('Update check'), findsOneWidget);
+      expect(find.textContaining('internet access'), findsOneWidget);
+      expect(find.textContaining('installing apps'), findsOneWidget);
+      expect(find.textContaining('download the newest APK'), findsOneWidget);
+      expect(
+        find.text(
+          'Only that request goes to GitHub. None of your data '
+          'is ever sent.',
+        ),
+        findsOneWidget,
+      );
+      await tester.tap(find.text('Check GitHub for new versions'));
+      await settle(tester);
+      expect((await settings(tester)).updateCheckEnabled, isTrue);
       expect(find.text('Contacts (read only)'), findsOneWidget);
       expect(find.text('Not allowed'), findsWidgets);
       expect(find.text('Always allowed'), findsNWidgets(2));

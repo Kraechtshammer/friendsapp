@@ -1297,7 +1297,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fsWelcomePrivacy =>
-      'Everything you enter stays on this phone. No account, no server.';
+      'Everything you enter stays on this phone. No account, no server. The only thing Kept. ever fetches is the version check from GitHub, and only if you switch it on.';
 
   @override
   String get fsStart => 'Let\'s go';
@@ -1365,7 +1365,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get permNothingLeaves =>
-      'Everything you enter stays on this phone. No account, no server.';
+      'Everything you enter stays on this phone. No account, no server. The only thing Kept. ever fetches is the version check from GitHub, and only if you switch it on.';
 
   @override
   String get permNothingSent => 'Nothing is sent anywhere.';
@@ -1508,4 +1508,172 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get permVibrateWithout =>
       'Without it, reminders would only make a sound.';
+
+  @override
+  String get updateSection => 'App update';
+
+  @override
+  String get updateSwitch => 'Check GitHub for new versions';
+
+  @override
+  String get updateOff =>
+      'The check is off. Kept. makes no internet requests. You can update by hand from the releases page.';
+
+  @override
+  String get updateReleasesPage => 'Releases on GitHub';
+
+  @override
+  String get updateReleasesPageHint =>
+      'Opens the browser. Download the newest APK there to update by hand.';
+
+  @override
+  String get updateAskTitle => 'Check GitHub for new versions?';
+
+  @override
+  String get updateAskBody =>
+      'Kept. can ask GitHub which version is the newest, and download and install it for you. Only that request goes out; none of your data is ever sent. You can always update by hand from GitHub instead. Android will ask once whether Kept. may install apps.';
+
+  @override
+  String get updateCheck => 'Check for updates';
+
+  @override
+  String updateStatusChecked(String version, String time) {
+    return 'Version $version · up to date, checked $time';
+  }
+
+  @override
+  String updateStatusNotChecked(String version) {
+    return 'Version $version · not checked yet';
+  }
+
+  @override
+  String get updateChecking => 'Checking for updates…';
+
+  @override
+  String get updateUpToDate => 'Kept. is up to date.';
+
+  @override
+  String updateAvailableTile(String version) {
+    return 'Update to version $version';
+  }
+
+  @override
+  String get updateAvailableHint => 'See what\'s new and install';
+
+  @override
+  String updateDownloading(int percent) {
+    return 'Downloading… $percent%';
+  }
+
+  @override
+  String get updateInstalling =>
+      'Confirm the installation in the Android window. Kept. closes meanwhile; just open it again afterwards.';
+
+  @override
+  String get updateCloseHint =>
+      'Kept. closes during the update. Just open it again afterwards.';
+
+  @override
+  String get updateRestart => 'Restart update';
+
+  @override
+  String get updateRestartHint => 'If the installation got stuck or failed';
+
+  @override
+  String get updateDeleteFile => 'Delete update file';
+
+  @override
+  String updateFileSize(String size) {
+    return 'Uses $size';
+  }
+
+  @override
+  String get updateNoFile => 'No file stored';
+
+  @override
+  String get updateFileDeleted => 'Update file deleted';
+
+  @override
+  String updateDialogTitle(String version) {
+    return 'Update to version $version';
+  }
+
+  @override
+  String get updateNotesEmpty => 'Small improvements behind the scenes.';
+
+  @override
+  String get notesNew => 'New';
+
+  @override
+  String get notesFixed => 'Fixed';
+
+  @override
+  String get notesImproved => 'Improved';
+
+  @override
+  String get updateInstall => 'Update';
+
+  @override
+  String get updateLater => 'Later';
+
+  @override
+  String get updateClose => 'Close';
+
+  @override
+  String get updateCheckFailed =>
+      'GitHub can\'t be reached right now. Try again later.';
+
+  @override
+  String get updateDownloadFailed =>
+      'The download didn\'t work. Please try again.';
+
+  @override
+  String get updateNoPermission =>
+      'Kept. isn\'t allowed to install apps yet. Allow it in Android\'s settings, then tap “Update” again.';
+
+  @override
+  String get updateAborted => 'Update cancelled.';
+
+  @override
+  String get updateFailed => 'Android refused the update.';
+
+  @override
+  String get whatsNewTile => 'What\'s new';
+
+  @override
+  String whatsNewTileHint(String version) {
+    return 'The changes in version $version';
+  }
+
+  @override
+  String whatsNewTitle(String version) {
+    return 'What\'s new in version $version';
+  }
+
+  @override
+  String get whatsNewFailed =>
+      'The changes can\'t be loaded right now. Try again later.';
+
+  @override
+  String get whatsNewEarlier => 'Earlier versions';
+
+  @override
+  String whatsNewVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get permUpdateTitle => 'Update check';
+
+  @override
+  String get permUpdateUse =>
+      'Asks GitHub which version of Kept. is the newest, on start and when you come back to the app, at most every 30 minutes. Uses two permissions: internet access, and installing apps, which Android asks for when the first update is installed.';
+
+  @override
+  String get permUpdateSent =>
+      'Only that request goes to GitHub. None of your data is ever sent.';
+
+  @override
+  String get permUpdateWithout =>
+      'Without it: download the newest APK from GitHub yourself (Settings, Releases on GitHub).';
 }

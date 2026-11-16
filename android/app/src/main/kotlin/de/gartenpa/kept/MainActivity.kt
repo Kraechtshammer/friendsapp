@@ -7,6 +7,7 @@ import io.flutter.embedding.engine.FlutterEngine
 
 class MainActivity : FlutterActivity() {
     private var share: ShareChannel? = null
+    private var update: UpdateChannel? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -14,6 +15,14 @@ class MainActivity : FlutterActivity() {
         IncomingChannel.register(flutterEngine.dartExecutor.binaryMessenger, this)
         // Sharing into the app (M10): see ShareChannel.kt.
         share = ShareChannel(flutterEngine.dartExecutor.binaryMessenger, this)
+        // In-app update, not in a Play build: see UpdateChannel.kt.
+        update = UpdateChannel(flutterEngine.dartExecutor.binaryMessenger, this)
+    }
+
+    override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
+        update?.dispose()
+        update = null
+        super.cleanUpFlutterEngine(flutterEngine)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

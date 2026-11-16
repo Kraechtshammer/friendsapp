@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app/incoming_sync.dart';
 import '../app/providers.dart';
+import '../app/update_controller.dart';
 import '../data/app_settings.dart';
 import '../data/database.dart';
 import '../data/ideas_repository.dart';
@@ -25,6 +26,7 @@ import 'material.dart';
 import 'people/people_screen.dart';
 import 'setup/first_start_screen.dart';
 import 'progress/progress_screen.dart';
+import 'settings/update_tiles.dart';
 import 'upcoming/upcoming_screen.dart';
 
 /// The four tabs: Home, Upcoming, People, Progress. Settings open from the
@@ -47,6 +49,10 @@ import 'upcoming/upcoming_screen.dart';
 /// Shares from other apps (M10) open "Keep this for…" over whatever is on
 /// screen ([showShareSheet]). Once per start, pictures in `shared/` that no
 /// idea refers to are removed ([removeOrphanPictures]).
+///
+/// The in-app update (02-design.md §8) is looked for on start and on every
+/// return to the app ([_lookForUpdate]); with the check switched off that
+/// does nothing. Not part of a Play build (see update_controller.dart).
 class HomeShell extends ConsumerStatefulWidget {
   const HomeShell({super.key});
 
@@ -64,6 +70,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   var _firstStartRunning = false;
   var _stampsPrepared = false;
   var _picturesCleaned = false;
+  var _updatePopupOpen = false;
   late final AppLifecycleListener _lifecycle;
   late final _incoming = IncomingSync(ref);
 
@@ -90,6 +97,41 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     });
     _watchWishes(schedule: false);
     unawaited(ref.read(shareReceiverProvider).listen(_onShare));
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => unawaited(_lookForUpdate()),
+    );
+  }
+
+  /// Shows "What's new" once after an update, then looks for an update (at
+  /// most every 30 minutes) and shows the popup once per new version.
+  /// [resumed]: also continues an update that waited for the "install
+  /// unknown apps" permission. Nothing of this uses the network while the
+  /// check is off (the gate in [UpdateController]). No popup over the
+  /// first-start flow.
+  Future<void> _lookForUpdate({bool resumed = false}) async {
+    try {
+      final update = ref.read(updateProvider.notifier);
+      if (!_updatePopupOpen && !_firstStartRunning) {
+        // First the changes of an update just installed, then a newer one.
+        final whatsNew = await update.whatsNewOnStart();
+        if (whatsNew != null && mounted) {
+          _updatePopupOpen = true;
+          await showWhatsNewDialog(context, Future.value(whatsNew));
+          _updatePopupOpen = false;
+        }
+      }
+      await (resumed ? update.resumed() : update.checkIfDue());
+      if (!mounted || _updatePopupOpen || _firstStartRunning) return;
+      if (!await update.popupDue() || !mounted) return;
+      _updatePopupOpen = true;
+      // Marked before it shows, so it comes once per version.
+      await update.markPopupShown();
+      if (mounted) await showUpdateDialog(context);
+      _updatePopupOpen = false;
+    } catch (e) {
+      _updatePopupOpen = false;
+      debugPrint('Update not looked for: $e');
+    }
   }
 
   /// A share from another app: "Keep this for…" once the frame is built.
@@ -197,6 +239,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   }
 
   void _onResume() {
+    unawaited(_lookForUpdate(resumed: true));
     _incoming.onResume();
     _askPendingQuestion();
     _watchWishes();

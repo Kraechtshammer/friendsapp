@@ -2105,7 +2105,7 @@ abstract class AppLocalizations {
   /// No description provided for @fsWelcomePrivacy.
   ///
   /// In en, this message translates to:
-  /// **'Everything you enter stays on this phone. No account, no server.'**
+  /// **'Everything you enter stays on this phone. No account, no server. The only thing Kept. ever fetches is the version check from GitHub, and only if you switch it on.'**
   String get fsWelcomePrivacy;
 
   /// No description provided for @fsStart.
@@ -2225,7 +2225,7 @@ abstract class AppLocalizations {
   /// No description provided for @permNothingLeaves.
   ///
   /// In en, this message translates to:
-  /// **'Everything you enter stays on this phone. No account, no server.'**
+  /// **'Everything you enter stays on this phone. No account, no server. The only thing Kept. ever fetches is the version check from GitHub, and only if you switch it on.'**
   String get permNothingLeaves;
 
   /// No description provided for @permNothingSent.
@@ -2485,6 +2485,282 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Without it, reminders would only make a sound.'**
   String get permVibrateWithout;
+
+  /// No description provided for @updateSection.
+  ///
+  /// In en, this message translates to:
+  /// **'App update'**
+  String get updateSection;
+
+  /// No description provided for @updateSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Check GitHub for new versions'**
+  String get updateSwitch;
+
+  /// No description provided for @updateOff.
+  ///
+  /// In en, this message translates to:
+  /// **'The check is off. Kept. makes no internet requests. You can update by hand from the releases page.'**
+  String get updateOff;
+
+  /// No description provided for @updateReleasesPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Releases on GitHub'**
+  String get updateReleasesPage;
+
+  /// No description provided for @updateReleasesPageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens the browser. Download the newest APK there to update by hand.'**
+  String get updateReleasesPageHint;
+
+  /// No description provided for @updateAskTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check GitHub for new versions?'**
+  String get updateAskTitle;
+
+  /// No description provided for @updateAskBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept. can ask GitHub which version is the newest, and download and install it for you. Only that request goes out; none of your data is ever sent. You can always update by hand from GitHub instead. Android will ask once whether Kept. may install apps.'**
+  String get updateAskBody;
+
+  /// No description provided for @updateCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check for updates'**
+  String get updateCheck;
+
+  /// No description provided for @updateStatusChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} · up to date, checked {time}'**
+  String updateStatusChecked(String version, String time);
+
+  /// No description provided for @updateStatusNotChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} · not checked yet'**
+  String updateStatusNotChecked(String version);
+
+  /// No description provided for @updateChecking.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking for updates…'**
+  String get updateChecking;
+
+  /// No description provided for @updateUpToDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept. is up to date.'**
+  String get updateUpToDate;
+
+  /// No description provided for @updateAvailableTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Update to version {version}'**
+  String updateAvailableTile(String version);
+
+  /// No description provided for @updateAvailableHint.
+  ///
+  /// In en, this message translates to:
+  /// **'See what\'s new and install'**
+  String get updateAvailableHint;
+
+  /// No description provided for @updateDownloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading… {percent}%'**
+  String updateDownloading(int percent);
+
+  /// No description provided for @updateInstalling.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm the installation in the Android window. Kept. closes meanwhile; just open it again afterwards.'**
+  String get updateInstalling;
+
+  /// No description provided for @updateCloseHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept. closes during the update. Just open it again afterwards.'**
+  String get updateCloseHint;
+
+  /// No description provided for @updateRestart.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart update'**
+  String get updateRestart;
+
+  /// No description provided for @updateRestartHint.
+  ///
+  /// In en, this message translates to:
+  /// **'If the installation got stuck or failed'**
+  String get updateRestartHint;
+
+  /// No description provided for @updateDeleteFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete update file'**
+  String get updateDeleteFile;
+
+  /// No description provided for @updateFileSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Uses {size}'**
+  String updateFileSize(String size);
+
+  /// No description provided for @updateNoFile.
+  ///
+  /// In en, this message translates to:
+  /// **'No file stored'**
+  String get updateNoFile;
+
+  /// No description provided for @updateFileDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Update file deleted'**
+  String get updateFileDeleted;
+
+  /// No description provided for @updateDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update to version {version}'**
+  String updateDialogTitle(String version);
+
+  /// No description provided for @updateNotesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Small improvements behind the scenes.'**
+  String get updateNotesEmpty;
+
+  /// No description provided for @notesNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get notesNew;
+
+  /// No description provided for @notesFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed'**
+  String get notesFixed;
+
+  /// No description provided for @notesImproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Improved'**
+  String get notesImproved;
+
+  /// No description provided for @updateInstall.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get updateInstall;
+
+  /// No description provided for @updateLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get updateLater;
+
+  /// No description provided for @updateClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get updateClose;
+
+  /// No description provided for @updateCheckFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'GitHub can\'t be reached right now. Try again later.'**
+  String get updateCheckFailed;
+
+  /// No description provided for @updateDownloadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The download didn\'t work. Please try again.'**
+  String get updateDownloadFailed;
+
+  /// No description provided for @updateNoPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept. isn\'t allowed to install apps yet. Allow it in Android\'s settings, then tap “Update” again.'**
+  String get updateNoPermission;
+
+  /// No description provided for @updateAborted.
+  ///
+  /// In en, this message translates to:
+  /// **'Update cancelled.'**
+  String get updateAborted;
+
+  /// No description provided for @updateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Android refused the update.'**
+  String get updateFailed;
+
+  /// No description provided for @whatsNewTile.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new'**
+  String get whatsNewTile;
+
+  /// No description provided for @whatsNewTileHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The changes in version {version}'**
+  String whatsNewTileHint(String version);
+
+  /// No description provided for @whatsNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new in version {version}'**
+  String whatsNewTitle(String version);
+
+  /// No description provided for @whatsNewFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The changes can\'t be loaded right now. Try again later.'**
+  String get whatsNewFailed;
+
+  /// No description provided for @whatsNewEarlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier versions'**
+  String get whatsNewEarlier;
+
+  /// No description provided for @whatsNewVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String whatsNewVersion(String version);
+
+  /// No description provided for @permUpdateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update check'**
+  String get permUpdateTitle;
+
+  /// No description provided for @permUpdateUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Asks GitHub which version of Kept. is the newest, on start and when you come back to the app, at most every 30 minutes. Uses two permissions: internet access, and installing apps, which Android asks for when the first update is installed.'**
+  String get permUpdateUse;
+
+  /// No description provided for @permUpdateSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Only that request goes to GitHub. None of your data is ever sent.'**
+  String get permUpdateSent;
+
+  /// No description provided for @permUpdateWithout.
+  ///
+  /// In en, this message translates to:
+  /// **'Without it: download the newest APK from GitHub yourself (Settings, Releases on GitHub).'**
+  String get permUpdateWithout;
 }
 
 class _AppLocalizationsDelegate
