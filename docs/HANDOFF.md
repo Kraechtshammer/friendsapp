@@ -5,9 +5,9 @@ The first thing a new session reads. Last rewritten on 2026-11-16, at the end of
 ## 1. Where things stand
 
 - Phase: **implement**. The app is called **Kept.** with the full stop (app label and titles; running text may write Kept). App ID `de.gartenpa.kept` (final). Repository and folder are `friendsapp`.
-- **M0 to M3 are done; M4 is built but not yet tried.** M3 was tried by the developer except the evening notification. See section 4.
-- **Released: 0.2.0** (tag `v0.2.0`, 2026-11-16, the state at the end of M3, with M2 in it). Before it: 0.1.0 at the end of M1. It was first tagged `v0.3.0` by mistake (a skipped version); that tag was replaced by `v0.2.0` the same day.
-- Everything up to the 0.2.0 release commit is pushed (2026-11-16).
+- **M0 to M4 are done.** Notifications (M3, M4) are being tried by the developer in daily use. See section 4.
+- **Released: 0.3.0** (tag `v0.3.0`, 2026-11-16, M4). Before it: 0.2.0 (M2 and M3) and 0.1.0 (M1). An earlier `v0.3.0` tag on the M3 state existed for some minutes and was deleted; the developer was asked to delete its leftover release draft on GitHub, if there is one. It was first tagged `v0.3.0` by mistake (a skipped version); that tag was replaced by `v0.2.0` the same day.
+- Everything up to the 0.3.0 release commit is pushed (2026-11-16).
 - The developer uses the app with real people on their Pixel 7 Pro since 2026-11-16. **Every database change needs a tested migration.**
 
 ## 2. What to read, and how much
@@ -91,11 +91,12 @@ Details of what was built are in [04-architecture.md](04-architecture.md); decis
 - Done: "Tonight's pick" on Home (one item with Open chat, Another one, Done; or three, by setting) from the open thoughts, oldest first, one per person (Claude's order until other sources exist); "Did you write to Tom?" after any Open chat (pick or person page), worded by kind, Yes leads to "Nice one". Checked: analyze, 133 tests, Claude looked at rendered pictures (`build/screens/home-one.png`, `chat-question.png`). **Not checked: on the phone, above all that the question appears when coming back from the messenger.** Against the concept: Another one and Done are text buttons under a full-width Open button; Yes says "Yes"; no "High five!" tag.
 - Still open in M3: the evening notification is untried on the phone, in debug and in the release build (points above). German texts of M3 are by subagents and not reviewed.
 
-**M4, birthdays: built, to be tried** (2026-11-16). Decisions in 02-design.md §8 (last rows).
+**M4, birthdays: done, released as 0.3.0** (2026-11-16). The developer on the debug build: "so far it looks good"; the notifications are being tried in daily use over the next days. Decisions in 02-design.md §8 (last rows).
 
 - Done: on the day, the person is the first pick on Home ("Turns 32 today", Open chat, Congratulated); "Did you congratulate ...?" after Open chat; two notifications per birthday (evening time, and 23:00 if not congratulated) with Yes and Open chat, in addition to the evening question and also on excluded days; "Your birthday" in Settings; "Who congratulated you?" card on the user's own birthday with a screen of toggles. No schema change. Checked: analyze, 167 tests, debug APK builds, Claude looked at a rendered Home picture (`build/screens/m4-home-birthday.png`). The M4 debug build was installed on the developer's phone on 2026-11-16. **Not checked: anything on the phone; the developer has not reported yet.** Phone list: both notifications arrive; Yes with the app closed stores the wish and removes the 23:00 one (cancelling from the background isolate is unverified); Open chat from a cold start, then the return question; the Birthdays channel in Android settings.
 - Known gaps: if the background handler dies between storing and cancelling, the 23:00 ping still fires; congratulating in demo mode does not cancel real notifications; Home does not notice midnight while it stays open; a person with a birthday pick shows no thought pick until congratulated; a Yes tapped after midnight is stored at 23:59 of the birthday. German texts by a subagent, not reviewed.
-- Next: the developer tries it; then release 0.3.0 if the developer agrees (the next number, no skips). After that M5, Upcoming and plans; ask the developer before fixing the data model.
+- **Working mode since 2026-11-16 (the developer):** Claude keeps building the remaining milestones up to 1.0.0 without waiting for a test of each one, keeps [05-test-list.md](05-test-list.md) up to date with what the developer should check, and makes reasonable releases now and then (next number each time, no skips). Choices Claude makes alone on the way are marked as Claude's in 02-design.md §8, for the developer to overrule. Still to ask first: new permissions, anything that risks Play, new dependencies.
+- Next: M5, Upcoming and plans.
 
 ## 5. Open questions for the developer
 
