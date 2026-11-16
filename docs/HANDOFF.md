@@ -1,14 +1,22 @@
 # Handoff
 
-The first thing a new session reads. Last rewritten on 2026-11-16, at the end of the session that built M0, M1 and most of M2. The log of the research and design sessions is in [history-research-and-design.md](history-research-and-design.md).
+The first thing a new session reads. Last rewritten on 2026-11-16, after the review of Claude's choices, the first-start flow and the in-app update. The log of the research and design sessions is in [history-research-and-design.md](history-research-and-design.md).
 
 ## 1. Where things stand
 
-- Phase: **implement**. The app is called **Kept.** with the full stop (app label and titles; running text may write Kept). App ID `de.gartenpa.kept` (final). Repository and folder are `friendsapp`.
-- **M0 to M10 are built, so every planned milestone.** The developer has tried up to M4; notifications (M3, M4) are being tried in daily use. M5 to M10 are untried on a phone; what to check is in [05-test-list.md](05-test-list.md). See section 4.
-- **Released: 0.6.0** (tag `v0.6.0`, 2026-11-16: M10). Before it: 0.5.0 (schema 4, M7 to M9), 0.4.0 (M5, M6), 0.3.0 (M4), 0.2.0 (M2, M3), 0.1.0 (M1). The developer's phone has the M4 debug build (schema 3); nothing later was installed there.
-- Everything up to the 0.6.0 release commit is pushed (2026-11-16).
-- The developer uses the app with real people on their Pixel 7 Pro since 2026-11-16. **Every database change needs a tested migration.**
+- Phase: **implement**. The app is called **Kept.** with the full stop (running text may write Kept). App ID `de.gartenpa.kept`; debug builds use `de.gartenpa.kept.debug`. Repository and folder are `friendsapp`.
+- **M0 to M10 are all built.** Everything after 0.6.0 is built but not released.
+- **Released** (tags `v0.1.0` to `v0.6.0`, all 2026-11-16, no version skipped):
+  - 0.1.0: M1, people, contacts import, "Open chat".
+  - 0.2.0: M2 and M3, capture, the evening question, Tonight's pick, "Nice one".
+  - 0.3.0: M4, birthdays.
+  - 0.4.0: M5 and M6, Upcoming and plans, the friend timeline.
+  - 0.5.0: schema 4, M7 to M9, owed replies, rhythm and reconnect, stamps and treats.
+  - 0.6.0: M10, ideas and sharing into the app.
+- **Built after 0.6.0, not released:** the review changes (02-design.md §8, "Review of Claude's choices"), the first-start flow, the permissions page, refresh from contacts, the licences row, the K. launcher icon, debug builds as a separate app, the in-app update.
+- **In progress:** the evening notification naming its reason (an owed reply or the reconnect person). Uncommitted work; see git log for whether it landed.
+- **The developer's phone** has a debug build of 0.6.0 under the release's app id (schema 4, real data). The developer will uninstall it and start fresh on the release build; debug builds then install beside it as "Kept. debug".
+- **Tried by the developer:** M1 to M4 on the phone (M2 "all worked", M3 "everything else looks good", M4 "so far it looks good"); the evening and birthday notifications are being tried in daily use and have no report yet. The 0.6.0 debug build was installed on 2026-11-16; there is no report on the migration to schema 4 or on M5 onward. **Every database change needs a tested migration.**
 
 ## 2. What to read, and how much
 
@@ -23,139 +31,121 @@ The reference for the look is concept V6 with the V6b tweaks: pictures in `docs/
 
 ## 3. The design in short
 
-02-design.md §2 was written early. Where it differs from this list, this list (taken from §6.5 to §6.14) is right.
+02-design.md §2 was written early. Where it differs from this list, this list (from §6 and §8) is right.
 
 **Core**
 
-- The user opens the app to capture a thought: text, person, kind (write, call, meet). No always-on notification.
-- Once a day, at a set time and not on excluded days: "Got ten minutes for someone today?" with Yes and Not today. Not today costs nothing. Nothing is ever shown as overdue.
-- Home shows the capture card, the open item ("Tonight's pick") or a list of three (a setting), and the next two dates.
-- "Open chat" opens the person's main messenger and carries that messenger's icon. On return: "Did you write to Tom?", then the "Nice one" screen with confetti, a line for next time, and "Planning to meet up?".
-- Pick order: birthday today, longest owed reply, reconnect person of the week, own intentions and undated plans, class rhythm hint.
+- The user opens the app to capture a thought: text, person, kind (write, call, meet, game), optional date, horizon and link. No always-on notification.
+- Once a day, at a set time and not on excluded days, the evening ping asks "Got ten minutes for someone today?" with Yes and Not today. Not today costs nothing. Nothing is shown as overdue. When there is a top reason (an owed reply, the reconnect person) the ping names it. There are no extra pings for owed replies.
+- Home shows the capture card, "Tonight's pick" (one item, or three by setting), "Coming up" and the open thoughts. Tapping a thought opens the person; editing is a button on the row.
+- "Open chat" opens the person's main messenger. On return: "Did you write to Tom?", then the "Nice one" screen (stamps, activity, line for next time, "Planning to meet up?").
+- Pick order: birthday today, owed reply, reconnect person, own thoughts and due plans, the gentle rhythm hint last.
 
 **People**
 
-- Classes: Close friends, Now and then, A few times a year; Family is a separate group. "Getting back in touch" is a state on top. Default rhythms 2 weeks, 6 weeks, 3 months, editable in settings. A rhythm only drives a gentle hint.
-- A person is shown by their initial in a coloured shape. No photos, no emoji.
+- Classes: Close friends, Now and then, A few times a year; Family is a separate group. "Getting back in touch" is a state on top. Default rhythms 2 weeks, 6 weeks, 3 months, editable; a rhythm only drives a gentle hint.
+- The reconnect person has a span (a setting, start a month, from a week to more than a month).
+- A person is an initial in a coloured shape with a plant badge for the class. No photos.
 
 **Time**
 
-- Upcoming tab: birthdays for the next 12 months and anything with a date. After a date has passed the app asks once "Did it happen?".
-- Plans without a date have a horizon: soon, later, or when… with a condition. "Soon" comes back as an evening pick after about two weeks, "later" after about two months, "when…" never by itself.
-- Each person has a compact timeline on their page: upcoming on top, history below.
-- Contact is recorded in both directions. Incoming: automatically where the notification listener is on, plus "They wrote" and "They called" buttons.
-- Birthdays: their birthday always shows in their timeline, with "You congratulated" when the user did. The user's own birthday shows only for people who congratulated.
+- Upcoming tab: birthdays for 12 months and dated thoughts. After a date the app asks once "Did it happen?" (Yes, New date, No).
+- Undated plans have a horizon: soon (due after about 14 days), later (about 60), when... (never by itself).
+- Each person has a timeline: upcoming on top, history below. Contact is recorded in both directions; incoming automatically through the optional listener, or by the "They wrote" and "They called" buttons.
+- Birthdays show only on the day. Two pings: evening, and 23:00 if not congratulated. No belated reminders.
 
-**Stamps and treats**
+**Stamps and streak**
 
-- At most one stamp-earning contact per person per week. Value: 1 (close), 2 (now and then), 3 (a few times a year), +1 if getting back in touch, +1 if the last contact was longer ago than the rhythm, doubled for a meet-up. Weights and card sizes are editable in settings.
-- Each treat has its own number of stamps (default 10). A default list of treats ships with the app (02-design.md §6.9, §6.10).
-- Progress shows a count that only grows, the stamp card, the week, weeks in a row that pause instead of resetting.
+- At most one stamp-earning contact per person per week. Value: class weight (close 1, now and then 2, a few times a year 3, Family 2), +1 getting back in touch, +1 if longer ago than the rhythm. A meet-up doubles; so does gaming, except with close friends (counts 1). Weights and card sizes are editable.
+- Treats have their own stamp numbers; twelve default treats ship.
+- The streak counts a week when the user was in touch with someone who is not a close friend. Strict mode ends the streak after a week without; Friendly mode only pauses it. "Longest so far" is kept.
 
-**Permissions and Play**
+**Permissions, Play, updates**
 
-- Contacts (read). Notifications. Notification access is optional, switched on by hand, own Kotlin code.
-- No call-log permission. Messenger calls may be recognised through notification access (to test).
-- Anything that adds a permission or could risk Play compatibility is discussed first.
+- Contacts (read) and notifications. Notification access is optional, switched on consciously, own Kotlin code, never reads message text. No call-log permission.
+- The app shows every permission, what it is for, that nothing goes to a server, and that it works without it.
+- The in-app update is an opt-in (first start, a Home card or Settings). Off means no network request at all. It adds INTERNET and REQUEST_INSTALL_PACKAGES and is for GitHub builds only.
+- Anything that adds a permission or risks Play is discussed first.
 
 **Look**
 
-- Dark first, light as well, plus a theme setting. Settings open from a gear on Home; the tabs are Home, Upcoming, People, Progress.
-- Own colourful icons, drawn to the icon style guide. Sixteen exist as SVG in `gen_v6.py` (`ICONS`).
+- Dark first, light too, plus a theme setting. Tabs: Home, Upcoming, People, Progress; settings from the gear on Home.
+- Own colourful icons, drawn to the icon style guide. App icon: the K. draft.
 
-**Later, not in the milestones:** groups and shared events, quick "do soon" items such as a voice message to listen to (§6.12), doctor appointments, iOS.
+## 4. Milestones
 
-## 4. Milestones: state and next steps
+What was built is in [04-architecture.md](04-architecture.md); decisions are in 02-design.md §8; what to try is in [05-test-list.md](05-test-list.md). Milestone table: 02-design.md §5.
 
-Details of what was built are in [04-architecture.md](04-architecture.md); decisions and phone test results are in 02-design.md §8.
+- **M0, setup and risk checks:** done, not released. All five phone checks passed (§8 rows of 2026-11-15). The throwaway code is in git history ("Dev: Add throwaway phone checks for M0").
+- **M1, People:** done, in 0.1.0. People tab, person page, contacts import, "Open chat". Tried by the developer. Not confirmed: "Open chat" lands in the right chat from the final code.
+- **M2, Capture:** done, in 0.2.0. Capture card, open thoughts, schema 2. Tried: "all worked".
+- **M3, Evening question and open items:** done, in 0.2.0. Schema 3, the evening notification, Tonight's pick, "Did you write?", "Nice one". The notification itself was not tried on the phone.
+- **M4, Birthdays:** done, in 0.3.0. Birthday pick, two pings, own birthday. Phone checks open (test list).
+- **M5, Upcoming and plans:** built, in 0.4.0, untried. Dates, horizons, Upcoming tab, "Did it happen?".
+- **M6, Friend timeline:** built, in 0.4.0, untried. Timeline, "They wrote" and "They called". Whether the small arrows show on the phone is open.
+- **M7, Owed replies and incoming contact:** built, in 0.5.0 (with schema 4), untried. Optional Kotlin listener (WhatsApp, Telegram, Signal, Discord). No Kotlin tests. Group detection unsure for Telegram and Discord.
+- **M8, Rhythm and reconnect:** built, in 0.5.0, untried. Rhythms, hint, reconnect person.
+- **M9, Stamps and treats:** built, in 0.5.0, untried. Stamp rule, Progress tab, treats. How the rule feels over weeks is open.
+- **M10, Ideas and sharing in:** built, in 0.6.0, untried. Ideas per person, share into the app (own Kotlin). Possible issue: with `singleTop` a share from Chrome may open a second Kept; if so, try `singleTask`.
 
-**M0, setup and risk checks: done** (2026-11-15). All five phone checks passed: no exact-alarm permission needed, notification buttons work with the app closed, chats open through `android_intent_plus`, the own listener sees WhatsApp messages and calls, own drawn messenger icons. The throwaway check code is in git history (commit "Dev: Add throwaway phone checks for M0"), a starting point for M3 and M7.
+**After M10** (built, not released)
 
-**M1, People: done** (2026-11-16). Database with settings and people, demo database behind a debug switch, People tab, person page top, add and edit, import from contacts, "Open chat", class shown as a growing plant. The developer tried it on the phone: "all worked well". Not confirmed by the developer: that "Open <messenger>" lands in the right chat from the final code.
+- Review changes: tap a thought opens the person; "Did it happen?" third button; "Planning to meet up?"; reconnect span; streak rule with Strict and Friendly; stamp weights (Family 2, gaming with close friends 1).
+- First-start flow (contacts, class per name, notifications, update choice) and the permissions page.
+- Refresh from contacts, per person and for everyone. "About and licences" row.
+- The K. launcher icon. Debug builds as the separate app "Kept. debug".
+- The in-app update from GitHub releases, with a "What's new" popup. Not run against a real newer release yet (unverified).
+- In progress: the evening ping naming its reason.
 
-**M2, Capture: done, not released** (2026-11-16).
+**Left before 1.0.0** (the developer's call)
 
-- Done: `intentions` table with the migration from schema 1 to 2; capture card on Home (text, person from the recent four or through "More", kind, Save); open thoughts listed on Home and on the person page with Done and Drop; greeting by time of day; long-press shortcut "Capture a thought" (`quick_actions`); the class badge on avatars on Home. Checked: analyze, 73 tests, debug build installed on the phone. **Not checked: Claude has not looked at the capture screens, in a picture or on the phone; the developer has not tried them; the long-press shortcut and the database upgrade on the phone are untested.**
-- M2 was not released by itself; it went out together with M3 in 0.2.0.
-- Known gaps: recent people are ordered by open intentions only; German texts in M1 and M2 were written by subagents and not all reviewed by the developer.
-
-- Tried by the developer on 2026-11-16: "all worked". The developer chose not to release 0.2.0 yet.
-
-**M3, evening question and open items: done, released as 0.2.0** (2026-11-16). 02-design.md §5; decisions of the day in §8 (kind "game", activity text, line for next time with a "Remind me" switch, Done records a contact).
-
-- Done: schema 3 with `contact_events` and `day_answers`, their repositories, the kind `game` (label Game / Zocken, shown with the meet icon for now). Checked: analyze, 92 tests, among them the upgrade from 2 to 3 with people, intentions and settings compared row by row. **Not checked: the upgrade on the phone; no screen uses the new tables yet.**
-- Done: Done on an open thought (Home and person page) stores a contact with source "by hand" and opens the "Nice one" screen: activity for meet and game (prefilled from the thought's text), line for next time, "Remind me" switch; "Last time: ..." under open thoughts. The controller is the Game icon (`assets/icons/controller.svg`). Checked: analyze, 100 tests, Claude looked at a rendered picture of the screen (`build/screens/`). **Not checked: on the phone; the developer has not seen the screen.** Left out against the concept: the "High five!" tag, "Planning to meet up?" (M5), stamps (M9), motion. The button reads "Close" (Claude's choice). German texts by a subagent, not reviewed.
-- Icons: Meet shows the two people icon for now (the People tab uses the same one). The developer wants simple icons of few plain shapes; a cheap model or Claude's own small SVG edits are enough. In the set since 2026-11-16: `controller` (Game), `cups`, `wasd`, `bench` (the last three not used yet) and the new `phone` (half-rounded-rectangle ends, from the developer's sketch). Open: the bench with tree, the bench with tree is in the set as `bench` (the developer may still edit it by hand). Do not delete drafts the developer has seen: the bench had to be redrawn from a screenshot.
-- On the phone: the M3 debug build was installed on 2026-11-16 (`adb install -r`, Success), so the real database is at schema 3 once the app was opened. The developer tried it the same day: "everything else looks good"; the evening notification was not tried ("let's assume it works"), so every notification point above stays unchecked.
-- Done: the evening question. Daily notification "Got ten minutes for someone today?" with Yes and Not today, settings section with on/off, time (start 19:00) and excluded weekdays (start none, Claude's start values), permission asked on first start and when switched on. Checked: analyze, 119 tests, debug APK builds. **Not checked, all on the phone:** the permission dialog on first start; arrival on allowed days only and after a restart (weekly repeating notifications are new, M0 tested single ones); Not today with the app closed stores the answer and leaves the app closed; Yes from cold and from running opens Home at the open thoughts; the line and button after refusing the permission; the sprout status icon; a release build (the icon is kept through `res/raw/keep.xml`).
-- Done: "Tonight's pick" on Home (one item with Open chat, Another one, Done; or three, by setting) from the open thoughts, oldest first, one per person (Claude's order until other sources exist); "Did you write to Tom?" after any Open chat (pick or person page), worded by kind, Yes leads to "Nice one". Checked: analyze, 133 tests, Claude looked at rendered pictures (`build/screens/home-one.png`, `chat-question.png`). **Not checked: on the phone, above all that the question appears when coming back from the messenger.** Against the concept: Another one and Done are text buttons under a full-width Open button; Yes says "Yes"; no "High five!" tag.
-- Still open in M3: the evening notification is untried on the phone, in debug and in the release build (points above). German texts of M3 are by subagents and not reviewed.
-
-**M4, birthdays: done, released as 0.3.0** (2026-11-16). The developer on the debug build: "so far it looks good"; the notifications are being tried in daily use over the next days. Decisions in 02-design.md §8 (last rows).
-
-- Done: on the day, the person is the first pick on Home ("Turns 32 today", Open chat, Congratulated); "Did you congratulate ...?" after Open chat; two notifications per birthday (evening time, and 23:00 if not congratulated) with Yes and Open chat, in addition to the evening question and also on excluded days; "Your birthday" in Settings; "Who congratulated you?" card on the user's own birthday with a screen of toggles. No schema change. Checked: analyze, 167 tests, debug APK builds, Claude looked at a rendered Home picture (`build/screens/m4-home-birthday.png`). The M4 debug build was installed on the developer's phone on 2026-11-16. **Not checked: anything on the phone; the developer has not reported yet.** Phone list: both notifications arrive; Yes with the app closed stores the wish and removes the 23:00 one (cancelling from the background isolate is unverified); Open chat from a cold start, then the return question; the Birthdays channel in Android settings.
-- Known gaps: if the background handler dies between storing and cancelling, the 23:00 ping still fires; congratulating in demo mode does not cancel real notifications; Home does not notice midnight while it stays open; a person with a birthday pick shows no thought pick until congratulated; a Yes tapped after midnight is stored at 23:59 of the birthday. German texts by a subagent, not reviewed.
-- **Working mode since 2026-11-16 (the developer):** Claude keeps building the remaining milestones up to 1.0.0 without waiting for a test of each one, keeps [05-test-list.md](05-test-list.md) up to date with what the developer should check, and makes reasonable releases now and then (next number each time, no skips). Choices Claude makes alone on the way are marked as Claude's in 02-design.md §8, for the developer to overrule. Still to ask first: new permissions, anything that risks Play, new dependencies.
-**M5, Upcoming and plans: built, not tried** (2026-11-16). No schema change.
-
-- Done: "when" on a thought (date with optional time, Soon, Later, When... with a condition) on the capture card and in a new edit sheet (tap a thought); the Upcoming tab (birthdays and dated thoughts for 12 months, "No date yet" in three groups); "Coming up" cards on Home; "Did it happen?" once after a date (Yes records the contact, No moves it back to Soon); due plans as picks ("Want to set a date with ...?"). Checked: analyze, 224 tests, Claude looked at rendered pictures (`build/screens/m5-*.png`). **Not checked: on the phone.**
-- Claude's choices, not confirmed: see 02-design.md §8. Notable: tapping a thought on Home now opens the edit sheet, not the person page.
-**M6, friend timeline: built, not tried** (2026-11-16). No schema change.
-
-- Done: the compact timeline on the person page (upcoming, a Today mark, history with who did what, activity and note, birthdays in both directions, "Added to your people"); "They wrote" and "They called" buttons (once per day, with Undo); a sheet to edit or delete a history entry. Checked: analyze, 248 tests, Claude looked at the dark render (`build/screens/m6-timeline-dark.png`). **Not checked: on the phone. The small direction arrows show as empty boxes in the test render (the test font lacks them); whether they show on the phone is open.**
-- M5 and M6 are released together as 0.4.0.
-- **Schema 4 is in** (2026-11-16): one adding-only step for M7 to M10 (two nullable columns; tables treats, stamps, ideas). Checked: 253 tests, the 3-to-4 migration test compares every old table row by row and there is a 1-to-4 run. **Not run on the developer's phone: the phone is at schema 3 with the M4 debug build. Claude does not install there unasked.**
-**M7, owed replies and incoming contact: built, not tried** (2026-11-16).
-
-- Done: the optional listener (Settings, "Incoming messages", off at start, needs notification access granted by hand) records who wrote or called in WhatsApp, Telegram, Signal and Discord, once per person, kind and day; the pick "Still owe ... a reply?" with Open chat and Already answered, second in the pick order, after a waiting time (start 2 days, 1 to 14 in Settings). Checked: analyze, 279 tests, debug APK builds, Claude read the Kotlin listener: it never reads the message text. **Not checked: everything on the phone; the Kotlin code has no tests.** Group chat detection is fairly sure for WhatsApp and Signal, unsure for Telegram and Discord.
-- Claude's choices, not confirmed: no notification of its own for owed replies; no "Did Jonas answer?" fallback question (the "They wrote" button covers entering by hand); "Already answered" stores no contact.
-**M8, rhythm and reconnect: built, not tried** (2026-11-16). No schema change.
-
-- Done: editable class rhythms in Settings and an own rhythm per person; the gentle hint as the last pick ("It's been a while with ...", one per day, rotating, no numbers); the reconnect person of the week (card on the People tab to choose, "This week: ..." as third pick, calm done state, a new week starts empty); a "You and ... are back in touch" card after a first exchange. Checked: analyze, 348 tests, Claude looked at the People render (`build/screens/m8-people.png`). **Not checked: on the phone; the week rollover and the daily rotation only show over days.**
-- Claude's choices, not confirmed: no notification for the reconnect person of the week; Family has no rhythm at start; details in 02-design.md §8.
-**M9, stamps and treats: built, not tried** (2026-11-16). Uses the schema 4 tables.
-
-- Done: the stamp rule with editable weights; awarding in one place for every way a contact is stored; twelve default treats; the current stamp card, carry-over and loose stamps; a one-time backfill of stamps for older contacts; the Progress tab (growing count, stamp card, this week, weeks in a row that pause, treats, "Your numbers"); stamps on the "Nice one" screen; a Stamps section in Settings. Checked: analyze, 407 tests, Claude looked at the Progress render (`build/screens/m9-progress.png`). **Not checked: on the phone, and how the rule feels over weeks.**
-- Claude's choices, not confirmed: Family counts 1; gaming doubles like a meet-up; a more valuable contact later in the week raises that week's stamp; deleting a contact keeps its stamp; "weeks in a row" counts every week with contact. See 02-design.md §8.
-- Schema 4, M7, M8 and M9 are released together as 0.5.0.
-**M10, ideas and sharing in: built, not tried** (2026-11-16). Uses the schema 4 `ideas` table.
-
-- Done: ideas per person (to do together, to talk about; optional link and picture; tick off, edit, delete) on the person page; one "Idea: ..." line on the single pick card; an optional link on a thought; sharing a link, text or one picture into the app from other apps, with the "Keep this for..." sheet (person, then idea or thought). No new permission, no new package. Checked: analyze, 436 tests, debug APK builds, Claude read the Kotlin share code and looked at the share sheet render (`build/screens/m10-share-sheet.png`). **Not checked: on the phone; all Kotlin is untested.** Possible issue: with `singleTop`, a share from Chrome may open a second Kept inside Chrome's task; if so, try `singleTask`.
-- Released as 0.6.0.
-
-**All milestones M0 to M10 are built.** What is left before 1.0.0, which is the developer's call:
-
-- The developer works through [05-test-list.md](05-test-list.md) on the phone; Claude fixes what comes up. The phone still has the M4 debug build (schema 3); the next install runs the migration to schema 4 on real data.
-- Review of the German texts (all written by subagents).
+- Work through [05-test-list.md](05-test-list.md) on the phone; Claude fixes what comes up.
+- Review of the German texts (written by subagents).
 - The light theme on a phone.
-- Claude's unconfirmed choices in 02-design.md §8 (rows marked "Claude, not confirmed").
-- The open questions in section 5, and before any Play release: the messenger logos and the notification listener part (04-architecture.md says what to delete).
-- Ideas noted for after 1.0.0: rotating praise and example texts; an icon per activity; "two come closer" badge; groups; quick "do soon" items.
+- Open questions (section 5).
+- Releases take the next number each time (the next after 0.6.0 is 0.7.0).
+
+**Ideas for after 1.0.0**
+
+- Rotating praise and example texts.
+- An icon per activity (needs a column and a larger icon set).
+- Backup export and import.
+- The "two come closer" badge (sketches in `docs/concepts/badge-ideas/`).
+- Groups and shared events; quick "do soon" items (02-design.md §6.12); doctor appointments; iOS.
+- Excluded hours; a language setting.
 
 ## 5. Open questions for the developer
 
-- A first-start welcome screen: there is none; the empty People tab offers "Add from contacts" and "Add by hand" (Claude's choice). Wanted?
-- The person page covers the tab bar; the concept shows the bar. Keep?
-- Row classes of the database are used as models, as in akai (Claude's choice).
-- Other companies' logos (messenger icons) in a published app touch their brand rules. Look at this before a Play release.
+- The person page covers the tab bar; the concept shows the bar. Keep? (Claude's choice, not confirmed.)
+- Row classes of the database are used as models, as in akai (Claude's choice, not confirmed in the review).
+- For a Play release, remove only the notification listener and the in-app update, or more? List in 04-architecture.md.
+- Other companies' logos (messenger icons) touch brand rules in a published app. Look at this before a Play release.
+- Claude's "not confirmed" rows in 02-design.md §8 for M5 to M10 that the review did not cover. The review covered only the nine points of its own row; the rest stands until overruled.
 - The repository is public and 01-research.md describes the developer's own situation (§5, §9.7, §9.8). Mention it once more if the repository gets promoted.
+- Two packages, `permission_handler` and `cupertino_icons`, are declared but unused (04-architecture.md). Removing them is a dependency change.
 
 ## 6. Not tested yet
 
-- The light theme on a phone.
+Everything that only the developer can check is in [05-test-list.md](05-test-list.md). Not in it:
+
 - The shared emulator from this container.
-- Long delays of the evening notification in deep sleep (the M0 test ran on charge).
+- Long delays of the evening notification in deep sleep (the M0 test ran on charge; the list has a point for it).
 - Signal with a user-name link, Discord with a user ID.
+- Missed and outgoing messenger calls, and other messengers' calls (§8, 2026-11-15, not tested).
+- Whether cancelling the 23:00 birthday ping from the background isolate works (unverified).
 
 ## 7. How to work here
 
 - **Flutter runs in the dev container, not in WSL.** From a Claude session in WSL: find the container with `docker ps` (its image name starts with `vsc-friendsapp`), then `docker exec -u vscode <name> bash -lc 'cd /workspaces/friendsapp && flutter analyze'`. The container only runs while the developer has the folder open in VS Code.
-- **Installing on the phone:** the container does not see the phone unless the developer runs `scripts\windows\start-adb-server.cmd`. What works from WSL: build in the container (`flutter build apk --debug --target-platform android-arm64`, smaller), copy `build/app/outputs/flutter-apk/app-debug.apk` to `/mnt/c/Windows/Temp/`, then from that folder `cmd.exe /c "adb install -r <file>"`. The phone is often nearly full; an install then fails with "not enough space" and the developer has to free about 1 GB.
+- **Installing on the phone:** from WSL through the Windows adb, by cable or wireless debugging. Build in the container (`flutter build apk --debug --target-platform android-arm64`), copy `build/app/outputs/flutter-apk/app-debug.apk` to `/mnt/c/Windows/Temp/`, then from that folder `cmd.exe /c "adb install -r <file>"`. If `adb devices` is empty, ask the developer to run `adb connect <address shown under Wireless debugging>`. The phone is often nearly full; an install then fails with "not enough space" and the developer has to free about 1 GB. **Debug builds are the separate app `de.gartenpa.kept.debug` ("Kept. debug") and can never replace the release.**
 - **Looking at a screen without the phone:** see 04-architecture.md §2.4 (throwaway widget test that writes pictures).
 - **Git runs in WSL** in `/home/paga/Projects/friendsapp`. Push works through the Windows Git Credential Manager (set per repository). Push only when the developer asks.
-- **Commits:** small, one finished step each, subject with prefix (the hook checks it), short messages. End each message with the attribution line the session gives.
+- **Commits:** small, one finished step each, subject with prefix (the hook checks it), short messages. Feature, Bugfix and Improvement subjects are shown to users in the app's "What's new", so write them for users. End each message with the attribution line the session gives.
 - **Token use:** keep it low, and keep messages to the developer short. The main session plans, writes the briefs, reviews and decides. Building goes to subagents, the smallest model that keeps the quality: Sonnet for screens and edits with a precise brief, Opus only for work where a mistake is costly (database and migrations, native code), Haiku for mechanical doc edits with the exact text given. One agent per set of files; each brief names what must not be touched and asks for a short report. Check every result yourself: rerun analyze and tests, read the risky parts.
 - **Tags are releases.** Every tag is `v<version>` matching pubspec.yaml; pushing it runs the release workflow (signed APK, public GitHub release). No other tags. **No version is ever skipped** (the developer, 2026-11-16): each release is the next number after the last one, whatever milestones it holds; the minor number does not follow the milestone numbers. 1.0.0 is the first real release. The build number after the `+` goes up with every release.
+- **Icons:** draw with simple shapes; Sonnet is enough. Never delete drafts the developer has seen.
+- **Parallel agents:** run agents in parallel wherever their files do not overlap.
+- **Test list:** [05-test-list.md](05-test-list.md) is the list of what only the developer can check. Add points with every change.
 - **Ask first** before design trade-offs, new dependencies, names, and anything touching permissions or Play.
 - **Secrets:** never read `android/key.properties` beyond single non-secret lines, never print the keystore, never put secrets into git, chat or docs.
 - **Papers** in `docs/papers/` are local only.
