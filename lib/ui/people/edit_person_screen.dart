@@ -1,8 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/services.dart'
     show FilteringTextInputFormatter, LengthLimitingTextInputFormatter;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/contact_refresh.dart';
 import '../../app/providers.dart';
 import '../../data/database.dart';
 import '../../domain/rhythm.dart';
@@ -19,6 +22,7 @@ import '../widgets/kept_text_field.dart';
 import '../widgets/main_button.dart';
 import '../widgets/rhythm_stepper.dart';
 import '../widgets/section_label.dart';
+import 'photo_crop_screen.dart';
 import 'refresh_contacts_screen.dart';
 
 /// Opens the form for a new person.
@@ -88,6 +92,7 @@ class _Form extends ConsumerStatefulWidget {
 
 class _FormState extends ConsumerState<_Form> {
   late final _name = TextEditingController(text: widget.person?.name);
+  late final _nickname = TextEditingController(text: widget.person?.nickname);
   late final _phone = TextEditingController(text: widget.person?.phone);
   late final _telegram = TextEditingController(
     text: widget.person?.telegramUsername,
@@ -116,14 +121,39 @@ class _FormState extends ConsumerState<_Form> {
   late AvatarShape _shape = widget.person?.avatarShape ?? AvatarShape.values[0];
   late AvatarColor _color = widget.person?.avatarColor ?? AvatarColor.values[0];
 
+  /// The picture's file name in the photo store. For a person who exists,
+  /// a change is stored at once (and the old file deleted); for a new one
+  /// it is written with the person on Save.
+  late String? _photo = widget.person?.photo;
+
+  /// The linked contact's picture, read once when the page opens; null when
+  /// there is none (or no access): "From contact" is then not offered.
+  Uint8List? _contactPhoto;
+
   bool _saving = false;
 
   bool get _editing => widget.person != null;
 
   @override
+  void initState() {
+    super.initState();
+    _loadContactPhoto();
+  }
+
+  Future<void> _loadContactPhoto() async {
+    final contactId = widget.person?.contactId;
+    if (contactId == null) return;
+    final bytes = await ref.read(contactsSourceProvider).photoFor(contactId);
+    if (mounted && bytes != null && bytes.isNotEmpty) {
+      setState(() => _contactPhoto = bytes);
+    }
+  }
+
+  @override
   void dispose() {
     for (final c in [
       _name,
+      _nickname,
       _phone,
       _telegram,
       _signal,
@@ -149,6 +179,37 @@ class _FormState extends ConsumerState<_Form> {
     return text.isEmpty ? null : text;
   }
 
+  /// What the avatar shows as its letter: the nickname, else the name.
+  String get _shownName =>
+      _nickname.text.trim().isNotEmpty ? _nickname.text.trim() : _name.text;
+
+  /// Sets the picture to [name] (null removes it) and deletes the old file.
+  Future<void> _setPhoto(String? name) async {
+    final old = _photo;
+    final person = widget.person;
+    if (person != null) {
+      await ref.read(peopleRepositoryProvider).setPhoto(person.id, name);
+    }
+    if (old != null && old != name) {
+      await ref.read(photoStoreProvider).delete(old);
+    }
+    if (mounted) setState(() => _photo = name);
+  }
+
+  Future<void> _choosePicture() async {
+    final bytes = await ref.read(photoStoreProvider).pickFromGallery();
+    if (bytes == null || !mounted) return;
+    final name = await cropAndSavePhoto(context, ref, bytes);
+    if (name != null) await _setPhoto(name);
+  }
+
+  Future<void> _pictureFromContact() async {
+    final bytes = _contactPhoto;
+    if (bytes == null) return;
+    final name = await cropAndSavePhoto(context, ref, bytes);
+    if (name != null) await _setPhoto(name);
+  }
+
   Future<void> _save() async {
     if (!_canSave) return;
     setState(() => _saving = true);
@@ -171,6 +232,8 @@ class _FormState extends ConsumerState<_Form> {
         birthdayDay: birthday.day,
         birthdayYear: birthday.year,
         notes: _notes.text.trim(),
+        nickname: _orNull(_nickname),
+        photo: _photo,
       );
     } else {
       if (_reconnecting && !person.reconnecting) {
@@ -202,6 +265,8 @@ class _FormState extends ConsumerState<_Form> {
           avatarShape: _shape,
           avatarColor: _color,
           notes: _notes.text.trim(),
+          nickname: Value(_orNull(_nickname)),
+          photo: Value(_photo),
         ),
       );
     }
@@ -214,11 +279,20 @@ class _FormState extends ConsumerState<_Form> {
   Future<void> _refreshFromContact() async {
     final person = widget.person!;
     final repo = ref.read(peopleRepositoryProvider);
-    final diff = await showRefreshPerson(context, person);
+    // The picture may have been changed in this form since it was opened.
+    final diff = await showRefreshPerson(
+      context,
+      person.copyWith(photo: Value(_photo)),
+    );
     if (diff == null) return;
-    await repo.update(diff.apply());
+    final saved = await applyContactDiff(
+      ref.read(photoStoreProvider),
+      repo,
+      diff,
+    );
     if (!mounted) return;
     setState(() {
+      _photo = saved.photo;
       if (diff.name != null) _name.text = diff.name!;
       if (diff.phone != null) _phone.text = diff.phone!;
       if (diff.birthday case final b?) {
@@ -253,6 +327,8 @@ class _FormState extends ConsumerState<_Form> {
     );
     if (confirmed != true) return;
     await repo.delete(person.id);
+    final photo = _photo ?? person.photo;
+    if (photo != null) await ref.read(photoStoreProvider).delete(photo);
     // Back to the tab, past the person page that is now empty.
     navigator.popUntil((route) => route.isFirst);
   }
@@ -283,11 +359,47 @@ class _FormState extends ConsumerState<_Form> {
               children: [
                 Center(
                   child: Avatar(
-                    name: _name.text,
+                    name: _shownName,
                     shape: _shape,
                     color: _color,
-                    size: 84,
+                    size: 96,
+                    photo: _photo,
                   ),
+                ),
+                const SizedBox(height: 14),
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(
+                      child: GreyButton(
+                        small: true,
+                        label: l10n.choosePicture,
+                        onPressed: _choosePicture,
+                      ),
+                    ),
+                    if (_contactPhoto != null)
+                      Expanded(
+                        child: GreyButton(
+                          small: true,
+                          label: l10n.pictureFromContact,
+                          onPressed: _pictureFromContact,
+                        ),
+                      ),
+                    if (_photo != null)
+                      Expanded(
+                        child: GreyButton(
+                          small: true,
+                          label: l10n.removePicture,
+                          onPressed: () => _setPhoto(null),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  l10n.pictureTip,
+                  textAlign: TextAlign.center,
+                  style: context.text.bodyMedium?.copyWith(fontSize: 13),
                 ),
                 if (widget.person?.contactId != null) ...[
                   const SizedBox(height: 14),
@@ -303,7 +415,7 @@ class _FormState extends ConsumerState<_Form> {
                   const SizedBox(height: 14),
                   _group(l10n.editLook, [
                     _ShapePicker(
-                      name: _name.text,
+                      name: _shownName,
                       color: _color,
                       value: _shape,
                       onChanged: (v) => setState(() => _shape = v),
@@ -322,6 +434,23 @@ class _FormState extends ConsumerState<_Form> {
                     hint: l10n.nameHint,
                     textCapitalization: TextCapitalization.words,
                     onChanged: (_) => setState(() {}),
+                  ),
+                ]),
+                const SizedBox(height: 18),
+                _group(l10n.editNickname, [
+                  KeptTextField(
+                    key: const ValueKey('nickname'),
+                    controller: _nickname,
+                    hint: l10n.nicknameHint,
+                    textCapitalization: TextCapitalization.words,
+                    onChanged: (_) => setState(() {}),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    child: Text(
+                      l10n.nicknameHelper,
+                      style: context.text.bodyMedium?.copyWith(fontSize: 13),
+                    ),
                   ),
                 ]),
                 const SizedBox(height: 18),

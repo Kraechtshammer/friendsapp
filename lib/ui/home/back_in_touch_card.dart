@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../data/database.dart';
-import '../../domain/person_name.dart';
 import '../../domain/reconnect_span.dart';
 import '../common.dart';
 import '../material.dart';
@@ -63,7 +62,7 @@ class BackInTouchCard extends ConsumerWidget {
                 Avatar.person(person, size: 48),
                 Expanded(
                   child: Text(
-                    l10n.backInTouchTitle(firstNameOf(person.name)),
+                    l10n.backInTouchTitle(ref.shortName(person)),
                     style: context.text.titleLarge?.copyWith(
                       color: tone.onContainer,
                     ),

@@ -1,5 +1,8 @@
 import 'dart:math' as math;
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/database.dart';
 import '../../domain/person.dart';
@@ -78,7 +81,10 @@ Path _scallop(double side, {int lobes = 8, double depth = .05}) {
 }
 
 /// A person's initial on their accent, in their shape, with a hard drop
-/// shadow that follows the shape (ui-style.md §5 and §6).
+/// shadow that follows the shape (ui-style.md §5 and §6). With a [photo]
+/// (a file name in the photo store) the picture fills the shape instead of
+/// the initial; the shape, the shadow and the class badge stay (02-design.md
+/// §8, 2026-11-16).
 class Avatar extends StatelessWidget {
   const Avatar({
     super.key,
@@ -88,6 +94,7 @@ class Avatar extends StatelessWidget {
     this.size = 48,
     this.classBadge = false,
     this.closeness,
+    this.photo,
   }) : assert(!classBadge || closeness != null);
 
   Avatar.person(
@@ -97,7 +104,12 @@ class Avatar extends StatelessWidget {
     bool classBadge = false,
   }) : this(
          key: key,
-         name: person.name,
+         // The initial of the short name (domain/display_name.dart) is always
+         // the first letter of the nickname, else of the name.
+         name: (person.nickname?.trim().isNotEmpty ?? false)
+             ? person.nickname!
+             : person.name,
+         photo: person.photo,
          shape: person.avatarShape,
          color: person.avatarColor,
          size: size,
@@ -119,6 +131,10 @@ class Avatar extends StatelessWidget {
   /// Needed for the badge.
   final Closeness? closeness;
 
+  /// The picture's file name in the photo store, or null for the initial.
+  /// Needs a `ProviderScope` above.
+  final String? photo;
+
   /// The first letter of the name, upper case.
   static String initial(String name) {
     final chars = name.trim().characters;
@@ -135,15 +151,19 @@ class Avatar extends StatelessWidget {
           color: color.accent,
           shadow: size >= 64 ? 3 : 2,
         ),
-        child: Center(
-          child: Text(
-            initial(name),
-            style: outfit(
-              size * .44,
-              FontWeight.w700,
-              color: KeptColors.onAccent,
-            ).copyWith(height: 1),
-          ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Text(
+              initial(name),
+              style: outfit(
+                size * .44,
+                FontWeight.w700,
+                color: KeptColors.onAccent,
+              ).copyWith(height: 1),
+            ),
+            if (photo != null) _Photo(photo!, shape, size),
+          ],
         ),
       ),
     );
@@ -160,6 +180,52 @@ class Avatar extends StatelessWidget {
       ],
     );
   }
+}
+
+/// The picture, cut to the avatar's shape. It is kept in memory once loaded
+/// (`photoBytesProvider`), so a list that scrolls does not flash the initial,
+/// and decoded at the size it is shown at (times the device pixel ratio),
+/// not at the stored 384 px.
+class _Photo extends ConsumerWidget {
+  const _Photo(this.name, this.shape, this.size);
+
+  final String name;
+  final AvatarShape shape;
+  final double size;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bytes = ref.watch(photoBytesProvider(name)).value;
+    if (bytes == null) return const SizedBox.shrink();
+    final px = (size * MediaQuery.devicePixelRatioOf(context)).round();
+    return ClipPath(
+      clipper: _ShapeClipper(shape),
+      child: Image.memory(
+        bytes,
+        width: size,
+        height: size,
+        fit: BoxFit.cover,
+        cacheWidth: px,
+        cacheHeight: px,
+        gaplessPlayback: true,
+        filterQuality: FilterQuality.medium,
+        excludeFromSemantics: true,
+        errorBuilder: (_, _, _) => const SizedBox.shrink(),
+      ),
+    );
+  }
+}
+
+class _ShapeClipper extends CustomClipper<Path> {
+  const _ShapeClipper(this.shape);
+
+  final AvatarShape shape;
+
+  @override
+  Path getClip(Size size) => avatarPath(shape, size.width);
+
+  @override
+  bool shouldReclip(_ShapeClipper old) => old.shape != shape;
 }
 
 /// Paints [path] in [color] over a copy of itself [shadow] px lower.

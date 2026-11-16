@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../data/database.dart';
 import '../../domain/contact_event.dart';
-import '../../domain/person_name.dart';
 import '../common.dart';
 import '../material.dart';
 import '../widgets/grey_button.dart';
@@ -27,7 +26,7 @@ class IncomingButtons extends ConsumerWidget {
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
     final repo = ref.read(contactEventsRepositoryProvider);
-    final name = firstNameOf(person.name);
+    final name = ref.readShortName(person);
     final event = await repo.addByThemOnce(
       personId: person.id,
       kind: kind,

@@ -2851,6 +2851,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Without it: download the newest APK from GitHub yourself (Settings, Releases on GitHub).'**
   String get permUpdateWithout;
+
+  /// No description provided for @editNickname.
+  ///
+  /// In en, this message translates to:
+  /// **'Nickname'**
+  String get editNickname;
+
+  /// No description provided for @nicknameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get nicknameHint;
+
+  /// No description provided for @nicknameHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown instead of the name.'**
+  String get nicknameHelper;
+
+  /// No description provided for @choosePicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose picture'**
+  String get choosePicture;
+
+  /// No description provided for @pictureFromContact.
+  ///
+  /// In en, this message translates to:
+  /// **'From contact'**
+  String get pictureFromContact;
+
+  /// No description provided for @removePicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove picture'**
+  String get removePicture;
+
+  /// No description provided for @pictureTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Tip: share a photo from any app into Kept. to use it as someone\'s picture.'**
+  String get pictureTip;
+
+  /// No description provided for @refreshFieldPicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Picture'**
+  String get refreshFieldPicture;
+
+  /// No description provided for @refreshPictureFromContact.
+  ///
+  /// In en, this message translates to:
+  /// **'The contact\'s picture'**
+  String get refreshPictureFromContact;
+
+  /// No description provided for @pictureCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add pictures from your contacts?'**
+  String get pictureCardTitle;
+
+  /// No description provided for @pictureCardBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept. takes the picture of each linked contact that has one. Nothing leaves your phone.'**
+  String get pictureCardBody;
+
+  /// No description provided for @pictureCardAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get pictureCardAdd;
+
+  /// No description provided for @pictureCardNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get pictureCardNotNow;
+
+  /// No description provided for @picturesAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No pictures found in your contacts} =1{Added 1 picture} other{Added {count} pictures}}'**
+  String picturesAdded(int count);
+
+  /// No description provided for @cropTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fit the picture'**
+  String get cropTitle;
+
+  /// No description provided for @cropHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag and pinch. Double-tap to zoom.'**
+  String get cropHint;
+
+  /// No description provided for @cropUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Use picture'**
+  String get cropUse;
+
+  /// No description provided for @cropSaving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving…'**
+  String get cropSaving;
+
+  /// No description provided for @cropFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'That picture could not be read.'**
+  String get cropFailed;
+
+  /// No description provided for @sharePictureTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s this picture for?'**
+  String get sharePictureTitle;
+
+  /// No description provided for @shareUseAsPicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Use as someone\'s picture'**
+  String get shareUseAsPicture;
+
+  /// No description provided for @shareUseAsPictureLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a friend, fit it, done'**
+  String get shareUseAsPictureLine;
+
+  /// No description provided for @shareKeepAsIdea.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep as an idea'**
+  String get shareKeepAsIdea;
+
+  /// No description provided for @shareKeepAsIdeaLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Save it with a note on a friend\'s page'**
+  String get shareKeepAsIdeaLine;
+
+  /// No description provided for @shareLastTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Last time'**
+  String get shareLastTime;
+
+  /// No description provided for @shareWhoseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Whose picture is this?'**
+  String get shareWhoseTitle;
+
+  /// No description provided for @shareFindFriend.
+  ///
+  /// In en, this message translates to:
+  /// **'Find a friend'**
+  String get shareFindFriend;
+
+  /// No description provided for @shareNoPictureYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No picture yet'**
+  String get shareNoPictureYet;
+
+  /// No description provided for @shareHasPicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Has a picture'**
+  String get shareHasPicture;
+
+  /// No description provided for @shareNobodyFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody found.'**
+  String get shareNobodyFound;
+
+  /// No description provided for @shareDoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Looks good!'**
+  String get shareDoneTitle;
+
+  /// No description provided for @shareDoneLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has a new picture.'**
+  String shareDoneLine(String name);
+
+  /// No description provided for @shareStillNoPicture.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 friend still has no picture} other{{count} friends still have no picture}}'**
+  String shareStillNoPicture(num count);
+
+  /// No description provided for @shareAllHavePicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone has a picture now.'**
+  String get shareAllHavePicture;
+
+  /// No description provided for @shareDoneButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get shareDoneButton;
+
+  /// No description provided for @tipSharePicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Tip: share a photo from your gallery into Kept. to use it as someone\'s picture.'**
+  String get tipSharePicture;
+
+  /// No description provided for @tipStepPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo'**
+  String get tipStepPhoto;
+
+  /// No description provided for @tipStepShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get tipStepShare;
+
+  /// No description provided for @fsDonePictureTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Tip: share a photo from your gallery into Kept. to give a friend a picture.'**
+  String get fsDonePictureTip;
+
+  /// No description provided for @shareDoneTag.
+  ///
+  /// In en, this message translates to:
+  /// **'New!'**
+  String get shareDoneTag;
 }
 
 class _AppLocalizationsDelegate

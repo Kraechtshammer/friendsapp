@@ -6,7 +6,6 @@ import '../../app/providers.dart';
 import '../../data/database.dart';
 import '../../domain/contact_event.dart';
 import '../../domain/intention.dart';
-import '../../domain/person_name.dart';
 import '../../domain/plans.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
@@ -90,7 +89,7 @@ class _Card extends ConsumerWidget {
           ),
           Text(
             [
-              firstNameOf(person.name),
+              ref.shortName(person),
               thoughtText(intention, l10n),
               whenText(whenOf(intention), l10n),
             ].join(' · '),

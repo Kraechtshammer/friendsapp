@@ -1,5 +1,7 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../app/providers.dart';
 import '../../data/database.dart';
-import '../../domain/person_name.dart';
 import '../../domain/recent_people.dart';
 import '../common.dart';
 import '../kept_icon.dart';
@@ -11,7 +13,7 @@ import 'person_picker.dart';
 /// ([recentPeople]) and "More", which opens the searchable picker. The
 /// picked person always shows in the row. Used by the capture card and the
 /// share sheet. Tapping the picked face again unpicks it.
-class PersonChoiceRow extends StatelessWidget {
+class PersonChoiceRow extends ConsumerWidget {
   const PersonChoiceRow({
     super.key,
     required this.people,
@@ -36,7 +38,7 @@ class PersonChoiceRow extends StatelessWidget {
   final Color fieldColor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Person? selected;
     for (final p in people) {
       if (p.id == selectedId) selected = p;
@@ -52,7 +54,7 @@ class PersonChoiceRow extends StatelessWidget {
         for (final p in shown)
           Expanded(
             child: _Blob(
-              label: firstNameOf(p.name),
+              label: ref.shortName(p),
               selected: p.id == selected?.id,
               dimmed: selected != null && p.id != selected.id,
               textColor: textColor,

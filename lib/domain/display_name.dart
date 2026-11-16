@@ -5,6 +5,9 @@
 /// in docs/02-design.md §8 (row "Short display names").
 library;
 
+import '../data/database.dart';
+import 'person_name.dart';
+
 typedef PersonNameInput = ({String id, String name, String? nickname});
 
 /// Returns person id -> short display name.
@@ -103,4 +106,19 @@ class _Parsed {
     final t = s?.trim();
     return (t == null || t.isEmpty) ? null : t;
   }
+}
+
+/// [displayNames] for whole people.
+Map<String, String> displayNamesOf(Iterable<Person> people) => displayNames([
+  for (final p in people) (id: p.id, name: p.name, nickname: p.nickname),
+]);
+
+/// The short name of [person] in [names] (from [displayNamesOf]). Before the
+/// people are loaded, or for a person that is not in the map, it falls back
+/// to the nickname or the first word of the name, so a text is never empty.
+String shortNameIn(Map<String, String> names, Person person) {
+  final known = names[person.id];
+  if (known != null) return known;
+  final nick = person.nickname?.trim();
+  return (nick != null && nick.isNotEmpty) ? nick : firstNameOf(person.name);
 }

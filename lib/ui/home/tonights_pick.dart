@@ -11,7 +11,7 @@ import '../../domain/contact_event.dart';
 import '../../domain/ideas.dart';
 import '../../domain/intention.dart';
 import '../../domain/owed_reply.dart';
-import '../../domain/person_name.dart';
+import '../../domain/display_name.dart';
 import '../../domain/pick_order.dart';
 import '../../domain/reconnect_span.dart';
 import '../../l10n/app_localizations.dart';
@@ -190,7 +190,10 @@ class _PickCard extends ConsumerWidget {
                           children: [
                             Flexible(
                               child: Text(
-                                _pickName(pick),
+                                _pickName(
+                                  pick,
+                                  ref.watch(displayNamesProvider),
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: context.text.titleLarge?.copyWith(
@@ -235,13 +238,20 @@ class _PickCard extends ConsumerWidget {
                   children: [
                     if (pick is PlanPick)
                       Text(
-                        l10n.wantSetDate(_pickName(pick)),
+                        l10n.wantSetDate(
+                          _pickName(pick, ref.watch(displayNamesProvider)),
+                        ),
                         style: context.text.labelLarge?.copyWith(
                           color: kept.text,
                         ),
                       ),
                     Text(
-                      _pickText(pick, l10n, ref.settings.reconnectSpan),
+                      _pickText(
+                        pick,
+                        l10n,
+                        ref.settings.reconnectSpan,
+                        ref.watch(displayNamesProvider),
+                      ),
                       style: context.text.bodyLarge?.copyWith(color: kept.text),
                     ),
                     WhenLineOf(pick),
@@ -330,7 +340,7 @@ class _CompactPick extends ConsumerWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        _pickName(pick),
+                        _pickName(pick, ref.watch(displayNamesProvider)),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: context.text.labelLarge?.copyWith(
@@ -343,15 +353,27 @@ class _CompactPick extends ConsumerWidget {
                 ),
                 Text(
                   pick is PlanPick
-                      ? l10n.wantSetDate(_pickName(pick))
-                      : _pickText(pick, l10n, ref.settings.reconnectSpan),
+                      ? l10n.wantSetDate(
+                          _pickName(pick, ref.watch(displayNamesProvider)),
+                        )
+                      : _pickText(
+                          pick,
+                          l10n,
+                          ref.settings.reconnectSpan,
+                          ref.watch(displayNamesProvider),
+                        ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: context.text.bodyMedium,
                 ),
                 if (pick is PlanPick)
                   Text(
-                    _pickText(pick, l10n, ref.settings.reconnectSpan),
+                    _pickText(
+                      pick,
+                      l10n,
+                      ref.settings.reconnectSpan,
+                      ref.watch(displayNamesProvider),
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: context.text.bodySmall?.copyWith(
@@ -390,13 +412,13 @@ class _CompactPick extends ConsumerWidget {
   }
 }
 
-/// The name on a pick: the person's first name, or for a couple's thought
-/// the members' first names joined with " & " (a plain fallback until the
-/// couple UI comes).
-String _pickName(Pick pick) => switch (pick) {
+/// The name on a pick: the person's short name, or for a couple's thought
+/// the members' short names joined with " & " (a plain fallback until the
+/// couple UI comes). [names] are `displayNamesProvider`.
+String _pickName(Pick pick, Map<String, String> names) => switch (pick) {
   IntentionPick(:final members) when members.length > 1 =>
-    members.map((p) => firstNameOf(p.name)).join(' & '),
-  _ => firstNameOf(pick.person.name),
+    members.map((p) => shortNameIn(names, p)).join(' & '),
+  _ => shortNameIn(names, pick.person),
 };
 
 /// The icon next to the name: the cake for a birthday, the chat bubble for
@@ -412,22 +434,26 @@ KeptIcons _pickIcon(Pick pick) => switch (pick) {
 /// The line under the name: the birthday with the age if known, the
 /// question about an owed reply, or the thought (its kind when it has no
 /// text).
-String _pickText(Pick pick, AppLocalizations l10n, ReconnectSpan span) =>
-    switch (pick) {
-      BirthdayPick(:final age?) => l10n.birthdayTurns(age),
-      BirthdayPick() => l10n.birthdayToday,
-      ReplyPick(:final person) => l10n.stillOweReply(firstNameOf(person.name)),
-      ReconnectPick(:final person) => reconnectTitle(
-        span,
-        firstNameOf(person.name),
-        l10n,
-      ),
-      HintPick(:final person) => l10n.hintPick(firstNameOf(person.name)),
-      IntentionPick(:final intention) =>
-        intention.note.trim().isEmpty
-            ? kindLabel(intention.kind, l10n)
-            : intention.note.trim(),
-    };
+String _pickText(
+  Pick pick,
+  AppLocalizations l10n,
+  ReconnectSpan span,
+  Map<String, String> names,
+) => switch (pick) {
+  BirthdayPick(:final age?) => l10n.birthdayTurns(age),
+  BirthdayPick() => l10n.birthdayToday,
+  ReplyPick(:final person) => l10n.stillOweReply(shortNameIn(names, person)),
+  ReconnectPick(:final person) => reconnectTitle(
+    span,
+    shortNameIn(names, person),
+    l10n,
+  ),
+  HintPick(:final person) => l10n.hintPick(shortNameIn(names, person)),
+  IntentionPick(:final intention) =>
+    intention.note.trim().isEmpty
+        ? kindLabel(intention.kind, l10n)
+        : intention.note.trim(),
+};
 
 void _openChat(BuildContext context, WidgetRef ref, Pick pick) =>
     unawaited(switch (pick) {

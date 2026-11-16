@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../data/database.dart';
 import '../../domain/intention.dart';
-import '../../domain/person_name.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../material.dart';
@@ -45,7 +44,7 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
 
   Future<void> _save(Person person) async {
     final messenger = ScaffoldMessenger.of(context);
-    final saved = context.l10n.captureSaved(firstNameOf(person.name));
+    final saved = context.l10n.captureSaved(ref.readShortName(person));
     final note = _note.text.trim();
     FocusScope.of(context).unfocus();
     await ref
@@ -131,7 +130,7 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
                 onChanged: (w) => setState(() => _when = w),
               ),
               MainButton(
-                label: l10n.captureSave(firstNameOf(selected.name)),
+                label: l10n.captureSave(ref.shortName(selected)),
                 onPressed: () => _save(selected!),
               ),
             ],

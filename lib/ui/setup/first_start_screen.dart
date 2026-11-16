@@ -86,6 +86,8 @@ class _FirstStartState extends ConsumerState<FirstStartScreen> {
       _picked,
       _closeness,
       _messenger,
+      source: ref.read(contactsSourceProvider),
+      photos: ref.read(photoStoreProvider),
     );
     if (mounted) {
       setState(() => _saving = false);
@@ -379,7 +381,15 @@ class _FirstStartState extends ConsumerState<FirstStartScreen> {
         return _Page(
           icon: KeptIcons.check,
           title: l10n.fsDoneTitle,
-          body: [Text(l10n.fsDoneBody, style: context.text.bodyLarge)],
+          body: [
+            Text(l10n.fsDoneBody, style: context.text.bodyLarge),
+            Text(
+              l10n.fsDonePictureTip,
+              style: context.text.bodyMedium?.copyWith(
+                color: context.kept.muted,
+              ),
+            ),
+          ],
           actions: [
             MainButton(
               label: l10n.fsDoneButton,

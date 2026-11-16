@@ -1724,4 +1724,147 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get permUpdateWithout =>
       'Without it: download the newest APK from GitHub yourself (Settings, Releases on GitHub).';
+
+  @override
+  String get editNickname => 'Nickname';
+
+  @override
+  String get nicknameHint => 'Optional';
+
+  @override
+  String get nicknameHelper => 'Shown instead of the name.';
+
+  @override
+  String get choosePicture => 'Choose picture';
+
+  @override
+  String get pictureFromContact => 'From contact';
+
+  @override
+  String get removePicture => 'Remove picture';
+
+  @override
+  String get pictureTip =>
+      'Tip: share a photo from any app into Kept. to use it as someone\'s picture.';
+
+  @override
+  String get refreshFieldPicture => 'Picture';
+
+  @override
+  String get refreshPictureFromContact => 'The contact\'s picture';
+
+  @override
+  String get pictureCardTitle => 'Add pictures from your contacts?';
+
+  @override
+  String get pictureCardBody =>
+      'Kept. takes the picture of each linked contact that has one. Nothing leaves your phone.';
+
+  @override
+  String get pictureCardAdd => 'Add';
+
+  @override
+  String get pictureCardNotNow => 'Not now';
+
+  @override
+  String picturesAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Added $count pictures',
+      one: 'Added 1 picture',
+      zero: 'No pictures found in your contacts',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cropTitle => 'Fit the picture';
+
+  @override
+  String get cropHint => 'Drag and pinch. Double-tap to zoom.';
+
+  @override
+  String get cropUse => 'Use picture';
+
+  @override
+  String get cropSaving => 'Saving…';
+
+  @override
+  String get cropFailed => 'That picture could not be read.';
+
+  @override
+  String get sharePictureTitle => 'What\'s this picture for?';
+
+  @override
+  String get shareUseAsPicture => 'Use as someone\'s picture';
+
+  @override
+  String get shareUseAsPictureLine => 'Pick a friend, fit it, done';
+
+  @override
+  String get shareKeepAsIdea => 'Keep as an idea';
+
+  @override
+  String get shareKeepAsIdeaLine => 'Save it with a note on a friend\'s page';
+
+  @override
+  String get shareLastTime => 'Last time';
+
+  @override
+  String get shareWhoseTitle => 'Whose picture is this?';
+
+  @override
+  String get shareFindFriend => 'Find a friend';
+
+  @override
+  String get shareNoPictureYet => 'No picture yet';
+
+  @override
+  String get shareHasPicture => 'Has a picture';
+
+  @override
+  String get shareNobodyFound => 'Nobody found.';
+
+  @override
+  String get shareDoneTitle => 'Looks good!';
+
+  @override
+  String shareDoneLine(String name) {
+    return '$name has a new picture.';
+  }
+
+  @override
+  String shareStillNoPicture(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count friends still have no picture',
+      one: '1 friend still has no picture',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shareAllHavePicture => 'Everyone has a picture now.';
+
+  @override
+  String get shareDoneButton => 'Done';
+
+  @override
+  String get tipSharePicture =>
+      'Tip: share a photo from your gallery into Kept. to use it as someone\'s picture.';
+
+  @override
+  String get tipStepPhoto => 'Photo';
+
+  @override
+  String get tipStepShare => 'Share';
+
+  @override
+  String get fsDonePictureTip =>
+      'Tip: share a photo from your gallery into Kept. to give a friend a picture.';
+
+  @override
+  String get shareDoneTag => 'New!';
 }

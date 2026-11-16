@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../data/database.dart';
 import '../../domain/person.dart';
-import '../../domain/person_name.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../kept_icon.dart';
@@ -16,6 +15,7 @@ import '../widgets/section_label.dart';
 import 'edit_person_screen.dart';
 import 'import_contacts_screen.dart';
 import 'person_screen.dart';
+import 'pictures_card.dart';
 import 'reconnect_card.dart';
 
 /// Everyone, grouped by class in the order of [Closeness]. Groups with
@@ -76,8 +76,10 @@ class PeopleScreen extends ConsumerWidget {
       children: [
         title,
         const SizedBox(height: 14),
-        if (people.value case final list? when list.isNotEmpty)
+        if (people.value case final list? when list.isNotEmpty) ...[
+          PicturesCard(list),
           ReconnectCard(list),
+        ],
         body,
       ],
     );
@@ -158,15 +160,15 @@ class _Group extends StatelessWidget {
   );
 }
 
-/// Avatar over first name; opens the person page.
-class _PersonBlob extends StatelessWidget {
+/// Avatar over the short name; opens the person page.
+class _PersonBlob extends ConsumerWidget {
   const _PersonBlob(this.person);
 
   final Person person;
 
   @override
-  Widget build(BuildContext context) {
-    final firstName = firstNameOf(person.name);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final firstName = ref.shortName(person);
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       onTap: () => Navigator.of(context).push(

@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/database.dart';
-import '../../domain/person_name.dart';
 import '../../domain/reconnect_span.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
@@ -139,7 +138,7 @@ class _Choose extends StatelessWidget {
 }
 
 /// Avatar over first name. The suggested one sits on a soft plate.
-class _Candidate extends StatelessWidget {
+class _Candidate extends ConsumerWidget {
   const _Candidate(
     this.person, {
     required this.highlighted,
@@ -151,7 +150,7 @@ class _Candidate extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final tone = context.kept.lilacTone;
     return Semantics(
       button: true,
@@ -174,7 +173,7 @@ class _Candidate extends StatelessWidget {
               children: [
                 Avatar.person(person, size: 54),
                 Text(
-                  firstNameOf(person.name),
+                  ref.shortName(person),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -218,7 +217,7 @@ class _Chosen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      reconnectTitle(span, firstNameOf(person.name), l10n),
+                      reconnectTitle(span, ref.shortName(person), l10n),
                       style: context.text.titleLarge?.copyWith(
                         color: tone.onContainer,
                       ),
@@ -253,13 +252,13 @@ class _Chosen extends ConsumerWidget {
 }
 
 /// The calm state: the user got in touch in the current span. No buttons.
-class _Done extends StatelessWidget {
+class _Done extends ConsumerWidget {
   const _Done(this.person);
 
   final Person person;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final tone = context.kept.mintTone;
     return KeptCard(
       tone: tone,
@@ -270,7 +269,7 @@ class _Done extends StatelessWidget {
           const KeptIcon(KeptIcons.check, size: 32),
           Expanded(
             child: Text(
-              context.l10n.reconnectDone(firstNameOf(person.name)),
+              context.l10n.reconnectDone(ref.shortName(person)),
               style: context.text.bodyLarge?.copyWith(color: tone.onContainer),
             ),
           ),

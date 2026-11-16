@@ -15,7 +15,7 @@ import '../domain/contact_event.dart';
 import '../domain/evening_question.dart';
 import '../domain/evening_reason.dart';
 import '../domain/first_start.dart';
-import '../domain/person_name.dart';
+import '../domain/display_name.dart';
 import '../l10n/labels.dart';
 import '../platform/notifications.dart';
 import '../platform/share_receiver.dart';
@@ -81,6 +81,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   var _firstStartRunning = false;
   var _stampsPrepared = false;
   var _picturesCleaned = false;
+  var _photosCleaned = false;
   var _updatePopupOpen = false;
   late final AppLifecycleListener _lifecycle;
   late final _incoming = IncomingSync(ref);
@@ -103,7 +104,8 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       if (next.value case final settings?) _onSettings(settings);
     });
     ref.listenManual(peopleProvider, (_, _) => _checkFirstStart());
-    ref.listenManual(realPeopleProvider, (_, _) {
+    ref.listenManual(realPeopleProvider, (_, next) {
+      if (next.value case final people?) _cleanPhotos(people);
       _scheduleBirthdays();
       _requestEvening();
       _incoming.onPeople();
@@ -180,6 +182,26 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         debugPrint('Pictures not cleaned: ${e.runtimeType}');
       }
     }());
+  }
+
+  /// Once per start, when the real people have been read: deletes picture
+  /// files no person refers to (a deleted person, a picture chosen in a form
+  /// that was left). Never runs on a loading state, so an empty list means
+  /// nobody has a picture. Always the real people, also in demo mode, whose
+  /// people have no pictures.
+  void _cleanPhotos(List<Person> people) {
+    if (_photosCleaned) return;
+    _photosCleaned = true;
+    final store = ref.read(photoStoreProvider);
+    final keep = {
+      for (final p in people)
+        if (p.photo != null) p.photo!,
+    };
+    unawaited(
+      store.deleteUnused(keep).catchError((Object e) {
+        debugPrint('Photos not cleaned: ${e.runtimeType}');
+      }),
+    );
   }
 
   @override
@@ -342,6 +364,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         now: now,
         on: settings.eveningOn,
         minute: settings.eveningMinute,
+        names: displayNamesOf(people),
       ),
       title: l10n.birthdayNotification,
       lateTitle: l10n.birthdayLateNotification,
@@ -409,6 +432,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     }
     final now = ref.read(clockProvider)();
     final l10n = context.l10n;
+    final names = displayNamesOf(people.value ?? const []);
     final weekdays = eveningWeekdays(
       on: settings.eveningOn,
       excluded: settings.eveningExcludedDays,
@@ -440,7 +464,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           reconnect: (span, name) =>
               l10n.eveningReconnect(reconnectTitle(span, name, l10n)),
         ),
-        nameOf: firstNameOf,
+        nameOf: (p) => shortNameIn(names, p),
       ),
     );
     if (plan == _scheduled) return;

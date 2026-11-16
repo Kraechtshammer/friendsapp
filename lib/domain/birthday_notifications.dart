@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart' show listEquals;
 import '../data/database.dart';
 import 'birthdays.dart';
 import 'contact_event.dart';
+import 'display_name.dart';
 
 /// The birthday notifications (02-design.md §8, birthdays) as pure
 /// functions: which ones, when, with which id and payload, and what a
@@ -58,9 +59,17 @@ class BirthdayAlarm {
     required this.person,
     required this.at,
     required this.late,
+    this.shortName,
   });
 
   final Person person;
+
+  /// The short display name for the title (domain/display_name.dart); null
+  /// falls back to the nickname or the first name.
+  final String? shortName;
+
+  /// What the title calls the person.
+  String get label => shortName ?? shortNameIn(const {}, person);
 
   /// Local time it comes.
   final DateTime at;
@@ -77,11 +86,12 @@ class BirthdayAlarm {
       other is BirthdayAlarm &&
       other.person.id == person.id &&
       other.person.name == person.name &&
+      other.label == label &&
       other.at == at &&
       other.late == late;
 
   @override
-  int get hashCode => Object.hash(person.id, person.name, at, late);
+  int get hashCode => Object.hash(person.id, person.name, label, at, late);
 
   @override
   String toString() => 'BirthdayAlarm(${person.name}, $at, late: $late)';
@@ -95,7 +105,7 @@ class BirthdayAlarm {
 ///
 /// For each person with a birthday: the next birthday on or after today;
 /// its evening one at [minute], and its late one at 23:00 unless [minute]
-/// is 23:00 or later. Times already past are left out; if both are past
+/// is 23:00 or later. [names] are the short display names. Times already past are left out; if both are past
 /// (or the person was congratulated today), the birthday a year later is
 /// used. Sorted by time, then by name.
 List<BirthdayAlarm> birthdayAlarms({
@@ -104,6 +114,7 @@ List<BirthdayAlarm> birthdayAlarms({
   required DateTime now,
   required bool on,
   required int minute,
+  Map<String, String> names = const {},
 }) {
   if (!on) return const [];
   List<BirthdayAlarm> forDay(Person p, DateTime day) => [
@@ -111,12 +122,14 @@ List<BirthdayAlarm> birthdayAlarms({
       person: p,
       at: DateTime(day.year, day.month, day.day, minute ~/ 60, minute % 60),
       late: false,
+      shortName: shortNameIn(names, p),
     ),
     if (minute < birthdayLateHour * 60)
       BirthdayAlarm(
         person: p,
         at: DateTime(day.year, day.month, day.day, birthdayLateHour),
         late: true,
+        shortName: shortNameIn(names, p),
       ),
   ];
   final result = <BirthdayAlarm>[];

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../data/database.dart';
 import '../../domain/intention.dart';
-import '../../domain/person_name.dart';
 import '../../domain/plans.dart';
 import '../../domain/timeline.dart';
 import '../../l10n/app_localizations.dart';
@@ -126,6 +125,7 @@ class _EntryRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final e = entry;
+    final names = ref.watch(displayNamesProvider);
     return Row(
       spacing: 10,
       children: [
@@ -157,7 +157,7 @@ class _EntryRow extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          entryTitle(e, l10n),
+                          entryTitle(e, l10n, names),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: context.text.labelLarge?.copyWith(
@@ -166,7 +166,7 @@ class _EntryRow extends ConsumerWidget {
                           ),
                         ),
                         Text(
-                          entrySubtitle(e, l10n),
+                          entrySubtitle(e, l10n, names),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: context.text.bodyMedium?.copyWith(
@@ -252,7 +252,7 @@ class _PlanRow extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  [firstNameOf(person.name), ?condition].join(' · '),
+                  [ref.shortName(person), ?condition].join(' · '),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: context.text.bodyMedium?.copyWith(fontSize: 13),

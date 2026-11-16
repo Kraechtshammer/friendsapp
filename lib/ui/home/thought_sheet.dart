@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../data/database.dart';
 import '../../domain/intention.dart';
-import '../../domain/person_name.dart';
 import '../../domain/plans.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
@@ -140,7 +139,7 @@ class _ThoughtSheetState extends ConsumerState<_ThoughtSheet> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      firstNameOf(person.name),
+                      ref.shortName(person),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: context.text.titleLarge?.copyWith(

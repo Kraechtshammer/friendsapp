@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/providers.dart';
 import '../../domain/chat_question.dart';
 import '../../domain/contact_event.dart';
 import '../../domain/intention.dart';
-import '../../domain/person_name.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../material.dart';
@@ -31,7 +31,7 @@ class ChatQuestionScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final person = question.person;
     final intention = question.intention;
-    final name = firstNameOf(person.name);
+    final name = ref.shortName(person);
     final title = question.birthday
         ? l10n.chatQuestionBirthday(name)
         : switch (intention?.kind ?? IntentionKind.write) {

@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../data/database.dart';
-import '../../domain/person_name.dart';
+import '../../domain/display_name.dart';
 import '../../domain/timeline.dart';
 import '../common.dart';
 import '../kept_icon.dart';
@@ -94,11 +94,12 @@ class _Card extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final e = entry;
     final l10n = context.l10n;
+    final names = ref.watch(displayNamesProvider);
     // Concept: "Bouldering, Tom".
     final title = switch (e) {
-      BirthdayEntry() => entryTitle(e, l10n),
+      BirthdayEntry() => entryTitle(e, l10n, names),
       ThoughtEntry(:final intention, :final person) =>
-        '${thoughtText(intention, l10n)}, ${firstNameOf(person.name)}',
+        '${thoughtText(intention, l10n)}, ${shortNameIn(names, person)}',
     };
     return KeptCard(
       small: true,

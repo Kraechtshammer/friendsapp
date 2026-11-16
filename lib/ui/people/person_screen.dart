@@ -199,15 +199,16 @@ class _OpenIntentions extends ConsumerWidget {
 
 /// The tonal header in the tone of the avatar colour, rounded at the
 /// bottom only, reaching up under the status bar.
-class _Header extends StatelessWidget {
+class _Header extends ConsumerWidget {
   const _Header(this.person);
 
   final Person person;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final kept = context.kept;
+    final shortName = ref.shortName(person);
     final tone = person.avatarColor.tone(kept);
     final messenger = person.mainMessenger;
     final month = person.birthdayMonth, day = person.birthdayDay;
@@ -231,12 +232,21 @@ class _Header extends StatelessWidget {
             children: [
               Center(child: Avatar.person(person, size: 84)),
               Text(
-                person.name,
+                shortName,
                 textAlign: TextAlign.center,
                 style: context.text.headlineLarge?.copyWith(
                   color: tone.onContainer,
                 ),
               ),
+              // The full name small under it, when it says more.
+              if (shortName != person.name.trim())
+                Text(
+                  person.name,
+                  textAlign: TextAlign.center,
+                  style: context.text.bodyMedium?.copyWith(
+                    color: tone.onContainer,
+                  ),
+                ),
               Wrap(
                 alignment: WrapAlignment.center,
                 spacing: 8,

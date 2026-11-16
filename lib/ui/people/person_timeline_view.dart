@@ -6,7 +6,6 @@ import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/database.dart';
 import '../../domain/contact_event.dart';
-import '../../domain/person_name.dart';
 import '../../domain/person_timeline.dart';
 import '../../domain/plans.dart';
 import '../../l10n/app_localizations.dart';
@@ -39,7 +38,7 @@ class PersonTimelineView extends ConsumerWidget {
     final intentions =
         ref.watch(personIntentionsProvider(person.id)).value ?? const [];
     final timeline = personTimeline(person, events, intentions, now);
-    final name = firstNameOf(person.name);
+    final name = ref.shortName(person);
     var dated = 0;
     return Stack(
       children: [

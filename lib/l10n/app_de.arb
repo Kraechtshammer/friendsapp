@@ -501,5 +501,52 @@
   "permUpdateTitle": "Update-Prüfung",
   "permUpdateUse": "Fragt bei GitHub nach, welche Version von Kept. die neueste ist, beim Start und wenn du zur App zurückkommst, höchstens alle 30 Minuten. Nutzt zwei Berechtigungen: Internetzugriff und das Installieren von Apps, nach dem Android fragt, wenn das erste Update installiert wird.",
   "permUpdateSent": "Nur diese Anfrage geht an GitHub. Deine Daten werden nie gesendet.",
-  "permUpdateWithout": "Ohne sie: Lade die neueste APK selbst von GitHub herunter (Einstellungen, Releases auf GitHub)."
+  "permUpdateWithout": "Ohne sie: Lade die neueste APK selbst von GitHub herunter (Einstellungen, Releases auf GitHub).",
+  "editNickname": "Spitzname",
+  "nicknameHint": "Optional",
+  "nicknameHelper": "Wird statt des Namens angezeigt.",
+  "choosePicture": "Bild wählen",
+  "pictureFromContact": "Aus Kontakt",
+  "removePicture": "Bild entfernen",
+  "pictureTip": "Tipp: Teile ein Foto aus einer beliebigen App mit Kept., um es als Bild einer Person zu nutzen.",
+  "refreshFieldPicture": "Bild",
+  "refreshPictureFromContact": "Das Bild des Kontakts",
+  "pictureCardTitle": "Bilder aus deinen Kontakten hinzufügen?",
+  "pictureCardBody": "Kept. übernimmt das Bild jedes verknüpften Kontakts, der eines hat. Nichts verlässt dein Handy.",
+  "pictureCardAdd": "Hinzufügen",
+  "pictureCardNotNow": "Nicht jetzt",
+  "picturesAdded": "{count, plural, =0{Keine Bilder in deinen Kontakten gefunden} =1{1 Bild hinzugefügt} other{{count} Bilder hinzugefügt}}",
+  "@picturesAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cropTitle": "Bild zurechtrücken",
+  "cropHint": "Ziehen und zoomen. Doppeltippen vergrößert.",
+  "cropUse": "Bild verwenden",
+  "cropSaving": "Speichern…",
+  "cropFailed": "Dieses Bild konnte nicht gelesen werden.",
+  "sharePictureTitle": "Wofür ist dieses Bild?",
+  "shareUseAsPicture": "Als Bild für jemanden nutzen",
+  "shareUseAsPictureLine": "Freund wählen, zuschneiden, fertig",
+  "shareKeepAsIdea": "Als Idee behalten",
+  "shareKeepAsIdeaLine": "Mit einer Notiz auf der Seite eines Freundes ablegen",
+  "shareLastTime": "Zuletzt",
+  "shareWhoseTitle": "Wer ist das?",
+  "shareFindFriend": "Freund suchen",
+  "shareNoPictureYet": "Noch kein Bild",
+  "shareHasPicture": "Hat ein Bild",
+  "shareNobodyFound": "Niemand gefunden.",
+  "shareDoneTitle": "Sieht gut aus!",
+  "shareDoneLine": "{name} hat ein neues Bild.",
+  "shareStillNoPicture": "{count, plural, =1{Noch 1 Freund ohne Bild} other{Noch {count} Freunde ohne Bild}}",
+  "shareAllHavePicture": "Alle haben jetzt ein Bild.",
+  "shareDoneButton": "Fertig",
+  "tipSharePicture": "Tipp: Teile ein Foto aus deiner Galerie mit Kept., um es als Bild für jemanden zu nutzen.",
+  "tipStepPhoto": "Foto",
+  "tipStepShare": "Teilen",
+  "fsDonePictureTip": "Tipp: Teile ein Foto aus deiner Galerie mit Kept., um einem Freund ein Bild zu geben.",
+  "shareDoneTag": "Neu!"
 }

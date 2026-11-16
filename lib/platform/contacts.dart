@@ -24,6 +24,17 @@ class PhoneContact {
   /// The contact's picture as raw bytes (full size, else thumbnail), in
   /// whatever format the address book holds. Only filled when asked for.
   final Uint8List? photo;
+
+  /// This contact with [photo] set.
+  PhoneContact withPhoto(Uint8List? photo) => PhoneContact(
+    id: id,
+    name: name,
+    phones: phones,
+    birthdayMonth: birthdayMonth,
+    birthdayDay: birthdayDay,
+    birthdayYear: birthdayYear,
+    photo: photo,
+  );
 }
 
 /// The phone's contacts, behind an interface so tests can fake them.

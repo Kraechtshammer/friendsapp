@@ -169,15 +169,15 @@ class EveningDay {
 /// (the local day of [now]), at [minute] minutes after midnight on the
 /// allowed [weekdays] ([eveningWeekdays]; empty when the question is off).
 /// Times not after [now] are left out. Each day gets the reason predicted
-/// by [eveningReasonAt] and its title from [texts]; names are first names
-/// ([nameOf]).
+/// by [eveningReasonAt] and its title from [texts]; names are the short names
+/// ([nameOf], `displayNames`).
 List<EveningDay> eveningDays({
   required DateTime now,
   required List<int> weekdays,
   required int minute,
   required EveningInputs inputs,
   required EveningTexts texts,
-  required String Function(String name) nameOf,
+  required String Function(Person person) nameOf,
   int count = eveningOneOffDays,
 }) => [
   for (var i = 0; i < count; i++)
@@ -190,16 +190,16 @@ EveningDay _day(
   DateTime at,
   EveningReason reason,
   EveningTexts texts,
-  String Function(String name) nameOf,
+  String Function(Person person) nameOf,
 ) => EveningDay(
   at: at,
   reason: reason,
   title: switch (reason) {
     EveningGeneral() => texts.general,
-    EveningOwedReply(:final person) => texts.owedReply(nameOf(person.name)),
+    EveningOwedReply(:final person) => texts.owedReply(nameOf(person)),
     EveningReconnect(:final person, :final span) => texts.reconnect(
       span,
-      nameOf(person.name),
+      nameOf(person),
     ),
   },
 );

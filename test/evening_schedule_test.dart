@@ -33,7 +33,7 @@ void main() {
         minute: minute,
         inputs: inputs,
         texts: texts,
-        nameOf: (n) => n,
+        nameOf: (p) => p.name,
       ),
     );
   }

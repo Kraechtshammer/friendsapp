@@ -14,7 +14,6 @@ import '../data/day_answers_repository.dart';
 import '../domain/birthday_notifications.dart';
 import '../domain/contact_event.dart';
 import '../domain/evening_question.dart';
-import '../domain/person_name.dart';
 
 /// The app's notifications, behind an interface so tests can fake them:
 /// the evening question (02-design.md §2.2) and the birthday notifications
@@ -243,7 +242,7 @@ class LocalNotifications implements Notifications {
         ),
       );
       for (final a in plan.alarms) {
-        final name = firstNameOf(a.person.name);
+        final name = a.label;
         await _plugin.zonedSchedule(
           id: a.id,
           title: a.late ? plan.lateTitle(name) : plan.title(name),

@@ -147,3 +147,30 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Settings, Look, Language: switch System, English, Deutsch; all texts change at once and the choice survives a restart.
 - [ ] Android System settings > Apps > Kept. > Language lists English and Deutsch. (This is separate from the in-app setting.)
 - [ ] Swipe back slowly from the screen edge on a settings page: the page peeks away and the one below shows; release to cancel or finish.
+
+## Share a photo as a picture (not released yet)
+
+- [ ] In Immich, open a photo of a friend, Share, Kept.: the screen "What's this picture for?" shows the photo big, with "Use as someone's picture" first.
+- [ ] The same from Google Photos (and one more gallery if you have it).
+- [ ] "Keep as an idea" still opens "Keep this for..." and saves the idea as before; next time that choice is first.
+- [ ] The list of people starts with those without a picture, then the rest A to Z, with a tick on those who have one; search finds a name; the keyboard does not pop up by itself.
+- [ ] Cropping feels smooth when dragging and pinching (also on 120 Hz); the photo never leaves the frame empty; double tap zooms in and out.
+- [ ] The frame has the person's avatar shape, and the picture on their page has that shape too and is sharp.
+- [ ] A photo taken upright and one taken sideways (EXIF) both end up with the part you framed, the right way up.
+- [ ] A 50 MP photo opens in the crop without a long wait or a crash.
+- [ ] Replacing a picture works; the old one is gone (storage does not grow).
+- [ ] "Done" on the last screen returns to the gallery you came from (and Back does the same).
+- [ ] Doing five in a row is quick: share, tap person, Use picture, Done.
+- [ ] The tip card at the bottom of Settings > Friends and the line on the last first-start page read well.
+
+## Names and pictures (not released yet)
+
+- [ ] After installing over the old build: all 54 people, thoughts, events and settings are still there (schema 5 migration), and the app opens without a delay.
+- [ ] People who share a first name show as "Max M" and "Max F" on Home, Upcoming, the People tab and in notifications; a nickname replaces the name everywhere; the person page shows the short name large and the full name small under it. The contact lists and the edit page still show full names.
+- [ ] Edit page: add a nickname, save, and see it on the People tab; empty it, save, and the first name is back.
+- [ ] Edit page: "Choose picture" opens the gallery and the crop, the picture shows at once on the edit page and the People tab; "From contact" shows only for a linked contact that has a photo; "Remove picture" brings the initial back. The hint line reads well.
+- [ ] People tab, first visit after the update: the card "Add pictures from your contacts?" shows once; "Add" fills the pictures of the contacts that have one and says how many; "Not now" hides it for good; it does not come back after a restart.
+- [ ] Importing a new contact takes their photo without asking; "Refresh from contact" offers the picture only for a person who has none.
+- [ ] Pictures look sharp on the People tab, the person page and Home, in every avatar shape, with the plant badge on top.
+- [ ] The People tab scrolls smoothly with 54 people and pictures (also on 120 Hz); no avatar flashes its initial while scrolling.
+- [ ] Delete a person who has a picture; after a restart the app's storage did not keep the file (check Settings > Apps > Kept. > Storage if you want).

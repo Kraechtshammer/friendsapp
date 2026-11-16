@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/app_settings.dart';
@@ -11,6 +13,7 @@ import '../data/people_repository.dart';
 import '../data/treats_repository.dart';
 import '../domain/chat_question.dart';
 import '../domain/contact_event.dart';
+import '../domain/display_name.dart';
 import '../domain/group.dart';
 import '../platform/app_shortcuts.dart';
 import '../platform/chat_opener.dart';
@@ -73,6 +76,14 @@ final notificationsProvider = Provider<Notifications>(
 /// a fake.
 final photoStoreProvider = Provider<PhotoStore>(
   (ref) => const FilePhotoStore(),
+);
+
+/// The bytes of a stored picture, by file name; null if the file is gone.
+/// Kept for the whole run: a name never changes its content (a new picture
+/// gets a new name), 54 small JPEGs are about 2 MB, and a list that scrolls
+/// shows the avatars at once.
+final photoBytesProvider = FutureProvider.family<Uint8List?, String>(
+  (ref, name) => ref.watch(photoStoreProvider).read(name),
 );
 
 /// Whether the optional notification listener is built in (the build flag
@@ -173,6 +184,13 @@ final peopleProvider = StreamProvider<List<Person>>((ref) async* {
   final demo = ref.watch(settingsProvider.selectAsync((s) => s.demoMode));
   final services = ref.watch(servicesProvider);
   yield* services.peopleFor(demo: await demo).watchAll();
+});
+
+/// Short display names of everyone in [peopleProvider]: person id -> name
+/// (domain/display_name.dart). Empty until the people are loaded.
+final displayNamesProvider = Provider<Map<String, String>>((ref) {
+  final people = ref.watch(peopleProvider).value;
+  return people == null ? const {} : displayNamesOf(people);
 });
 
 /// One person; null once deleted.
@@ -391,4 +409,16 @@ extension SettingsOrDefault on WidgetRef {
   AppSettings get settings =>
       watch(settingsProvider).value ?? const AppSettings();
   AppServices get services => read(servicesProvider);
+}
+
+extension ShortNames on WidgetRef {
+  /// The short name of [person] (nickname, first name, "Max M" ...), and
+  /// rebuilds the widget when it changes.
+  String shortName(Person person) =>
+      watch(displayNamesProvider.select((m) => m[person.id])) ??
+      shortNameIn(const {}, person);
+
+  /// Like [shortName], for event handlers: read once, no rebuild.
+  String readShortName(Person person) =>
+      shortNameIn(read(displayNamesProvider), person);
 }

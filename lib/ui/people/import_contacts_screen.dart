@@ -291,6 +291,8 @@ class _ClassState extends ConsumerState<_ClassStep> {
       widget.contacts,
       _closeness,
       _messenger,
+      source: ref.read(contactsSourceProvider),
+      photos: ref.read(photoStoreProvider),
     );
     navigator.popUntil((route) => route.isFirst);
   }

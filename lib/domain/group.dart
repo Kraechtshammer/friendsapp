@@ -4,6 +4,7 @@
 library;
 
 import '../data/database.dart';
+import 'display_name.dart';
 
 /// What kind of group it is. Friend circles may follow.
 enum GroupKind {
@@ -19,12 +20,12 @@ class GroupWithMembers {
   final PersonGroup group;
   final List<Person> members;
 
-  /// The group's own name, or the members' names joined with " & ". A plain
-  /// fallback until the couple UI comes.
-  String get label {
+  /// The group's own name, or the members' short names joined with " & ".
+  /// [names] are the short display names (`displayNamesProvider`).
+  String label(Map<String, String> names) {
     final own = group.name?.trim();
     if (own != null && own.isNotEmpty) return own;
-    return members.map((p) => p.name).join(' & ');
+    return members.map((p) => shortNameIn(names, p)).join(' & ');
   }
 }
 

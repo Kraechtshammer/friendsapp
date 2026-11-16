@@ -60,7 +60,7 @@ void main() {
       ]);
       final all = await groups.watchCouples().first;
       expect(all.single.group, couple);
-      expect(all.single.label, 'Ben & Anna');
+      expect(all.single.label(const {}), 'Ben & Anna');
       expect((await groups.coupleOf(anna.id))?.group.id, couple.id);
       expect(await groups.coupleOf(cleo.id), isNull);
       expect((await groups.watchCoupleOf(ben.id).first)?.group.id, couple.id);
@@ -125,7 +125,7 @@ void main() {
       );
       expect(couple.name, 'The neighbours');
       expect(
-        (await groups.watchCouples().first).single.label,
+        (await groups.watchCouples().first).single.label(const {}),
         'The neighbours',
       );
     });

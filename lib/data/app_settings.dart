@@ -15,6 +15,11 @@ enum AppThemeMode { system, light, dark }
 /// Separate from Android's per-app language (we do not sync them).
 enum AppLanguage { system, en, de }
 
+/// What the user did last with a picture shared into the app: made it
+/// someone's picture, or kept it as an idea. The choice screen puts the last
+/// one first.
+enum ShareImageChoice { picture, idea }
+
 /// How many open items Home offers for tonight (02-design.md §2.3).
 enum OpenItemsMode { one, three }
 
@@ -46,6 +51,8 @@ class AppSettings {
     this.familyWeightFixed = false,
     this.updateCheckEnabled = false,
     this.updateCheckAsked = false,
+    this.shareImageChoice = ShareImageChoice.picture,
+    this.picturesCatchUpAsked = false,
   });
 
   /// The shortest and longest waiting time for owed replies, in days.
@@ -144,6 +151,14 @@ class AppSettings {
   /// The user was asked about the update check (first start or the card on
   /// Home), so the card does not come back.
   final bool updateCheckAsked;
+
+  /// The last choice for a shared picture (start value: a person's picture).
+  final ShareImageChoice shareImageChoice;
+
+  /// The one-time card on the People tab "Add pictures from your contacts?"
+  /// was answered (Add or Not now), so it does not come back (02-design.md
+  /// §8, 2026-11-16).
+  final bool picturesCatchUpAsked;
 
   /// Reads settings from the stored key-value pairs. Unknown or broken
   /// values fall back to the defaults.
@@ -266,6 +281,12 @@ class AppSettings {
       familyWeightFixed: m['familyWeightFixed'] == 'true',
       updateCheckEnabled: m['updateCheckEnabled'] == 'true',
       updateCheckAsked: m['updateCheckAsked'] == 'true',
+      shareImageChoice: pick(
+        ShareImageChoice.values,
+        'shareImageChoice',
+        d.shareImageChoice,
+      ),
+      picturesCatchUpAsked: m['picturesCatchUpAsked'] == 'true',
     );
   }
 
@@ -298,6 +319,8 @@ class AppSettings {
     'familyWeightFixed': '$familyWeightFixed',
     'updateCheckEnabled': '$updateCheckEnabled',
     'updateCheckAsked': '$updateCheckAsked',
+    'shareImageChoice': shareImageChoice.name,
+    'picturesCatchUpAsked': '$picturesCatchUpAsked',
   };
 
   AppSettings copyWith({
@@ -322,6 +345,8 @@ class AppSettings {
     bool? familyWeightFixed,
     bool? updateCheckEnabled,
     bool? updateCheckAsked,
+    ShareImageChoice? shareImageChoice,
+    bool? picturesCatchUpAsked,
   }) => _copy(
     themeMode: themeMode,
     language: language,
@@ -344,6 +369,8 @@ class AppSettings {
     familyWeightFixed: familyWeightFixed,
     updateCheckEnabled: updateCheckEnabled,
     updateCheckAsked: updateCheckAsked,
+    shareImageChoice: shareImageChoice,
+    picturesCatchUpAsked: picturesCatchUpAsked,
   );
 
   /// A copy with [birthday] as the user's own birthday; null clears it.
@@ -386,6 +413,8 @@ class AppSettings {
     bool? familyWeightFixed,
     bool? updateCheckEnabled,
     bool? updateCheckAsked,
+    ShareImageChoice? shareImageChoice,
+    bool? picturesCatchUpAsked,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     language: language ?? this.language,
@@ -418,6 +447,8 @@ class AppSettings {
     familyWeightFixed: familyWeightFixed ?? this.familyWeightFixed,
     updateCheckEnabled: updateCheckEnabled ?? this.updateCheckEnabled,
     updateCheckAsked: updateCheckAsked ?? this.updateCheckAsked,
+    shareImageChoice: shareImageChoice ?? this.shareImageChoice,
+    picturesCatchUpAsked: picturesCatchUpAsked ?? this.picturesCatchUpAsked,
   );
 
   @override
@@ -446,7 +477,9 @@ class AppSettings {
       other.firstStartDone == firstStartDone &&
       other.familyWeightFixed == familyWeightFixed &&
       other.updateCheckEnabled == updateCheckEnabled &&
-      other.updateCheckAsked == updateCheckAsked;
+      other.updateCheckAsked == updateCheckAsked &&
+      other.shareImageChoice == shareImageChoice &&
+      other.picturesCatchUpAsked == picturesCatchUpAsked;
 
   @override
   int get hashCode => Object.hashAll([
@@ -474,6 +507,8 @@ class AppSettings {
     familyWeightFixed,
     updateCheckEnabled,
     updateCheckAsked,
+    shareImageChoice,
+    picturesCatchUpAsked,
   ]);
 }
 

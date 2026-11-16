@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kept/data/database.dart' show Person;
 import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/evening_question.dart';
 import 'package:kept/domain/evening_reason.dart';
@@ -14,7 +15,7 @@ const texts = EveningTexts(
 
 String _owed(String name) => 'owe $name';
 String _reconnect(ReconnectSpan span, String name) => '${span.name}: $name';
-String _first(String name) => name.split(' ').first;
+String _first(Person p) => p.name.split(' ').first;
 
 void main() {
   // Monday 16 November 2026, 14:00; the question comes at 19:00.

@@ -1736,4 +1736,148 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get permUpdateWithout =>
       'Ohne sie: Lade die neueste APK selbst von GitHub herunter (Einstellungen, Releases auf GitHub).';
+
+  @override
+  String get editNickname => 'Spitzname';
+
+  @override
+  String get nicknameHint => 'Optional';
+
+  @override
+  String get nicknameHelper => 'Wird statt des Namens angezeigt.';
+
+  @override
+  String get choosePicture => 'Bild wählen';
+
+  @override
+  String get pictureFromContact => 'Aus Kontakt';
+
+  @override
+  String get removePicture => 'Bild entfernen';
+
+  @override
+  String get pictureTip =>
+      'Tipp: Teile ein Foto aus einer beliebigen App mit Kept., um es als Bild einer Person zu nutzen.';
+
+  @override
+  String get refreshFieldPicture => 'Bild';
+
+  @override
+  String get refreshPictureFromContact => 'Das Bild des Kontakts';
+
+  @override
+  String get pictureCardTitle => 'Bilder aus deinen Kontakten hinzufügen?';
+
+  @override
+  String get pictureCardBody =>
+      'Kept. übernimmt das Bild jedes verknüpften Kontakts, der eines hat. Nichts verlässt dein Handy.';
+
+  @override
+  String get pictureCardAdd => 'Hinzufügen';
+
+  @override
+  String get pictureCardNotNow => 'Nicht jetzt';
+
+  @override
+  String picturesAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Bilder hinzugefügt',
+      one: '1 Bild hinzugefügt',
+      zero: 'Keine Bilder in deinen Kontakten gefunden',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cropTitle => 'Bild zurechtrücken';
+
+  @override
+  String get cropHint => 'Ziehen und zoomen. Doppeltippen vergrößert.';
+
+  @override
+  String get cropUse => 'Bild verwenden';
+
+  @override
+  String get cropSaving => 'Speichern…';
+
+  @override
+  String get cropFailed => 'Dieses Bild konnte nicht gelesen werden.';
+
+  @override
+  String get sharePictureTitle => 'Wofür ist dieses Bild?';
+
+  @override
+  String get shareUseAsPicture => 'Als Bild für jemanden nutzen';
+
+  @override
+  String get shareUseAsPictureLine => 'Freund wählen, zuschneiden, fertig';
+
+  @override
+  String get shareKeepAsIdea => 'Als Idee behalten';
+
+  @override
+  String get shareKeepAsIdeaLine =>
+      'Mit einer Notiz auf der Seite eines Freundes ablegen';
+
+  @override
+  String get shareLastTime => 'Zuletzt';
+
+  @override
+  String get shareWhoseTitle => 'Wer ist das?';
+
+  @override
+  String get shareFindFriend => 'Freund suchen';
+
+  @override
+  String get shareNoPictureYet => 'Noch kein Bild';
+
+  @override
+  String get shareHasPicture => 'Hat ein Bild';
+
+  @override
+  String get shareNobodyFound => 'Niemand gefunden.';
+
+  @override
+  String get shareDoneTitle => 'Sieht gut aus!';
+
+  @override
+  String shareDoneLine(String name) {
+    return '$name hat ein neues Bild.';
+  }
+
+  @override
+  String shareStillNoPicture(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Noch $count Freunde ohne Bild',
+      one: 'Noch 1 Freund ohne Bild',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shareAllHavePicture => 'Alle haben jetzt ein Bild.';
+
+  @override
+  String get shareDoneButton => 'Fertig';
+
+  @override
+  String get tipSharePicture =>
+      'Tipp: Teile ein Foto aus deiner Galerie mit Kept., um es als Bild für jemanden zu nutzen.';
+
+  @override
+  String get tipStepPhoto => 'Foto';
+
+  @override
+  String get tipStepShare => 'Teilen';
+
+  @override
+  String get fsDonePictureTip =>
+      'Tipp: Teile ein Foto aus deiner Galerie mit Kept., um einem Freund ein Bild zu geben.';
+
+  @override
+  String get shareDoneTag => 'Neu!';
 }

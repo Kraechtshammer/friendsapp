@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:drift/drift.dart' show Value;
 
 import '../data/database.dart' show Person;
@@ -10,9 +12,16 @@ import 'phone_number.dart';
 /// import; a refresh looks again, and the user decides.
 ///
 /// A field is only proposed when the contact has a value and it differs: an
-/// empty field in the address book never erases what the user keeps.
+/// empty field in the address book never erases what the user keeps. The
+/// picture is proposed only when the person has none yet.
 class ContactDiff {
-  const ContactDiff(this.person, {this.name, this.phone, this.birthday});
+  const ContactDiff(
+    this.person, {
+    this.name,
+    this.phone,
+    this.birthday,
+    this.photo,
+  });
 
   final Person person;
 
@@ -21,10 +30,15 @@ class ContactDiff {
   final String? phone;
   final Birthday? birthday;
 
-  bool get isEmpty => name == null && phone == null && birthday == null;
+  /// The contact's picture (raw bytes), when the person has none.
+  final Uint8List? photo;
 
-  /// The person with the proposed values applied.
-  Person apply() {
+  bool get isEmpty =>
+      name == null && phone == null && birthday == null && photo == null;
+
+  /// The person with the proposed values applied. The picture is stored by
+  /// the caller (`applyContactDiff`) and passed as [photoName].
+  Person apply({String? photoName}) {
     final b = birthday;
     return person.copyWith(
       name: name ?? person.name,
@@ -32,6 +46,7 @@ class ContactDiff {
       birthdayMonth: b == null ? const Value.absent() : Value(b.month),
       birthdayDay: b == null ? const Value.absent() : Value(b.day),
       birthdayYear: b == null ? const Value.absent() : Value(b.year),
+      photo: photoName == null ? const Value.absent() : Value(photoName),
     );
   }
 }
@@ -64,6 +79,7 @@ ContactDiff compareWithContact(Person person, PhoneContact contact) {
     name: newName,
     phone: newPhone,
     birthday: newBirthday,
+    photo: person.photo == null ? contact.photo : null,
   );
 }
 

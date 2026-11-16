@@ -18,7 +18,7 @@ Future<void> openRefreshContacts(BuildContext context) => Navigator.of(
 ).push(MaterialPageRoute<void>(builder: (_) => const RefreshContactsScreen()));
 
 /// Checks every person linked to a contact and lists those whose name,
-/// number or birthday differ. Each can be accepted or skipped; "Accept all"
+/// number, birthday or picture differ. Each can be accepted or skipped; "Accept all"
 /// takes the rest. Nothing changes without a tap (02-design.md §8).
 class RefreshContactsScreen extends ConsumerStatefulWidget {
   const RefreshContactsScreen({super.key});
@@ -51,7 +51,11 @@ class _RefreshState extends ConsumerState<RefreshContactsScreen> {
   }
 
   Future<void> _accept(ContactDiff diff) async {
-    await ref.read(peopleRepositoryProvider).update(diff.apply());
+    await applyContactDiff(
+      ref.read(photoStoreProvider),
+      ref.read(peopleRepositoryProvider),
+      diff,
+    );
     if (!mounted) return;
     setState(() {
       _diffs.remove(diff);
@@ -211,6 +215,12 @@ class DiffCard extends StatelessWidget {
             _Change(l10n.refreshFieldName, p.name, diff.name!),
           if (diff.phone != null)
             _Change(l10n.refreshFieldPhone, p.phone ?? none(), diff.phone!),
+          if (diff.photo != null)
+            _Change(
+              l10n.refreshFieldPicture,
+              none(),
+              l10n.refreshPictureFromContact,
+            ),
           if (diff.birthday != null)
             _Change(
               l10n.refreshFieldBirthday,

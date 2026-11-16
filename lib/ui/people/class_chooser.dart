@@ -1,9 +1,11 @@
+import '../../app/contact_photos.dart';
 import '../../app/theme.dart';
 import '../../data/people_repository.dart';
 import '../../domain/person.dart';
 import '../../domain/phone_number.dart';
 import '../../l10n/labels.dart';
 import '../../platform/contacts.dart';
+import '../../platform/photo_store.dart';
 import '../common.dart';
 import '../kept_icon.dart';
 import '../material.dart';
@@ -62,15 +64,23 @@ class ClassAssignment extends StatelessWidget {
 }
 
 /// Adds [contacts] as people, one after the other so each sees the avatars
-/// before. Shared by the import and the first-start flow.
+/// before. Shared by the import and the first-start flow. With [source] and
+/// [photos], each contact's picture is read one by one and stored with the
+/// centre crop; only the chosen contacts are asked for it.
 Future<void> addContactsAsPeople(
   PeopleRepository repo,
   List<PhoneContact> contacts,
   Map<String, Closeness> closeness,
-  Messenger? messenger,
-) async {
+  Messenger? messenger, {
+  ContactsSource? source,
+  PhotoStore? photos,
+}) async {
   for (final c in contacts) {
+    final photo = source == null || photos == null
+        ? null
+        : await storeContactPhoto(source, photos, c.id);
     await repo.add(
+      photo: photo,
       name: c.name,
       contactId: c.id,
       closeness: closeness[c.id] ?? Closeness.nowAndThen,

@@ -38,7 +38,9 @@ class _PersonPickerState extends State<_PersonPicker> {
     final query = _search.text.trim().toLowerCase();
     final matches = [
       for (final p in widget.people)
-        if (p.name.toLowerCase().contains(query)) p,
+        if (p.name.toLowerCase().contains(query) ||
+            (p.nickname ?? '').toLowerCase().contains(query))
+          p,
     ];
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
