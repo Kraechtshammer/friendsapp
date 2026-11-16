@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,7 +28,7 @@ class _FakeContacts implements ContactsSource {
   Future<bool> requestAccess() async => granted;
 
   @override
-  Future<List<PhoneContact>> load() async => const [
+  Future<List<PhoneContact>> load({bool withPhotos = false}) async => const [
     PhoneContact(
       id: 'c1',
       name: 'Anna Adler',
@@ -38,6 +40,9 @@ class _FakeContacts implements ContactsSource {
     PhoneContact(id: 'c2', name: 'Ben Bauer', phones: ['+43 660 1234567']),
     PhoneContact(id: 'c3', name: 'Cora Carl'),
   ];
+
+  @override
+  Future<Uint8List?> photoFor(String contactId) async => null;
 
   @override
   Future<void> openSettings() async => settingsOpened = true;

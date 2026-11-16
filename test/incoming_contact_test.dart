@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kept/app/incoming_sync.dart';
@@ -40,7 +42,11 @@ class _Contacts implements ContactsSource {
   Future<bool> requestAccess() => throw UnimplementedError();
 
   @override
-  Future<List<PhoneContact>> load() => throw UnimplementedError();
+  Future<List<PhoneContact>> load({bool withPhotos = false}) =>
+      throw UnimplementedError();
+
+  @override
+  Future<Uint8List?> photoFor(String contactId) async => null;
 
   @override
   Future<void> openSettings() => throw UnimplementedError();

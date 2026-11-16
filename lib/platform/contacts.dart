@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter_contacts/flutter_contacts.dart';
 
 /// One entry of the phone's address book, reduced to what Kept uses.
@@ -9,6 +11,7 @@ class PhoneContact {
     this.birthdayMonth,
     this.birthdayDay,
     this.birthdayYear,
+    this.photo,
   });
 
   final String id;
@@ -17,6 +20,10 @@ class PhoneContact {
   final int? birthdayMonth;
   final int? birthdayDay;
   final int? birthdayYear;
+
+  /// The contact's picture as raw bytes (full size, else thumbnail), in
+  /// whatever format the address book holds. Only filled when asked for.
+  final Uint8List? photo;
 }
 
 /// The phone's contacts, behind an interface so tests can fake them.
@@ -27,8 +34,13 @@ abstract class ContactsSource {
   /// Whether the read permission is granted now. Never asks.
   Future<bool> hasAccess();
 
-  /// All contacts that have a name, sorted by name.
-  Future<List<PhoneContact>> load();
+  /// All contacts that have a name, sorted by name. Pictures are large, so
+  /// [PhoneContact.photo] is only filled with [withPhotos].
+  Future<List<PhoneContact>> load({bool withPhotos = false});
+
+  /// The picture of one contact (full size, else thumbnail), or null if it
+  /// has none, access is missing or anything fails.
+  Future<Uint8List?> photoFor(String contactId);
 
   /// Opens the app settings, for when access was denied for good.
   Future<void> openSettings();
@@ -61,12 +73,16 @@ class DeviceContacts implements ContactsSource {
   }
 
   @override
-  Future<List<PhoneContact>> load() async {
+  Future<List<PhoneContact>> load({bool withPhotos = false}) async {
     final contacts = await FlutterContacts.getAll(
       properties: {
         ContactProperty.name,
         ContactProperty.phone,
         ContactProperty.event,
+        if (withPhotos) ...{
+          ContactProperty.photoThumbnail,
+          ContactProperty.photoFullRes,
+        },
       },
     );
     final result = <PhoneContact>[];
@@ -94,11 +110,35 @@ class DeviceContacts implements ContactsSource {
           birthdayDay: birthday?.day,
           // Some address books store a dummy year when it is unknown.
           birthdayYear: year != null && year >= 1900 ? year : null,
+          photo: withPhotos ? _photoBytes(c.photo) : null,
         ),
       );
     }
     result.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     return result;
+  }
+
+  @override
+  Future<Uint8List?> photoFor(String contactId) async {
+    try {
+      final c = await FlutterContacts.get(
+        contactId,
+        properties: {
+          ContactProperty.photoThumbnail,
+          ContactProperty.photoFullRes,
+        },
+      );
+      return _photoBytes(c?.photo);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static Uint8List? _photoBytes(Photo? p) {
+    final full = p?.fullSize;
+    if (full != null && full.isNotEmpty) return full;
+    final thumb = p?.thumbnail;
+    return thumb != null && thumb.isNotEmpty ? thumb : null;
   }
 
   @override

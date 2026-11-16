@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:kept/platform/contacts.dart';
 
 /// [ContactsSource] without the platform. [contacts] is the address book.
@@ -22,7 +24,28 @@ class FakeContacts implements ContactsSource {
   }
 
   @override
-  Future<List<PhoneContact>> load() async => contacts;
+  Future<List<PhoneContact>> load({bool withPhotos = false}) async => [
+    for (final c in contacts)
+      if (withPhotos || c.photo == null)
+        c
+      else
+        PhoneContact(
+          id: c.id,
+          name: c.name,
+          phones: c.phones,
+          birthdayMonth: c.birthdayMonth,
+          birthdayDay: c.birthdayDay,
+          birthdayYear: c.birthdayYear,
+        ),
+  ];
+
+  @override
+  Future<Uint8List?> photoFor(String contactId) async {
+    for (final c in contacts) {
+      if (c.id == contactId) return c.photo;
+    }
+    return null;
+  }
 
   @override
   Future<void> openSettings() async => settingsOpened++;

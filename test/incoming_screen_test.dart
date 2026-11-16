@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -354,7 +356,10 @@ class _Contacts implements ContactsSource {
   Future<bool> requestAccess() async => false;
 
   @override
-  Future<List<PhoneContact>> load() async => const [];
+  Future<List<PhoneContact>> load({bool withPhotos = false}) async => const [];
+
+  @override
+  Future<Uint8List?> photoFor(String contactId) async => null;
 
   @override
   Future<void> openSettings() async {}
