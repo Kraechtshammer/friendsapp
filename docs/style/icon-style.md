@@ -96,4 +96,4 @@ Added on 2026-11-16 for the class badge: sprout (green stem, two leaves, the rig
 
 Added on 2026-11-16: signal, discord (messenger stand-ins) and gift.
 
-Still to draw for the app: plus the icons for anything new that milestones bring (idea or note, treat types, "they wrote", voice message).
+Still to draw for the app: the icons for anything new that milestones bring (idea or note, treat types, "they wrote", voice message).
