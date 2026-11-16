@@ -69,8 +69,14 @@ class ReleaseInfo {
   final int apkSize;
 
   /// From GitHub's `releases/latest` answer. Null for drafts, pre-releases,
-  /// unreadable tags and releases without an APK.
-  static ReleaseInfo? fromJson(Map<String, dynamic> json) {
+  /// unreadable tags and releases without the APK that matches the build:
+  /// a build with the listener ([listener]) takes only `kept-*-listener.apk`
+  /// (older releases have none, so no update is offered); a build without
+  /// takes only an `.apk` that does not end in `-listener.apk`.
+  static ReleaseInfo? fromJson(
+    Map<String, dynamic> json, {
+    bool listener = false,
+  }) {
     if (json['draft'] == true || json['prerelease'] == true) return null;
     final version = AppVersion.tryParse('${json['tag_name'] ?? ''}');
     final assets = json['assets'];
@@ -79,7 +85,11 @@ class ReleaseInfo {
       final name = '${asset['name'] ?? ''}';
       final url = asset['browser_download_url'];
       final size = asset['size'];
-      if (name.toLowerCase().endsWith('.apk') && url is String && size is int) {
+      final lower = name.toLowerCase();
+      final matches = listener
+          ? lower.startsWith('kept-') && lower.endsWith('-listener.apk')
+          : lower.endsWith('.apk') && !lower.endsWith('-listener.apk');
+      if (matches && url is String && size is int) {
         return ReleaseInfo(
           version: version,
           notes: '${json['body'] ?? ''}',
@@ -146,8 +156,10 @@ String _plain(String text) => text
     .replaceAllMapped(RegExp(r'\[([^\]]*)\]\([^)]*\)'), (m) => m.group(1)!)
     .replaceAll(RegExp(r'\*\*|__|`'), '');
 
-/// The local file name of a downloaded update.
-String apkFileName(AppVersion version) => 'kept-$version.apk';
+/// The local file name of a downloaded update, as on the release page:
+/// `kept-1.0.2.apk` or, for a build with the listener, `kept-1.0.2-listener.apk`.
+String apkFileName(AppVersion version, {bool listener = false}) =>
+    'kept-$version${listener ? '-listener' : ''}.apk';
 
 /// Downloaded files that can go after an update: APKs of the installed
 /// version or older (the update worked) and unfinished downloads. The APK of
@@ -163,7 +175,7 @@ List<String> updateFilesToDelete(Iterable<String> names, AppVersion installed) {
 }
 
 AppVersion? _apkVersion(String name) {
-  final match = RegExp(r'^kept-(.+)\.apk$').firstMatch(name);
+  final match = RegExp(r'^kept-(.+?)(?:-listener)?\.apk$').firstMatch(name);
   return match == null ? null : AppVersion.tryParse(match.group(1)!);
 }
 

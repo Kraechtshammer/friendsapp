@@ -1,4 +1,4 @@
-# Builds the signed release APK and publishes it as a GitHub release.
+# Builds the signed release APKs (with and without the listener) and publishes them as a GitHub release.
 #
 # Release: set `version:` in pubspec.yaml (e.g. 1.0.1+2), commit, then
 #   git tag v1.0.1 && git push origin v1.0.1
@@ -78,19 +78,29 @@ jobs:
             echo "keyAlias=$KEY_ALIAS"
           } > android/key.properties
 
-      - run: flutter build apk --release
+      # Two APKs per release: kept-<version>.apk (no notification listener) and
+      # kept-<version>-listener.apk (--dart-define=KEPT_INCOMING=true), docs/03-dev-setup.md.
+      # The in-app updater picks the one that matches its own build.
+      - name: Build the APK without the listener
+        run: |
+          flutter build apk --release
+          cp build/app/outputs/flutter-apk/app-release.apk "kept-${{ steps.version.outputs.name }}.apk"
 
-      - name: Check the APK is signed with the release key
+      - name: Build the APK with the listener
+        run: |
+          flutter build apk --release --dart-define=KEPT_INCOMING=true
+          cp build/app/outputs/flutter-apk/app-release.apk "kept-${{ steps.version.outputs.name }}-listener.apk"
+
+      - name: Check both APKs are signed with the release key
         run: |
           apksigner=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -n1)
-          "$apksigner" verify --print-certs build/app/outputs/flutter-apk/app-release.apk | tee certs.txt
-          if grep -q "CN=Android Debug" certs.txt; then
-            echo "::error::The APK is signed with the debug key."
-            exit 1
-          fi
-
-      - name: Name the APK
-        run: cp build/app/outputs/flutter-apk/app-release.apk "kept-${{ steps.version.outputs.name }}.apk"
+          for apk in "kept-${{ steps.version.outputs.name }}.apk" "kept-${{ steps.version.outputs.name }}-listener.apk"; do
+            "$apksigner" verify --print-certs "$apk" | tee certs.txt
+            if grep -q "CN=Android Debug" certs.txt; then
+              echo "::error::$apk is signed with the debug key."
+              exit 1
+            fi
+          done
 
       # Sorted by the commit subjects' type prefixes (Feature:, Bugfix:, ...).
       - name: Write release notes
@@ -100,7 +110,9 @@ jobs:
         with:
           tag_name: ${{ steps.version.outputs.tag }}
           name: Kept ${{ steps.version.outputs.name }}
-          files: kept-${{ steps.version.outputs.name }}.apk
+          files: |
+            kept-${{ steps.version.outputs.name }}.apk
+            kept-${{ steps.version.outputs.name }}-listener.apk
           body_path: release-notes.md
 
       - name: Remove the key from the runner

@@ -14,6 +14,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../app/build_flags.dart';
 import '../domain/app_update.dart';
 
 /// Where the releases come from. The repository is public, so no token.
@@ -131,7 +132,9 @@ class AndroidUpdateService implements UpdateService {
   @override
   Future<ReleaseInfo?> fetchLatest() async {
     final json = await _getJson(_latestReleaseUrl);
-    return json is Map<String, dynamic> ? ReleaseInfo.fromJson(json) : null;
+    return json is Map<String, dynamic>
+        ? ReleaseInfo.fromJson(json, listener: keptIncoming)
+        : null;
   }
 
   @override
@@ -179,7 +182,9 @@ class AndroidUpdateService implements UpdateService {
 
   @override
   Future<File?> downloaded(ReleaseInfo release) async {
-    final file = File('${(await _dir()).path}/${apkFileName(release.version)}');
+    final file = File(
+      '${(await _dir()).path}/${apkFileName(release.version, listener: keptIncoming)}',
+    );
     return await file.exists() && await file.length() == release.apkSize
         ? file
         : null;
@@ -191,7 +196,7 @@ class AndroidUpdateService implements UpdateService {
     void Function(double progress) onProgress,
   ) async {
     final target = File(
-      '${(await _dir()).path}/${apkFileName(release.version)}',
+      '${(await _dir()).path}/${apkFileName(release.version, listener: keptIncoming)}',
     );
     final part = File('${target.path}.part');
     final client = HttpClient()

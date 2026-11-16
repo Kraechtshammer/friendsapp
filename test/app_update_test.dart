@@ -63,6 +63,39 @@ void main() {
       expect(info.notes, contains('Something'));
     });
 
+    final both = [
+      {
+        'name': 'kept-1.0.2.apk',
+        'size': 100,
+        'browser_download_url': 'https://x/kept-1.0.2.apk',
+      },
+      {
+        'name': 'kept-1.0.2-listener.apk',
+        'size': 200,
+        'browser_download_url': 'https://x/kept-1.0.2-listener.apk',
+      },
+    ];
+
+    test('a build without the listener takes the plain APK', () {
+      final info = ReleaseInfo.fromJson(
+        release(assets: both.reversed.toList()),
+      );
+      expect(info!.apkUrl, 'https://x/kept-1.0.2.apk');
+      expect(info.apkSize, 100);
+    });
+
+    test('a build with the listener takes the listener APK', () {
+      final info = ReleaseInfo.fromJson(release(assets: both), listener: true);
+      expect(info!.apkUrl, 'https://x/kept-1.0.2-listener.apk');
+      expect(info.apkSize, 200);
+    });
+
+    test('a release without the matching APK offers nothing', () {
+      // Older releases (0.7.0) have only the plain APK.
+      expect(ReleaseInfo.fromJson(release(), listener: true), isNull);
+      expect(ReleaseInfo.fromJson(release(assets: [both[1]])), isNull);
+    });
+
     test('ignores drafts, pre-releases, bad tags and releases without APK', () {
       expect(ReleaseInfo.fromJson(release(draft: true)), isNull);
       expect(ReleaseInfo.fromJson(release(prerelease: true)), isNull);
@@ -131,6 +164,21 @@ All commits: [v1.0.0...v1.0.1](https://github.com/x/y/compare/v1.0.0...v1.0.1)
       'kept-1.0.1.apk',
       'kept-1.0.0.apk',
       'kept-1.0.3.apk.part',
+    ]);
+  });
+
+  test('apkFileName and the clean-up handle the listener APKs', () {
+    expect(apkFileName(v('1.0.2'), listener: true), 'kept-1.0.2-listener.apk');
+    final names = [
+      'kept-1.0.1-listener.apk',
+      'kept-1.0.0-listener.apk',
+      'kept-1.0.2-listener.apk',
+      'kept-1.0.3-listener.apk.part',
+    ];
+    expect(updateFilesToDelete(names, v('1.0.1')), [
+      'kept-1.0.1-listener.apk',
+      'kept-1.0.0-listener.apk',
+      'kept-1.0.3-listener.apk.part',
     ]);
   });
 

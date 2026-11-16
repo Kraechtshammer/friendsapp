@@ -100,7 +100,7 @@ Taken from akai-timetrack.
 
 **CI** (`.github/workflows/ci.yml`): every push to main and every pull request runs `flutter analyze` and `flutter test` with the same Flutter version as the dev container.
 
-**Release** (`.github/workflows/release.yml`): pushing a tag `v<version>` builds the signed APK and creates a GitHub release "Kept <version>" with `kept-<version>.apk` attached. The release text is made by `scripts/release-notes.sh` from the commit subjects since the last tag, sorted by their prefix. The workflow fails on purpose if the signing secrets are missing.
+**Release** (`.github/workflows/release.yml`): pushing a tag `v<version>` builds two signed APKs and creates a GitHub release "Kept <version>" with both attached: `kept-<version>.apk` (without the notification listener) and `kept-<version>-listener.apk` (built with `--dart-define=KEPT_INCOMING=true`). Both are checked to be signed with the release key. To install by hand take the plain one; take the `-listener` one only if you want incoming messages and Play Protect lets it through. The in-app updater picks the file that matches the installed build. Releases up to 0.7.0 have only the plain APK, so a listener build finds no update there. The release text is made by `scripts/release-notes.sh` from the commit subjects since the last tag, sorted by their prefix. The workflow fails on purpose if the signing secrets are missing.
 
 ### One-time setup by the developer: signing key and secrets
 
@@ -129,7 +129,7 @@ The key decides who may update the installed app. If it is lost, updates are no 
 
 ### Build flag: incoming messages
 
-The notification listener for incoming messages (M7) is a build flag, off by default (02-design.md §8, 2026-11-16). Play Protect blocks installing a sideloaded APK that has a notification listener, so GitHub releases and the tasks above are built without it.
+The notification listener for incoming messages (M7) is a build flag, off by default (02-design.md §8, 2026-11-16). Play Protect blocks installing a sideloaded APK that has a notification listener, so the tasks above and the plain GitHub APK are built without it. Each release also has a `-listener` APK with it (section 8).
 
 - Without: `flutter build apk --release` (or `--debug`, or `flutter run`). The APK has no listener service and no listener code; the app hides the switch.
 - With: add `--dart-define=KEPT_INCOMING=true`, for example `flutter build apk --release --dart-define=KEPT_INCOMING=true` or `flutter run --dart-define=KEPT_INCOMING=true`. Works for debug and release alike.
