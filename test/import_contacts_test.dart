@@ -11,6 +11,8 @@ import 'package:kept/ui/material.dart';
 import 'package:kept/ui/people/import_contacts_screen.dart';
 import 'package:kept/ui/people/people_screen.dart';
 
+import 'fake_notifications.dart';
+
 class _FakeContacts implements ContactsSource {
   _FakeContacts({this.granted = true});
 
@@ -53,6 +55,7 @@ void main() {
       ProviderScope(
         overrides: [
           servicesProvider.overrideWithValue(services),
+          notificationsProvider.overrideWithValue(FakeNotifications()),
           contactsSourceProvider.overrideWithValue(fake),
         ],
         child: const KeptApp(),

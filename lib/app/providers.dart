@@ -9,6 +9,7 @@ import '../data/people_repository.dart';
 import '../platform/app_shortcuts.dart';
 import '../platform/chat_opener.dart';
 import '../platform/contacts.dart';
+import '../platform/notifications.dart';
 import 'services.dart';
 
 /// Set in main() with the services created at start.
@@ -29,6 +30,31 @@ final chatOpenerProvider = Provider<ChatOpener>(
 /// The launcher icon's shortcuts. Tests override it with a fake.
 final appShortcutsProvider = Provider<AppShortcuts>(
   (ref) => const QuickActionsShortcuts(),
+);
+
+/// The app's notifications (the evening question). Tests override it with
+/// a fake.
+final notificationsProvider = Provider<Notifications>(
+  (ref) => LocalNotifications(),
+);
+
+/// Whether the app may show notifications. Read again when the app comes
+/// back to the front and after asking for the permission.
+final notificationsEnabledProvider = FutureProvider.autoDispose<bool>(
+  (ref) => ref.watch(notificationsProvider).areEnabled(),
+);
+
+/// Counts requests to scroll Home to the open thoughts ("Yes" on the
+/// evening question). The open thoughts listen, like [captureFocusProvider].
+class OpenThoughtsRequests extends Notifier<int> {
+  @override
+  int build() => 0;
+
+  void request() => state++;
+}
+
+final openThoughtsRequestProvider = NotifierProvider<OpenThoughtsRequests, int>(
+  OpenThoughtsRequests.new,
 );
 
 /// The current time, for the greeting. Tests override it with a fixed time.

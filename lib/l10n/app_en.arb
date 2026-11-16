@@ -175,5 +175,15 @@
         "type": "String"
       }
     }
-  }
+  },
+  "eveningQuestion": "Got ten minutes for someone today?",
+  "eveningYes": "Yes",
+  "eveningNotToday": "Not today",
+  "eveningChannel": "Evening question",
+  "settingsEvening": "Evening question",
+  "settingsEveningSwitch": "Ask me in the evening",
+  "settingsEveningTime": "Time",
+  "settingsEveningDays": "Days",
+  "settingsNotificationsOff": "Notifications are off for Kept.",
+  "settingsOpenNotificationSettings": "Open notification settings"
 }

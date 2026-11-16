@@ -10,6 +10,8 @@ import 'package:kept/app/theme.dart';
 import 'package:kept/ui/kept_icon.dart';
 import 'package:kept/ui/material.dart';
 
+import 'fake_notifications.dart';
+
 void main() {
   testWidgets('shows the four tabs and opens settings from the gear', (
     tester,
@@ -22,6 +24,7 @@ void main() {
       ProviderScope(
         overrides: [
           servicesProvider.overrideWithValue(services),
+          notificationsProvider.overrideWithValue(FakeNotifications()),
           clockProvider.overrideWithValue(() => DateTime(2026, 11, 16, 14)),
         ],
         child: const KeptApp(),

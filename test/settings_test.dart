@@ -42,4 +42,50 @@ void main() {
     });
     expect(settings, const AppSettings());
   });
+
+  test('the evening question starts on, at 19:00, every day', () async {
+    final settings = await repo.load();
+    expect(settings.eveningOn, isTrue);
+    expect(settings.eveningMinute, 19 * 60);
+    expect(settings.eveningExcludedDays, isEmpty);
+    expect(settings.notificationPermissionAsked, isFalse);
+  });
+
+  test('the evening question settings are stored', () async {
+    await repo.update(
+      (s) => s.copyWith(
+        eveningOn: false,
+        eveningMinute: 20 * 60 + 30,
+        eveningExcludedDays: {7, 6},
+        notificationPermissionAsked: true,
+      ),
+    );
+    final settings = await repo.load();
+    expect(settings.eveningOn, isFalse);
+    expect(settings.eveningMinute, 20 * 60 + 30);
+    expect(settings.eveningExcludedDays, {6, 7});
+    expect(settings.notificationPermissionAsked, isTrue);
+    expect(settings.toMap()['eveningTime'], '20:30');
+    expect(settings.toMap()['eveningExcludedDays'], '6,7');
+    expect(await repo.watch().first, settings);
+
+    await repo.update(
+      (s) => s.copyWith(eveningOn: true, eveningExcludedDays: {}),
+    );
+    final back = await repo.load();
+    expect(back.eveningOn, isTrue);
+    expect(back.eveningExcludedDays, isEmpty);
+    expect(back.eveningMinute, 20 * 60 + 30);
+  });
+
+  test('broken evening values fall back to the defaults', () {
+    final settings = AppSettings.fromMap({
+      'eveningOn': 'perhaps',
+      'eveningTime': '25:00',
+      'eveningExcludedDays': '0,3,x,8, 6',
+    });
+    expect(settings.eveningOn, isTrue);
+    expect(settings.eveningMinute, 19 * 60);
+    expect(settings.eveningExcludedDays, {3, 6});
+  });
 }

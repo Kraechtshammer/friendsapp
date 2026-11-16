@@ -17,12 +17,35 @@ import '../widgets/section_label.dart';
 /// The open intentions, newest first, under "On your mind". Nothing is
 /// shown as late and there are no dates (02-design.md §2.3). With none,
 /// nothing is shown at all.
-class OpenThoughts extends ConsumerWidget {
+///
+/// "Yes" on the evening question scrolls Home here
+/// ([openThoughtsRequestProvider]). If the thoughts are still loading, the
+/// scroll waits for them.
+class OpenThoughts extends ConsumerStatefulWidget {
   const OpenThoughts({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final intentions = ref.watch(openIntentionsProvider).value ?? const [];
+  ConsumerState<OpenThoughts> createState() => _OpenThoughtsState();
+}
+
+class _OpenThoughtsState extends ConsumerState<OpenThoughts> {
+  var _scrollPending = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // A request made before this was built (a cold start from the
+    // notification) counts too.
+    _scrollPending = ref.read(openThoughtsRequestProvider) > 0;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.listen(openThoughtsRequestProvider, (_, _) {
+      setState(() => _scrollPending = true);
+    });
+    final loaded = ref.watch(openIntentionsProvider);
+    final intentions = loaded.value ?? const [];
     final people = {
       for (final p in ref.watch(peopleProvider).value ?? const <Person>[])
         p.id: p,
@@ -31,6 +54,20 @@ class OpenThoughts extends ConsumerWidget {
       for (final i in intentions)
         if (people[i.personId] != null) _Row(people[i.personId]!, i),
     ];
+    if (_scrollPending && rows.isNotEmpty) {
+      _scrollPending = false;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        Scrollable.ensureVisible(
+          context,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOutCubic,
+        );
+      });
+    } else if (_scrollPending && loaded.hasValue && intentions.isEmpty) {
+      // Nothing to show: don't jump later when a thought is added.
+      _scrollPending = false;
+    }
     if (rows.isEmpty) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.only(top: 22),

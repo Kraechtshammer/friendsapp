@@ -709,6 +709,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Last time: {note}'**
   String lastTime(String note);
+
+  /// No description provided for @eveningQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Got ten minutes for someone today?'**
+  String get eveningQuestion;
+
+  /// No description provided for @eveningYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get eveningYes;
+
+  /// No description provided for @eveningNotToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Not today'**
+  String get eveningNotToday;
+
+  /// No description provided for @eveningChannel.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening question'**
+  String get eveningChannel;
+
+  /// No description provided for @settingsEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening question'**
+  String get settingsEvening;
+
+  /// No description provided for @settingsEveningSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask me in the evening'**
+  String get settingsEveningSwitch;
+
+  /// No description provided for @settingsEveningTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get settingsEveningTime;
+
+  /// No description provided for @settingsEveningDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Days'**
+  String get settingsEveningDays;
+
+  /// No description provided for @settingsNotificationsOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are off for Kept.'**
+  String get settingsNotificationsOff;
+
+  /// No description provided for @settingsOpenNotificationSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open notification settings'**
+  String get settingsOpenNotificationSettings;
 }
 
 class _AppLocalizationsDelegate

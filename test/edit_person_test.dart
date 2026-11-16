@@ -11,6 +11,8 @@ import 'package:kept/ui/people/edit_person_screen.dart';
 import 'package:kept/ui/people/people_screen.dart';
 import 'package:kept/ui/people/person_screen.dart';
 
+import 'fake_notifications.dart';
+
 void main() {
   late AppServices services;
 
@@ -24,7 +26,10 @@ void main() {
   Future<void> openPeopleTab(WidgetTester tester) async {
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [servicesProvider.overrideWithValue(services)],
+        overrides: [
+          servicesProvider.overrideWithValue(services),
+          notificationsProvider.overrideWithValue(FakeNotifications()),
+        ],
         child: const KeptApp(),
       ),
     );

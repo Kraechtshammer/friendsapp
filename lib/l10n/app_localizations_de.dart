@@ -358,4 +358,35 @@ class AppLocalizationsDe extends AppLocalizations {
   String lastTime(String note) {
     return 'Letztes Mal: $note';
   }
+
+  @override
+  String get eveningQuestion => 'Hast du heute zehn Minuten für jemanden?';
+
+  @override
+  String get eveningYes => 'Ja';
+
+  @override
+  String get eveningNotToday => 'Heute nicht';
+
+  @override
+  String get eveningChannel => 'Abendfrage';
+
+  @override
+  String get settingsEvening => 'Abendfrage';
+
+  @override
+  String get settingsEveningSwitch => 'Frag mich am Abend';
+
+  @override
+  String get settingsEveningTime => 'Uhrzeit';
+
+  @override
+  String get settingsEveningDays => 'Tage';
+
+  @override
+  String get settingsNotificationsOff =>
+      'Benachrichtigungen sind für Kept aus.';
+
+  @override
+  String get settingsOpenNotificationSettings => 'Benachrichtigungen öffnen';
 }

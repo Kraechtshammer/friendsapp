@@ -12,6 +12,8 @@ import 'package:kept/ui/home/nice_one_screen.dart';
 import 'package:kept/ui/material.dart';
 import 'package:kept/ui/people/person_screen.dart';
 
+import 'fake_notifications.dart';
+
 void main() {
   late AppServices services;
   late _FakeShortcuts shortcuts;
@@ -40,6 +42,7 @@ void main() {
       ProviderScope(
         overrides: [
           servicesProvider.overrideWithValue(services),
+          notificationsProvider.overrideWithValue(FakeNotifications()),
           clockProvider.overrideWithValue(() => now),
           appShortcutsProvider.overrideWithValue(shortcuts),
         ],

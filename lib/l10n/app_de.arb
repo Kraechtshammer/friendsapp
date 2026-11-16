@@ -126,5 +126,15 @@
   "remindMe": "Erinnere mich",
   "remindMeHelp": "Hält die Zeile außerdem als offenen Gedanken.",
   "niceOneClose": "Schließen",
-  "lastTime": "Letztes Mal: {note}"
+  "lastTime": "Letztes Mal: {note}",
+  "eveningQuestion": "Hast du heute zehn Minuten für jemanden?",
+  "eveningYes": "Ja",
+  "eveningNotToday": "Heute nicht",
+  "eveningChannel": "Abendfrage",
+  "settingsEvening": "Abendfrage",
+  "settingsEveningSwitch": "Frag mich am Abend",
+  "settingsEveningTime": "Uhrzeit",
+  "settingsEveningDays": "Tage",
+  "settingsNotificationsOff": "Benachrichtigungen sind für Kept aus.",
+  "settingsOpenNotificationSettings": "Benachrichtigungen öffnen"
 }

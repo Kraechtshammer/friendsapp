@@ -11,6 +11,8 @@ import 'package:kept/domain/person.dart';
 import 'package:kept/ui/material.dart';
 import 'package:kept/ui/people/person_screen.dart';
 
+import 'fake_notifications.dart';
+
 void main() {
   late AppServices services;
 
@@ -31,6 +33,7 @@ void main() {
       ProviderScope(
         overrides: [
           servicesProvider.overrideWithValue(services),
+          notificationsProvider.overrideWithValue(FakeNotifications()),
           chatOpenerProvider.overrideWithValue(opener),
         ],
         child: const KeptApp(),
