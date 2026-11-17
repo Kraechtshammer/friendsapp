@@ -175,7 +175,7 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] The People tab scrolls smoothly with 54 people and pictures (also on 120 Hz); no avatar flashes its initial while scrolling.
 - [ ] Delete a person who has a picture; after a restart the app's storage did not keep the file (check Settings > Apps > Kept. > Storage if you want).
 
-## Couples (not released yet)
+## Couples (in 0.9.1)
 
 - [ ] Edit a person, "Link a partner", pick the partner: the row shows their face and "Unlink". Nothing about couples shows anywhere before two people are linked.
 - [ ] People tab: the two show once as "Anna & Tom" with both faces overlapping (also with pictures), in the class of the closer one. Tap it: the couple page opens; tap one face: their own page.
