@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 
 import '../domain/group.dart';
+import '../domain/intention.dart';
 import 'database.dart';
 import 'whole_seconds.dart';
 
@@ -92,12 +93,33 @@ class GroupsRepository {
   }
 
   /// Ends group [groupId] in one transaction: its intentions move to the
-  /// first remaining member (with none left they are deleted with the
+  /// first remaining member, and open ones are copied to every other
+  /// remaining member (with none left they are deleted with the
   /// group), its contact events stay on every timeline without the group,
   /// and the memberships go.
   Future<void> dissolve(String groupId) => _db.transaction(() async {
     final members = await this.members(groupId);
     if (members.isNotEmpty) {
+      // Each remaining member gets every open thought: the first keeps the
+      // row itself (and with it the links from contact events), the others
+      // get a copy. Closed thoughts are history and only move.
+      final thoughts = await (_db.select(
+        _db.intentions,
+      )..where((t) => t.groupId.equals(groupId))).get();
+      for (final thought in thoughts) {
+        if (thought.state != IntentionState.open) continue;
+        for (final member in members.skip(1)) {
+          await _db
+              .into(_db.intentions)
+              .insert(
+                thought.copyWith(
+                  id: _uuid.v4(),
+                  personId: Value(member.id),
+                  groupId: const Value(null),
+                ),
+              );
+        }
+      }
       await (_db.update(
         _db.intentions,
       )..where((t) => t.groupId.equals(groupId))).write(

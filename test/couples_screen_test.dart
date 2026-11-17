@@ -109,7 +109,7 @@ void main() {
 
     await tester.tap(find.text('Unlink'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('move to Tom'), findsOneWidget);
+    expect(find.textContaining('go to each of them'), findsOneWidget);
     await tester.tap(
       find.descendant(
         of: find.byType(AlertDialog),

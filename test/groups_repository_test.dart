@@ -82,7 +82,7 @@ void main() {
       expect(await db.select(db.groupMembers).get(), hasLength(2));
     });
 
-    test('dissolving moves the thoughts to the first member and keeps the '
+    test('dissolving gives the open thoughts to both members and keeps the '
         'shared contact', () async {
       final couple = await groups.createCouple(anna.id, ben.id, now: t);
       final thought = await intentions.add(groupId: couple.id, note: 'dinner');
@@ -95,6 +95,12 @@ void main() {
       final moved = (await intentions.watchForPerson(anna.id).first).single;
       expect(moved.id, thought.id);
       expect(moved.groupId, isNull);
+      final copy = (await intentions.watchForPerson(ben.id).first).single;
+      expect(copy.id, isNot(thought.id));
+      expect(copy.note, 'dinner');
+      expect(copy.kind, thought.kind);
+      expect(copy.createdAt, thought.createdAt);
+      expect(copy.groupId, isNull);
       final after = await db.select(db.contactEvents).get();
       expect(after.map((e) => e.id).toSet(), rows.map((e) => e.id).toSet());
       expect(after.map((e) => e.groupId), everyElement(isNull));

@@ -816,10 +816,8 @@ class _PartnerRow extends ConsumerWidget {
             shortNameIn(names, couple.members[1]),
           ),
         ),
-        // Dissolving moves the couple's thoughts to the first member.
-        content: Text(
-          l10n.partnerUnlinkBody(shortNameIn(names, couple.members.first)),
-        ),
+        // Dissolving gives the couple's open thoughts to both members.
+        content: Text(l10n.partnerUnlinkBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),

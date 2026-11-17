@@ -3125,8 +3125,8 @@ abstract class AppLocalizations {
   /// No description provided for @partnerUnlinkBody.
   ///
   /// In en, this message translates to:
-  /// **'They show as two people again. Open thoughts for both of them move to {first}. Meetings you logged together stay on both timelines.'**
-  String partnerUnlinkBody(String first);
+  /// **'They show as two people again. Open thoughts for both of them go to each of them. Meetings you logged together stay on both timelines.'**
+  String get partnerUnlinkBody;
 
   /// No description provided for @coupleWith.
   ///

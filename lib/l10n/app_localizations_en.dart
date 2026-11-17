@@ -1887,9 +1887,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String partnerUnlinkBody(String first) {
-    return 'They show as two people again. Open thoughts for both of them move to $first. Meetings you logged together stay on both timelines.';
-  }
+  String get partnerUnlinkBody =>
+      'They show as two people again. Open thoughts for both of them go to each of them. Meetings you logged together stay on both timelines.';
 
   @override
   String coupleWith(String name) {

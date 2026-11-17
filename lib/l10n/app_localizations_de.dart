@@ -1900,9 +1900,8 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String partnerUnlinkBody(String first) {
-    return 'Beide erscheinen wieder einzeln. Offene Gedanken an beide gehen an $first. Gemeinsame Treffen bleiben in beiden Verläufen.';
-  }
+  String get partnerUnlinkBody =>
+      'Beide erscheinen wieder einzeln. Offene Gedanken an beide bekommt jeder von beiden. Gemeinsame Treffen bleiben in beiden Verläufen.';
 
   @override
   String coupleWith(String name) {
