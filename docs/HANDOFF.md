@@ -5,8 +5,8 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
 ## 1. Where things stand
 
 - Phase: **implement**. The app is called **Kept.** with the full stop (running text may write Kept). App ID `de.gartenpa.kept`; debug builds use `de.gartenpa.kept.debug`. Repository and folder are `friendsapp`.
-- **M0 to M10 are all built.** Everything is released; the newest release is 0.9.1.
-- **Released** (tags `v0.1.0` to `v0.9.1`, all 2026-11-16, no version skipped):
+- **M0 to M10 are all built.** Everything is released; the newest release is 0.9.2.
+- **Released** (tags `v0.1.0` to `v0.9.2`, 2026-11-16 to 2026-11-18, no version skipped):
   - 0.1.0: M1, people, contacts import, "Open chat".
   - 0.2.0: M2 and M3, capture, the evening question, Tonight's pick, "Nice one".
   - 0.3.0: M4, birthdays.
@@ -17,6 +17,7 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
   - 0.8.0: incoming messages as a build flag; two APKs per release (plain, and `-listener`), the updater keeps each build on its kind.
   - 0.9.0: schema 5; settings as categories with icons; language setting; predictive back; short display names, nicknames, pictures (contacts, gallery, shared in with a crop screen).
   - 0.9.1 (2026-11-17): couples screens (Partner row, couple page, couple thoughts, shared meetings). Wanted later: a name for a couple.
+  - 0.9.2 (2026-11-18): schema 6, any messenger (15 apps, installed only, one chat target, contact entries, help page, new icons); listener matches Discord DMs by chat id and uses message send times.
 - **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.9.2 next).
 - **The developer's phone** (2026-11-16): `de.gartenpa.kept.debug` ("Kept. debug", 0.7.0, test data). The old 0.6.0 debug build under `de.gartenpa.kept` is left only in the Private space (user 11), never opened there; it blocks the release install (signature) and the developer removes it by hand (Claude's uninstall was refused). Then the listener build of the release goes on over adb.
 - **The developer's phone since 0.8.0:** the release listener build `kept-0.8.0-listener.apk` is installed over adb as the real app; 0.9.0 is its first real in-app update test. The developer said on 2026-11-16 that commits may be pushed right away.
@@ -109,7 +110,7 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 - Review of the German texts (written by subagents).
 - The light theme on a phone.
 - Open questions (section 5).
-- Releases take the next number each time (the next after 0.9.1 is 0.9.2).
+- Releases take the next number each time (the next after 0.9.2 is 0.9.3).
 
 **Planned, decided, not built** (to be built in its own session)
 
@@ -126,7 +127,7 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 
 ## 5. Open questions for the developer
 
-- **Any messenger: decided 2026-11-18 (02-design.md §8), build planned, not started.** The app list is confirmed (02-design.md §8). The two debug-only experiments (shortcut picker, link test) were removed on 2026-11-18 after the tests; they are in git history ("Dev: Add chat shortcut experiment to debug builds"). The WhatsApp shortcut capture is not built. Build plan, one commit per step:
+- **Any messenger: decided 2026-11-18 (02-design.md §8), built and released in 0.9.2; step 8 (clean-up) is done along the way.** The app list is confirmed (02-design.md §8). The two debug-only experiments (shortcut picker, link test) were removed on 2026-11-18 after the tests; they are in git history ("Dev: Add chat shortcut experiment to debug builds"). The WhatsApp shortcut capture is not built. Build plan, one commit per step:
   1. **Chat app catalogue** (`domain/chat_app.dart`): enum `ChatApp` replacing `Messenger`; per app the Android packages, how a bare target becomes a link (template or none), which link hosts belong to it (to recognise links in a contact's Website field), the contact entry MIME type if the app writes one. Pure Dart, unit tests. `chat_link.dart` becomes the resolver for the open order (target, contact entry, phone, main screen).
   2. **Schema 6** (done 2026-11-18, 04-architecture.md): `mainMessenger` becomes `chatApp` (same values for the four old ones), new `chatTarget`, drop `telegramUsername`, `signalLink`, `discordUserId`. Migration test from schema 5 with the drift schema dumps, as for 4 to 5.
   3. **Contact routes** (done 2026-11-18; Signal, Telegram and WhatsApp MIME types seen on the phone, opening not yet tried by the developer) (Kotlin, existing READ_CONTACTS): a channel that lists the linked contact's data rows of known messenger MIME types (row id, MIME type) and its Website entries; Dart maps them to `ChatApp` options. Opening a contact entry: ACTION_VIEW on `content://com.android.contacts/data/<id>` with its MIME type. Looked up fresh at every "Open chat", nothing stored. Unverified on the phone; check first, like the M0 checks.

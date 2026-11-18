@@ -185,7 +185,7 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] "Did it happen?" for a dated couple thought, and Done on it, record for both.
 - [ ] Unlink: the confirm says what happens to shared thoughts; afterwards they are two people again, the thoughts belong to the first one and the shared meetings stay on both timelines. Deleting one of the two says the link goes too.
 
-## Any messenger (not released yet)
+## Any messenger and the listener fixes (in 0.9.2)
 
 - [ ] After the update to schema 6, every person still has their messenger; nothing else changed.
 - [ ] A person imported from contacts, messenger Signal, no chat link: "Open Signal" opens the chat with them through the contact (also for WhatsApp and Telegram).
