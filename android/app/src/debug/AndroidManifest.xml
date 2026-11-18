@@ -4,4 +4,11 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Chat shortcut experiment (ShortcutProbe.kt): lets the debug build see
+         the apps that offer a "create shortcut" picker. Not in release. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+        </intent>
+    </queries>
 </manifest>

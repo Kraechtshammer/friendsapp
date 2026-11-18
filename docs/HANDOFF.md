@@ -122,6 +122,7 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 
 ## 5. Open questions for the developer
 
+- **Any messenger, not a fixed list (the developer, 2026-11-18), in progress.** Idea: pick the app for "Open chat" from the apps that accept shared text (a narrow `<queries>`, no `QUERY_ALL_PACKAGES`), open known chats through the contact's messenger entries or Kept.'s own links, and open other apps at their main screen. First an experiment: Settings › Development › "Chat shortcut test" (debug builds only, `ShortcutProbe.kt`) runs each app's old "create shortcut" picker and shows whether the returned intent can open that chat again. Built without a local Flutter build (no SDK on the WSL host); Kotlin compiles only on the first debug build. The developer runs it and sends the copied report; the result goes into 02-design.md §8.
 - The person page covers the tab bar; the concept shows the bar. Keep? (Claude's choice, not confirmed.)
 - Row classes of the database are used as models, as in akai (Claude's choice, not confirmed in the review).
 - For a Play release, remove only the notification listener and the in-app update, or more? List in 04-architecture.md.
