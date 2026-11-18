@@ -18,6 +18,7 @@ import '../domain/group.dart';
 import '../platform/app_shortcuts.dart';
 import '../platform/chat_opener.dart';
 import '../platform/contact_entries.dart';
+import '../platform/installed_apps.dart';
 import '../platform/contacts.dart';
 import '../platform/incoming_listener.dart';
 import '../platform/link_opener.dart';
@@ -56,6 +57,16 @@ final chatOpenerProvider = Provider<ChatOpener>(
 /// override it with a fake.
 final contactEntriesProvider = Provider<ContactEntries>(
   (ref) => const AndroidContactEntries(),
+);
+
+/// Asks the phone which chat apps are installed. Tests override it.
+final installedAppsProvider = Provider<InstalledApps>(
+  (ref) => const AndroidInstalledApps(),
+);
+
+/// The installed chat apps. Read again when a screen that watches it opens.
+final installedChatAppsProvider = FutureProvider.autoDispose<InstalledChatApps>(
+  (ref) => ref.watch(installedAppsProvider).chatApps(),
 );
 
 /// Opens links in the browser. Tests override it with a fake.

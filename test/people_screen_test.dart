@@ -9,6 +9,7 @@ import 'package:kept/domain/chat_link.dart';
 import 'package:kept/domain/contact_route.dart';
 import 'package:kept/data/database.dart';
 import 'package:kept/domain/person.dart';
+import 'package:kept/platform/installed_apps.dart';
 import 'package:kept/ui/material.dart';
 import 'package:kept/ui/people/person_screen.dart';
 
@@ -20,11 +21,13 @@ void main() {
 
   final opener = FakeChatOpener();
   final contact = FakeContactEntries();
+  final installed = FakeInstalledApps();
 
   setUp(() {
     opener
       ..opened.clear()
       ..result = true;
+    installed.apps = InstalledChatApps.all;
     contact
       ..entries.clear()
       ..asked.clear()
@@ -45,6 +48,7 @@ void main() {
           notificationsProvider.overrideWithValue(FakeNotifications()),
           chatOpenerProvider.overrideWithValue(opener),
           contactEntriesProvider.overrideWithValue(contact),
+          installedAppsProvider.overrideWithValue(installed),
         ],
         child: const KeptApp(),
       ),
@@ -213,6 +217,46 @@ void main() {
     expect(contact.asked, isEmpty);
     expect(opener.opened.single.uri, 'https://signal.me/#eu/x');
 
+    await closeDown(tester);
+  });
+
+  testWidgets('a messenger that is not installed says so', (tester) async {
+    installed.apps = const InstalledChatApps({'com.whatsapp.w4b'}, sms: true);
+    await tester.runAsync(() async {
+      final people = services.peopleFor(demo: false);
+      await people.add(
+        name: 'Eva Lund',
+        closeness: Closeness.close,
+        chatApp: ChatApp.signal,
+      );
+      await people.add(
+        name: 'Tom Berger',
+        closeness: Closeness.close,
+        chatApp: ChatApp.whatsapp,
+        phone: '+491701234567',
+      );
+    });
+    await openPeopleTab(tester);
+    await tester.tap(find.text('Eva').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Open Signal'));
+    await tester.pump();
+    expect(find.text('Signal is not installed on this phone.'), findsOneWidget);
+    expect(opener.opened, isEmpty);
+
+    // Only WhatsApp Business is there: it opens with that package.
+    await tester.tap(find.byTooltip('Back'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Tom').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Open WhatsApp'));
+    await tester.pump();
+    expect(opener.opened, [
+      const ChatLink(
+        package: 'com.whatsapp.w4b',
+        uri: 'https://wa.me/491701234567',
+      ),
+    ]);
     await closeDown(tester);
   });
 

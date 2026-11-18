@@ -27,11 +27,20 @@ Future<void> openChat(
   Intention? intention,
   bool birthday = false,
 }) async {
-  final link = chatLink(person);
-  if (link == null) return;
+  final base = chatLink(person);
+  if (base == null) return;
   final l10n = context.l10n;
-  final name = messengerLabel(person.chatApp!, l10n);
+  final app = person.chatApp!;
+  final name = messengerLabel(app, l10n);
   final messenger = ScaffoldMessenger.of(context);
+  final installed = await ref.read(installedChatAppsProvider.future);
+  if (!installed.has(app)) {
+    messenger.showSnackBar(
+      SnackBar(content: Text(l10n.messengerNotInstalled(name))),
+    );
+    return;
+  }
+  final link = ChatLink(package: installed.packageFor(app), uri: base.uri);
   final pending = ref.read(pendingChatQuestionProvider.notifier);
   final people = ref.read(peopleRepositoryProvider);
   final now = ref.read(clockProvider)();

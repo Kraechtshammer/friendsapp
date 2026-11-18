@@ -90,6 +90,7 @@ void main() {
           appShortcutsProvider.overrideWithValue(NoShortcuts()),
           chatOpenerProvider.overrideWithValue(opener),
           contactEntriesProvider.overrideWithValue(FakeContactEntries()),
+          installedAppsProvider.overrideWithValue(FakeInstalledApps()),
         ],
         child: const KeptApp(),
       ),

@@ -13,6 +13,7 @@ import '../../domain/group.dart';
 import '../../domain/rhythm.dart';
 import '../../domain/person.dart';
 import '../../l10n/labels.dart';
+import '../../platform/installed_apps.dart';
 import '../common.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
@@ -492,7 +493,10 @@ class _FormState extends ConsumerState<_Form> {
                   ChoiceChips<ChatApp?>(
                     options: [
                       ChipOption(null, l10n.messengerNone),
-                      for (final m in ChatApp.values)
+                      for (final m
+                          in (ref.watch(installedChatAppsProvider).value ??
+                                  InstalledChatApps.all)
+                              .choices(_messenger))
                         ChipOption(m, messengerLabel(m, l10n)),
                     ],
                     value: _messenger,

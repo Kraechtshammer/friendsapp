@@ -42,6 +42,7 @@ Future<void> pumpKeptApp(
         appShortcutsProvider.overrideWithValue(shortcuts ?? NoShortcuts()),
         if (opener != null) chatOpenerProvider.overrideWithValue(opener),
         contactEntriesProvider.overrideWithValue(FakeContactEntries()),
+        installedAppsProvider.overrideWithValue(FakeInstalledApps()),
         clockProvider.overrideWithValue(clock),
         ...overrides,
       ],

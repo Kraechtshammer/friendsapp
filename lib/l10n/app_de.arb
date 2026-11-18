@@ -60,6 +60,7 @@
   },
   "notes": "Notizen",
   "messengerNotOpened": "{messenger} konnte nicht geöffnet werden.",
+  "messengerNotInstalled": "{name} ist auf diesem Handy nicht installiert.",
   "addPersonTitle": "Person hinzufügen",
   "editPersonTitle": "Person bearbeiten",
   "edit": "Bearbeiten",

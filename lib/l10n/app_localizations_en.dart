@@ -157,6 +157,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String messengerNotInstalled(String name) {
+    return '$name is not installed on this phone.';
+  }
+
+  @override
   String get addPersonTitle => 'Add a person';
 
   @override

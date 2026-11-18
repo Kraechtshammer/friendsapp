@@ -4,6 +4,7 @@ import 'package:kept/domain/contact_route.dart';
 import 'package:kept/platform/app_shortcuts.dart';
 import 'package:kept/platform/chat_opener.dart';
 import 'package:kept/platform/contact_entries.dart';
+import 'package:kept/platform/installed_apps.dart';
 
 /// [AppShortcuts] that does nothing.
 class NoShortcuts implements AppShortcuts {
@@ -45,4 +46,12 @@ class FakeContactEntries implements ContactEntries {
     opened.add(entry);
     return result;
   }
+}
+
+/// [InstalledApps] that answers [apps]; everything by default.
+class FakeInstalledApps implements InstalledApps {
+  InstalledChatApps apps = InstalledChatApps.all;
+
+  @override
+  Future<InstalledChatApps> chatApps() async => apps;
 }

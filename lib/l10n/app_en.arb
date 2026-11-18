@@ -67,6 +67,14 @@
   },
   "notes": "Notes",
   "messengerNotOpened": "{messenger} could not be opened.",
+  "messengerNotInstalled": "{name} is not installed on this phone.",
+  "@messengerNotInstalled": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "@messengerNotOpened": {
     "placeholders": {
       "messenger": {

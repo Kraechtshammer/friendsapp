@@ -192,3 +192,5 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] The same person with a chat link entered: the link wins.
 - [ ] A contact with a chat link in its Website field (for example `https://t.me/<name>`), messenger set to that app, no chat link in Kept.: "Open" uses the contact's link.
 - [ ] Messenger SMS: "Open" starts a message to the number in the default SMS app.
+- [ ] The messenger choice on the edit page, on first start and in the contact import shows only the apps installed on the phone (and the person's current one).
+- [ ] A person whose messenger was uninstalled: "Open" says it is not installed.

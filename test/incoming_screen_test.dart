@@ -70,6 +70,7 @@ void main() {
           appShortcutsProvider.overrideWithValue(NoShortcuts()),
           chatOpenerProvider.overrideWithValue(opener),
           contactEntriesProvider.overrideWithValue(FakeContactEntries()),
+          installedAppsProvider.overrideWithValue(FakeInstalledApps()),
           incomingListenerProvider.overrideWithValue(listener),
           incomingBuiltInProvider.overrideWithValue(builtIn),
           contactsSourceProvider.overrideWithValue(_Contacts()),

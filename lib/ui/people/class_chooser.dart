@@ -1,10 +1,14 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../app/contact_photos.dart';
+import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/people_repository.dart';
 import '../../domain/person.dart';
 import '../../domain/phone_number.dart';
 import '../../l10n/labels.dart';
 import '../../platform/contacts.dart';
+import '../../platform/installed_apps.dart';
 import '../../platform/photo_store.dart';
 import '../common.dart';
 import '../kept_icon.dart';
@@ -16,7 +20,7 @@ import '../widgets/section_label.dart';
 /// four class icons, the choice of one messenger for all, and a list of
 /// names with the four icons as a single choice each. One implementation for
 /// both screens. The parent keeps the state.
-class ClassAssignment extends StatelessWidget {
+class ClassAssignment extends ConsumerWidget {
   const ClassAssignment({
     super.key,
     required this.contacts,
@@ -33,8 +37,10 @@ class ClassAssignment extends StatelessWidget {
   final ValueChanged<ChatApp?> onMessenger;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final installed =
+        ref.watch(installedChatAppsProvider).value ?? InstalledChatApps.all;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -45,7 +51,7 @@ class ClassAssignment extends StatelessWidget {
         ChoiceChips<ChatApp?>(
           options: [
             ChipOption(null, l10n.messengerNone),
-            for (final m in ChatApp.values)
+            for (final m in installed.choices(messenger))
               ChipOption(m, messengerLabel(m, l10n)),
           ],
           value: messenger,

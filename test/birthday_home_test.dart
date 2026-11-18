@@ -85,6 +85,7 @@ void main() {
           appShortcutsProvider.overrideWithValue(NoShortcuts()),
           chatOpenerProvider.overrideWithValue(opener),
           contactEntriesProvider.overrideWithValue(FakeContactEntries()),
+          installedAppsProvider.overrideWithValue(FakeInstalledApps()),
           clockProvider.overrideWithValue(() => now),
         ],
         child: const KeptApp(),

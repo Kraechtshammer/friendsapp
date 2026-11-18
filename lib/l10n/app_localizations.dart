@@ -350,6 +350,12 @@ abstract class AppLocalizations {
   /// **'{messenger} could not be opened.'**
   String messengerNotOpened(String messenger);
 
+  /// No description provided for @messengerNotInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is not installed on this phone.'**
+  String messengerNotInstalled(String name);
+
   /// No description provided for @addPersonTitle.
   ///
   /// In en, this message translates to:
