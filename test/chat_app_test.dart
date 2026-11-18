@@ -54,6 +54,30 @@ void main() {
       expect(ChatApp.slack.targetLink('U123'), isNull);
       expect(ChatApp.signal.takesBareTarget, isFalse);
       expect(ChatApp.telegram.takesBareTarget, isTrue);
+      // Agrees with bareTargetLink: every app but Signal and Slack has a
+      // link for some bare username or ID.
+      const samples = {
+        ChatApp.whatsapp: '+4917',
+        ChatApp.telegram: 'anna',
+        ChatApp.discord: '123',
+        ChatApp.linkedin: 'anna',
+        ChatApp.threema: 'ABCD1234',
+        ChatApp.line: 'anna',
+        ChatApp.viber: '+4917',
+        ChatApp.messenger: 'anna',
+        ChatApp.instagram: 'anna',
+        ChatApp.element: '@anna:matrix.org',
+        ChatApp.snapchat: 'anna',
+        ChatApp.teams: 'anna@firma.de',
+        ChatApp.sms: '+4917',
+      };
+      for (final app in ChatApp.values) {
+        expect(app.takesBareTarget, samples.containsKey(app), reason: app.name);
+        final sample = samples[app];
+        if (sample != null) {
+          expect(app.bareTargetLink(sample), isNotNull, reason: app.name);
+        }
+      }
     });
 
     test('nonsense gives no link', () {

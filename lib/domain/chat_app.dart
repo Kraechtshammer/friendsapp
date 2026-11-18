@@ -102,7 +102,10 @@ enum ChatApp {
 
   /// True if a bare username or ID (not a link) can be turned into a link
   /// for this app. The edit page uses it for the hint under the field.
-  bool get takesBareTarget => bareTargetLink('x') != null;
+  bool get takesBareTarget => switch (this) {
+    signal || slack => false,
+    _ => true,
+  };
 
   /// The link for a bare username or ID, or null if this app has no
   /// known link for one (then only a full link helps).
