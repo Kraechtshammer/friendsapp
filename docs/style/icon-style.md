@@ -77,7 +77,7 @@ Choose the colour by what the thing is, not by where it is used: plants green, f
 | star | Yellow five-point star with rounded tips |
 | leaf | Green leaf, darker lower right half |
 
-Messenger stand-ins (WhatsApp, Telegram) on the concept are placeholders. In the app the real app icon is read from the phone if that works (M0); they are not part of the set.
+Messenger stand-ins copy the form of an app icon (a rounded square with one white symbol) and are drawn in this style, not read from the phone (changed on 2026-11-18, 02-design.md §8). They are stand-ins, not copies of the brands' logos.
 
 ## 7. Checklist for a new icon
 
@@ -95,5 +95,7 @@ Input: the concept ("gift", "coffee"), optionally a colour. Output: one SVG, vie
 Added on 2026-11-16 for the class badge: sprout (green stem, two leaves, the right one darker), bud (the same lower down, with a pink bud split into a darker right half), flower (six pink petals, the right ones darker, yellow centre, stem with one leaf).
 
 Added on 2026-11-16: signal, discord (messenger stand-ins) and gift.
+
+Added on 2026-11-18, messenger stand-ins for the chat app list (drafts and previews in `docs/concepts/messenger-icons-v1/`): threema (bubble with a padlock), line (bubble with two bars), viber (handset), messenger (bubble with a zig-zag), instagram (camera), element (ring with a dot), snapchat (ghost, right half shaded), teams (two people behind a dark tile with a T; draft `teams-b`), slack (four coloured bars turning around the centre on dark purple; draft `slack-c`), linkedin ("in" from shapes), sms (bubble with three dots). **Exception:** slack uses four palette colours (blue, green, yellow, red) because the brand mark it stands in for is colourful; the developer chose it.
 
 Still to draw for the app: the icons for anything new that milestones bring (idea or note, treat types, "they wrote", voice message).

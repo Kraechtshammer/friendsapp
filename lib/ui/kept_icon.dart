@@ -31,6 +31,20 @@ enum KeptIcons {
   wasd,
   bench,
 
+  // Messenger stand-ins added for the chat app list (02-design.md §8,
+  // 2026-11-18); whatsapp, telegram, signal and discord are above.
+  linkedin,
+  threema,
+  line,
+  viber,
+  messenger,
+  instagram,
+  element,
+  snapchat,
+  teams,
+  slack,
+  sms,
+
   // Settings categories.
   moon,
   palette,
