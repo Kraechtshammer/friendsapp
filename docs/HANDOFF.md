@@ -18,6 +18,7 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
   - 0.9.0: schema 5; settings as categories with icons; language setting; predictive back; short display names, nicknames, pictures (contacts, gallery, shared in with a crop screen).
   - 0.9.1 (2026-11-17): couples screens (Partner row, couple page, couple thoughts, shared meetings). Wanted later: a name for a couple.
   - 0.9.2 (2026-11-18): schema 6, any messenger (15 apps, installed only, one chat target, contact entries, help page, new icons); listener matches Discord DMs by chat id and uses message send times.
+  - Not released yet (2026-11-18): the People tab shows couple members on their own too, and the couple in the less close class (02-design.md §8).
 - **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.9.2 next).
 - **The developer's phone** (2026-11-16): `de.gartenpa.kept.debug` ("Kept. debug", 0.7.0, test data). The old 0.6.0 debug build under `de.gartenpa.kept` is left only in the Private space (user 11), never opened there; it blocks the release install (signature) and the developer removes it by hand (Claude's uninstall was refused). Then the listener build of the release goes on over adb.
 - **The developer's phone since 0.8.0:** the release listener build `kept-0.8.0-listener.apk` is installed over adb as the real app; 0.9.0 is its first real in-app update test. The developer said on 2026-11-16 that commits may be pushed right away.

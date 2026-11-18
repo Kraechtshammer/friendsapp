@@ -82,8 +82,9 @@ ThoughtSubject? subjectOf(
   return ThoughtSubject(couple.members.first, couple: couple);
 }
 
-/// The class of the closer one of [members], by the order of [Closeness]
-/// (close first). Where a couple is placed on the People tab.
-Closeness closestClass(Iterable<Person> members) => members
+/// The class of the less close one of [members], by the order of
+/// [Closeness] (close first, family last). Where a couple is placed on the
+/// People tab (02-design.md §8, 2026-11-18).
+Closeness coupleClass(Iterable<Person> members) => members
     .map((p) => p.closeness)
-    .reduce((a, b) => a.index <= b.index ? a : b);
+    .reduce((a, b) => a.index >= b.index ? a : b);

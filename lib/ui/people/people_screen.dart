@@ -78,9 +78,10 @@ class PeopleScreen extends ConsumerWidget {
   }
 }
 
-/// The classes with their people. A linked couple is one entry, in the
-/// class of the closer member ([closestClass]); inside a class everything
-/// is sorted by name, a couple by its first member's.
+/// The classes with their people. Everyone has their own entry; a linked
+/// couple has one more, in the class of the less close member
+/// ([coupleClass]). Inside a class everything is sorted by name, a couple
+/// by its first member's.
 class _Groups extends ConsumerWidget {
   const _Groups(this.people);
 
@@ -89,10 +90,6 @@ class _Groups extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final couples = ref.watch(couplesProvider).value ?? const [];
-    final coupled = {
-      for (final c in couples)
-        for (final p in c.members) p.id,
-    };
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 14,
@@ -101,10 +98,10 @@ class _Groups extends ConsumerWidget {
           ...() {
             final items = <(String, Widget)>[
               for (final p in people)
-                if (p.closeness == closeness && !coupled.contains(p.id))
+                if (p.closeness == closeness)
                   (p.name.toLowerCase(), _PersonBlob(p)),
               for (final c in couples)
-                if (closestClass(c.members) == closeness)
+                if (coupleClass(c.members) == closeness)
                   (c.members.first.name.toLowerCase(), _CoupleBlob(c)),
             ]..sort((a, b) => a.$1.compareTo(b.$1));
             return [

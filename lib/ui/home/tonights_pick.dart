@@ -213,7 +213,7 @@ class _PickCard extends ConsumerWidget {
                         ),
                         Text(
                           couple != null
-                              ? closenessLabel(closestClass(couple), l10n)
+                              ? closenessLabel(coupleClass(couple), l10n)
                               : [
                                   closenessLabel(person.closeness, l10n),
                                   ?(messenger == null

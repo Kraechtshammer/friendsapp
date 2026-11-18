@@ -127,15 +127,21 @@ void main() {
     await closeDown(tester);
   });
 
-  testWidgets('the People tab shows a couple as one row', (tester) async {
+  testWidgets('the People tab shows the couple and each of them', (
+    tester,
+  ) async {
     await seed(tester);
     await start(tester);
     await tester.tap(find.text('People'));
     await tester.pumpAndSettle();
     expect(find.text('Anna & Tom'), findsOneWidget);
-    expect(find.text('Anna'), findsNothing);
-    expect(find.text('Tom'), findsNothing);
+    expect(find.text('Anna'), findsOneWidget);
+    expect(find.text('Tom'), findsOneWidget);
     expect(find.text('Eva'), findsOneWidget);
+    // Close Anna and now-and-then Tom: the couple sits with Tom, below Anna.
+    final couple = tester.getTopLeft(find.text('Anna & Tom')).dy;
+    expect(couple, greaterThan(tester.getTopLeft(find.text('Anna')).dy));
+    expect(couple, closeTo(tester.getTopLeft(find.text('Tom')).dy, 1));
     await closeDown(tester);
   });
 

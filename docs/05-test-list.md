@@ -178,7 +178,8 @@ A real update needs two release-signed builds: install one release, then a newer
 ## Couples (in 0.9.1)
 
 - [ ] Edit a person, "Link a partner", pick the partner: the row shows their face and "Unlink". Nothing about couples shows anywhere before two people are linked.
-- [ ] People tab: the two show once as "Anna & Tom" with both faces overlapping (also with pictures), in the class of the closer one. Tap it: the couple page opens; tap one face: their own page.
+- [ ] People tab: the two show once as "Anna & Tom" with both faces overlapping (also with pictures), in the class of the closer one. (Changed 2026-11-18, see the next point.) Tap it: the couple page opens; tap one face: their own page.
+- [ ] Since 2026-11-18: People tab shows Anna and Tom each in their own class too, and "Anna & Tom" in the less close class (a close friend and a now-and-then friend: under now and then).
 - [ ] Capture a thought: "Anna & Tom" is a choice beside the people (also under "More"); it saves as meet by default and shows on Home, under Coming up when dated, on the Upcoming tab, and on both person pages with "with Tom".
 - [ ] Couple page "We met": Nice one shows both faces and a stamp for each; both timelines have one "You met" entry; editing it from one page says it also changes the other, and changes both.
 - [ ] "Open chat" on a couple thought asks whom first; after a write thought "Did you write to Tom?" Yes records for Tom only, after a meet thought "Did you meet Anna & Tom?" records for both.
