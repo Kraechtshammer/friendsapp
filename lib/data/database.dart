@@ -159,6 +159,11 @@ class Intentions extends Table {
   /// Set when the intention leaves `open`; cleared when it is reopened.
   DateTimeColumn get closedAt => dateTime().nullable()();
 
+  /// The name of a KeptIcons icon for what is planned (a meetup or a game);
+  /// carried over to the contact when the plan is done. Added in schema
+  /// version 7.
+  TextColumn get activityIcon => text().nullable()();
+
   @override
   Set<Column> get primaryKey => {id};
 
@@ -336,7 +341,7 @@ class AppDatabase extends _$AppDatabase {
   /// `drift_schemas/`, updates `database.steps.dart` and the schema test
   /// helpers in `test/drift/` (as in akai-timetrack).
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   /// Steps come from the snapshots in `drift_schemas/`. The real database
   /// on the developer's phone holds people from version 1, so a step must
@@ -397,6 +402,10 @@ class AppDatabase extends _$AppDatabase {
         ]) {
           await m.dropColumn(schema.people, column);
         }
+      },
+      from6To7: (m, schema) async {
+        // An icon on a plan (02-design.md §8, 2026-11-18).
+        await m.addColumn(schema.intentions, schema.intentions.activityIcon);
       },
     ),
     beforeOpen: (details) async {

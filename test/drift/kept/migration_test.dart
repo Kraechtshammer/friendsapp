@@ -22,6 +22,7 @@ import 'generated/schema_v3.dart' as v3;
 import 'generated/schema_v4.dart' as v4;
 import 'generated/schema_v5.dart' as v5;
 import 'generated/schema_v6.dart' as v6;
+import 'generated/schema_v7.dart' as v7;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -1109,5 +1110,65 @@ void main() {
     expect(anna.single.chatApp, ChatApp.signal);
     expect(anna.single.chatTarget, isNull);
     await db.close();
+  });
+
+  test('migration from v6 to v7 keeps every plan, with no icon', () async {
+    final created =
+        DateTime.utc(2026, 11, 18, 9).millisecondsSinceEpoch ~/ 1000;
+    final oldPeople = [
+      v6.PeopleData(
+        id: 'p1',
+        name: 'Anna Example',
+        closeness: 'close',
+        reconnecting: 0,
+        avatarShape: 'scallop',
+        avatarColor: 'coral',
+        notes: '',
+        createdAt: created,
+        chatTarget: 'anna_t',
+      ),
+    ];
+    final oldIntentions = [
+      v6.IntentionsData(
+        id: 'i1',
+        personId: 'p1',
+        note: 'bouldering',
+        kind: 'meet',
+        state: 'open',
+        createdAt: created + 60,
+      ),
+      v6.IntentionsData(
+        id: 'i2',
+        personId: 'p1',
+        note: 'call about the move',
+        kind: 'call',
+        state: 'done',
+        createdAt: created + 120,
+        closedAt: created + 180,
+      ),
+    ];
+
+    await verifier.testWithDataIntegrity(
+      oldVersion: 6,
+      newVersion: 7,
+      createOld: v6.DatabaseAtV6.new,
+      createNew: v7.DatabaseAtV7.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) {
+        batch.insertAll(oldDb.people, oldPeople);
+        batch.insertAll(oldDb.intentions, oldIntentions);
+      },
+      validateItems: (newDb) async {
+        expect(await newDb.select(newDb.people).get(), [
+          for (final r in oldPeople) v7.PeopleData.fromJson(r.toJson()),
+        ]);
+        final intentions = await newDb.select(newDb.intentions).get();
+        expect(intentions, [
+          for (final r in oldIntentions)
+            v7.IntentionsData.fromJson(r.toJson()),
+        ]);
+        expect(intentions.map((i) => i.activityIcon), everyElement(isNull));
+      },
+    );
   });
 }

@@ -2060,6 +2060,17 @@ class $IntentionsTable extends Intentions
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _activityIconMeta = const VerificationMeta(
+    'activityIcon',
+  );
+  @override
+  late final GeneratedColumn<String> activityIcon = GeneratedColumn<String>(
+    'activity_icon',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2074,6 +2085,7 @@ class $IntentionsTable extends Intentions
     condition,
     createdAt,
     closedAt,
+    activityIcon,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2142,6 +2154,15 @@ class $IntentionsTable extends Intentions
         closedAt.isAcceptableOrUnknown(data['closed_at']!, _closedAtMeta),
       );
     }
+    if (data.containsKey('activity_icon')) {
+      context.handle(
+        _activityIconMeta,
+        activityIcon.isAcceptableOrUnknown(
+          data['activity_icon']!,
+          _activityIconMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -2205,6 +2226,10 @@ class $IntentionsTable extends Intentions
         DriftSqlType.dateTime,
         data['${effectivePrefix}closed_at'],
       ),
+      activityIcon: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}activity_icon'],
+      ),
     );
   }
 
@@ -2256,6 +2281,11 @@ class Intention extends DataClass implements Insertable<Intention> {
 
   /// Set when the intention leaves `open`; cleared when it is reopened.
   final DateTime? closedAt;
+
+  /// The name of a KeptIcons icon for what is planned (a meetup or a game);
+  /// carried over to the contact when the plan is done. Added in schema
+  /// version 7.
+  final String? activityIcon;
   const Intention({
     required this.id,
     this.personId,
@@ -2269,6 +2299,7 @@ class Intention extends DataClass implements Insertable<Intention> {
     this.condition,
     required this.createdAt,
     this.closedAt,
+    this.activityIcon,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2309,6 +2340,9 @@ class Intention extends DataClass implements Insertable<Intention> {
     if (!nullToAbsent || closedAt != null) {
       map['closed_at'] = Variable<DateTime>(closedAt);
     }
+    if (!nullToAbsent || activityIcon != null) {
+      map['activity_icon'] = Variable<String>(activityIcon);
+    }
     return map;
   }
 
@@ -2336,6 +2370,9 @@ class Intention extends DataClass implements Insertable<Intention> {
       closedAt: closedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(closedAt),
+      activityIcon: activityIcon == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activityIcon),
     );
   }
 
@@ -2363,6 +2400,7 @@ class Intention extends DataClass implements Insertable<Intention> {
       condition: serializer.fromJson<String?>(json['condition']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       closedAt: serializer.fromJson<DateTime?>(json['closedAt']),
+      activityIcon: serializer.fromJson<String?>(json['activityIcon']),
     );
   }
   @override
@@ -2387,6 +2425,7 @@ class Intention extends DataClass implements Insertable<Intention> {
       'condition': serializer.toJson<String?>(condition),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'closedAt': serializer.toJson<DateTime?>(closedAt),
+      'activityIcon': serializer.toJson<String?>(activityIcon),
     };
   }
 
@@ -2403,6 +2442,7 @@ class Intention extends DataClass implements Insertable<Intention> {
     Value<String?> condition = const Value.absent(),
     DateTime? createdAt,
     Value<DateTime?> closedAt = const Value.absent(),
+    Value<String?> activityIcon = const Value.absent(),
   }) => Intention(
     id: id ?? this.id,
     personId: personId.present ? personId.value : this.personId,
@@ -2416,6 +2456,7 @@ class Intention extends DataClass implements Insertable<Intention> {
     condition: condition.present ? condition.value : this.condition,
     createdAt: createdAt ?? this.createdAt,
     closedAt: closedAt.present ? closedAt.value : this.closedAt,
+    activityIcon: activityIcon.present ? activityIcon.value : this.activityIcon,
   );
   Intention copyWithCompanion(IntentionsCompanion data) {
     return Intention(
@@ -2431,6 +2472,9 @@ class Intention extends DataClass implements Insertable<Intention> {
       condition: data.condition.present ? data.condition.value : this.condition,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       closedAt: data.closedAt.present ? data.closedAt.value : this.closedAt,
+      activityIcon: data.activityIcon.present
+          ? data.activityIcon.value
+          : this.activityIcon,
     );
   }
 
@@ -2448,7 +2492,8 @@ class Intention extends DataClass implements Insertable<Intention> {
           ..write('horizon: $horizon, ')
           ..write('condition: $condition, ')
           ..write('createdAt: $createdAt, ')
-          ..write('closedAt: $closedAt')
+          ..write('closedAt: $closedAt, ')
+          ..write('activityIcon: $activityIcon')
           ..write(')'))
         .toString();
   }
@@ -2467,6 +2512,7 @@ class Intention extends DataClass implements Insertable<Intention> {
     condition,
     createdAt,
     closedAt,
+    activityIcon,
   );
   @override
   bool operator ==(Object other) =>
@@ -2483,7 +2529,8 @@ class Intention extends DataClass implements Insertable<Intention> {
           other.horizon == this.horizon &&
           other.condition == this.condition &&
           other.createdAt == this.createdAt &&
-          other.closedAt == this.closedAt);
+          other.closedAt == this.closedAt &&
+          other.activityIcon == this.activityIcon);
 }
 
 class IntentionsCompanion extends UpdateCompanion<Intention> {
@@ -2499,6 +2546,7 @@ class IntentionsCompanion extends UpdateCompanion<Intention> {
   final Value<String?> condition;
   final Value<DateTime> createdAt;
   final Value<DateTime?> closedAt;
+  final Value<String?> activityIcon;
   final Value<int> rowid;
   const IntentionsCompanion({
     this.id = const Value.absent(),
@@ -2513,6 +2561,7 @@ class IntentionsCompanion extends UpdateCompanion<Intention> {
     this.condition = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.closedAt = const Value.absent(),
+    this.activityIcon = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   IntentionsCompanion.insert({
@@ -2528,6 +2577,7 @@ class IntentionsCompanion extends UpdateCompanion<Intention> {
     this.condition = const Value.absent(),
     required DateTime createdAt,
     this.closedAt = const Value.absent(),
+    this.activityIcon = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        createdAt = Value(createdAt);
@@ -2544,6 +2594,7 @@ class IntentionsCompanion extends UpdateCompanion<Intention> {
     Expression<String>? condition,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? closedAt,
+    Expression<String>? activityIcon,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -2559,6 +2610,7 @@ class IntentionsCompanion extends UpdateCompanion<Intention> {
       if (condition != null) 'condition': condition,
       if (createdAt != null) 'created_at': createdAt,
       if (closedAt != null) 'closed_at': closedAt,
+      if (activityIcon != null) 'activity_icon': activityIcon,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -2576,6 +2628,7 @@ class IntentionsCompanion extends UpdateCompanion<Intention> {
     Value<String?>? condition,
     Value<DateTime>? createdAt,
     Value<DateTime?>? closedAt,
+    Value<String?>? activityIcon,
     Value<int>? rowid,
   }) {
     return IntentionsCompanion(
@@ -2591,6 +2644,7 @@ class IntentionsCompanion extends UpdateCompanion<Intention> {
       condition: condition ?? this.condition,
       createdAt: createdAt ?? this.createdAt,
       closedAt: closedAt ?? this.closedAt,
+      activityIcon: activityIcon ?? this.activityIcon,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2640,6 +2694,9 @@ class IntentionsCompanion extends UpdateCompanion<Intention> {
     if (closedAt.present) {
       map['closed_at'] = Variable<DateTime>(closedAt.value);
     }
+    if (activityIcon.present) {
+      map['activity_icon'] = Variable<String>(activityIcon.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -2661,6 +2718,7 @@ class IntentionsCompanion extends UpdateCompanion<Intention> {
           ..write('condition: $condition, ')
           ..write('createdAt: $createdAt, ')
           ..write('closedAt: $closedAt, ')
+          ..write('activityIcon: $activityIcon, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -7314,6 +7372,7 @@ typedef $$IntentionsTableCreateCompanionBuilder = IntentionsCompanion Function({
   Value<String?> condition,
   required DateTime createdAt,
   Value<DateTime?> closedAt,
+  Value<String?> activityIcon,
   Value<int> rowid,
 });
 typedef $$IntentionsTableUpdateCompanionBuilder = IntentionsCompanion Function({
@@ -7329,6 +7388,7 @@ typedef $$IntentionsTableUpdateCompanionBuilder = IntentionsCompanion Function({
   Value<String?> condition,
   Value<DateTime> createdAt,
   Value<DateTime?> closedAt,
+  Value<String?> activityIcon,
   Value<int> rowid,
 });
 
@@ -7448,6 +7508,11 @@ class $$IntentionsTableFilterComposer
 
   ColumnFilters<DateTime> get closedAt => $composableBuilder(
     column: $table.closedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get activityIcon => $composableBuilder(
+    column: $table.activityIcon,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7582,6 +7647,11 @@ class $$IntentionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get activityIcon => $composableBuilder(
+    column: $table.activityIcon,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$PeopleTableOrderingComposer get personId {
     final $$PeopleTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -7667,6 +7737,11 @@ class $$IntentionsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get closedAt =>
       $composableBuilder(column: $table.closedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get activityIcon => $composableBuilder(
+    column: $table.activityIcon,
+    builder: (column) => column,
+  );
 
   $$PeopleTableAnnotationComposer get personId {
     final $$PeopleTableAnnotationComposer composer = $composerBuilder(
@@ -7784,6 +7859,7 @@ class $$IntentionsTableTableManager
                 Value<String?> condition = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> closedAt = const Value.absent(),
+                Value<String?> activityIcon = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => IntentionsCompanion(
                 id: id,
@@ -7798,6 +7874,7 @@ class $$IntentionsTableTableManager
                 condition: condition,
                 createdAt: createdAt,
                 closedAt: closedAt,
+                activityIcon: activityIcon,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -7814,6 +7891,7 @@ class $$IntentionsTableTableManager
                 Value<String?> condition = const Value.absent(),
                 required DateTime createdAt,
                 Value<DateTime?> closedAt = const Value.absent(),
+                Value<String?> activityIcon = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => IntentionsCompanion.insert(
                 id: id,
@@ -7828,6 +7906,7 @@ class $$IntentionsTableTableManager
                 condition: condition,
                 createdAt: createdAt,
                 closedAt: closedAt,
+                activityIcon: activityIcon,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
