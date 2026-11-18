@@ -448,9 +448,7 @@ void main() {
       await closeDown(tester);
     });
 
-    testWidgets('shows what happened below Today, without writing', (
-      tester,
-    ) async {
+    testWidgets('shows what happened below Today', (tester) async {
       await start(
         tester,
         seed: (add) async {
@@ -487,7 +485,8 @@ void main() {
       expect(find.text('You met'), findsOneWidget);
       expect(find.text('LAST WEEK'), findsOneWidget);
       expect(find.text('Tom called'), findsOneWidget);
-      expect(find.text('Tom wrote'), findsNothing);
+      // Messages are one line per day, with whom.
+      expect(find.text('You texted'), findsOneWidget);
       // The mark, and the badge of today's meet-up instead of its weekday.
       expect(find.text('TODAY'), findsNWidgets(2));
       final y = [

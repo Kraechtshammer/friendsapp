@@ -225,3 +225,5 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] A birthday or plan today shows "TODAY" on its badge on Home and on the Timeline tab, not the weekday.
 - [ ] On the person page, things from today (coming or past) show "TODAY" instead of the date.
 - [ ] Timeline rows and Home's Coming up cards show small faces (pictures where there are any) before the name line; a couple shows two.
+- [ ] Person page: a day with several messages (yours and theirs) is one "You texted" entry.
+- [ ] Timeline tab: a day with messages to several people is one "You texted" line with their faces and names.

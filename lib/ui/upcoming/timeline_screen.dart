@@ -34,8 +34,8 @@ import 'entry_style.dart';
 /// Above it the next 12 months (every birthday and open dated thought,
 /// the soonest nearest the mark) and, at the very top, the plans without
 /// a date. Below it what happened (calls, meet-ups, gaming, birthdays),
-/// newest first. Writing is left out, and nothing is shown as late or
-/// missed.
+/// newest first; messages are one line per day. Nothing is shown as late
+/// or missed.
 class TimelineScreen extends ConsumerWidget {
   const TimelineScreen({super.key});
 
@@ -265,6 +265,18 @@ class _PastRow extends ConsumerWidget {
           ?note(event.note),
         ].join(' · '),
         onTap: () => showContactEntrySheet(context, ref, event),
+      ),
+      PastTexting(:final people) => _EntryRow(
+        day: entry.day,
+        accent: KeptColors.sun,
+        tilt: tilt,
+        icon: KeptIcons.chat,
+        title: l10n.youTexted,
+        people: people,
+        subtitle: people.map((p) => shortNameIn(names, p)).join(', '),
+        onTap: people.length == 1
+            ? () => _openPerson(context, people.single)
+            : null,
       ),
       PastPersonBirthday(:final person, :final age, :final congratulated) =>
         _EntryRow(

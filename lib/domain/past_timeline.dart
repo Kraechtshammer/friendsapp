@@ -4,8 +4,9 @@ import 'contact_event.dart';
 import 'group.dart';
 
 /// The past half of the Timeline tab (02-design.md §8): what happened with
-/// everyone, built as a pure function. It is not stored. Writing is left
-/// out on purpose; it would drown the rest. Nothing is shown as missed:
+/// everyone, built as a pure function. It is not stored. Messages are one
+/// line per day for everyone together, so they do not drown the rest.
+/// Nothing is shown as missed:
 /// a birthday without a wish is listed plainly.
 
 /// One line of the past timeline.
@@ -25,6 +26,13 @@ class PastContact extends PastEntry {
   final Person person;
   final ContactEvent event;
   final GroupWithMembers? couple;
+}
+
+/// Messages on [day] with [people] (either direction), by name.
+class PastTexting extends PastEntry {
+  const PastTexting(super.day, this.people);
+
+  final List<Person> people;
 }
 
 /// [person]'s birthday on [day]. [congratulated] is true when the user
@@ -57,13 +65,15 @@ const pastKinds = {ContactKind.called, ContactKind.met, ContactKind.gamed};
 ///
 /// - every call, meet-up and gaming session of [people] (both directions);
 ///   a couple's shared contact is one entry;
+/// - one [PastTexting] per day with messages, naming everyone written with;
 /// - every birthday of each person from the day they were added (or their
 ///   oldest event, if older) up to yesterday, marked when the user
 ///   congratulated; a wish on another day gets a birthday entry of its own;
 /// - the user's own birthdays someone congratulated on, one entry per day.
 ///
 /// Events of people not in [people] are left out. Inside a day contacts
-/// come first, newest first, then birthdays by name, then the user's own.
+/// come first, newest first, then the messages, then birthdays by name,
+/// then the user's own.
 List<PastEntry> pastEntries(
   List<Person> people,
   Iterable<ContactEvent> events,
@@ -81,6 +91,8 @@ List<PastEntry> pastEntries(
   final wishes = <String, Map<String, DateTime>>{};
   final ownWishes = <String, List<Person>>{};
   final ownDays = <String, DateTime>{};
+  final texts = <String, Set<Person>>{};
+  final textDays = <String, DateTime>{};
   for (final e in events) {
     final p = byId[e.personId];
     if (p == null || e.at.isAfter(now)) continue;
@@ -94,6 +106,12 @@ List<PastEntry> pastEntries(
       } else {
         (wishes[p.id] ??= {})[key] = d;
       }
+      continue;
+    }
+    if (e.kind == ContactKind.wrote) {
+      final key = dayKey(e.at);
+      texts.putIfAbsent(key, () => {}).add(p);
+      textDays[key] = d;
       continue;
     }
     if (!pastKinds.contains(e.kind)) continue;
@@ -140,6 +158,15 @@ List<PastEntry> pastEntries(
     }
   }
 
+  for (final t in texts.entries) {
+    entries.add(
+      PastTexting(
+        textDays[t.key]!,
+        t.value.toList()..sort((a, b) => a.name.compareTo(b.name)),
+      ),
+    );
+  }
+
   // The user's own birthdays.
   for (final w in ownWishes.entries) {
     final from = w.value..sort((a, b) => a.name.compareTo(b.name));
@@ -148,8 +175,9 @@ List<PastEntry> pastEntries(
 
   int rank(PastEntry e) => switch (e) {
     PastContact() => 0,
-    PastPersonBirthday() => 1,
-    PastOwnBirthday() => 2,
+    PastTexting() => 1,
+    PastPersonBirthday() => 2,
+    PastOwnBirthday() => 3,
   };
   entries.sort((a, b) {
     var c = b.day.compareTo(a.day);

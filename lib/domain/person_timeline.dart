@@ -65,6 +65,25 @@ class ContactEntry extends TimelineEntry {
   final ContactEvent event;
 }
 
+/// Several messages on one day, as one entry (the developer, 2026-11-18).
+/// [events] are that day's "wrote" events, newest first, at least two. A
+/// single message stays a [ContactEntry].
+class TextingDay extends TimelineEntry {
+  TextingDay(this.events)
+    : super(
+        DateTime(
+          events.first.at.year,
+          events.first.at.month,
+          events.first.at.day,
+        ),
+      );
+
+  final List<ContactEvent> events;
+
+  bool get byUser => events.any((e) => e.direction == ContactDirection.byUser);
+  bool get byThem => events.any((e) => e.direction == ContactDirection.byThem);
+}
+
 /// The person's birthday on [day], in the past. [congratulated] is true
 /// when the user congratulated that day; otherwise nothing is said
 /// (02-design.md §6.8).
@@ -106,7 +125,8 @@ class PersonTimeline {
 ///
 /// - Upcoming: the next birthday, open thoughts with a date that has not
 ///   passed ([hasPassed]), and open plans with a horizon.
-/// - History: every contact event, the person's birthdays between the
+/// - History: every contact event (several messages on one day as one
+///   [TextingDay]), the person's birthdays between the
 ///   first entry of the history and yesterday (with "congratulated" from
 ///   the user's birthday wish that day), the user's own birthdays the
 ///   person congratulated, and the day the person was added at the end.
@@ -169,10 +189,28 @@ PersonTimeline personTimeline(
   final upcoming = <TimelineEntry>[...plans, ...dated.reversed];
 
   // History.
-  final contacts = [
-    for (final e in mine)
-      if (e.kind != ContactKind.birthdayWish) ContactEntry(e),
-  ];
+  // Messages on one day become one entry.
+  final contacts = <TimelineEntry>[];
+  final texts = <String, List<ContactEvent>>{};
+  for (final e in mine) {
+    if (e.kind == ContactKind.birthdayWish) continue;
+    if (e.kind == ContactKind.wrote) {
+      texts.putIfAbsent(dayKey(e.at), () => []).add(e);
+    } else {
+      contacts.add(ContactEntry(e));
+    }
+  }
+  for (final day in texts.values) {
+    if (day.length == 1) {
+      contacts.add(ContactEntry(day.single));
+    } else {
+      day.sort((a, b) {
+        final c = b.at.compareTo(a.at);
+        return c != 0 ? c : b.id.compareTo(a.id);
+      });
+      contacts.add(TextingDay(day));
+    }
+  }
   final addedDay = dayOf(person.createdAt);
   var start = addedDay;
   for (final e in mine) {
@@ -223,6 +261,7 @@ PersonTimeline personTimeline(
   DateTime moment(TimelineEntry e) => switch (e) {
     ContactEntry(:final event) => event.at,
     OwnBirthdayWish(:final event) => event.at,
+    TextingDay(:final events) => events.first.at,
     _ => e.day,
   };
   // Newest first. On one day the contacts come before the birthdays; the

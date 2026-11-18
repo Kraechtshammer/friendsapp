@@ -247,6 +247,7 @@
   "setADate": "Datum festlegen",
   "timelineToday": "Heute",
   "youWrote": "Du hast geschrieben",
+  "youTexted": "Ihr habt geschrieben",
   "theyWrote": "{name} hat geschrieben",
   "@theyWrote": {"placeholders": {"name": {"type": "String"}}},
   "youCalled": "Du hast angerufen",

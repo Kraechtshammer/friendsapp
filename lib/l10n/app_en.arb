@@ -347,6 +347,7 @@
   "setADate": "Set a date",
   "timelineToday": "Today",
   "youWrote": "You wrote",
+  "youTexted": "You texted",
   "theyWrote": "{name} wrote",
   "@theyWrote": {"placeholders": {"name": {"type": "String"}}},
   "youCalled": "You called",

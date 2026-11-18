@@ -16,9 +16,10 @@ void main() {
     PastPersonBirthday(:final person, :final congratulated) =>
       'b:${person.id}${congratulated ? '+' : ''}',
     PastOwnBirthday(:final from) => 'own:${from.map((p) => p.id).join(',')}',
+    PastTexting(:final people) => 'w:${people.map((p) => p.id).join(',')}',
   };
 
-  test('calls, meet-ups and gaming, newest first; writing is left out', () {
+  test('contacts newest first, messages one line per day', () {
     final people = [person('tom'), person('anna')];
     final entries = pastEntries(people, [
       event(
@@ -54,7 +55,7 @@ void main() {
         personId: 'gone',
       ),
     ], now);
-    expect(entries.map(describe), ['c:g', 'c:c', 'c:m']);
+    expect(entries.map(describe), ['c:g', 'c:c', 'w:tom', 'c:m']);
   });
 
   test('a shared couple contact is one entry', () {
@@ -136,5 +137,25 @@ void main() {
     ]);
     expect(groups[3].month, DateTime(2026, 11));
     expect(groups[4].month, DateTime(2026, 10));
+  });
+
+  test('messages with several people on one day are one line', () {
+    final people = [person('tom'), person('anna'), person('mia')];
+    final entries = pastEntries(people, [
+      for (final (id, who, dir) in [
+        ('1', 'tom', ContactDirection.byUser),
+        ('2', 'tom', ContactDirection.byThem),
+        ('3', 'mia', ContactDirection.byThem),
+        ('4', 'anna', ContactDirection.byUser),
+      ])
+        event(
+          id,
+          DateTime(2026, 11, 17, 8 + int.parse(id)),
+          ContactKind.wrote,
+          dir,
+          personId: who,
+        ),
+    ], now);
+    expect(entries.map(describe), ['w:anna,mia,tom']);
   });
 }

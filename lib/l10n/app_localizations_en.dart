@@ -780,6 +780,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get youWrote => 'You wrote';
 
   @override
+  String get youTexted => 'You texted';
+
+  @override
   String theyWrote(String name) {
     return '$name wrote';
   }

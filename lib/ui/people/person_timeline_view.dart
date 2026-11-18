@@ -119,6 +119,20 @@ class PersonTimelineView extends ConsumerWidget {
                   note: join([withPartner(event.groupId), _note(event.note)]),
                   onTap: () => showContactEntrySheet(context, ref, event),
                 ),
+                // One line per day; tapping edits the newest message.
+                TextingDay(:final events, :final byUser, :final byThem) => _Row(
+                  date: _DateText(e.day, now),
+                  icon: KeptIcons.chat,
+                  arrow: byUser && byThem
+                      ? null
+                      : _arrow(events.first.direction),
+                  title: byUser && byThem
+                      ? l10n.youTexted
+                      : contactTitle(events.first, name, l10n),
+                  note: events.map((ev) => _note(ev.note)).nonNulls.firstOrNull,
+                  onTap: () =>
+                      showContactEntrySheet(context, ref, events.first),
+                ),
                 PastBirthday(:final congratulated) => _Row(
                   date: _DateText(e.day, now),
                   icon: KeptIcons.cake,

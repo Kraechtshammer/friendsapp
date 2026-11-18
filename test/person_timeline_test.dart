@@ -41,6 +41,7 @@ void main() {
     UpcomingThought(:final intention) => 'ut:${intention.id}',
     UpcomingPlan(:final intention) => 'up:${intention.id}',
     ContactEntry(:final event) => 'c:${event.id}',
+    TextingDay(:final events) => 't:${events.map((e) => e.id).join(',')}',
     PastBirthday(:final congratulated) => congratulated ? 'pb+' : 'pb',
     OwnBirthdayWish() => 'own',
     AddedEntry() => 'added',
@@ -355,5 +356,42 @@ void main() {
     expect(hist(t), ['c:b', 'c:a', 'added']);
     expect(t.history[0].day, DateTime(2026, 1, 1));
     expect(t.history[1].day, DateTime(2025, 12, 31));
+  });
+
+  test('several messages on one day are one entry, newest first', () {
+    final t = personTimeline(
+      tom(),
+      [
+        event(
+          'a',
+          DateTime(2026, 11, 15, 9),
+          ContactKind.wrote,
+          ContactDirection.byUser,
+        ),
+        event(
+          'b',
+          DateTime(2026, 11, 15, 21),
+          ContactKind.wrote,
+          ContactDirection.byThem,
+        ),
+        event(
+          'c',
+          DateTime(2026, 11, 14, 9),
+          ContactKind.wrote,
+          ContactDirection.byUser,
+        ),
+        event(
+          'd',
+          DateTime(2026, 11, 15, 12),
+          ContactKind.called,
+          ContactDirection.byThem,
+        ),
+      ],
+      [],
+      now,
+    );
+    expect(hist(t), ['t:b,a', 'c:d', 'c:c', 'added']);
+    final day = t.history.first as TextingDay;
+    expect(day.byUser && day.byThem, isTrue);
   });
 }

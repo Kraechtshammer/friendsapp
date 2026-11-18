@@ -1352,6 +1352,12 @@ abstract class AppLocalizations {
   /// **'You wrote'**
   String get youWrote;
 
+  /// No description provided for @youTexted.
+  ///
+  /// In en, this message translates to:
+  /// **'You texted'**
+  String get youTexted;
+
   /// No description provided for @theyWrote.
   ///
   /// In en, this message translates to:
