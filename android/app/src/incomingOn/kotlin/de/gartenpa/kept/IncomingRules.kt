@@ -35,10 +35,27 @@ data class NotificationFacts(
     val hasConversationTitle: Boolean,
     /** `EXTRA_CALL_TYPE` of a CallStyle (1 incoming, 2 ongoing, 3 screening); 0 when missing. */
     val callType: Int,
+    /** `Notification.getChannelId()`, the app's notification channel; null if none. */
+    val channelId: String? = null,
+    /** `Notification.getShortcutId()`, the conversation's id; null if none. */
+    val shortcutId: String? = null,
+    /**
+     * The newest send time among the MessagingStyle messages (only their
+     * "time" field is read, never their text); null if there are none.
+     */
+    val newestMessageTime: Long? = null,
 )
 
-/** One person to watch for: their id and the names a messenger may show. */
-data class WatchEntry(val personId: String, val names: List<String>)
+/**
+ * One person to watch for: their id, the names a messenger may show, and
+ * conversation keys ([conversationKeys]) such as "discord:<channel id>" or
+ * "phone:<digits>" (2026-11-18).
+ */
+data class WatchEntry(
+    val personId: String,
+    val names: List<String>,
+    val keys: List<String> = emptyList(),
+)
 
 /** One line of the queue file. [time] is milliseconds since the epoch. */
 data class QueueEntry(val personId: String, val kind: IncomingKind, val time: Long)
@@ -92,8 +109,59 @@ object IncomingRules {
      * a conversation title marks a group (as NotificationCompat does for
      * apps that do not set the flag).
      */
-    fun isGroupConversation(n: NotificationFacts): Boolean =
-        n.groupConversation ?: n.hasConversationTitle
+    fun isGroupConversation(n: NotificationFacts): Boolean {
+        // Discord puts direct messages in the channel "directMessages" and
+        // server messages in "messages" (seen on the developer's phone,
+        // 2026-11-18): only the first are 1:1.
+        if (n.packageName == "com.discord" && n.channelId != null) {
+            return !n.channelId.startsWith("directMessages")
+        }
+        return n.groupConversation ?: n.hasConversationTitle
+    }
+
+    /**
+     * The keys of the conversation a notification belongs to, from its
+     * shortcut id: Discord uses the chat's channel id (the number in
+     * `discord.com/channels/@me/<id>`, seen 2026-11-18); WhatsApp's chat ids
+     * have the form `<number>@s.whatsapp.net` (unverified). Other apps: none.
+     */
+    fun conversationKeys(n: NotificationFacts): List<String> {
+        val id = n.shortcutId?.trim().orEmpty()
+        if (id.isEmpty()) return emptyList()
+        return when (n.packageName) {
+            "com.discord" -> if (id.all { it.isDigit() }) listOf("discord:$id") else emptyList()
+            "com.whatsapp", "com.whatsapp.w4b" -> {
+                val m = Regex("^(\\d+)@s\\.whatsapp\\.net$").find(id)
+                if (m == null) emptyList() else listOf("phone:${m.groupValues[1]}")
+            }
+            else -> emptyList()
+        }
+    }
+
+    /**
+     * The person for notification [n] with [title]: first by conversation key
+     * (exact; one person only), then by name ([match]).
+     */
+    fun matchPerson(n: NotificationFacts, title: String?, watchList: List<WatchEntry>): String? {
+        val keys = conversationKeys(n)
+        if (keys.isNotEmpty()) {
+            val ids = watchList.filter { e -> e.keys.any { it in keys } }.map { it.personId }.toSet()
+            if (ids.size == 1) return ids.first()
+        }
+        return match(title, watchList)
+    }
+
+    /**
+     * When the contact happened: the newest message's own send time when it
+     * is known and not in the future, else the post time. A messenger that
+     * shows an old unread notification again (WhatsApp after a restart, seen
+     * on the developer's phone, 2026-11-18) then keeps its first day, where
+     * the queue and the app already have it.
+     */
+    fun eventTime(n: NotificationFacts, postTime: Long): Long {
+        val t = n.newestMessageTime ?: return postTime
+        return if (t in 1..postTime) t else postTime
+    }
 
     /** Trimmed, inner spaces collapsed, lower case. */
     fun normalize(name: String): String =

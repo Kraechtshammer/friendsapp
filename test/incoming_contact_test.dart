@@ -11,10 +11,20 @@ import 'package:kept/domain/incoming_contact.dart';
 import 'package:kept/domain/person.dart';
 import 'package:kept/platform/contacts.dart';
 
-Person person(String id, String name, {String? contactId}) => Person(
+Person person(
+  String id,
+  String name, {
+  String? contactId,
+  ChatApp? chatApp,
+  String? chatTarget,
+  String? phone,
+}) => Person(
   id: id,
   name: name,
   contactId: contactId,
+  chatApp: chatApp,
+  chatTarget: chatTarget,
+  phone: phone,
   closeness: Closeness.close,
   avatarShape: AvatarShape.scallop,
   avatarColor: AvatarColor.mint,
@@ -75,8 +85,58 @@ void main() {
       expect(list.first.toJson(), {
         'id': 'j',
         'names': ['Jonas', 'Jonas Wirth'],
+        'keys': <String>[],
       });
     });
+
+    test(
+      'conversation keys from a Discord DM link and an international number',
+      () {
+        expect(
+          conversationKeysOf(
+            person(
+              'l',
+              'Lasse',
+              chatApp: ChatApp.discord,
+              chatTarget: 'https://discord.com/channels/@me/410456313760448512',
+              phone: '+49 157 7950-1022',
+            ),
+          ),
+          ['discord:410456313760448512', 'phone:4915779501022'],
+        );
+        expect(conversationKeysOf(person('a', 'A', phone: '0049 170 123456')), [
+          'phone:49170123456',
+        ]);
+        // A local number cannot be matched to WhatsApp's international ids.
+        expect(
+          conversationKeysOf(person('b', 'B', phone: '0170 123456')),
+          isEmpty,
+        );
+        // A Discord user link is no chat id; another app's link is ignored.
+        expect(
+          conversationKeysOf(
+            person(
+              'c',
+              'C',
+              chatApp: ChatApp.discord,
+              chatTarget: 'https://discord.com/users/1',
+            ),
+          ),
+          isEmpty,
+        );
+        expect(
+          conversationKeysOf(
+            person(
+              'd',
+              'D',
+              chatApp: ChatApp.telegram,
+              chatTarget: 'https://discord.com/channels/@me/5',
+            ),
+          ),
+          isEmpty,
+        );
+      },
+    );
 
     test('contacts are read only when someone is linked', () async {
       final contacts = _Contacts({'c1': 'Jonas Wirth'});

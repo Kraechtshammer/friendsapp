@@ -20,9 +20,9 @@ import java.util.Locale
  * name of a watched person is written to a small queue file as
  * {personId, kind, time}. The app reads and clears the queue when it comes
  * to the front. Read from a notification: package, post time, category,
- * flags, and the extras template, title, conversation title, group
- * conversation flag and call type. Never the text of a message. Nothing is
- * logged.
+ * flags, notification channel id, shortcut (conversation) id, the send
+ * times of the messages, and the extras template, title, conversation
+ * title, group conversation flag and call type. Never the text of a message. Nothing is logged.
  */
 class KeptNotificationListener : NotificationListenerService() {
 
@@ -32,9 +32,12 @@ class KeptNotificationListener : NotificationListenerService() {
             if (!IncomingStore.isEnabled(this)) return
             val n = sbn.notification ?: return
             val kind = IncomingRules.classify(facts(sbn.packageName, n)) ?: return
+            val facts = facts(sbn.packageName, n)
             val title = n.extras?.getCharSequence(Notification.EXTRA_TITLE)?.toString()
-            val personId = IncomingRules.match(title, IncomingStore.watchList(this)) ?: return
-            IncomingStore.add(this, QueueEntry(personId, kind, sbn.postTime))
+            val personId =
+                IncomingRules.matchPerson(facts, title, IncomingStore.watchList(this)) ?: return
+            val time = IncomingRules.eventTime(facts, sbn.postTime)
+            IncomingStore.add(this, QueueEntry(personId, kind, time))
         } catch (_: Throwable) {
             // Never crash the listener, never log what was seen.
         }
@@ -59,7 +62,19 @@ class KeptNotificationListener : NotificationListenerService() {
             hasConversationTitle =
                 !extras?.getCharSequence(EXTRA_CONVERSATION_TITLE).isNullOrBlank(),
             callType = extras?.getInt(EXTRA_CALL_TYPE, 0) ?: 0,
+            channelId = n.channelId,
+            shortcutId = n.shortcutId,
+            newestMessageTime = newestMessageTime(extras),
         )
+    }
+
+    /** The largest "time" of the MessagingStyle message bundles; their text is not read. */
+    @Suppress("DEPRECATION")
+    private fun newestMessageTime(extras: android.os.Bundle?): Long? {
+        val messages = extras?.getParcelableArray(EXTRA_MESSAGES) ?: return null
+        return messages
+            .mapNotNull { (it as? android.os.Bundle)?.getLong("time", 0L)?.takeIf { t -> t > 0 } }
+            .maxOrNull()
     }
 
     private companion object {
@@ -71,6 +86,7 @@ class KeptNotificationListener : NotificationListenerService() {
         const val EXTRA_CONVERSATION_TITLE = "android.conversationTitle"
         const val EXTRA_IS_GROUP_CONVERSATION = "android.isGroupConversation"
         const val EXTRA_CALL_TYPE = "android.callType"
+        const val EXTRA_MESSAGES = "android.messages"
     }
 }
 
@@ -99,7 +115,7 @@ object IncomingStore {
         }
     }
 
-    /** [json]: `[{"id": "...", "names": ["...", ...]}, ...]`, as the app sends it. */
+    /** [json]: `[{"id": "...", "names": [...], "keys": [...]}, ...]`, as the app sends it. */
     fun setWatchList(context: Context, json: String) {
         JSONArray(json) // Refuses anything that is not a list.
         prefs(context).edit().putString(KEY_WATCH_LIST, json).apply()
@@ -112,7 +128,12 @@ object IncomingStore {
             val id = o.optString("id")
             val names = o.optJSONArray("names") ?: return@mapNotNull null
             if (id.isEmpty()) return@mapNotNull null
-            WatchEntry(id, (0 until names.length()).map { names.optString(it) })
+            val keys = o.optJSONArray("keys")
+            WatchEntry(
+                id,
+                (0 until names.length()).map { names.optString(it) },
+                if (keys == null) emptyList() else (0 until keys.length()).map { keys.optString(it) },
+            )
         }
     }
 

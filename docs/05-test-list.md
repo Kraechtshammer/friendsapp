@@ -199,3 +199,6 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] LinkedIn with a bare profile name (from the address bar of their profile): "Open LinkedIn" starts a new message to them, in the LinkedIn app or, if the app does not take the link, in the browser.
 - [ ] Discord: paste a "Copy Message Link" link as it is (with the message number): "Open" goes to the DM.
 - [ ] "How do I get a chat link?" under the field opens the help page with the chosen app first; read the German texts (other apps' menu names such as „Nachrichtenlink kopieren“ are guesses).
+- [ ] Listener build: a Discord DM from someone whose chat link is saved is recorded as "wrote" for them, even when their Discord name differs from their name in Kept.; a server message is not recorded.
+- [ ] Listener build: an ignored WhatsApp message that is shown again the next day is not recorded a second time.
+- [ ] Editing a person: a pasted Discord message link is shortened to the chat link on Save.

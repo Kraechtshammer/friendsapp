@@ -154,7 +154,7 @@ void main() {
     // Ordered by name, like the people.
     expect(listener.watchLists.last, [
       isA<WatchEntry>().having((e) => e.names, 'names', ['Anna']),
-      WatchEntry(tom.id, const ['Tom', 'Tom Berger']),
+      WatchEntry(tom.id, const ['Tom', 'Tom Berger'], conversationKeysOf(tom)),
     ]);
     expect(find.text('Notification access'), findsOneWidget);
     expect(find.text('Not allowed yet'), findsOneWidget);
