@@ -56,7 +56,23 @@ enum KeptIcons {
   // The class badge on an avatar: a plant that grows with the class.
   sprout,
   bud,
-  flower;
+  flower,
+
+  // Activities of a meetup (02-design.md §8, 2026-11-18).
+  beer,
+  meeple,
+  climber,
+  ticket,
+  clapper,
+  notes,
+  guitar,
+  pot,
+  tools,
+  dumbbell,
+  microphone,
+  plate,
+  bag,
+  runner;
 
   String get asset => 'assets/icons/$name.svg';
 }
