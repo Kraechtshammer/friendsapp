@@ -227,6 +227,11 @@ class _FormState extends ConsumerState<_Form> {
     if (!_canSave) return;
     setState(() => _saving = true);
     final navigator = Navigator.of(context);
+    // Store the chat target tidied, and show it so in the field.
+    final app = _messenger;
+    if (app != null && _target.text.trim().isNotEmpty) {
+      _target.text = app.tidyTarget(_target.text);
+    }
     final repo = ref.read(peopleRepositoryProvider);
     final birthday = _birthday;
     final person = widget.person;

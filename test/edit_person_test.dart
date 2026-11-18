@@ -218,12 +218,17 @@ void main() {
     expect(discord < telegram, isTrue);
     await tester.tap(find.byTooltip('Back'));
     await tester.pumpAndSettle();
+    await type(
+      tester,
+      'chatTarget',
+      'https://discord.com/channels/@me/1111/2222',
+    );
     await tapScrolled(tester, find.text('Save'));
     final eva = await tester.runAsync(
       () => services.peopleFor(demo: false).watchAll().first,
     );
     expect(eva!.single.chatApp, ChatApp.discord);
-    expect(eva.single.chatTarget, isNull);
+    expect(eva.single.chatTarget, 'https://discord.com/channels/@me/1111');
     await closeDown(tester);
   });
 

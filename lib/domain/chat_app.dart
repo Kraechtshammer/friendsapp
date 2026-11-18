@@ -218,6 +218,18 @@ enum ChatApp {
     return bareTargetLink(t);
   }
 
+  /// The chat target as it should be stored: a full link tidied (a
+  /// Discord message link becomes the chat link), a link without scheme
+  /// gets `https://`, a bare username or ID stays as typed (trimmed).
+  String tidyTarget(String target) {
+    final t = target.trim();
+    if (t.isEmpty) return t;
+    if (_hasScheme(t)) return _tidy(t);
+    final withHttps = 'https://$t';
+    if (forLink(withHttps) == this) return _tidy(withHttps);
+    return t;
+  }
+
   /// Small fixes to a pasted link. Discord: a message link
   /// (`/channels/@me/<chat>/<message>`, from "Copy Message Link") becomes
   /// the link of the chat, which the developer tested (2026-11-18).

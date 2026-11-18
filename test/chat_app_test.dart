@@ -152,6 +152,15 @@ void main() {
     }
   });
 
+  test('tidyTarget', () {
+    expect(
+      ChatApp.discord.tidyTarget(' discord.com/channels/@me/11/22 '),
+      'https://discord.com/channels/@me/11',
+    );
+    expect(ChatApp.telegram.tidyTarget(' @anna '), '@anna');
+    expect(ChatApp.telegram.tidyTarget('t.me/anna'), 'https://t.me/anna');
+  });
+
   test('opensProfile', () {
     expect(
       ChatApp.snapchat.opensProfile('https://www.snapchat.com/add/x'),
