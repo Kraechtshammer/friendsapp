@@ -214,7 +214,7 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] The same for a couple: both timelines have one entry and both get a stamp.
 - [ ] Turning "Already happened" off brings the When row back as it was.
 
-## Timeline tab
+## Timeline tab (in 0.10.0)
 
 - [ ] The tab is called Timeline (Zeitleiste in German) and opens with "Today" in the middle of the screen.
 - [ ] Scrolling up shows what is coming, the soonest right above Today; the plans without a date are at the very top.
