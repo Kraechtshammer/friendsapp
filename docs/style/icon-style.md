@@ -9,7 +9,7 @@ The style follows the feel of the ENIX launcher icon pack the developer likes: f
 - **Flat.** Solid fills only. No gradients, no blur, no texture.
 - **No outline.** Shapes are separated by colour, never by a stroke around them.
 - **No background shape.** The object stands alone, with no circle or square behind it. The exception is messenger stand-ins, which copy the form of an app icon (rounded square).
-- **Two or three tones.** A main colour and a darker tone of the same colour, plus at most one accent in a different colour and white for small details.
+- **Colourful where it helps.** The app is colourful and so are its icons. Most icons need only a main colour, its darker tone, one accent and white; an icon may use more palette colours when the object is colourful itself (changed on 2026-11-18, the developer).
 - **Chunky and round.** Corners are rounded. Details smaller than about 3 units on the 48 grid are left out.
 - **One object, seen from the front.** No perspective, no scenes, no people's faces.
 
@@ -82,7 +82,7 @@ Messenger stand-ins copy the form of an app icon (a rounded square with one whit
 ## 7. Checklist for a new icon
 
 1. Is it one object, recognisable at 22 px?
-2. At most three colours plus white, all from the palette?
+2. All colours from the palette, and no more of them than the object needs?
 3. One darker tone, light from the upper left, shaded by split or by layer?
 4. No outline, no gradient, no background shape, no black?
 5. Rounded corners, no detail under 3 units?
@@ -96,6 +96,6 @@ Added on 2026-11-16 for the class badge: sprout (green stem, two leaves, the rig
 
 Added on 2026-11-16: signal, discord (messenger stand-ins) and gift.
 
-Added on 2026-11-18, messenger stand-ins for the chat app list (drafts and previews in `docs/concepts/messenger-icons-v1/`): threema (bubble with a padlock), line (bubble with two bars), viber (handset), messenger (bubble with a zig-zag), instagram (camera), element (ring with a dot), snapchat (ghost, right half shaded), teams (two people behind a dark tile with a T; draft `teams-b`), slack (four coloured bars turning around the centre on dark purple; draft `slack-c`), linkedin ("in" from shapes), sms (bubble with three dots). **Exception:** slack uses four palette colours (blue, green, yellow, red) because the brand mark it stands in for is colourful; the developer chose it.
+Added on 2026-11-18, messenger stand-ins for the chat app list (drafts and previews in `docs/concepts/messenger-icons-v1/`): threema (bubble with a padlock), line (bubble with two bars), viber (handset), messenger (bubble with a zig-zag), instagram (camera), element (ring with a dot), snapchat (ghost, right half shaded), teams (two people behind a dark tile with a T; draft `teams-b`), slack (four coloured bars turning around the centre on dark purple; draft `slack-c`), linkedin ("in" from shapes), sms (bubble with three dots). Slack uses four palette colours (blue, green, yellow, red), like the colourful brand mark it stands in for.
 
 Still to draw for the app: the icons for anything new that milestones bring (idea or note, treat types, "they wrote", voice message).
