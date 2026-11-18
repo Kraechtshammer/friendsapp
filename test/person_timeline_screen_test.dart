@@ -123,7 +123,8 @@ void main() {
   testWidgets('the page shows the timeline', (tester) async {
     await start(tester);
     expect(find.text('COMING UP'), findsOneWidget);
-    expect(find.text('TODAY'), findsOneWidget);
+    // The mark, and today's entry shows "Today" instead of a date.
+    expect(find.text('TODAY'), findsNWidgets(2));
     // Upcoming above the Today mark, history below.
     double top(String t) => tester.getTopLeft(find.text(t).first).dy;
     final upcomingTop = tester

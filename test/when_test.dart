@@ -488,9 +488,11 @@ void main() {
       expect(find.text('LAST WEEK'), findsOneWidget);
       expect(find.text('Tom called'), findsOneWidget);
       expect(find.text('Tom wrote'), findsNothing);
+      // The mark, and the badge of today's meet-up instead of its weekday.
+      expect(find.text('TODAY'), findsNWidgets(2));
       final y = [
         for (final t in ['TODAY', 'You met', 'LAST WEEK', 'Tom called'])
-          tester.getTopLeft(find.text(t)).dy,
+          tester.getTopLeft(find.text(t).first).dy,
       ];
       expect(y, orderedEquals([...y]..sort()));
       await closeDown(tester);

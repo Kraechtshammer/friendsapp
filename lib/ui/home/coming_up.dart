@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../data/database.dart';
+import '../../domain/birthdays.dart';
 import '../../domain/display_name.dart';
 import '../../domain/timeline.dart';
 import '../common.dart';
@@ -131,6 +132,7 @@ class _Card extends ConsumerWidget {
                 accent: entryAccent(e),
                 tilt: tilt,
                 small: true,
+                today: isToday(e.day, ref.watch(clockProvider)()),
               ),
               KeptIcon(entryIcon(e), size: 30),
             ],

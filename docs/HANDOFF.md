@@ -112,7 +112,7 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 - The light theme on a phone.
 - Open questions (section 5).
 - Releases take the next number each time (the next after 0.9.3 is 0.9.4).
-- **Timeline tab** (2026-11-18, not released): replaces Upcoming; Today in the middle, future above, past below (02-design.md §8).
+- **Timeline tab** (2026-11-18, not released): replaces Upcoming; Today in the middle, future above, past below (02-design.md §8). Things on the current day show "Today" instead of a date on Home, the Timeline tab and the person page.
 
 **Planned, decided, not built** (to be built in its own session)
 

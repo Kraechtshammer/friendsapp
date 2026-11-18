@@ -163,3 +163,7 @@ Set<String> congratulatedIds(Iterable<ContactEvent> events, DateTime date) => {
   for (final e in events)
     if (isWishByUserOn(e, date)) e.personId,
 };
+
+/// Whether [day] falls on the local day of [now].
+bool isToday(DateTime day, DateTime now) =>
+    day.year == now.year && day.month == now.month && day.day == now.day;

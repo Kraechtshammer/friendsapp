@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/database.dart';
+import '../../domain/birthdays.dart';
 import '../../domain/contact_event.dart';
 import '../../domain/display_name.dart';
 import '../../domain/group.dart';
@@ -329,7 +330,14 @@ class _EntryRow extends StatelessWidget {
     return Row(
       spacing: 10,
       children: [
-        DateBadge(date: day, accent: accent, tilt: tilt),
+        Consumer(
+          builder: (context, ref, _) => DateBadge(
+            date: day,
+            accent: accent,
+            tilt: tilt,
+            today: isToday(day, ref.watch(clockProvider)()),
+          ),
+        ),
         Expanded(
           child: KeptCard(
             small: true,

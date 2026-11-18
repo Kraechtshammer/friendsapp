@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/database.dart';
+import '../../domain/birthdays.dart';
 import '../../domain/contact_event.dart';
 import '../../domain/person_timeline.dart';
 import '../../domain/plans.dart';
@@ -181,8 +182,13 @@ IconData? _arrow(ContactDirection d) => switch (d) {
   ContactDirection.together => null,
 };
 
+/// The date, or "Today" for the local day of [now].
 String _dateLabel(DateTime day, DateTime now, AppLocalizations l10n) =>
-    (day.year == now.year ? l10n.dateDayMonth(day) : l10n.dateDayMonthYear(day))
+    (isToday(day, now)
+            ? l10n.timelineToday
+            : day.year == now.year
+            ? l10n.dateDayMonth(day)
+            : l10n.dateDayMonthYear(day))
         .replaceAll('.', '')
         .toUpperCase();
 

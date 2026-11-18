@@ -7,7 +7,8 @@ import '../material.dart';
 /// The date badge (ui-style.md §6): an accent fill, the weekday in small
 /// caps over the day number, tilted by [tilt] degrees, hard shadow 4.
 /// 56 x 58 with radius 18; [small] is the 46 x 48 version with radius 15
-/// used on the Home cards (concept V6 · Home, "Coming up").
+/// used on the Home cards (concept V6 · Home, "Coming up"). [today] puts
+/// "Today" where the weekday goes.
 class DateBadge extends StatelessWidget {
   const DateBadge({
     super.key,
@@ -15,6 +16,7 @@ class DateBadge extends StatelessWidget {
     required this.accent,
     this.tilt = 0,
     this.small = false,
+    this.today = false,
   });
 
   final DateTime date;
@@ -22,10 +24,15 @@ class DateBadge extends StatelessWidget {
   final double tilt;
   final bool small;
 
+  /// Shows "Today" in place of the weekday.
+  final bool today;
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final weekday = l10n.dateWeekday(date).replaceAll('.', '').toUpperCase();
+    final weekday = (today ? l10n.timelineToday : l10n.dateWeekday(date))
+        .replaceAll('.', '')
+        .toUpperCase();
     final badge = Container(
       width: small ? 46 : 56,
       height: small ? 48 : 58,

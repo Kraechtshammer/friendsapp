@@ -222,3 +222,5 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] A birthday you congratulated on says "You congratulated"; one you did not just shows the birthday.
 - [ ] Your own birthday lists who congratulated you.
 - [ ] Tapping a past contact opens its edit sheet; tapping a past birthday opens the person.
+- [ ] A birthday or plan today shows "TODAY" on its badge on Home and on the Timeline tab, not the weekday.
+- [ ] On the person page, things from today (coming or past) show "TODAY" instead of the date.
