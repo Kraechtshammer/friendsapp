@@ -365,6 +365,111 @@
       "w": 1180,
       "h": 1080,
       "title": "Icon sets compared: ours and six candidates, dark and light"
+    },
+    "MeetupWeight.dc.html": {
+      "x": 0,
+      "y": 14320,
+      "w": 1180,
+      "h": 200,
+      "title": "Meetup icons v1 · weight check at 26 px: existing set | drafts"
+    },
+    "MeetupBar.dc.html": {
+      "x": 0,
+      "y": 14640,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v1 · Bar"
+    },
+    "MeetupBoardGames.dc.html": {
+      "x": 440,
+      "y": 14640,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v1 · Board games"
+    },
+    "MeetupBouldering.dc.html": {
+      "x": 880,
+      "y": 14640,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v1 · Bouldering"
+    },
+    "MeetupCinema.dc.html": {
+      "x": 1320,
+      "y": 14640,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v1 · Cinema"
+    },
+    "MeetupConcert.dc.html": {
+      "x": 1760,
+      "y": 14640,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v1 · Concert"
+    },
+    "MeetupCookingTogether.dc.html": {
+      "x": 2200,
+      "y": 14640,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v1 · Cooking together"
+    },
+    "MeetupDiy.dc.html": {
+      "x": 2640,
+      "y": 14640,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v1 · DIY"
+    },
+    "MeetupGym.dc.html": {
+      "x": 0,
+      "y": 15060,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v1 · Gym"
+    },
+    "MeetupKaraoke.dc.html": {
+      "x": 440,
+      "y": 15060,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v1 · Karaoke"
+    },
+    "MeetupRestaurant.dc.html": {
+      "x": 880,
+      "y": 15060,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v1 · Restaurant"
+    },
+    "MeetupShopping.dc.html": {
+      "x": 1320,
+      "y": 15060,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v1 · Shopping"
+    },
+    "MeetupSports.dc.html": {
+      "x": 1760,
+      "y": 15060,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v1 · Sports"
+    },
+    "MeetupWalk.dc.html": {
+      "x": 2200,
+      "y": 15060,
+      "w": 560,
+      "h": 300,
+      "title": "Meetup icons v1 · Walk"
+    },
+    "MeetupReusedAsTheyAre.dc.html": {
+      "x": 2840,
+      "y": 15060,
+      "w": 560,
+      "h": 300,
+      "title": "Meetup icons v1 · Reused as they are"
     }
   },
   "createdOnFiles": {
@@ -463,6 +568,14 @@
       "text": "Icon sets: ours against candidates (samples picked by search, so some matches are off)",
       "kind": "title1",
       "maxW": 2740
+    },
+    "t12": {
+      "x": 0,
+      "y": 14020,
+      "w": 240,
+      "kind": "title1",
+      "maxW": 2740,
+      "text": "Meetup icons v1: one board per activity, dark and light, at 22, 36 and 72 px"
     }
   },
   "order": [
@@ -517,7 +630,22 @@
     "V6bHome.dc.html",
     "V6bCapture.dc.html",
     "V6bPeople.dc.html",
-    "IconCompare.dc.html"
+    "IconCompare.dc.html",
+    "MeetupWeight.dc.html",
+    "MeetupBar.dc.html",
+    "MeetupBoardGames.dc.html",
+    "MeetupBouldering.dc.html",
+    "MeetupCinema.dc.html",
+    "MeetupConcert.dc.html",
+    "MeetupCookingTogether.dc.html",
+    "MeetupDiy.dc.html",
+    "MeetupGym.dc.html",
+    "MeetupKaraoke.dc.html",
+    "MeetupRestaurant.dc.html",
+    "MeetupShopping.dc.html",
+    "MeetupSports.dc.html",
+    "MeetupWalk.dc.html",
+    "MeetupReusedAsTheyAre.dc.html"
   ],
   "pages": [],
   "title": "Friends app concept screens"
