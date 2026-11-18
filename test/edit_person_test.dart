@@ -160,7 +160,12 @@ void main() {
     await tester.runAsync(
       () => services
           .peopleFor(demo: false)
-          .add(name: 'Eva Lund', closeness: Closeness.close, contactId: 'c1'),
+          .add(
+            name: 'Eva Lund',
+            closeness: Closeness.close,
+            contactId: 'c1',
+            phone: '+491701234567',
+          ),
     );
     await openPeopleTab(tester);
     await tester.tap(find.text('Eva'));
@@ -170,6 +175,11 @@ void main() {
 
     await scrollTo(tester, find.text('From the contact'));
     expect(find.text('Other apps on this phone'), findsOneWidget);
+    // Signal and SMS (by the contact's number) come before the others.
+    double top(String text) => tester.getTopLeft(find.text(text).first).dy;
+    final others = top('Other apps on this phone');
+    expect(top('Signal') < others && top('SMS') < others, isTrue);
+    expect(top('Telegram') > others, isTrue);
     expect(find.byKey(const ValueKey('chatTarget')), findsNothing);
     await tapScrolled(tester, find.text('Signal').first);
     expect(
@@ -189,9 +199,14 @@ void main() {
     await tapScrolled(tester, find.text('Telegram'));
     await type(tester, 'chatTarget', '');
     expect(
+      find.text('Without one, Kept. opens the chat by the phone number.'),
+      findsOneWidget,
+    );
+    await tapScrolled(tester, find.text('Discord'));
+    expect(
       find.text(
         'If you have a username or chat link for this person, enter it '
-        'here. Otherwise Kept. just opens Telegram.',
+        'here. Otherwise Kept. just opens Discord.',
       ),
       findsOneWidget,
     );
@@ -199,7 +214,7 @@ void main() {
     final eva = await tester.runAsync(
       () => services.peopleFor(demo: false).watchAll().first,
     );
-    expect(eva!.single.chatApp, ChatApp.telegram);
+    expect(eva!.single.chatApp, ChatApp.discord);
     expect(eva.single.chatTarget, isNull);
     await closeDown(tester);
   });

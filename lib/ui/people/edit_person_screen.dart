@@ -607,9 +607,17 @@ class _FormState extends ConsumerState<_Form> {
     final l10n = context.l10n;
     final installed =
         ref.watch(installedChatAppsProvider).value ?? InstalledChatApps.all;
+    // SMS reaches anyone with a number; for a person linked to a contact
+    // that number came from the contact, so SMS sits with its apps.
+    final smsFromContact =
+        widget.person?.contactId != null &&
+        _orNull(_phone) != null &&
+        installed.has(ChatApp.sms);
     final fromContact = <ChatApp>[
       for (final app in ChatApp.values)
-        if (_routes.any((r) => r.app == app)) app,
+        if (_routes.any((r) => r.app == app) ||
+            (app == ChatApp.sms && smsFromContact))
+          app,
     ];
     ChipOption<ChatApp?> option(ChatApp m) =>
         ChipOption(m, messengerLabel(m, l10n), icon: messengerIcon(m));
