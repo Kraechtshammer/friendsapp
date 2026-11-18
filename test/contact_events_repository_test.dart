@@ -4,6 +4,8 @@ import 'package:kept/data/contact_events_repository.dart';
 import 'package:kept/data/database.dart';
 import 'package:kept/data/intentions_repository.dart';
 import 'package:kept/data/people_repository.dart';
+import 'package:kept/data/treats_repository.dart';
+import 'package:kept/domain/stamps.dart';
 import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
@@ -79,6 +81,25 @@ void main() {
     expect(added.createdAt, DateTime(2026, 11, 16, 9));
     expect(added.intentionId, isNull);
     expect(await repo.watchForPerson(anna.id).first, [added]);
+  });
+
+  test('a contact from last week earns that week\'s stamp', () async {
+    final now = DateTime(2026, 11, 18, 10);
+    final lastWeek = DateTime(2026, 11, 11, 12);
+    await repo.add(
+      personId: anna.id,
+      at: lastWeek,
+      kind: ContactKind.met,
+      direction: ContactDirection.together,
+      source: ContactSource.manual,
+      now: now,
+    );
+    final stamps = await TreatsRepository(db).watchStamps().first;
+    expect(stamps, isNotEmpty);
+    for (final s in stamps) {
+      expect(weekStart(s.at), weekStart(lastWeek));
+      expect(weekStart(s.at), isNot(weekStart(now)));
+    }
   });
 
   test('stores the enums as their names', () async {

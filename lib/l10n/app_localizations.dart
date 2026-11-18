@@ -1394,6 +1394,60 @@ abstract class AppLocalizations {
   /// **'They called'**
   String get buttonTheyCalled;
 
+  /// No description provided for @buttonWeWereInTouch.
+  ///
+  /// In en, this message translates to:
+  /// **'We were in touch'**
+  String get buttonWeWereInTouch;
+
+  /// No description provided for @logContactTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We were in touch with {name}'**
+  String logContactTitle(String name);
+
+  /// No description provided for @logContactWhat.
+  ///
+  /// In en, this message translates to:
+  /// **'What'**
+  String get logContactWhat;
+
+  /// No description provided for @logKindWrote.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrote'**
+  String get logKindWrote;
+
+  /// No description provided for @logKindCalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Called'**
+  String get logKindCalled;
+
+  /// No description provided for @logKindMet.
+  ///
+  /// In en, this message translates to:
+  /// **'Met'**
+  String get logKindMet;
+
+  /// No description provided for @logKindGamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Played'**
+  String get logKindGamed;
+
+  /// No description provided for @logDayYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get logDayYesterday;
+
+  /// No description provided for @logDayPick.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a day'**
+  String get logDayPick;
+
   /// No description provided for @notedTheyWrote.
   ///
   /// In en, this message translates to:

@@ -89,6 +89,35 @@ Future<void> completeWrite(
       ),
 );
 
+/// "We were in touch" sheet on the person page: stores a contact that
+/// already happened, dated [at], then shows the "Nice one" screen. Writing
+/// and calling are by the user, meeting and playing are together. The
+/// "Nice one" screen asks for the activity and the line for next time.
+Future<void> completeLoggedContact(
+  BuildContext context,
+  WidgetRef ref,
+  Person person, {
+  required ContactKind kind,
+  required DateTime at,
+}) => _storeAndCelebrate(
+  context,
+  person: person,
+  thought: '',
+  replace: false,
+  store: () => ref
+      .read(contactEventsRepositoryProvider)
+      .add(
+        personId: person.id,
+        at: at,
+        kind: kind,
+        direction: switch (kind) {
+          ContactKind.wrote || ContactKind.called => ContactDirection.byUser,
+          _ => ContactDirection.together,
+        },
+        source: ContactSource.manual,
+      ),
+);
+
 /// "We met" on the couple page: stores a meeting with both members as one
 /// shared event ([ContactEventsRepository.addForGroup], source `manual`,
 /// kind `met`, together), then shows the "Nice one" screen with both faces

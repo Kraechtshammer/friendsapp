@@ -808,6 +808,35 @@ class AppLocalizationsDe extends AppLocalizations {
   String get buttonTheyCalled => 'Hat angerufen';
 
   @override
+  String get buttonWeWereInTouch => 'Wir hatten Kontakt';
+
+  @override
+  String logContactTitle(String name) {
+    return 'Kontakt mit $name';
+  }
+
+  @override
+  String get logContactWhat => 'Was';
+
+  @override
+  String get logKindWrote => 'Geschrieben';
+
+  @override
+  String get logKindCalled => 'Telefoniert';
+
+  @override
+  String get logKindMet => 'Getroffen';
+
+  @override
+  String get logKindGamed => 'Gezockt';
+
+  @override
+  String get logDayYesterday => 'Gestern';
+
+  @override
+  String get logDayPick => 'Tag wählen';
+
+  @override
   String notedTheyWrote(String name) {
     return 'Notiert: $name hat geschrieben';
   }

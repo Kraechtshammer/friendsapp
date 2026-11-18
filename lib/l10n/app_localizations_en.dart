@@ -802,6 +802,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get buttonTheyCalled => 'They called';
 
   @override
+  String get buttonWeWereInTouch => 'We were in touch';
+
+  @override
+  String logContactTitle(String name) {
+    return 'We were in touch with $name';
+  }
+
+  @override
+  String get logContactWhat => 'What';
+
+  @override
+  String get logKindWrote => 'Wrote';
+
+  @override
+  String get logKindCalled => 'Called';
+
+  @override
+  String get logKindMet => 'Met';
+
+  @override
+  String get logKindGamed => 'Played';
+
+  @override
+  String get logDayYesterday => 'Yesterday';
+
+  @override
+  String get logDayPick => 'Pick a day';
+
+  @override
   String notedTheyWrote(String name) {
     return 'Noted: $name wrote';
   }

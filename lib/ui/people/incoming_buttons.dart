@@ -6,11 +6,14 @@ import '../../domain/contact_event.dart';
 import '../common.dart';
 import '../material.dart';
 import '../widgets/grey_button.dart';
+import 'log_contact_sheet.dart';
 
-/// "They wrote" and "They called": two small grey buttons that store a
-/// contact event from the person (direction byThem, source manual) dated
-/// now. At most one per person, kind and day: a second tap on the same day
-/// stores nothing and says it is already noted. Each shows a short
+/// Three small grey buttons. "We were in touch" (full width, on top) opens
+/// the sheet that logs a contact that already happened. "They wrote" and
+/// "They called" (one row below) store a contact event from the person
+/// (direction byThem, source manual) dated now. At most one per person,
+/// kind and day: a second tap on the same day stores nothing and says it
+/// is already noted. Each shows a short
 /// confirmation with Undo. The concept does not place them (02-design.md
 /// §6.6); they sit above the timeline.
 class IncomingButtons extends ConsumerWidget {
@@ -55,22 +58,33 @@ class IncomingButtons extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: 12,
       children: [
-        Expanded(
-          child: GreyButton(
-            small: true,
-            label: l10n.buttonTheyWrote,
-            onPressed: () => _note(context, ref, ContactKind.wrote),
-          ),
+        GreyButton(
+          small: true,
+          label: l10n.buttonWeWereInTouch,
+          onPressed: () => showLogContactSheet(context, ref, person),
         ),
-        Expanded(
-          child: GreyButton(
-            small: true,
-            label: l10n.buttonTheyCalled,
-            onPressed: () => _note(context, ref, ContactKind.called),
-          ),
+        Row(
+          spacing: 12,
+          children: [
+            Expanded(
+              child: GreyButton(
+                small: true,
+                label: l10n.buttonTheyWrote,
+                onPressed: () => _note(context, ref, ContactKind.wrote),
+              ),
+            ),
+            Expanded(
+              child: GreyButton(
+                small: true,
+                label: l10n.buttonTheyCalled,
+                onPressed: () => _note(context, ref, ContactKind.called),
+              ),
+            ),
+          ],
         ),
       ],
     );

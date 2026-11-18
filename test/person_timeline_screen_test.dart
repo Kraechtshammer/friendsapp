@@ -149,6 +149,30 @@ void main() {
     await closeDown(tester);
   });
 
+  testWidgets('We were in touch logs a call from yesterday', (tester) async {
+    await start(tester);
+    final before = (await events(tester)).length;
+    await tester.tap(find.text('We were in touch'));
+    await tester.pumpAndSettle();
+    expect(find.text('We were in touch with Tom'), findsOneWidget);
+    await tester.tap(find.text('Called'));
+    await tester.tap(find.text('Yesterday'));
+    await tester.pump();
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    await settleWrite(tester);
+    await tester.pumpAndSettle();
+
+    final stored = await events(tester);
+    expect(stored, hasLength(before + 1));
+    final e = stored.firstWhere((e) => e.at == back(1));
+    expect(e.kind, ContactKind.called);
+    expect(e.direction, ContactDirection.byUser);
+    expect(e.source, ContactSource.manual);
+    expect(find.text('Nice one!'), findsOneWidget);
+    await closeDown(tester);
+  });
+
   testWidgets('They wrote stores one event a day; Undo removes it', (
     tester,
   ) async {

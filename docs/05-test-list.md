@@ -203,3 +203,10 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Listener build: a Discord DM from someone whose chat link is saved is recorded as "wrote" for them, even when their Discord name differs from their name in Kept.; a server message is not recorded.
 - [ ] Listener build: an ignored WhatsApp message that is shown again the next day is not recorded a second time.
 - [ ] Editing a person: a pasted Discord message link is shortened to the chat link on Save.
+
+## We were in touch (not released yet)
+
+- [ ] Person page, "We were in touch": pick Met and Yesterday, Save: Nice one asks for the activity and shows a stamp; the timeline has "You met" under yesterday.
+- [ ] "Pick a day" with a day of last week: the stamp lands in last week (Progress tab), and the streak counts that week.
+- [ ] "Pick a day" with today: the entry shows today with the current time, not noon.
+- [ ] The three buttons fit on the person page in German.
