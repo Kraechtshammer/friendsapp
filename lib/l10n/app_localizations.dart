@@ -470,6 +470,12 @@ abstract class AppLocalizations {
   /// **'Open goes straight to this chat in {name}.'**
   String chatTargetUsed(String name);
 
+  /// No description provided for @chatTargetProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Open shows their profile in {name}; the chat is one tap from there.'**
+  String chatTargetProfile(String name);
+
   /// No description provided for @chatTargetNotUnderstood.
   ///
   /// In en, this message translates to:

@@ -101,6 +101,14 @@
   "editMessengerOthers": "Other apps on this phone",
   "chatTargetHint": "@name, ID or https://…",
   "chatTargetUsed": "Open goes straight to this chat in {name}.",
+  "chatTargetProfile": "Open shows their profile in {name}; the chat is one tap from there.",
+  "@chatTargetProfile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "@chatTargetUsed": {
     "placeholders": {
       "name": {

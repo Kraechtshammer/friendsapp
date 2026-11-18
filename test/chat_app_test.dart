@@ -151,4 +151,17 @@ void main() {
       expect(ChatApp.values.byName(old).name, old);
     }
   });
+
+  test('opensProfile', () {
+    expect(
+      ChatApp.snapchat.opensProfile('https://www.snapchat.com/add/x'),
+      isTrue,
+    );
+    expect(ChatApp.discord.opensProfile('https://discord.com/users/1'), isTrue);
+    expect(
+      ChatApp.discord.opensProfile('https://discord.com/channels/@me/1'),
+      isFalse,
+    );
+    expect(ChatApp.telegram.opensProfile('https://t.me/anna'), isFalse);
+  });
 }

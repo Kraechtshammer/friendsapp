@@ -107,6 +107,17 @@ enum ChatApp {
     _ => true,
   };
 
+  /// True if [link] leads to the person's profile rather than the chat
+  /// (one more tap there). Snapchat has no chat link at all; Line, Discord
+  /// user and Matrix user links open the profile (02-design.md §8).
+  bool opensProfile(String link) => switch (this) {
+    snapchat => true,
+    line => link.contains('/ti/p/'),
+    discord => link.contains('/users/'),
+    element => link.contains('#/@'),
+    _ => false,
+  };
+
   /// The link for a bare username or ID, or null if this app has no
   /// known link for one (then only a full link helps).
   String? bareTargetLink(String target) {

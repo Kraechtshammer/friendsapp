@@ -222,6 +222,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String chatTargetProfile(String name) {
+    return 'Open shows their profile in $name; the chat is one tap from there.';
+  }
+
+  @override
   String chatTargetNotUnderstood(String name) {
     return '$name needs a full chat link here, starting with https://.';
   }

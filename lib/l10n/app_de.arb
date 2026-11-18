@@ -80,6 +80,7 @@
   "editMessengerOthers": "Andere Apps auf diesem Handy",
   "chatTargetHint": "@name, ID oder https://…",
   "chatTargetUsed": "„Öffnen“ führt direkt zu diesem Chat in {name}.",
+  "chatTargetProfile": "„Öffnen“ zeigt ihr Profil in {name}; von dort ist der Chat einen Tipp entfernt.",
   "chatTargetNotUnderstood": "{name} braucht hier einen vollständigen Chat-Link, der mit https:// beginnt.",
   "chatTargetViaContact": "Ohne öffnet Kept. den Chat über den Kontakt im Handy.",
   "chatTargetViaPhone": "Ohne öffnet Kept. den Chat über die Telefonnummer.",

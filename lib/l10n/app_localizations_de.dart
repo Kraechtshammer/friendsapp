@@ -224,6 +224,11 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String chatTargetProfile(String name) {
+    return '„Öffnen“ zeigt ihr Profil in $name; von dort ist der Chat einen Tipp entfernt.';
+  }
+
+  @override
   String chatTargetNotUnderstood(String name) {
     return '$name braucht hier einen vollständigen Chat-Link, der mit https:// beginnt.';
   }

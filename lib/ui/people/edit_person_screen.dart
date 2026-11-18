@@ -648,6 +648,9 @@ class _FormState extends ConsumerState<_Form> {
         onChanged: choose,
       ),
       if (app != null) ...[
+        // The field's floating label sits above its border: extra room so
+        // it does not touch the chips.
+        const SizedBox(height: 8),
         KeptTextField(
           key: const ValueKey('chatTarget'),
           controller: _target,
@@ -662,7 +665,10 @@ class _FormState extends ConsumerState<_Form> {
           child: TextButton(
             style: TextButton.styleFrom(
               padding: EdgeInsets.zero,
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               foregroundColor: context.kept.text,
+              textStyle: context.text.labelLarge,
             ),
             onPressed: () => unawaited(
               Navigator.of(context).push(
@@ -684,9 +690,11 @@ class _FormState extends ConsumerState<_Form> {
     final name = messengerLabel(app, l10n);
     final target = _target.text.trim();
     if (target.isNotEmpty) {
-      return app.targetLink(target) != null
-          ? l10n.chatTargetUsed(name)
-          : l10n.chatTargetNotUnderstood(name);
+      final link = app.targetLink(target);
+      if (link == null) return l10n.chatTargetNotUnderstood(name);
+      return app.opensProfile(link)
+          ? l10n.chatTargetProfile(name)
+          : l10n.chatTargetUsed(name);
     }
     if (_routes.any((r) => r.app == app)) return l10n.chatTargetViaContact;
     if (app.phoneLink(_orNull(_phone)) != null) {
