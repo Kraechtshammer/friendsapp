@@ -102,6 +102,7 @@ Future<void> completeLoggedContact(
   required DateTime at,
   GroupWithMembers? couple,
   String thought = '',
+  String? activityIcon,
 }) {
   final direction = switch (kind) {
     ContactKind.wrote || ContactKind.called => ContactDirection.byUser,
@@ -122,6 +123,7 @@ Future<void> completeLoggedContact(
             kind: kind,
             direction: direction,
             source: ContactSource.manual,
+            activityIcon: activityIcon,
           )
         : () async {
             final rows = await repo.addForGroup(
@@ -130,6 +132,7 @@ Future<void> completeLoggedContact(
               kind: kind,
               direction: direction,
               source: ContactSource.manual,
+              activityIcon: activityIcon,
             );
             return rows.first;
           },

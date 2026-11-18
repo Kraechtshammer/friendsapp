@@ -8,6 +8,8 @@ import '../../domain/intention.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../material.dart';
+import '../kept_icon.dart';
+import '../widgets/activity_icon_picker.dart';
 import '../widgets/choice_chips.dart';
 import '../widgets/grey_button.dart';
 import '../widgets/kept_card.dart';
@@ -38,12 +40,20 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
   String? _personId;
   var _kind = IntentionKind.write;
 
+  /// For a meetup or a game only; see [_iconName].
+  KeptIcons? _icon;
+
   /// Optional, and collapsed into one row of chips (02-design.md §6.9).
   var _when = const When.none();
 
   /// "Already happened": the card logs a contact instead of a thought.
   var _happened = false;
   var _day = const PastDay.today();
+
+  bool get _hasIcon =>
+      _kind == IntentionKind.meet || _kind == IntentionKind.game;
+
+  String? get _iconName => _hasIcon ? _icon?.name : null;
 
   @override
   void dispose() {
@@ -56,12 +66,14 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
     final note = _note.text.trim();
     final kind = contactKindFor(_kind);
     final at = _day.at(ref.read(clockProvider)());
+    final icon = _iconName;
     FocusScope.of(context).unfocus();
     final nav = context;
     _note.clear();
     setState(() {
       _personId = null;
       _kind = IntentionKind.write;
+      _icon = null;
       _when = const When.none();
       _happened = false;
       _day = const PastDay.today();
@@ -74,6 +86,7 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
       at: at,
       couple: subject.couple,
       thought: note,
+      activityIcon: icon,
     );
   }
 
@@ -92,12 +105,14 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
           note: note,
           kind: _kind,
           when: _when,
+          activityIcon: _iconName,
         );
     if (!mounted) return;
     _note.clear();
     setState(() {
       _personId = null;
       _kind = IntentionKind.write;
+      _icon = null;
       _when = const When.none();
     });
     messenger
@@ -139,12 +154,24 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
             l10n.captureTitle,
             style: context.text.titleLarge?.copyWith(color: tone.onContainer),
           ),
-          KeptTextField(
-            controller: _note,
-            focusNode: _focus,
-            hint: l10n.captureHint,
-            fillColor: kept.ground,
-            textCapitalization: TextCapitalization.sentences,
+          Row(
+            spacing: 10,
+            children: [
+              Expanded(
+                child: KeptTextField(
+                  controller: _note,
+                  focusNode: _focus,
+                  hint: l10n.captureHint,
+                  fillColor: kept.ground,
+                  textCapitalization: TextCapitalization.sentences,
+                ),
+              ),
+              if (_hasIcon)
+                ActivityIconButton(
+                  icon: _icon,
+                  onChanged: (icon) => setState(() => _icon = icon),
+                ),
+            ],
           ),
           if (peopleState.hasValue && people.isEmpty) ...[
             Text(

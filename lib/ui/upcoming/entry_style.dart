@@ -29,7 +29,7 @@ Color kindAccent(IntentionKind kind) => switch (kind) {
 
 KeptIcons entryIcon(UpcomingEntry e) => switch (e) {
   BirthdayEntry() => KeptIcons.cake,
-  ThoughtEntry(:final intention) => kindIcon(intention.kind),
+  ThoughtEntry(:final intention) => thoughtIcon(intention),
 };
 
 /// The text of a thought, or its kind when it has none.
@@ -77,3 +77,8 @@ KeptIcons contactIcon(ContactEvent e) =>
       ContactKind.gamed => KeptIcons.controller,
       ContactKind.birthdayWish => KeptIcons.cake,
     };
+
+/// The icon of a thought or plan: its activity icon when the user gave
+/// one, else the kind's.
+KeptIcons thoughtIcon(Intention i) =>
+    activityIconByName(i.activityIcon) ?? kindIcon(i.kind);

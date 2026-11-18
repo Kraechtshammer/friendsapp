@@ -8,6 +8,7 @@ import '../../domain/plans.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../material.dart';
+import '../widgets/activity_icon_picker.dart';
 import '../widgets/avatar.dart';
 import '../widgets/couple_avatar.dart';
 import '../widgets/choice_chips.dart';
@@ -19,8 +20,8 @@ import '../widgets/section_label.dart';
 import '../widgets/when_picker.dart';
 import 'nice_one_screen.dart';
 
-/// Opens the sheet that edits an open thought: text, kind, "when" and an
-/// optional link, with
+/// Opens the sheet that edits an open thought: text, kind, "when", an
+/// optional link and, for a meetup or a game, an activity icon, with
 /// Save, Done and Drop. The three-dot button on a Home row, a tap on a
 /// thought on the person page and on the Upcoming tab opens it. Done stores the changes first and then
 /// goes on as the Done button does ([completeThought]).
@@ -57,6 +58,11 @@ class _ThoughtSheetState extends ConsumerState<_ThoughtSheet> {
   late var _kind = widget.intention.kind;
   late var _when = whenOf(widget.intention);
   late final _link = TextEditingController(text: widget.intention.link ?? '');
+  late var _icon = activityIconByName(widget.intention.activityIcon);
+
+  /// Only a meetup or a game has an activity icon.
+  bool get _hasIcon =>
+      _kind == IntentionKind.meet || _kind == IntentionKind.game;
 
   @override
   void dispose() {
@@ -71,10 +77,12 @@ class _ThoughtSheetState extends ConsumerState<_ThoughtSheet> {
     final old = widget.intention;
     final note = _note.text.trim();
     final link = _link.text.trim().isEmpty ? null : _link.text.trim();
+    final icon = _hasIcon ? _icon?.name : null;
     final updated = old.copyWith(
       note: note,
       kind: _kind,
       link: Value(link),
+      activityIcon: Value(icon),
       date: Value(_when.date),
       horizon: Value(_when.horizon),
       condition: Value(
@@ -87,10 +95,18 @@ class _ThoughtSheetState extends ConsumerState<_ThoughtSheet> {
     if (note != old.note ||
         _kind != old.kind ||
         _when != whenOf(old) ||
-        link != old.link) {
+        link != old.link ||
+        icon != old.activityIcon) {
       await ref
           .read(intentionsRepositoryProvider)
-          .update(old.id, note: note, kind: _kind, when: _when, link: link);
+          .update(
+            old.id,
+            note: note,
+            kind: _kind,
+            when: _when,
+            link: link,
+            activityIcon: icon,
+          );
     }
     return updated;
   }
@@ -161,13 +177,26 @@ class _ThoughtSheetState extends ConsumerState<_ThoughtSheet> {
               ),
             ],
           ),
-          KeptTextField(
-            controller: _note,
-            hint: l10n.captureHint,
-            fillColor: kept.ground,
-            textCapitalization: TextCapitalization.sentences,
-            maxLines: 3,
-            minLines: 1,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
+            children: [
+              Expanded(
+                child: KeptTextField(
+                  controller: _note,
+                  hint: l10n.captureHint,
+                  fillColor: kept.ground,
+                  textCapitalization: TextCapitalization.sentences,
+                  maxLines: 3,
+                  minLines: 1,
+                ),
+              ),
+              if (_hasIcon)
+                ActivityIconButton(
+                  icon: _icon,
+                  onChanged: (icon) => setState(() => _icon = icon),
+                ),
+            ],
           ),
           ChoiceChips<IntentionKind>(
             options: [

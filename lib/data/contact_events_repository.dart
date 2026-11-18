@@ -286,7 +286,8 @@ class ContactEventsRepository {
 
   /// Marks the intention [intentionId] done and adds the contact event that
   /// did it, linked to it, in one transaction. Kind and direction follow
-  /// from the intention's kind (contactKindFor, contactDirectionFor). A
+  /// from the intention's kind (contactKindFor, contactDirectionFor); the
+  /// event takes the intention's activity icon. A
   /// couple's intention adds the event for the group ([addForGroup]) and
   /// returns the first member's row, unless [onlyPersonId] is given: then
   /// one plain event for that member only (writing or calling one of the
@@ -323,6 +324,7 @@ class ContactEventsRepository {
           direction: contactDirectionFor(intention.kind),
           source: source,
           activity: activity,
+          activityIcon: intention.activityIcon,
           note: note,
           intentionId: intentionId,
           now: time,
@@ -336,6 +338,7 @@ class ContactEventsRepository {
         direction: contactDirectionFor(intention.kind),
         source: source,
         activity: activity,
+        activityIcon: intention.activityIcon,
         note: note,
         intentionId: intentionId,
         now: time,

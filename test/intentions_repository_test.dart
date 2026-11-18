@@ -42,6 +42,43 @@ void main() {
     expect(plain.note, '');
   });
 
+  test('keeps an activity icon for a meetup or a game only', () async {
+    final meet = await repo.add(
+      personId: anna.id,
+      kind: IntentionKind.meet,
+      activityIcon: 'climber',
+    );
+    expect(meet.activityIcon, 'climber');
+    final call = await repo.add(
+      personId: anna.id,
+      kind: IntentionKind.call,
+      activityIcon: 'climber',
+    );
+    expect(call.activityIcon, isNull);
+
+    Future<String?> iconOf(String id) async =>
+        (await repo.watchForPerson(anna.id).first)
+            .firstWhere((i) => i.id == id)
+            .activityIcon;
+    await repo.update(
+      meet.id,
+      note: '',
+      kind: IntentionKind.game,
+      when: const When.none(),
+      activityIcon: 'meeple',
+    );
+    expect(await iconOf(meet.id), 'meeple');
+    // Turning it into a call drops the icon.
+    await repo.update(
+      meet.id,
+      note: '',
+      kind: IntentionKind.write,
+      when: const When.none(),
+      activityIcon: 'meeple',
+    );
+    expect(await iconOf(meet.id), isNull);
+  });
+
   test('stores the enums as their names', () async {
     await repo.add(personId: anna.id, kind: IntentionKind.meet);
     final row = await db

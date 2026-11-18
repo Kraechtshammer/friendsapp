@@ -1164,8 +1164,7 @@ void main() {
         ]);
         final intentions = await newDb.select(newDb.intentions).get();
         expect(intentions, [
-          for (final r in oldIntentions)
-            v7.IntentionsData.fromJson(r.toJson()),
+          for (final r in oldIntentions) v7.IntentionsData.fromJson(r.toJson()),
         ]);
         expect(intentions.map((i) => i.activityIcon), everyElement(isNull));
       },

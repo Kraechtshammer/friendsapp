@@ -155,6 +155,7 @@ void main() {
       personId: anna.id,
       note: 'play again',
       kind: IntentionKind.game,
+      activityIcon: 'meeple',
     );
     final done = DateTime(2026, 11, 16, 21, 30, 5, 500);
     final event = await repo.completeIntention(
@@ -170,6 +171,8 @@ void main() {
     expect(event.intentionId, i.id);
     expect(event.at, DateTime(2026, 11, 16, 21, 30, 5));
     expect(event.activity, 'Mario Kart');
+    // The plan's icon goes with it.
+    expect(event.activityIcon, 'meeple');
 
     final stored = (await intentions.watchForPerson(anna.id).first).single;
     expect(stored.state, IntentionState.done);

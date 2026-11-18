@@ -34,6 +34,7 @@ import '../widgets/when_picker.dart';
 import 'nice_one_screen.dart';
 import 'open_chat.dart';
 import 'open_thoughts.dart';
+import '../upcoming/entry_style.dart' show thoughtIcon;
 
 /// "Tonight's pick" under the capture card (02-design.md §2.3 and §2.4;
 /// concept V6 · Home): one card with "Another one", or three compact
@@ -465,7 +466,7 @@ KeptIcons _pickIcon(Pick pick) => switch (pick) {
   ReplyPick() => KeptIcons.chat,
   ReconnectPick() => KeptIcons.people,
   HintPick() => KeptIcons.leaf,
-  IntentionPick(:final intention) => kindIcon(intention.kind),
+  IntentionPick(:final intention) => thoughtIcon(intention),
 };
 
 /// The line under the name: the birthday with the age if known, the

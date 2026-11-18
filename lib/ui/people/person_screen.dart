@@ -25,6 +25,7 @@ import 'edit_person_screen.dart';
 import 'ideas_section.dart';
 import 'incoming_buttons.dart';
 import 'person_timeline_view.dart';
+import '../upcoming/entry_style.dart' show thoughtIcon;
 
 /// One person: the tonal header, the button that opens their chat, their
 /// notes, open thoughts and ideas, then the friend timeline with the "They wrote" and "They
@@ -174,7 +175,7 @@ class OpenIntentionCards extends ConsumerWidget {
                 Row(
                   spacing: 10,
                   children: [
-                    KeptIcon(kindIcon(i.kind), size: 22),
+                    KeptIcon(thoughtIcon(i), size: 22),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

@@ -19,6 +19,7 @@ import 'thought_sheet.dart';
 import '../widgets/kept_card.dart';
 import '../widgets/link_row.dart';
 import '../widgets/section_label.dart';
+import '../upcoming/entry_style.dart' show thoughtIcon;
 
 /// The open intentions, newest first, under "On your mind". Tapping a row
 /// opens the person, or the couple page for a couple's thought; the
@@ -100,7 +101,7 @@ class _Row extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    KeptIcon(kindIcon(intention.kind), size: 22),
+                    KeptIcon(thoughtIcon(intention), size: 22),
                     if (intention.link != null) const LinkMark(),
                   ],
                 ),

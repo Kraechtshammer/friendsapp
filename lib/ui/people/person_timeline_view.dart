@@ -89,7 +89,7 @@ class PersonTimelineView extends ConsumerWidget {
                     entryTilt(dated++),
                     now,
                   ),
-                  icon: kindIcon(intention.kind),
+                  icon: thoughtIcon(intention),
                   title: thoughtText(intention, l10n),
                   note: join([
                     kindLabel(intention.kind, l10n),
@@ -100,7 +100,7 @@ class PersonTimelineView extends ConsumerWidget {
                 // One compact line: no date, so no pill.
                 UpcomingPlan(:final intention) => _Row(
                   date: const SizedBox.shrink(),
-                  icon: kindIcon(intention.kind),
+                  icon: thoughtIcon(intention),
                   title: [
                     thoughtText(intention, l10n),
                     whenText(whenOf(intention), l10n),

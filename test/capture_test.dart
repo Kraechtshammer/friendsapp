@@ -10,6 +10,7 @@ import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
 import 'package:kept/platform/app_shortcuts.dart';
 import 'package:kept/ui/home/nice_one_screen.dart';
+import 'package:kept/ui/kept_icon.dart';
 import 'package:kept/ui/material.dart';
 import 'package:kept/ui/people/person_screen.dart';
 
@@ -216,6 +217,57 @@ void main() {
     expect(find.text('ON YOUR MIND'), findsNothing);
     expect(find.text('saw a bouldering video'), findsNothing);
 
+    await closeDown(tester);
+  });
+
+  testWidgets('a meetup gets an icon that carries over to the contact', (
+    tester,
+  ) async {
+    await addPeople(tester, ['Tom Berger']);
+    await start(tester);
+    Finder climber() => find.byWidgetPredicate(
+      (w) => w is KeptIcon && w.icon == KeptIcons.climber,
+    );
+
+    // A thought to write has no icon button.
+    expect(find.byTooltip('Icon for the activity'), findsNothing);
+    await tester.enterText(find.byType(TextField), 'bouldering');
+    await tester.tap(find.text('Tom'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Meet'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Icon for the activity'));
+    await tester.pumpAndSettle();
+    await tester.tap(climber());
+    await tester.pumpAndSettle();
+    await saveFor(tester, 'Tom');
+
+    final rows = await tester.runAsync(
+      () => services.intentionsFor(demo: false).watchOpen().first,
+    );
+    expect(rows!.single.activityIcon, 'climber');
+    // The pick and the list below it show the icon instead of the kind's.
+    expect(climber(), findsNWidgets(2));
+
+    await tester.tap(find.text('Done').first);
+    await tester.pumpAndSettle();
+    expect(find.text('Nice one!'), findsOneWidget);
+    // Preselected on the button beside "What did you do?".
+    expect(climber(), findsOneWidget);
+    await tester.tap(
+      find.descendant(
+        of: find.byType(NiceOneScreen),
+        matching: find.text('Close'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final events = await tester.runAsync(
+      () => services
+          .contactEventsFor(demo: false)
+          .watchForPerson(rows.single.personId!)
+          .first,
+    );
+    expect(events!.single.activityIcon, 'climber');
     await closeDown(tester);
   });
 

@@ -475,7 +475,7 @@ class _PlanRow extends ConsumerWidget {
       child: Row(
         spacing: 10,
         children: [
-          KeptIcon(kindIcon(intention.kind), size: 28),
+          KeptIcon(thoughtIcon(intention), size: 28),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

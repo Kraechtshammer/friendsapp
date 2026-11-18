@@ -52,6 +52,7 @@ class IntentionsRepository {
     IntentionKind kind = IntentionKind.write,
     When when = const When.none(),
     String? link,
+    String? activityIcon,
     DateTime? now,
   }) async {
     if ((personId == null) == (groupId == null)) {
@@ -72,13 +73,14 @@ class IntentionsRepository {
       condition: _condition(when),
       link: _link(link),
       createdAt: wholeSeconds(now ?? DateTime.now()),
+      activityIcon: _icon(kind, activityIcon),
     );
     await _db.into(_db.intentions).insert(intention);
     return intention;
   }
 
-  /// Changes the text, the kind, the "when" and the link of an intention in
-  /// one step, as the edit sheet does. A date and a horizon never go
+  /// Changes the text, the kind, the "when", the link and the activity icon
+  /// of an intention in one step, as the edit sheet does. A date and a horizon never go
   /// together; the condition is kept only for "when…" and only if it has
   /// text. An empty [link] is stored as null.
   Future<void> update(
@@ -87,16 +89,22 @@ class IntentionsRepository {
     required IntentionKind kind,
     required When when,
     String? link,
+    String? activityIcon,
   }) => (_db.update(_db.intentions)..where((t) => t.id.equals(id))).write(
     IntentionsCompanion(
       note: Value(note),
       kind: Value(kind),
+      activityIcon: Value(_icon(kind, activityIcon)),
       link: Value(_link(link)),
       date: Value(when.date == null ? null : wholeSeconds(when.date!)),
       horizon: Value(when.horizon),
       condition: Value(_condition(when)),
     ),
   );
+
+  /// An activity icon belongs to a meetup or a game; other kinds drop it.
+  static String? _icon(IntentionKind kind, String? icon) =>
+      kind == IntentionKind.meet || kind == IntentionKind.game ? icon : null;
 
   /// Sets only the "when" ("Set a date", "Pick a date").
   Future<void> setWhen(String id, When when) =>
