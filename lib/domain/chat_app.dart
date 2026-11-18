@@ -201,10 +201,21 @@ enum ChatApp {
   String? targetLink(String? target) {
     final t = target?.trim() ?? '';
     if (t.isEmpty) return null;
-    if (_hasScheme(t)) return t;
+    if (_hasScheme(t)) return _tidy(t);
     final withHttps = 'https://$t';
-    if (forLink(withHttps) == this) return withHttps;
+    if (forLink(withHttps) == this) return _tidy(withHttps);
     return bareTargetLink(t);
+  }
+
+  /// Small fixes to a pasted link. Discord: a message link
+  /// (`/channels/@me/<chat>/<message>`, from "Copy Message Link") becomes
+  /// the link of the chat, which the developer tested (2026-11-18).
+  String _tidy(String link) {
+    if (this != discord) return link;
+    final m = RegExp(
+      r'^(https://(?:[a-z]+\.)?discord(?:app)?\.com/channels/@me/\d+)/\d+/?$',
+    ).firstMatch(link);
+    return m == null ? link : m.group(1)!;
   }
 }
 

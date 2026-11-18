@@ -16,6 +16,22 @@ void main() {
       );
     });
 
+    test('a Discord message link becomes the link of the chat', () {
+      expect(
+        ChatApp.discord.targetLink(
+          'https://discord.com/channels/@me/1111111111/2222222222',
+        ),
+        'https://discord.com/channels/@me/1111111111',
+      );
+      expect(
+        ChatApp.discord.targetLink('discord.com/channels/@me/1111111111/22'),
+        'https://discord.com/channels/@me/1111111111',
+      );
+      // A server channel link is left alone.
+      const server = 'https://discord.com/channels/123/456/789';
+      expect(ChatApp.discord.targetLink(server), server);
+    });
+
     test('a link without scheme but with the app host gets https', () {
       expect(ChatApp.telegram.targetLink('t.me/anna'), 'https://t.me/anna');
     });
