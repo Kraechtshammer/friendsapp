@@ -124,7 +124,7 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 **Ideas for after 1.0.0**
 
 - Rotating praise and example texts.
-- An icon per activity (needs a column and a larger icon set). Drafts v1 (2026-11-18) in `docs/concepts/meetup-icons-v1/`; rerun `board.py` there to rebuild `board.html` after changes. Also on the concept canvas as one board per activity (row "Meetup icons v1"); `canvas_boards.py` regenerates the boards. Being refined with the developer.
+- An icon per activity (needs a column and a larger icon set). Drafts v1 (2026-11-18) in `docs/concepts/meetup-icons-v1/`; rerun `board.py` there to rebuild `board.html` after changes. Also on the concept canvas as one board per activity (row "Meetup icons v1"); `canvas_boards.py <round>` regenerates a row. Round 2 (2026-11-18): the developer picked bar, boardgames (a), gym, karaoke, cinema (both), shopping, concert, concert-b as "making music", cooking, diy (a), bench for walk; climber (bouldering-c/d), runner (sports-c/d) and restaurant with food (restaurant-b/c) redrawn, row "Meetup icons v2".
 - Backup export and import.
 - The "two come closer" badge (sketches in `docs/concepts/badge-ideas/`).
 - Groups and shared events; quick "do soon" items (02-design.md §6.12); doctor appointments; iOS.

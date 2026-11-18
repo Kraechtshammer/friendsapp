@@ -470,6 +470,118 @@
       "w": 560,
       "h": 300,
       "title": "Meetup icons v1 · Reused as they are"
+    },
+    "MeetupV2Weight.dc.html": {
+      "x": 0,
+      "y": 15960,
+      "w": 1180,
+      "h": 200,
+      "title": "Meetup icons v2 · weight check at 26 px: existing set | drafts"
+    },
+    "MeetupV2BoulderingNew.dc.html": {
+      "x": 0,
+      "y": 16280,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v2 · Bouldering (new)"
+    },
+    "MeetupV2SportsNew.dc.html": {
+      "x": 440,
+      "y": 16280,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v2 · Sports (new)"
+    },
+    "MeetupV2RestaurantNew.dc.html": {
+      "x": 880,
+      "y": 16280,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v2 · Restaurant (new)"
+    },
+    "MeetupV2Bar.dc.html": {
+      "x": 1320,
+      "y": 16280,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v2 · Bar"
+    },
+    "MeetupV2BoardGames.dc.html": {
+      "x": 1760,
+      "y": 16280,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v2 · Board games"
+    },
+    "MeetupV2Cinema.dc.html": {
+      "x": 2200,
+      "y": 16280,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v2 · Cinema"
+    },
+    "MeetupV2Concert.dc.html": {
+      "x": 2640,
+      "y": 16280,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v2 · Concert"
+    },
+    "MeetupV2MakingMusic.dc.html": {
+      "x": 0,
+      "y": 16700,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v2 · Making music"
+    },
+    "MeetupV2CookingTogether.dc.html": {
+      "x": 440,
+      "y": 16700,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v2 · Cooking together"
+    },
+    "MeetupV2Diy.dc.html": {
+      "x": 880,
+      "y": 16700,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v2 · DIY"
+    },
+    "MeetupV2Gym.dc.html": {
+      "x": 1320,
+      "y": 16700,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v2 · Gym"
+    },
+    "MeetupV2Karaoke.dc.html": {
+      "x": 1760,
+      "y": 16700,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v2 · Karaoke"
+    },
+    "MeetupV2Shopping.dc.html": {
+      "x": 2200,
+      "y": 16700,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v2 · Shopping"
+    },
+    "MeetupV2Walk.dc.html": {
+      "x": 2640,
+      "y": 16700,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v2 · Walk"
+    },
+    "MeetupV2ReusedAsTheyAre.dc.html": {
+      "x": 0,
+      "y": 17120,
+      "w": 560,
+      "h": 300,
+      "title": "Meetup icons v2 · Reused as they are"
     }
   },
   "createdOnFiles": {
@@ -576,6 +688,14 @@
       "kind": "title1",
       "maxW": 2740,
       "text": "Meetup icons v1: one board per activity, dark and light, at 22, 36 and 72 px"
+    },
+    "tMeetupV2": {
+      "x": 0,
+      "y": 15660,
+      "w": 240,
+      "kind": "title1",
+      "maxW": 2740,
+      "text": "Meetup icons v2: picks from v1, new climber, runner and restaurant"
     }
   },
   "order": [
@@ -645,7 +765,23 @@
     "MeetupShopping.dc.html",
     "MeetupSports.dc.html",
     "MeetupWalk.dc.html",
-    "MeetupReusedAsTheyAre.dc.html"
+    "MeetupReusedAsTheyAre.dc.html",
+    "MeetupV2Weight.dc.html",
+    "MeetupV2BoulderingNew.dc.html",
+    "MeetupV2SportsNew.dc.html",
+    "MeetupV2RestaurantNew.dc.html",
+    "MeetupV2Bar.dc.html",
+    "MeetupV2BoardGames.dc.html",
+    "MeetupV2Cinema.dc.html",
+    "MeetupV2Concert.dc.html",
+    "MeetupV2MakingMusic.dc.html",
+    "MeetupV2CookingTogether.dc.html",
+    "MeetupV2Diy.dc.html",
+    "MeetupV2Gym.dc.html",
+    "MeetupV2Karaoke.dc.html",
+    "MeetupV2Shopping.dc.html",
+    "MeetupV2Walk.dc.html",
+    "MeetupV2ReusedAsTheyAre.dc.html"
   ],
   "pages": [],
   "title": "Friends app concept screens"
