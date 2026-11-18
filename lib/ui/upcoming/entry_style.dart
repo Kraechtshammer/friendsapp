@@ -1,5 +1,6 @@
 import '../../app/theme.dart';
 import '../../data/database.dart';
+import '../../domain/contact_event.dart';
 import '../../domain/intention.dart';
 import '../../domain/display_name.dart';
 import '../../domain/timeline.dart';
@@ -7,6 +8,7 @@ import '../../l10n/app_localizations.dart';
 import '../../l10n/labels.dart';
 import '../kept_icon.dart';
 import '../material.dart';
+import '../widgets/activity_icon_picker.dart';
 
 /// How a timeline entry looks, shared by the Upcoming tab and the "coming
 /// up" cards on Home (concept V6 · Upcoming).
@@ -63,3 +65,15 @@ String entrySubtitle(
 
 /// The tilt of the badge at [index]: 2 to 3 degrees, alternating.
 double entryTilt(int index) => const [-3.0, 2.0, -2.0, 3.0][index % 4];
+
+/// The icon of a contact on a timeline: the activity's icon when the user
+/// gave one, else the kind's.
+KeptIcons contactIcon(ContactEvent e) =>
+    activityIconByName(e.activityIcon) ??
+    switch (e.kind) {
+      ContactKind.wrote => KeptIcons.chat,
+      ContactKind.called => KeptIcons.phone,
+      ContactKind.met => KeptIcons.people,
+      ContactKind.gamed => KeptIcons.controller,
+      ContactKind.birthdayWish => KeptIcons.cake,
+    };

@@ -3379,6 +3379,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} +{count}'**
   String niceOneStampsOf(String name, int count);
+
+  /// No description provided for @activityIconButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon for the activity'**
+  String get activityIconButton;
+
+  /// No description provided for @activityIconPick.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick an icon'**
+  String get activityIconPick;
+
+  /// No description provided for @activityIconNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No icon'**
+  String get activityIconNone;
 }
 
 class _AppLocalizationsDelegate

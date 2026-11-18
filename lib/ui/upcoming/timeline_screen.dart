@@ -258,7 +258,7 @@ class _PastRow extends ConsumerWidget {
         day: entry.day,
         accent: _contactAccent(event.kind),
         tilt: tilt,
-        icon: _contactIcon(event.kind),
+        icon: contactIcon(event),
         title: contactTitle(event, shortNameIn(names, person), l10n),
         people: couple?.members ?? [person],
         subtitle: [
@@ -321,14 +321,6 @@ Color _contactAccent(ContactKind kind) => switch (kind) {
   ContactKind.met => KeptColors.mint,
   ContactKind.gamed => KeptColors.lilac,
   ContactKind.birthdayWish => KeptColors.pink,
-};
-
-KeptIcons _contactIcon(ContactKind kind) => switch (kind) {
-  ContactKind.wrote => KeptIcons.chat,
-  ContactKind.called => KeptIcons.phone,
-  ContactKind.met => KeptIcons.people,
-  ContactKind.gamed => KeptIcons.controller,
-  ContactKind.birthdayWish => KeptIcons.cake,
 };
 
 void _openPerson(BuildContext context, Person person) => Navigator.of(context)

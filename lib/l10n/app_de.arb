@@ -604,5 +604,8 @@
   "coupleChatWho": "Wen möchtest du anschreiben?",
   "removeCoupleLine": "Die Verknüpfung als Paar wird ebenfalls gelöst.",
   "niceOneStampsOf": "{name} +{count}",
-  "@niceOneStampsOf": {"placeholders": {"name": {"type": "String"}, "count": {"type": "int"}}}
+  "@niceOneStampsOf": {"placeholders": {"name": {"type": "String"}, "count": {"type": "int"}}},
+  "activityIconButton": "Symbol für die Aktivität",
+  "activityIconPick": "Wähle ein Symbol",
+  "activityIconNone": "Kein Symbol"
 }

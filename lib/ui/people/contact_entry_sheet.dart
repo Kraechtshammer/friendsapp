@@ -2,8 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../data/database.dart';
+import '../../domain/contact_event.dart';
 import '../common.dart';
 import '../material.dart';
+import '../widgets/activity_icon_picker.dart';
 import '../widgets/grey_button.dart';
 import '../widgets/kept_text_field.dart';
 import '../widgets/main_button.dart';
@@ -36,6 +38,12 @@ class _EntrySheet extends ConsumerStatefulWidget {
 class _EntrySheetState extends ConsumerState<_EntrySheet> {
   late final _activity = TextEditingController(text: widget.event.activity);
   late final _note = TextEditingController(text: widget.event.note);
+  late var _icon = activityIconByName(widget.event.activityIcon);
+
+  /// Only meetings and games get an activity icon, as on "Nice one".
+  bool get _hasIcon =>
+      widget.event.kind == ContactKind.met ||
+      widget.event.kind == ContactKind.gamed;
 
   @override
   void dispose() {
@@ -57,6 +65,7 @@ class _EntrySheetState extends ConsumerState<_EntrySheet> {
         .update(
           widget.event.id,
           activity: _clean(_activity.text),
+          activityIcon: _hasIcon ? _icon?.name : widget.event.activityIcon,
           note: _clean(_note.text),
         );
     navigator.pop();
@@ -126,11 +135,23 @@ class _EntrySheetState extends ConsumerState<_EntrySheet> {
               l10n.coupleAlsoChanges(others.join(' & ')),
               style: context.text.bodySmall?.copyWith(color: kept.muted),
             ),
-          KeptTextField(
-            controller: _activity,
-            label: l10n.entryActivity,
-            fillColor: kept.ground,
-            textCapitalization: TextCapitalization.sentences,
+          Row(
+            spacing: 10,
+            children: [
+              Expanded(
+                child: KeptTextField(
+                  controller: _activity,
+                  label: l10n.entryActivity,
+                  fillColor: kept.ground,
+                  textCapitalization: TextCapitalization.sentences,
+                ),
+              ),
+              if (_hasIcon)
+                ActivityIconButton(
+                  icon: _icon,
+                  onChanged: (icon) => setState(() => _icon = icon),
+                ),
+            ],
           ),
           KeptTextField(
             controller: _note,

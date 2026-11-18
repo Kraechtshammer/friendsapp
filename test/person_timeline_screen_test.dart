@@ -8,6 +8,7 @@ import 'package:kept/data/database.dart';
 import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
+import 'package:kept/ui/kept_icon.dart';
 import 'package:kept/ui/material.dart';
 
 import 'fake_notifications.dart';
@@ -253,6 +254,50 @@ void main() {
     expect(wrote.activity, 'chat');
     expect(wrote.note, isNull);
     expect(find.text('You wrote · chat'), findsOneWidget);
+    await closeDown(tester);
+  });
+
+  testWidgets('a meeting gets an icon that the timeline shows', (tester) async {
+    await start(tester);
+    bool climberShown() => tester
+        .widgetList<KeptIcon>(find.byType(KeptIcon))
+        .any((w) => w.icon == KeptIcons.climber);
+
+    // Writing has no activity icon.
+    await tester.tap(find.text('You wrote'));
+    await tester.pumpAndSettle();
+    expect(find.byTooltip('Icon for the activity'), findsNothing);
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('You met · bouldering'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Icon for the activity'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byWidgetPredicate(
+        (w) => w is KeptIcon && w.icon == KeptIcons.climber,
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    Future<ContactEvent> met() async =>
+        (await events(tester)).firstWhere((e) => e.kind == ContactKind.met);
+    expect((await met()).activityIcon, 'climber');
+    expect(climberShown(), isTrue);
+
+    // "No icon" clears it again.
+    await tester.tap(find.text('You met · bouldering'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Icon for the activity'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('No icon'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    expect((await met()).activityIcon, isNull);
+    expect(climberShown(), isFalse);
     await closeDown(tester);
   });
 

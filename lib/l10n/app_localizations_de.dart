@@ -2068,4 +2068,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String niceOneStampsOf(String name, int count) {
     return '$name +$count';
   }
+
+  @override
+  String get activityIconButton => 'Symbol für die Aktivität';
+
+  @override
+  String get activityIconPick => 'Wähle ein Symbol';
+
+  @override
+  String get activityIconNone => 'Kein Symbol';
 }

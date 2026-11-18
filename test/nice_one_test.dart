@@ -9,6 +9,7 @@ import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
 import 'package:kept/ui/home/nice_one_screen.dart';
+import 'package:kept/ui/kept_icon.dart';
 import 'package:kept/ui/material.dart';
 import 'package:kept/ui/people/person_screen.dart';
 
@@ -142,6 +143,36 @@ void main() {
     await tester.pumpAndSettle();
     // In the pick and in the list below it.
     expect(find.text('Last time: new job in March'), findsNWidgets(2));
+    await closeDown(tester);
+  });
+
+  testWidgets('the icon button picks an icon for the activity', (tester) async {
+    await start(tester, IntentionKind.meet);
+    await tapDone(tester);
+
+    KeptIcon? climber() => tester
+        .widgetList<KeptIcon>(find.byType(KeptIcon))
+        .where((w) => w.icon == KeptIcons.climber)
+        .firstOrNull;
+    expect(climber(), isNull);
+    await tester.tap(find.byTooltip('Icon for the activity'));
+    await tester.pumpAndSettle();
+    expect(find.text('Pick an icon'), findsOneWidget);
+    // Nothing chosen yet, so there is nothing to clear.
+    expect(find.text('No icon'), findsNothing);
+    await tester.tap(
+      find.byWidgetPredicate(
+        (w) => w is KeptIcon && w.icon == KeptIcons.climber,
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Pick an icon'), findsNothing);
+    // The button now shows the chosen icon.
+    expect(climber(), isNotNull);
+
+    await tester.tap(find.text('Close'));
+    await tester.pumpAndSettle();
+    expect((await events(tester)).single.activityIcon, 'climber');
     await closeDown(tester);
   });
 

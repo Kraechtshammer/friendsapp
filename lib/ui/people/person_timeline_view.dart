@@ -114,7 +114,7 @@ class PersonTimelineView extends ConsumerWidget {
               switch (e) {
                 ContactEntry(:final event) => _Row(
                   date: _DateText(e.day, now),
-                  icon: _contactIcon(event.kind),
+                  icon: contactIcon(event),
                   arrow: _arrow(event.direction),
                   title: contactTitle(event, name, l10n),
                   note: join([withPartner(event.groupId), _note(event.note)]),
@@ -187,14 +187,6 @@ String contactTitle(ContactEvent e, String name, AppLocalizations l10n) {
   final activity = e.activity?.trim();
   return activity == null || activity.isEmpty ? what : '$what · $activity';
 }
-
-KeptIcons _contactIcon(ContactKind kind) => switch (kind) {
-  ContactKind.wrote => KeptIcons.chat,
-  ContactKind.called => KeptIcons.phone,
-  ContactKind.met => KeptIcons.people,
-  ContactKind.gamed => KeptIcons.controller,
-  ContactKind.birthdayWish => KeptIcons.cake,
-};
 
 IconData? _arrow(ContactDirection d) => switch (d) {
   ContactDirection.byUser => Icons.north_east_rounded,

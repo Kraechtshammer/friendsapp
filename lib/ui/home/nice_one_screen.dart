@@ -18,6 +18,7 @@ import '../widgets/couple_avatar.dart';
 import '../widgets/kept_switch.dart';
 import '../widgets/grey_button.dart';
 import '../widgets/kept_card.dart';
+import '../widgets/activity_icon_picker.dart';
 import '../widgets/kept_text_field.dart';
 import '../widgets/main_button.dart';
 import '../widgets/section_label.dart';
@@ -263,6 +264,7 @@ class NiceOneScreen extends ConsumerStatefulWidget {
 
 class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
   late final _activity = TextEditingController(text: widget.thought);
+  late var _icon = activityIconByName(widget.event.activityIcon);
   final _line = TextEditingController();
   final _planNote = TextEditingController();
   var _planWhen = const When.none();
@@ -299,6 +301,7 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
           .update(
             widget.event.id,
             activity: _asksActivity ? _textOrNull(_activity) : null,
+            activityIcon: _asksActivity ? _icon?.name : null,
             note: line,
           ),
     );
@@ -388,11 +391,23 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
                               children: [
                                 if (_asksActivity) ...[
                                   _Label(l10n.activityLabel),
-                                  KeptTextField(
-                                    controller: _activity,
-                                    fillColor: kept.ground,
-                                    textCapitalization:
-                                        TextCapitalization.sentences,
+                                  Row(
+                                    spacing: 10,
+                                    children: [
+                                      Expanded(
+                                        child: KeptTextField(
+                                          controller: _activity,
+                                          fillColor: kept.ground,
+                                          textCapitalization:
+                                              TextCapitalization.sentences,
+                                        ),
+                                      ),
+                                      ActivityIconButton(
+                                        icon: _icon,
+                                        onChanged: (icon) =>
+                                            setState(() => _icon = icon),
+                                      ),
+                                    ],
                                   ),
                                 ],
                                 _Label(l10n.nextTimeLabel),

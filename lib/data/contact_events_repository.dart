@@ -40,6 +40,7 @@ class ContactEventsRepository {
     required ContactDirection direction,
     required ContactSource source,
     String? activity,
+    String? activityIcon,
     String? note,
     String? intentionId,
     String? groupId,
@@ -57,6 +58,7 @@ class ContactEventsRepository {
       note: note,
       intentionId: intentionId,
       createdAt: wholeSeconds(now ?? DateTime.now()),
+      activityIcon: activityIcon,
       groupId: groupId,
       sharedId: sharedId,
     );
@@ -80,6 +82,7 @@ class ContactEventsRepository {
     required ContactDirection direction,
     required ContactSource source,
     String? activity,
+    String? activityIcon,
     String? note,
     String? intentionId,
     DateTime? now,
@@ -104,6 +107,7 @@ class ContactEventsRepository {
             direction: direction,
             source: source,
             activity: activity,
+            activityIcon: activityIcon,
             note: note,
             intentionId: intentionId,
             groupId: groupId,
@@ -339,19 +343,25 @@ class ContactEventsRepository {
     });
   }
 
-  /// Sets the activity and the note of an event. Both are replaced, so
-  /// null clears one. Nothing else of an event can change. For a shared
+  /// Sets the activity, its icon and the note of an event. All three are
+  /// replaced, so null clears one. Nothing else of an event can change. For a shared
   /// event (a meeting with a couple) every row of it changes, so all
   /// timelines show the same.
-  Future<void> update(String id, {String? activity, String? note}) =>
-      _db.transaction(() async {
-        final ids = await sharedRowIds(id);
-        await (_db.update(
-          _db.contactEvents,
-        )..where((t) => t.id.isIn(ids))).write(
-          ContactEventsCompanion(activity: Value(activity), note: Value(note)),
-        );
-      });
+  Future<void> update(
+    String id, {
+    String? activity,
+    String? activityIcon,
+    String? note,
+  }) => _db.transaction(() async {
+    final ids = await sharedRowIds(id);
+    await (_db.update(_db.contactEvents)..where((t) => t.id.isIn(ids))).write(
+      ContactEventsCompanion(
+        activity: Value(activity),
+        activityIcon: Value(activityIcon),
+        note: Value(note),
+      ),
+    );
+  });
 
   /// Deletes an event; for a shared event every row of it. Stamps stay.
   Future<void> delete(String id) => _db.transaction(() async {

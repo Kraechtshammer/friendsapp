@@ -741,5 +741,8 @@
   "coupleChatWho": "Who do you want to message?",
   "removeCoupleLine": "Their link as a couple goes too.",
   "niceOneStampsOf": "{name} +{count}",
-  "@niceOneStampsOf": {"placeholders": {"name": {"type": "String"}, "count": {"type": "int"}}}
+  "@niceOneStampsOf": {"placeholders": {"name": {"type": "String"}, "count": {"type": "int"}}},
+  "activityIconButton": "Icon for the activity",
+  "activityIconPick": "Pick an icon",
+  "activityIconNone": "No icon"
 }
