@@ -5,7 +5,7 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
 ## 1. Where things stand
 
 - Phase: **implement**. The app is called **Kept.** with the full stop (running text may write Kept). App ID `de.gartenpa.kept`; debug builds use `de.gartenpa.kept.debug`. Repository and folder are `friendsapp`.
-- **M0 to M10 are all built.** Everything is released; the newest release is 0.9.2.
+- **M0 to M10 are all built.** Everything is released; the newest release is 0.9.3.
 - **Released** (tags `v0.1.0` to `v0.9.2`, 2026-11-16 to 2026-11-18, no version skipped):
   - 0.1.0: M1, people, contacts import, "Open chat".
   - 0.2.0: M2 and M3, capture, the evening question, Tonight's pick, "Nice one".
@@ -18,8 +18,8 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
   - 0.9.0: schema 5; settings as categories with icons; language setting; predictive back; short display names, nicknames, pictures (contacts, gallery, shared in with a crop screen).
   - 0.9.1 (2026-11-17): couples screens (Partner row, couple page, couple thoughts, shared meetings). Wanted later: a name for a couple.
   - 0.9.2 (2026-11-18): schema 6, any messenger (15 apps, installed only, one chat target, contact entries, help page, new icons); listener matches Discord DMs by chat id and uses message send times.
-  - Not released yet (2026-11-18): the People tab shows couple members on their own too, and the couple in the less close class (02-design.md §8); "We were in touch" on the person page and "Already happened" on the capture card.
-- **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.9.2 next).
+  - 0.9.3 (2026-11-18): the People tab shows couple members on their own too, and the couple in the less close class (02-design.md §8); "We were in touch" on the person page and "Already happened" on the capture card (tried by the developer: "works").
+- **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.9.4 next).
 - **The developer's phone** (2026-11-16): `de.gartenpa.kept.debug` ("Kept. debug", 0.7.0, test data). The old 0.6.0 debug build under `de.gartenpa.kept` is left only in the Private space (user 11), never opened there; it blocks the release install (signature) and the developer removes it by hand (Claude's uninstall was refused). Then the listener build of the release goes on over adb.
 - **The developer's phone since 0.8.0:** the release listener build `kept-0.8.0-listener.apk` is installed over adb as the real app; 0.9.0 is its first real in-app update test. The developer said on 2026-11-16 that commits may be pushed right away.
 - **Play Protect blocks sideloaded APKs with a notification listener** (found 2026-11-16 on the Pixel 7 Pro: "The app can request access to sensitive data..."). Since then the listener is the build flag `KEPT_INCOMING` (03-dev-setup.md). Each release publishes `kept-<v>.apk` (no listener, installs from the browser) and `kept-<v>-listener.apk` (for the developer, installed over adb); the updater keeps each build on its own kind. Whether Play Protect lets the app's own updater install the listener APK is unverified. A Play internal testing track would be the legal way to ship the listener to others.
@@ -111,11 +111,11 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 - Review of the German texts (written by subagents).
 - The light theme on a phone.
 - Open questions (section 5).
-- Releases take the next number each time (the next after 0.9.2 is 0.9.3).
+- Releases take the next number each time (the next after 0.9.3 is 0.9.4).
 
 **Planned, decided, not built** (to be built in its own session)
 
-- **Log a contact that already happened** (the developer, 2026-11-18, 02-design.md §8): one shared sheet (what: wrote, called, met, played; when: today, yesterday or a date; optional activity and next-time line; Save leads to "Nice one"), reachable from a "We were in touch" button on the person page beside "They wrote" and "They called", and from an "Already happened" choice on the Home capture card. A back-dated contact earns its week's stamp and counts for the streak. **Both parts are built (2026-11-18, not released, untried on the phone).**
+- **Log a contact that already happened** (the developer, 2026-11-18, 02-design.md §8): one shared sheet (what: wrote, called, met, played; when: today, yesterday or a date; optional activity and next-time line; Save leads to "Nice one"), reachable from a "We were in touch" button on the person page beside "They wrote" and "They called", and from an "Already happened" choice on the Home capture card. A back-dated contact earns its week's stamp and counts for the streak. **Both parts are built and in 0.9.3.**
 
 **Ideas for after 1.0.0**
 

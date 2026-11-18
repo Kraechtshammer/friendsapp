@@ -204,7 +204,7 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Listener build: an ignored WhatsApp message that is shown again the next day is not recorded a second time.
 - [ ] Editing a person: a pasted Discord message link is shortened to the chat link on Save.
 
-## We were in touch (not released yet)
+## We were in touch and the couples list (in 0.9.3)
 
 - [ ] Person page, "We were in touch": pick Met and Yesterday, Save: Nice one asks for the activity and shows a stamp; the timeline has "You met" under yesterday.
 - [ ] "Pick a day" with a day of last week: the stamp lands in last week (Progress tab), and the streak counts that week.
