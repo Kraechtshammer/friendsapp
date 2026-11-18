@@ -1190,6 +1190,12 @@ abstract class AppLocalizations {
   /// **'{date}'**
   String dateWeekday(DateTime date);
 
+  /// No description provided for @dateMonthShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}'**
+  String dateMonthShort(DateTime date);
+
   /// No description provided for @dateDayNumber.
   ///
   /// In en, this message translates to:

@@ -17,6 +17,7 @@ class DateBadge extends StatelessWidget {
     this.tilt = 0,
     this.small = false,
     this.today = false,
+    this.month = false,
   });
 
   final DateTime date;
@@ -27,12 +28,21 @@ class DateBadge extends StatelessWidget {
   /// Shows "Today" in place of the weekday.
   final bool today;
 
+  /// Shows the month in place of the weekday, for dates further away where
+  /// no group label names the month.
+  final bool month;
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final weekday = (today ? l10n.timelineToday : l10n.dateWeekday(date))
-        .replaceAll('.', '')
-        .toUpperCase();
+    final weekday =
+        (today
+                ? l10n.timelineToday
+                : month
+                ? l10n.dateMonthShort(date)
+                : l10n.dateWeekday(date))
+            .replaceAll('.', '')
+            .toUpperCase();
     final badge = Container(
       width: small ? 46 : 56,
       height: small ? 48 : 58,

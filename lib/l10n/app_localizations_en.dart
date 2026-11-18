@@ -655,6 +655,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String dateMonthShort(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.MMM(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
+  }
+
+  @override
   String dateDayNumber(DateTime date) {
     final intl.DateFormat dateDateFormat = intl.DateFormat.d(localeName);
     final String dateString = dateDateFormat.format(date);

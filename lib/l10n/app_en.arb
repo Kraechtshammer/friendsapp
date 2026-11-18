@@ -310,6 +310,8 @@
   "editThought": "Edit thought",
   "dateWeekday": "{date}",
   "@dateWeekday": {"placeholders": {"date": {"type": "DateTime", "format": "EEE", "isCustomDateFormat": "true"}}},
+  "dateMonthShort": "{date}",
+  "@dateMonthShort": {"placeholders": {"date": {"type": "DateTime", "format": "MMM", "isCustomDateFormat": "true"}}},
   "dateDayNumber": "{date}",
   "@dateDayNumber": {"placeholders": {"date": {"type": "DateTime", "format": "d", "isCustomDateFormat": "true"}}},
   "dateShort": "{date}",

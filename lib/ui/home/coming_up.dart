@@ -101,6 +101,7 @@ class _Card extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final e = entry;
     final l10n = context.l10n;
+    final now = ref.watch(clockProvider)();
     final names = ref.watch(displayNamesProvider);
     // Concept: "Bouldering, Tom".
     final title = switch (e) {
@@ -133,7 +134,12 @@ class _Card extends ConsumerWidget {
                 accent: entryAccent(e),
                 tilt: tilt,
                 small: true,
-                today: isToday(e.day, ref.watch(clockProvider)()),
+                today: isToday(e.day, now),
+                // Within a week the weekday says enough; further out the
+                // month does.
+                month: !e.day.isBefore(
+                  DateTime(now.year, now.month, now.day + 7),
+                ),
               ),
               KeptIcon(entryIcon(e), size: 30),
             ],
