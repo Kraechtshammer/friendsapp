@@ -30,9 +30,9 @@ import 'people/people_screen.dart';
 import 'setup/first_start_screen.dart';
 import 'progress/progress_screen.dart';
 import 'settings/update_tiles.dart';
-import 'upcoming/upcoming_screen.dart';
+import 'upcoming/timeline_screen.dart';
 
-/// The four tabs: Home, Upcoming, People, Progress. Settings open from the
+/// The four tabs: Home, Timeline, People, Progress. Settings open from the
 /// gear on Home.
 ///
 /// It also keeps the evening question (02-design.md §2.2) scheduled, each
@@ -527,7 +527,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
               onAddPeople: () => setState(() => _tab = 2),
               onShowUpcoming: () => setState(() => _tab = 1),
             ),
-            const UpcomingScreen(),
+            const TimelineScreen(),
             const PeopleScreen(),
             const ProgressScreen(),
           ],
@@ -543,7 +543,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           ),
           NavigationDestination(
             icon: const KeptIcon(KeptIcons.calendar, size: 26),
-            label: l10n.tabUpcoming,
+            label: l10n.tabTimeline,
           ),
           NavigationDestination(
             icon: const KeptIcon(KeptIcons.people, size: 26),

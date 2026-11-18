@@ -16,7 +16,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tabHome => 'Start';
 
   @override
-  String get tabUpcoming => 'Demnächst';
+  String get tabTimeline => 'Zeitleiste';
 
   @override
   String get tabPeople => 'Leute';
@@ -707,11 +707,12 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get upcomingTitle => 'Demnächst';
+  String get timelineSubtitle =>
+      'Was kommt und was war. Hier ist nie etwas überfällig.';
 
   @override
-  String get upcomingSubtitle =>
-      'Geburtstage und Termine, die du gesetzt hast. Hier ist nie etwas überfällig.';
+  String get pastEmpty =>
+      'Noch nichts. Anrufe, Treffen, Zocken und Geburtstage erscheinen hier.';
 
   @override
   String get upcomingEmpty =>
@@ -722,6 +723,22 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get groupNextWeek => 'Nächste Woche';
+
+  @override
+  String get groupEarlierThisWeek => 'Früher diese Woche';
+
+  @override
+  String get groupLastWeek => 'Letzte Woche';
+
+  @override
+  String turnedAge(int age) {
+    return 'Wurde $age';
+  }
+
+  @override
+  String wishesFrom(String names) {
+    return 'Glückwünsche von $names';
+  }
 
   @override
   String birthdayOf(String name) {

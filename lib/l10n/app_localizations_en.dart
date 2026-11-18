@@ -16,7 +16,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabHome => 'Home';
 
   @override
-  String get tabUpcoming => 'Upcoming';
+  String get tabTimeline => 'Timeline';
 
   @override
   String get tabPeople => 'People';
@@ -701,11 +701,12 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get upcomingTitle => 'Coming up';
+  String get timelineSubtitle =>
+      'What is coming and what happened. Nothing here is ever late.';
 
   @override
-  String get upcomingSubtitle =>
-      'Birthdays and dates you have set. Nothing here is ever late.';
+  String get pastEmpty =>
+      'Nothing yet. Calls, meet-ups, gaming and birthdays will show up here.';
 
   @override
   String get upcomingEmpty =>
@@ -716,6 +717,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get groupNextWeek => 'Next week';
+
+  @override
+  String get groupEarlierThisWeek => 'Earlier this week';
+
+  @override
+  String get groupLastWeek => 'Last week';
+
+  @override
+  String turnedAge(int age) {
+    return 'Turned $age';
+  }
+
+  @override
+  String wishesFrom(String names) {
+    return 'Wishes from $names';
+  }
 
   @override
   String birthdayOf(String name) {

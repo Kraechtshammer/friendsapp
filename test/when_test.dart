@@ -132,8 +132,8 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  Future<void> goToUpcoming(WidgetTester tester) async {
-    await tester.tap(find.text('Upcoming'));
+  Future<void> goToTimeline(WidgetTester tester) async {
+    await tester.tap(find.text('Timeline'));
     await tester.pumpAndSettle();
   }
 
@@ -432,11 +432,11 @@ void main() {
     });
   });
 
-  group('the Upcoming tab', () {
+  group('the Timeline tab', () {
     testWidgets('says so calmly when there is nothing', (tester) async {
       await start(tester, birthday: false);
-      await goToUpcoming(tester);
-      expect(find.text('Coming up'), findsOneWidget);
+      await goToTimeline(tester);
+      expect(find.text('TODAY'), findsOneWidget);
       expect(
         find.text(
           'Nothing dated yet. Birthdays and the dates you set will show up '
@@ -445,6 +445,54 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('NO DATE YET'), findsNothing);
+      await closeDown(tester);
+    });
+
+    testWidgets('shows what happened below Today, without writing', (
+      tester,
+    ) async {
+      await start(
+        tester,
+        seed: (add) async {
+          final contacts = services.contactEventsFor(demo: false);
+          for (final (at, kind, direction) in [
+            (
+              DateTime(2026, 11, 16, 10),
+              ContactKind.met,
+              ContactDirection.together,
+            ),
+            (
+              DateTime(2026, 11, 15, 9),
+              ContactKind.wrote,
+              ContactDirection.byThem,
+            ),
+            (
+              DateTime(2026, 11, 12, 18),
+              ContactKind.called,
+              ContactDirection.byThem,
+            ),
+          ]) {
+            await contacts.add(
+              personId: tom.id,
+              at: at,
+              kind: kind,
+              direction: direction,
+              source: ContactSource.manual,
+              now: at,
+            );
+          }
+        },
+      );
+      await goToTimeline(tester);
+      expect(find.text('You met'), findsOneWidget);
+      expect(find.text('LAST WEEK'), findsOneWidget);
+      expect(find.text('Tom called'), findsOneWidget);
+      expect(find.text('Tom wrote'), findsNothing);
+      final y = [
+        for (final t in ['TODAY', 'You met', 'LAST WEEK', 'Tom called'])
+          tester.getTopLeft(find.text(t)).dy,
+      ];
+      expect(y, orderedEquals([...y]..sort()));
       await closeDown(tester);
     });
 
@@ -460,7 +508,7 @@ void main() {
           await add('Old plan', when: When.date(DateTime(2026, 11, 2)));
         },
       );
-      await goToUpcoming(tester);
+      await goToTimeline(tester);
       expect(find.text('THIS WEEK'), findsOneWidget);
       expect(find.text("Anna's birthday"), findsOneWidget);
       expect(find.text('Turns 36'), findsOneWidget);
@@ -469,9 +517,14 @@ void main() {
       expect(find.text('DECEMBER'), findsOneWidget);
       expect(find.text('Aunt visits'), findsOneWidget);
       expect(find.text('Old plan'), findsNothing);
-      // Soonest first.
+      // The soonest sits nearest the "Today" mark, below the later ones.
       final y = [
-        for (final t in ["Anna's birthday", 'Bouldering', 'Aunt visits'])
+        for (final t in [
+          'Aunt visits',
+          'Bouldering',
+          "Anna's birthday",
+          'TODAY',
+        ])
           tester.getTopLeft(find.text(t)).dy,
       ];
       expect(y, orderedEquals([...y]..sort()));
@@ -493,7 +546,7 @@ void main() {
           );
         },
       );
-      await goToUpcoming(tester);
+      await goToTimeline(tester);
       expect(find.text('NO DATE YET'), findsOneWidget);
       for (final t in ['Soon', 'Later', 'When…']) {
         expect(find.text(t), findsOneWidget);
@@ -509,7 +562,7 @@ void main() {
         seed: (add) =>
             add('Ramen night', when: const When.horizon(Horizon.soon)),
       );
-      await goToUpcoming(tester);
+      await goToTimeline(tester);
       await tapText(tester, 'Pick a date');
       await pickDay(tester, '24');
       expect(find.text('NO DATE YET'), findsNothing);
@@ -526,7 +579,7 @@ void main() {
         seed: (add) =>
             add('Bouldering', when: When.date(DateTime(2026, 11, 21))),
       );
-      await goToUpcoming(tester);
+      await goToTimeline(tester);
       await tapText(tester, 'Bouldering');
       expect(find.text('Edit thought'), findsOneWidget);
       await closeDown(tester);
@@ -549,11 +602,11 @@ void main() {
       await closeDown(tester);
     });
 
-    testWidgets('See all leads to the Upcoming tab', (tester) async {
+    testWidgets('See all leads to the Timeline tab', (tester) async {
       await start(tester);
       await tapText(tester, 'See all');
       expect(find.text('THIS WEEK'), findsOneWidget);
-      expect(find.text('Coming up'), findsOneWidget);
+      expect(find.text('TODAY'), findsOneWidget);
       await closeDown(tester);
     });
 
@@ -672,7 +725,7 @@ void main() {
       expect(i.note, 'Bouldering');
       expect(await events(tester), isEmpty);
       // It shows under "No date yet", not on the timeline.
-      await goToUpcoming(tester);
+      await goToTimeline(tester);
       expect(find.text('NO DATE YET'), findsOneWidget);
       expect(find.text('Bouldering'), findsOneWidget);
       await closeDown(tester);

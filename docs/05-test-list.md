@@ -213,3 +213,12 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Home capture card: type "Bouldering", pick a person, Meet, "Already happened", Yesterday, Save: Nice one has "Bouldering" as the activity; no new open thought; the card is empty again.
 - [ ] The same for a couple: both timelines have one entry and both get a stamp.
 - [ ] Turning "Already happened" off brings the When row back as it was.
+
+## Timeline tab
+
+- [ ] The tab is called Timeline (Zeitleiste in German) and opens with "Today" in the middle of the screen.
+- [ ] Scrolling up shows what is coming, the soonest right above Today; the plans without a date are at the very top.
+- [ ] Scrolling down shows calls, meet-ups, gaming and birthdays, newest first; no "wrote" entries.
+- [ ] A birthday you congratulated on says "You congratulated"; one you did not just shows the birthday.
+- [ ] Your own birthday lists who congratulated you.
+- [ ] Tapping a past contact opens its edit sheet; tapping a past birthday opens the person.

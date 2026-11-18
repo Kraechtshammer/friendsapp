@@ -112,8 +112,11 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 - The light theme on a phone.
 - Open questions (section 5).
 - Releases take the next number each time (the next after 0.9.3 is 0.9.4).
+- **Timeline tab** (2026-11-18, not released): replaces Upcoming; Today in the middle, future above, past below (02-design.md §8).
 
 **Planned, decided, not built** (to be built in its own session)
+
+- **One entry per day for texting** (the developer, 2026-11-18, next to build): a day with many messages with one person becomes one entry on the person timeline ("You texted" when both wrote). Then the Timeline tab can include writing as one line per day: "You texted with Maria, Jonas and William". Not designed in detail yet.
 
 - **Log a contact that already happened** (the developer, 2026-11-18, 02-design.md §8): one shared sheet (what: wrote, called, met, played; when: today, yesterday or a date; optional activity and next-time line; Save leads to "Nice one"), reachable from a "We were in touch" button on the person page beside "They wrote" and "They called", and from an "Already happened" choice on the Home capture card. A back-dated contact earns its week's stamp and counts for the streak. **Both parts are built and in 0.9.3.**
 

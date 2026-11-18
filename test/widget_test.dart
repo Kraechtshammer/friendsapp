@@ -34,7 +34,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Hello'), findsOneWidget);
-    for (final tab in ['Home', 'Upcoming', 'People', 'Progress']) {
+    for (final tab in ['Home', 'Timeline', 'People', 'Progress']) {
       expect(find.text(tab), findsWidgets);
     }
 

@@ -110,11 +110,11 @@ abstract class AppLocalizations {
   /// **'Home'**
   String get tabHome;
 
-  /// No description provided for @tabUpcoming.
+  /// No description provided for @tabTimeline.
   ///
   /// In en, this message translates to:
-  /// **'Upcoming'**
-  String get tabUpcoming;
+  /// **'Timeline'**
+  String get tabTimeline;
 
   /// No description provided for @tabPeople.
   ///
@@ -1220,17 +1220,17 @@ abstract class AppLocalizations {
   /// **'{date}'**
   String timeShort(DateTime date);
 
-  /// No description provided for @upcomingTitle.
+  /// No description provided for @timelineSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Coming up'**
-  String get upcomingTitle;
+  /// **'What is coming and what happened. Nothing here is ever late.'**
+  String get timelineSubtitle;
 
-  /// No description provided for @upcomingSubtitle.
+  /// No description provided for @pastEmpty.
   ///
   /// In en, this message translates to:
-  /// **'Birthdays and dates you have set. Nothing here is ever late.'**
-  String get upcomingSubtitle;
+  /// **'Nothing yet. Calls, meet-ups, gaming and birthdays will show up here.'**
+  String get pastEmpty;
 
   /// No description provided for @upcomingEmpty.
   ///
@@ -1249,6 +1249,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Next week'**
   String get groupNextWeek;
+
+  /// No description provided for @groupEarlierThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier this week'**
+  String get groupEarlierThisWeek;
+
+  /// No description provided for @groupLastWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Last week'**
+  String get groupLastWeek;
+
+  /// No description provided for @turnedAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Turned {age}'**
+  String turnedAge(int age);
+
+  /// No description provided for @wishesFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Wishes from {names}'**
+  String wishesFrom(String names);
 
   /// No description provided for @birthdayOf.
   ///
