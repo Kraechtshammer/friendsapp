@@ -21,6 +21,7 @@ import '../people/contact_entry_sheet.dart';
 import '../people/person_screen.dart';
 import '../people/person_timeline_view.dart' show contactTitle;
 import '../widgets/dashed_card.dart';
+import '../widgets/chipped_icon.dart';
 import '../widgets/date_badge.dart';
 import '../widgets/face_stack.dart';
 import '../widgets/grey_button.dart';
@@ -295,6 +296,7 @@ class _PastRow extends ConsumerWidget {
             if (congratulated)
               texted ? l10n.youCongratulatedAndTexted : l10n.youCongratulated,
           ].join(' · '),
+          chip: wishChip(congratulated: congratulated, texted: texted),
           people: [person],
           onTap: () => _openPerson(context, person),
         ),
@@ -342,6 +344,7 @@ class _EntryRow extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.people,
+    this.chip,
     this.onTap,
   });
 
@@ -354,6 +357,9 @@ class _EntryRow extends StatelessWidget {
 
   /// Shown as small faces at the start of the [subtitle] line.
   final List<Person> people;
+
+  /// A small second icon on [icon] (`ChippedIcon`).
+  final KeptIcons? chip;
   final VoidCallback? onTap;
 
   @override
@@ -414,7 +420,7 @@ class _EntryRow extends StatelessWidget {
                       ],
                     ),
                   ),
-                  KeptIcon(icon, size: 30),
+                  ChippedIcon(icon, chip: chip),
                 ],
               ),
             ),

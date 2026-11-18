@@ -229,3 +229,4 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Timeline tab: a day with messages to several people is one "You texted" line with their faces and names.
 - [ ] Home's Coming up: a date a month or more away shows the month ("MAR 6") on its badge, a nearer one the weekday.
 - [ ] Congratulate someone and text with them the same day: the birthday says "You congratulated and texted", with no separate texting entry for them.
+- [ ] A congratulated birthday shows a small chip on the cake: chat when you also texted, a party popper when you only congratulated; readable at that size.

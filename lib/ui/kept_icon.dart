@@ -30,6 +30,7 @@ enum KeptIcons {
   cups,
   wasd,
   bench,
+  party,
 
   // Messenger stand-ins added for the chat app list (02-design.md §8,
   // 2026-11-18); whatsapp, telegram, signal and discord are above.

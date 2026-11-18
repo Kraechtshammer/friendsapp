@@ -16,6 +16,7 @@ import '../kept_icon.dart';
 import '../material.dart';
 import '../upcoming/entry_style.dart';
 import '../widgets/section_label.dart';
+import '../widgets/chipped_icon.dart';
 import 'contact_entry_sheet.dart';
 
 /// The friend timeline on the person page, in the compact style of concept
@@ -142,6 +143,7 @@ class PersonTimelineView extends ConsumerWidget {
                       : texted
                       ? l10n.youCongratulatedAndTexted
                       : l10n.youCongratulated,
+                  chip: wishChip(congratulated: congratulated, texted: texted),
                 ),
                 OwnBirthdayWish() => _Row(
                   date: _DateText(e.day, now),
@@ -298,11 +300,13 @@ class _Row extends StatelessWidget {
     required this.title,
     this.note,
     this.arrow,
+    this.chip,
     this.onTap,
   });
 
   final Widget date;
   final KeptIcons icon;
+  final KeptIcons? chip;
   final String title;
   final String? note;
   final IconData? arrow;
@@ -324,7 +328,7 @@ class _Row extends StatelessWidget {
           height: 30,
           color: kept.ground,
           alignment: Alignment.center,
-          child: KeptIcon(icon, size: 22),
+          child: ChippedIcon(icon, chip: chip, size: 22),
         ),
         Expanded(
           child: Padding(
