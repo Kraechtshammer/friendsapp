@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart'
 /// The app's version, shown on the licence page. There is no package for
 /// reading it from the build, so it is kept here and a test checks it
 /// against `pubspec.yaml`: change both together.
-const appVersion = '0.10.0';
+const appVersion = '0.10.1';
 
 /// Adds the licence of the Outfit font to Flutter's licence page. The text
 /// is the same as `assets/fonts/Outfit-OFL.txt`; it is kept here because

@@ -231,7 +231,7 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Congratulate someone and text with them the same day: the birthday says "You congratulated and texted", with no separate texting entry for them.
 - [ ] A congratulated birthday shows a small chip on the cake: chat when you also texted, a party popper when you only congratulated; readable at that size.
 
-## Activity icons (next release)
+## Activity icons (in 0.10.1)
 
 - [ ] After a meetup or a game, "Nice one" shows a square button beside "What did you do?"; a tap opens a grid of icons, and the chosen icon shows on the button.
 - [ ] Writing or calling shows no icon button.
