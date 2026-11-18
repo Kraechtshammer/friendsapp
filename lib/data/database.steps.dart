@@ -1434,11 +1434,266 @@ i1.GeneratedColumn<String> _column_60(String aliasedName) =>
       type: i1.DriftSqlType.string,
       $customConstraints: 'NULL',
     );
+
+final class Schema6 extends i0.VersionedSchema {
+  Schema6({required super.database}) : super(version: 6);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    settings,
+    people,
+    groups,
+    groupMembers,
+    intentions,
+    contactEvents,
+    dayAnswers,
+    treats,
+    stamps,
+    ideas,
+  ];
+  late final Shape0 settings = Shape0(
+    source: i0.VersionedTable(
+      entityName: 'settings',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY("key")'],
+      columns: [_column_0, _column_1],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape15 people = Shape15(
+    source: i0.VersionedTable(
+      entityName: 'people',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_2,
+        _column_3,
+        _column_4,
+        _column_5,
+        _column_6,
+        _column_7,
+        _column_8,
+        _column_9,
+        _column_61,
+        _column_13,
+        _column_14,
+        _column_15,
+        _column_16,
+        _column_17,
+        _column_18,
+        _column_19,
+        _column_39,
+        _column_53,
+        _column_54,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape11 groups = Shape11(
+    source: i0.VersionedTable(
+      entityName: 'groups',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [_column_2, _column_30, _column_55, _column_19],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape12 groupMembers = Shape12(
+    source: i0.VersionedTable(
+      entityName: 'group_members',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(group_id, person_id)'],
+      columns: [_column_56, _column_20, _column_43],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape13 intentions = Shape13(
+    source: i0.VersionedTable(
+      entityName: 'intentions',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'CHECK((person_id IS NULL)<>(group_id IS NULL))',
+      ],
+      columns: [
+        _column_2,
+        _column_57,
+        _column_58,
+        _column_21,
+        _column_22,
+        _column_23,
+        _column_24,
+        _column_25,
+        _column_26,
+        _column_27,
+        _column_19,
+        _column_28,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape14 contactEvents = Shape14(
+    source: i0.VersionedTable(
+      entityName: 'contact_events',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_2,
+        _column_20,
+        _column_29,
+        _column_30,
+        _column_31,
+        _column_32,
+        _column_33,
+        _column_34,
+        _column_35,
+        _column_19,
+        _column_40,
+        _column_59,
+        _column_60,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape4 dayAnswers = Shape4(
+    source: i0.VersionedTable(
+      entityName: 'day_answers',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(day)'],
+      columns: [_column_36, _column_37, _column_38],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape7 treats = Shape7(
+    source: i0.VersionedTable(
+      entityName: 'treats',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_2,
+        _column_3,
+        _column_41,
+        _column_42,
+        _column_43,
+        _column_19,
+        _column_44,
+        _column_45,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape8 stamps = Shape8(
+    source: i0.VersionedTable(
+      entityName: 'stamps',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_2,
+        _column_29,
+        _column_46,
+        _column_47,
+        _column_48,
+        _column_49,
+        _column_19,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape9 ideas = Shape9(
+    source: i0.VersionedTable(
+      entityName: 'ideas',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_2,
+        _column_20,
+        _column_50,
+        _column_30,
+        _column_24,
+        _column_51,
+        _column_19,
+        _column_52,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+}
+
+class Shape15 extends i0.VersionedTable {
+  Shape15({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get name =>
+      columnsByName['name']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get contactId =>
+      columnsByName['contact_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get closeness =>
+      columnsByName['closeness']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get reconnecting =>
+      columnsByName['reconnecting']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get rhythmDays =>
+      columnsByName['rhythm_days']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get mainMessenger =>
+      columnsByName['main_messenger']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get phone =>
+      columnsByName['phone']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get chatTarget =>
+      columnsByName['chat_target']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get birthdayMonth =>
+      columnsByName['birthday_month']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get birthdayDay =>
+      columnsByName['birthday_day']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get birthdayYear =>
+      columnsByName['birthday_year']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get avatarShape =>
+      columnsByName['avatar_shape']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get avatarColor =>
+      columnsByName['avatar_color']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get notes =>
+      columnsByName['notes']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAt =>
+      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get replyClearedAt =>
+      columnsByName['reply_cleared_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get nickname =>
+      columnsByName['nickname']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get photo =>
+      columnsByName['photo']! as i1.GeneratedColumn<String>;
+}
+
+i1.GeneratedColumn<String> _column_61(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'chat_target',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NULL',
+    );
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
   required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
   required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
+  required Future<void> Function(i1.Migrator m, Schema6 schema) from5To6,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -1462,6 +1717,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from4To5(migrator, schema);
         return 5;
+      case 5:
+        final schema = Schema6(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from5To6(migrator, schema);
+        return 6;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -1473,11 +1733,13 @@ i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
   required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
   required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
+  required Future<void> Function(i1.Migrator m, Schema6 schema) from5To6,
 }) => i0.VersionedSchema.stepByStepHelper(
   step: migrationSteps(
     from1To2: from1To2,
     from2To3: from2To3,
     from3To4: from3To4,
     from4To5: from4To5,
+    from5To6: from5To6,
   ),
 );

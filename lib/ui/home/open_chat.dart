@@ -28,7 +28,7 @@ Future<void> openChat(
   final link = chatLink(person);
   if (link == null) return;
   final l10n = context.l10n;
-  final name = messengerLabel(person.mainMessenger!, l10n);
+  final name = messengerLabel(person.chatApp!, l10n);
   final messenger = ScaffoldMessenger.of(context);
   final pending = ref.read(pendingChatQuestionProvider.notifier);
   final people = ref.read(peopleRepositoryProvider);
@@ -53,7 +53,7 @@ Future<void> openChat(
 /// Whether anyone of [members] has a main messenger, so "Open chat" on a
 /// couple's thought can do something.
 bool anyHasMessenger(List<Person> members) =>
-    members.any((p) => p.mainMessenger != null);
+    members.any((p) => p.chatApp != null);
 
 /// "Open chat" on a couple's thought: asks which of the two to write to
 /// (a small sheet with both faces and their messenger), then goes the
@@ -101,7 +101,7 @@ class _WhoSheet extends ConsumerWidget {
             ),
             for (final p in members)
               Opacity(
-                opacity: p.mainMessenger == null ? .5 : 1,
+                opacity: p.chatApp == null ? .5 : 1,
                 child: ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 4),
                   leading: Avatar.person(p, size: 44),
@@ -112,14 +112,14 @@ class _WhoSheet extends ConsumerWidget {
                     ),
                   ),
                   subtitle: Text(
-                    p.mainMessenger == null
+                    p.chatApp == null
                         ? l10n.messengerNone
-                        : messengerLabel(p.mainMessenger!, l10n),
+                        : messengerLabel(p.chatApp!, l10n),
                   ),
-                  trailing: p.mainMessenger == null
+                  trailing: p.chatApp == null
                       ? null
-                      : KeptIcon(messengerIcon(p.mainMessenger!), size: 28),
-                  onTap: p.mainMessenger == null
+                      : KeptIcon(messengerIcon(p.chatApp!), size: 28),
+                  onTap: p.chatApp == null
                       ? null
                       : () => Navigator.of(context).pop(p),
                 ),

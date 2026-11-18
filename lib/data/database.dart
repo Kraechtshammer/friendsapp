@@ -39,16 +39,19 @@ class People extends Table {
   /// The person's own rhythm in days. null = the class default.
   IntColumn get rhythmDays => integer().nullable()();
 
-  /// What "Open chat" uses. null = no messenger chosen.
-  TextColumn get mainMessenger => textEnum<Messenger>().nullable()();
+  /// What "Open chat" uses. null = no messenger chosen. The column keeps
+  /// its old name `main_messenger`: schema 5 stored the four old
+  /// messengers under the same names (02-design.md §8, 2026-11-18).
+  TextColumn get chatApp =>
+      textEnum<ChatApp>().named('main_messenger').nullable()();
 
-  /// International form. Serves WhatsApp, Signal and Telegram by number.
+  /// International form. Serves WhatsApp, Signal, Telegram, Viber and SMS
+  /// by number.
   TextColumn get phone => text().nullable()();
 
-  /// One handle per messenger besides the phone number.
-  TextColumn get telegramUsername => text().nullable()();
-  TextColumn get signalLink => text().nullable()();
-  TextColumn get discordUserId => text().nullable()();
+  /// The chat link, username or ID for [chatApp] (domain/chat_app.dart).
+  /// Schema 6; replaces the three handles of schema 1 to 5.
+  TextColumn get chatTarget => text().nullable()();
 
   /// The birthday. The year is often unknown.
   IntColumn get birthdayMonth => integer().nullable()();
@@ -325,14 +328,15 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Raise this and add a migration step for every schema change. Only add
-  /// tables or nullable columns; never rename or reuse a column. A table
+  /// tables or nullable columns; never rename or reuse a column. Dropping
+  /// a column needs the developer's decision (schema 6, 02-design.md §8). A table
   /// rebuild (schema 5, intentions) goes through `m.alterTable`, which
   /// copies every row. Then run
   /// `dart run drift_dev make-migrations`: it saves a snapshot in
   /// `drift_schemas/`, updates `database.steps.dart` and the schema test
   /// helpers in `test/drift/` (as in akai-timetrack).
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   /// Steps come from the snapshots in `drift_schemas/`. The real database
   /// on the developer's phone holds people from version 1, so a step must
@@ -380,6 +384,19 @@ class AppDatabase extends _$AppDatabase {
         );
         await m.addColumn(schema.contactEvents, schema.contactEvents.groupId);
         await m.addColumn(schema.contactEvents, schema.contactEvents.sharedId);
+      },
+      from5To6: (m, schema) async {
+        // Any messenger, one chat target (02-design.md §8, 2026-11-18). The
+        // three old handles go without being carried over (the developer's
+        // decision); main_messenger stays as it is.
+        await m.addColumn(schema.people, schema.people.chatTarget);
+        for (final column in [
+          'telegram_username',
+          'signal_link',
+          'discord_user_id',
+        ]) {
+          await m.dropColumn(schema.people, column);
+        }
       },
     ),
     beforeOpen: (details) async {

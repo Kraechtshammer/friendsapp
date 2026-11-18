@@ -202,7 +202,7 @@ class _Chosen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final tone = context.kept.lilacTone;
-    final messenger = person.mainMessenger;
+    final messenger = person.chatApp;
     return _TaggedCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -21,7 +21,7 @@ void main() {
       reconnecting.map((p) => p.closeness),
       isNot(contains(Closeness.family)),
     );
-    expect(people.where((p) => p.mainMessenger == null), hasLength(1));
+    expect(people.where((p) => p.chatApp == null), hasLength(1));
     expect(people.where((p) => p.notes.isNotEmpty).length, greaterThan(1));
   });
 
@@ -46,11 +46,16 @@ void main() {
   test('uses only fake numbers and handles', () {
     for (final p in people) {
       if (p.phone != null) expect(p.phone, matches(r'^\+4900000001\d\d$'));
-      if (p.telegramUsername != null) {
-        expect(p.telegramUsername, startsWith('demo_'));
-      }
-      if (p.discordUserId != null) {
-        expect(p.discordUserId, matches(r'^0000\d{14}$'));
+      final target = p.chatTarget;
+      if (target != null) {
+        expect(
+          target,
+          anyOf(
+            startsWith('@demo_'),
+            contains('#eu/demo_'),
+            matches(r'^0000\d{14}$'),
+          ),
+        );
       }
     }
   });

@@ -171,7 +171,7 @@ class _PickCard extends ConsumerWidget {
     final pick = this.pick;
     final person = pick.person;
     final couple = _coupleOf(pick);
-    final messenger = person.mainMessenger;
+    final messenger = person.chatApp;
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -337,7 +337,7 @@ class _CompactPick extends ConsumerWidget {
     final l10n = context.l10n;
     final person = pick.person;
     final couple = _coupleOf(pick);
-    final messenger = person.mainMessenger;
+    final messenger = person.chatApp;
     return KeptCard(
       small: true,
       padding: const EdgeInsets.all(12),

@@ -34,14 +34,14 @@ void main() {
         anna = await people.add(
           name: 'Anna Roth',
           closeness: Closeness.close,
-          mainMessenger: Messenger.telegram,
-          telegramUsername: 'anna',
+          chatApp: ChatApp.telegram,
+          chatTarget: '@anna',
         );
         tom = await people.add(
           name: 'Tom Berger',
           closeness: Closeness.nowAndThen,
-          mainMessenger: Messenger.telegram,
-          telegramUsername: 'tom',
+          chatApp: ChatApp.telegram,
+          chatTarget: '@tom',
         );
         await people.add(name: 'Eva Lund', closeness: Closeness.close);
         if (linked) {

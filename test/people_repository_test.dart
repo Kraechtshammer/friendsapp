@@ -27,11 +27,9 @@ void main() {
       contactId: 'c1',
       reconnecting: true,
       rhythmDays: 9,
-      mainMessenger: Messenger.telegram,
+      chatApp: ChatApp.telegram,
       phone: '+490000000101',
-      telegramUsername: 'demo_ada',
-      signalLink: 'https://signal.me/#eu/demo',
-      discordUserId: '000011112222333344',
+      chatTarget: '@demo_ada',
       birthdayMonth: 2,
       birthdayDay: 29,
       notes: 'Note',
@@ -42,14 +40,14 @@ void main() {
     expect(stored, added);
     expect(stored!.birthdayYear, isNull);
     expect(stored.closeness, Closeness.close);
-    expect(stored.mainMessenger, Messenger.telegram);
+    expect(stored.chatApp, ChatApp.telegram);
     expect(stored.createdAt, now);
 
     final other = await repo.add(name: 'B', closeness: Closeness.family);
     expect(other.id, isNot(added.id));
     expect(other.reconnecting, isFalse);
     expect(other.notes, '');
-    expect(other.mainMessenger, isNull);
+    expect(other.chatApp, isNull);
   });
 
   test('stores the enums as their names', () async {

@@ -28,9 +28,9 @@ class ClassAssignment extends StatelessWidget {
 
   final List<PhoneContact> contacts;
   final Map<String, Closeness> closeness;
-  final Messenger? messenger;
+  final ChatApp? messenger;
   final void Function(String contactId, Closeness value) onCloseness;
-  final ValueChanged<Messenger?> onMessenger;
+  final ValueChanged<ChatApp?> onMessenger;
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +42,10 @@ class ClassAssignment extends StatelessWidget {
         const SizedBox(height: 16),
         SectionLabel(l10n.importMessengerAll),
         const SizedBox(height: 8),
-        ChoiceChips<Messenger?>(
+        ChoiceChips<ChatApp?>(
           options: [
             ChipOption(null, l10n.messengerNone),
-            for (final m in Messenger.values)
+            for (final m in ChatApp.values)
               ChipOption(m, messengerLabel(m, l10n)),
           ],
           value: messenger,
@@ -71,7 +71,7 @@ Future<void> addContactsAsPeople(
   PeopleRepository repo,
   List<PhoneContact> contacts,
   Map<String, Closeness> closeness,
-  Messenger? messenger, {
+  ChatApp? messenger, {
   ContactsSource? source,
   PhotoStore? photos,
 }) async {
@@ -84,7 +84,7 @@ Future<void> addContactsAsPeople(
       name: c.name,
       contactId: c.id,
       closeness: closeness[c.id] ?? Closeness.nowAndThen,
-      mainMessenger: messenger,
+      chatApp: messenger,
       phone: c.phones.isEmpty ? null : normalisePhone(c.phones.first),
       birthdayMonth: c.birthdayMonth,
       birthdayDay: c.birthdayDay,

@@ -26,12 +26,25 @@ String closenessGroupLabel(Closeness closeness, AppLocalizations l10n) =>
       _ => closenessLabel(closeness, l10n),
     };
 
-String messengerLabel(Messenger messenger, AppLocalizations l10n) =>
+/// The app's name. Brand names are the same in every language; only SMS
+/// goes through the translations.
+String messengerLabel(ChatApp messenger, AppLocalizations l10n) =>
     switch (messenger) {
-      Messenger.whatsapp => l10n.messengerWhatsapp,
-      Messenger.telegram => l10n.messengerTelegram,
-      Messenger.signal => l10n.messengerSignal,
-      Messenger.discord => l10n.messengerDiscord,
+      ChatApp.whatsapp => 'WhatsApp',
+      ChatApp.signal => 'Signal',
+      ChatApp.telegram => 'Telegram',
+      ChatApp.discord => 'Discord',
+      ChatApp.linkedin => 'LinkedIn',
+      ChatApp.threema => 'Threema',
+      ChatApp.line => 'LINE',
+      ChatApp.viber => 'Viber',
+      ChatApp.messenger => 'Messenger',
+      ChatApp.instagram => 'Instagram',
+      ChatApp.element => 'Element',
+      ChatApp.snapchat => 'Snapchat',
+      ChatApp.teams => 'Teams',
+      ChatApp.slack => 'Slack',
+      ChatApp.sms => l10n.messengerSms,
     };
 
 /// The class as an icon: a plant that grows with the class, and a house for
@@ -43,11 +56,22 @@ KeptIcons closenessIcon(Closeness closeness) => switch (closeness) {
   Closeness.family => KeptIcons.cottage,
 };
 
-KeptIcons messengerIcon(Messenger messenger) => switch (messenger) {
-  Messenger.whatsapp => KeptIcons.whatsapp,
-  Messenger.telegram => KeptIcons.telegram,
-  Messenger.signal => KeptIcons.signal,
-  Messenger.discord => KeptIcons.discord,
+KeptIcons messengerIcon(ChatApp messenger) => switch (messenger) {
+  ChatApp.whatsapp => KeptIcons.whatsapp,
+  ChatApp.signal => KeptIcons.signal,
+  ChatApp.telegram => KeptIcons.telegram,
+  ChatApp.discord => KeptIcons.discord,
+  ChatApp.linkedin => KeptIcons.linkedin,
+  ChatApp.threema => KeptIcons.threema,
+  ChatApp.line => KeptIcons.line,
+  ChatApp.viber => KeptIcons.viber,
+  ChatApp.messenger => KeptIcons.messenger,
+  ChatApp.instagram => KeptIcons.instagram,
+  ChatApp.element => KeptIcons.element,
+  ChatApp.snapchat => KeptIcons.snapchat,
+  ChatApp.teams => KeptIcons.teams,
+  ChatApp.slack => KeptIcons.slack,
+  ChatApp.sms => KeptIcons.sms,
 };
 
 /// A birthday as day and month, with the year only when it is known.

@@ -53,7 +53,7 @@ void main() {
       Future<Person> add(String name) => people.add(
         name: name,
         closeness: Closeness.close,
-        mainMessenger: Messenger.whatsapp,
+        chatApp: ChatApp.whatsapp,
         phone: '+4900000000101',
       );
       tom = await add('Tom Berger');

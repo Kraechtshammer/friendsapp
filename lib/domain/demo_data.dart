@@ -21,14 +21,14 @@ List<Person> demoPeople(DateTime today) {
     _Demo(
       'Lena Hartwig',
       Closeness.close,
-      Messenger.whatsapp,
+      ChatApp.whatsapp,
       phone: 1,
       birthday: (day.month, day.day, 1994),
     ),
     _Demo(
       'Malik Osei',
       Closeness.close,
-      Messenger.whatsapp,
+      ChatApp.whatsapp,
       phone: 2,
       birthday: (3, 3, 1991),
       rhythmDays: 10,
@@ -36,15 +36,15 @@ List<Person> demoPeople(DateTime today) {
     _Demo(
       'Sofia Lindqvist',
       Closeness.close,
-      Messenger.telegram,
+      ChatApp.telegram,
       phone: 3,
-      telegram: 'demo_sofia',
+      chatTarget: '@demo_sofia',
       birthday: (soon.month, soon.day, null),
     ),
     _Demo(
       'Paulina Brandt',
       Closeness.close,
-      Messenger.signal,
+      ChatApp.signal,
       phone: 4,
       birthday: (8, 22, 1993),
       notes: 'Started a pottery class on Tuesdays.',
@@ -53,41 +53,41 @@ List<Person> demoPeople(DateTime today) {
     _Demo(
       'Kenji Moreau',
       Closeness.nowAndThen,
-      Messenger.whatsapp,
+      ChatApp.whatsapp,
       phone: 5,
       reconnecting: true,
     ),
     _Demo(
       'Amira Haddad',
       Closeness.nowAndThen,
-      Messenger.whatsapp,
+      ChatApp.whatsapp,
       phone: 6,
       birthday: (11, 14, null),
     ),
     _Demo(
       'Felix Grünberg',
       Closeness.nowAndThen,
-      Messenger.discord,
-      discord: '000012345678900007',
+      ChatApp.discord,
+      chatTarget: '000012345678900007',
     ),
     _Demo(
       'Noor Vandersee',
       Closeness.nowAndThen,
-      Messenger.telegram,
-      telegram: 'demo_noor',
+      ChatApp.telegram,
+      chatTarget: '@demo_noor',
       birthday: (6, 9, 1990),
     ),
     _Demo(
       'Mateo Ruiz Kessler',
       Closeness.nowAndThen,
-      Messenger.whatsapp,
+      ChatApp.whatsapp,
       phone: 9,
     ),
     // A few times a year (4).
     _Demo(
       'Ingrid Solberg',
       Closeness.fewTimesAYear,
-      Messenger.whatsapp,
+      ChatApp.whatsapp,
       phone: 10,
       reconnecting: true,
       birthday: (1, 30, 1988),
@@ -96,8 +96,8 @@ List<Person> demoPeople(DateTime today) {
     _Demo(
       'Yusuf Aydemir',
       Closeness.fewTimesAYear,
-      Messenger.signal,
-      signalLink: 'https://signal.me/#eu/demo_yusuf',
+      ChatApp.signal,
+      chatTarget: 'https://signal.me/#eu/demo_yusuf',
     ),
     _Demo(
       'Clara Weissmann',
@@ -108,15 +108,15 @@ List<Person> demoPeople(DateTime today) {
     _Demo(
       'Tobi Okafor',
       Closeness.fewTimesAYear,
-      Messenger.telegram,
+      ChatApp.telegram,
       phone: 13,
-      telegram: 'demo_tobi',
+      chatTarget: '@demo_tobi',
     ),
     // Family (3).
     _Demo(
       'Hilde Brenner',
       Closeness.family,
-      Messenger.whatsapp,
+      ChatApp.whatsapp,
       phone: 14,
       birthday: (2, 5, 1956),
       notes: 'Likes a call more than a message.',
@@ -124,14 +124,14 @@ List<Person> demoPeople(DateTime today) {
     _Demo(
       'Rosa Brenner',
       Closeness.family,
-      Messenger.whatsapp,
+      ChatApp.whatsapp,
       phone: 15,
       birthday: (12, 28, 1984),
     ),
     _Demo(
       'Max Brenner',
       Closeness.family,
-      Messenger.whatsapp,
+      ChatApp.whatsapp,
       phone: 16,
       birthday: (7, 11, 1997),
     ),
@@ -150,13 +150,11 @@ List<Person> demoPeople(DateTime today) {
         closeness: d.closeness,
         reconnecting: d.reconnecting,
         rhythmDays: d.rhythmDays,
-        mainMessenger: d.messenger,
+        chatApp: d.messenger,
         phone: d.phone == null
             ? null
             : '+4900000001${d.phone.toString().padLeft(2, '0')}',
-        telegramUsername: d.telegram,
-        signalLink: d.signalLink,
-        discordUserId: d.discord,
+        chatTarget: d.chatTarget,
         birthdayMonth: d.birthday?.$1,
         birthdayDay: d.birthday?.$2,
         birthdayYear: d.birthday?.$3,
@@ -489,9 +487,7 @@ class _Demo {
     this.closeness,
     this.messenger, {
     this.phone,
-    this.telegram,
-    this.signalLink,
-    this.discord,
+    this.chatTarget,
     this.birthday,
     this.reconnecting = false,
     this.rhythmDays,
@@ -500,13 +496,11 @@ class _Demo {
 
   final String name;
   final Closeness closeness;
-  final Messenger? messenger;
+  final ChatApp? messenger;
 
   /// The last two digits of the fake number.
   final int? phone;
-  final String? telegram;
-  final String? signalLink;
-  final String? discord;
+  final String? chatTarget;
 
   /// Month, day, year (null = unknown).
   final (int, int, int?)? birthday;

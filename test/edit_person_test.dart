@@ -99,9 +99,9 @@ void main() {
     );
     final lena = people!.single;
     expect(lena.closeness, Closeness.close);
-    expect(lena.mainMessenger, Messenger.whatsapp);
+    expect(lena.chatApp, ChatApp.whatsapp);
     expect(lena.phone, '+491234');
-    expect(lena.telegramUsername, isNull);
+    expect(lena.chatTarget, isNull);
     expect(lena.birthdayDay, isNull);
     await closeDown(tester);
   });

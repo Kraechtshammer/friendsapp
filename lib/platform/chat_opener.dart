@@ -10,8 +10,8 @@ abstract class ChatOpener {
   Future<bool> open(ChatLink link);
 }
 
-/// [ChatOpener] with `android_intent_plus`: a VIEW intent with the https
-/// link and the messenger's package set. Without a link, or if that fails,
+/// [ChatOpener] with `android_intent_plus`: a VIEW intent with the link
+/// and the messenger's package set (SENDTO without a package for SMS). Without a link, or if that fails,
 /// the messenger's main screen is opened.
 class AndroidChatOpener implements ChatOpener {
   const AndroidChatOpener();
@@ -22,7 +22,10 @@ class AndroidChatOpener implements ChatOpener {
     if (uri != null) {
       try {
         await AndroidIntent(
-          action: 'action_view',
+          // SMS links go to the default SMS app through SENDTO.
+          action: uri.startsWith('smsto:')
+              ? 'android.intent.action.SENDTO'
+              : 'action_view',
           data: uri,
           package: link.package,
           flags: const [Flag.FLAG_ACTIVITY_NEW_TASK],
@@ -32,6 +35,7 @@ class AndroidChatOpener implements ChatOpener {
         // Fall through to the plain app.
       }
     }
+    if (link.package == null) return false;
     try {
       await AndroidIntent(
         action: 'android.intent.action.MAIN',

@@ -36,10 +36,7 @@
   "closenessFewTimesAYear": "A few times a year",
   "closenessFamily": "Family",
   "reconnecting": "Getting back in touch",
-  "messengerWhatsapp": "WhatsApp",
-  "messengerTelegram": "Telegram",
-  "messengerSignal": "Signal",
-  "messengerDiscord": "Discord",
+  "messengerSms": "SMS",
   "openMessenger": "Open {messenger}",
   "@openMessenger": {
     "placeholders": {
@@ -91,9 +88,8 @@
   "editReach": "How to reach them",
   "phoneNumber": "Phone number",
   "phoneHint": "+49…",
-  "telegramUsername": "Telegram user name",
-  "signalLink": "Signal link",
-  "discordUserId": "Discord user ID",
+  "chatTarget": "Chat link, username or ID",
+  "chatTargetHint": "Optional. Without it, Kept. opens the app.",
   "birthday": "Birthday",
   "birthdayDay": "Day",
   "birthdayMonthField": "Month",

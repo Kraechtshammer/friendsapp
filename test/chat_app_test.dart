@@ -106,7 +106,7 @@ void main() {
     for (final app in ChatApp.values) {
       expect(app.packages.isEmpty, app == ChatApp.sms, reason: app.name);
     }
-    // Schema 5 stored these Messenger names; schema 6 reads them as ChatApp.
+    // Schema 5 stored these ChatApp names; schema 6 reads them as ChatApp.
     for (final old in ['whatsapp', 'telegram', 'signal', 'discord']) {
       expect(ChatApp.values.byName(old).name, old);
     }

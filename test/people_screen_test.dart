@@ -63,7 +63,7 @@ void main() {
       await people.add(
         name: 'Tom Berger',
         closeness: Closeness.close,
-        mainMessenger: Messenger.whatsapp,
+        chatApp: ChatApp.whatsapp,
         phone: '+491701234567',
         birthdayMonth: 3,
         birthdayDay: 3,

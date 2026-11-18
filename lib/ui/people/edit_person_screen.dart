@@ -97,13 +97,7 @@ class _FormState extends ConsumerState<_Form> {
   late final _name = TextEditingController(text: widget.person?.name);
   late final _nickname = TextEditingController(text: widget.person?.nickname);
   late final _phone = TextEditingController(text: widget.person?.phone);
-  late final _telegram = TextEditingController(
-    text: widget.person?.telegramUsername,
-  );
-  late final _signal = TextEditingController(text: widget.person?.signalLink);
-  late final _discord = TextEditingController(
-    text: widget.person?.discordUserId,
-  );
+  late final _target = TextEditingController(text: widget.person?.chatTarget);
   late final _day = TextEditingController(
     text: widget.person?.birthdayDay?.toString(),
   );
@@ -120,7 +114,7 @@ class _FormState extends ConsumerState<_Form> {
 
   /// The person's own rhythm in days; null is "like the class".
   late int? _rhythm = widget.person?.rhythmDays;
-  late Messenger? _messenger = widget.person?.mainMessenger;
+  late ChatApp? _messenger = widget.person?.chatApp;
   late AvatarShape _shape = widget.person?.avatarShape ?? AvatarShape.values[0];
   late AvatarColor _color = widget.person?.avatarColor ?? AvatarColor.values[0];
 
@@ -158,9 +152,7 @@ class _FormState extends ConsumerState<_Form> {
       _name,
       _nickname,
       _phone,
-      _telegram,
-      _signal,
-      _discord,
+      _target,
       _day,
       _month,
       _year,
@@ -226,11 +218,9 @@ class _FormState extends ConsumerState<_Form> {
         closeness: _closeness,
         reconnecting: _reconnecting,
         rhythmDays: _rhythm,
-        mainMessenger: _messenger,
+        chatApp: _messenger,
         phone: _orNull(_phone),
-        telegramUsername: _orNull(_telegram),
-        signalLink: _orNull(_signal),
-        discordUserId: _orNull(_discord),
+        chatTarget: _orNull(_target),
         birthdayMonth: birthday.month,
         birthdayDay: birthday.day,
         birthdayYear: birthday.year,
@@ -257,11 +247,9 @@ class _FormState extends ConsumerState<_Form> {
           closeness: _closeness,
           reconnecting: _reconnecting,
           rhythmDays: Value(_rhythm),
-          mainMessenger: Value(_messenger),
+          chatApp: Value(_messenger),
           phone: Value(_orNull(_phone)),
-          telegramUsername: Value(_orNull(_telegram)),
-          signalLink: Value(_orNull(_signal)),
-          discordUserId: Value(_orNull(_discord)),
+          chatTarget: Value(_orNull(_target)),
           birthdayMonth: Value(birthday.month),
           birthdayDay: Value(birthday.day),
           birthdayYear: Value(birthday.year),
@@ -501,10 +489,10 @@ class _FormState extends ConsumerState<_Form> {
                 ),
                 const SizedBox(height: 18),
                 _group(l10n.editMessenger, [
-                  ChoiceChips<Messenger?>(
+                  ChoiceChips<ChatApp?>(
                     options: [
                       ChipOption(null, l10n.messengerNone),
-                      for (final m in Messenger.values)
+                      for (final m in ChatApp.values)
                         ChipOption(m, messengerLabel(m, l10n)),
                     ],
                     value: _messenger,
@@ -521,22 +509,11 @@ class _FormState extends ConsumerState<_Form> {
                     keyboardType: TextInputType.phone,
                   ),
                   KeptTextField(
-                    key: const ValueKey('telegram'),
-                    controller: _telegram,
-                    label: l10n.telegramUsername,
-                  ),
-                  KeptTextField(
-                    key: const ValueKey('signal'),
-                    controller: _signal,
-                    label: l10n.signalLink,
+                    key: const ValueKey('chatTarget'),
+                    controller: _target,
+                    label: l10n.chatTarget,
+                    hint: l10n.chatTargetHint,
                     keyboardType: TextInputType.url,
-                  ),
-                  KeptTextField(
-                    key: const ValueKey('discord'),
-                    controller: _discord,
-                    label: l10n.discordUserId,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   ),
                 ]),
                 const SizedBox(height: 18),

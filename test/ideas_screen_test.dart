@@ -54,7 +54,7 @@ void main() {
           .add(
             name: 'Tom Berger',
             closeness: Closeness.close,
-            mainMessenger: Messenger.whatsapp,
+            chatApp: ChatApp.whatsapp,
             phone: '+4900000000101',
           );
       if (thought case (final note, final kind, final link)) {

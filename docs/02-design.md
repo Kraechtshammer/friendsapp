@@ -95,7 +95,7 @@ Fallback without this part: some days after the user opened a chat from the app,
 
 Later, with groups (F12): a contact event can belong to several people, so a shared meet-up shows everyone's bubble.
 
-Since schema 5 (2026-11-16, §8): a person also has an optional nickname and picture. A **group** (for now only a couple) has a kind, an optional name and its members in order; a person is in at most one couple. An intention belongs to a person or to a group. Meeting a group is stored as one contact event per member, tied together by a shared id, so each person's timeline and stamp work as for one person.
+Since schema 5 (2026-11-16, §8): a person also has an optional nickname and picture. Since schema 6 (2026-11-18, §8): "how to reach them" is one chat app from Kept.'s list and one optional chat target (link, username or ID) instead of one handle per messenger; the phone number stays. A **group** (for now only a couple) has a kind, an optional name and its members in order; a person is in at most one couple. An intention belongs to a person or to a group. Meeting a group is stored as one contact event per member, tied together by a shared id, so each person's timeline and stamp work as for one person.
 
 The friend timeline is not stored. It is built from the person's contact events (history) and their birthday and dated intentions (upcoming). The Upcoming tab is built the same way across all people.
 

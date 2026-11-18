@@ -314,29 +314,11 @@ abstract class AppLocalizations {
   /// **'Getting back in touch'**
   String get reconnecting;
 
-  /// No description provided for @messengerWhatsapp.
+  /// No description provided for @messengerSms.
   ///
   /// In en, this message translates to:
-  /// **'WhatsApp'**
-  String get messengerWhatsapp;
-
-  /// No description provided for @messengerTelegram.
-  ///
-  /// In en, this message translates to:
-  /// **'Telegram'**
-  String get messengerTelegram;
-
-  /// No description provided for @messengerSignal.
-  ///
-  /// In en, this message translates to:
-  /// **'Signal'**
-  String get messengerSignal;
-
-  /// No description provided for @messengerDiscord.
-  ///
-  /// In en, this message translates to:
-  /// **'Discord'**
-  String get messengerDiscord;
+  /// **'SMS'**
+  String get messengerSms;
 
   /// No description provided for @openMessenger.
   ///
@@ -452,23 +434,17 @@ abstract class AppLocalizations {
   /// **'+49…'**
   String get phoneHint;
 
-  /// No description provided for @telegramUsername.
+  /// No description provided for @chatTarget.
   ///
   /// In en, this message translates to:
-  /// **'Telegram user name'**
-  String get telegramUsername;
+  /// **'Chat link, username or ID'**
+  String get chatTarget;
 
-  /// No description provided for @signalLink.
+  /// No description provided for @chatTargetHint.
   ///
   /// In en, this message translates to:
-  /// **'Signal link'**
-  String get signalLink;
-
-  /// No description provided for @discordUserId.
-  ///
-  /// In en, this message translates to:
-  /// **'Discord user ID'**
-  String get discordUserId;
+  /// **'Optional. Without it, Kept. opens the app.'**
+  String get chatTargetHint;
 
   /// No description provided for @birthday.
   ///

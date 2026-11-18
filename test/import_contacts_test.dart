@@ -143,7 +143,7 @@ void main() {
       (anna.birthdayMonth, anna.birthdayDay, anna.birthdayYear),
       (5, 17, 1990),
     );
-    expect(anna.mainMessenger, Messenger.whatsapp);
+    expect(anna.chatApp, ChatApp.whatsapp);
     expect(ben.closeness, Closeness.nowAndThen);
     expect(ben.phone, '+436601234567');
     expect(ben.birthdayDay, isNull);

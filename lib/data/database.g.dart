@@ -281,14 +281,14 @@ class $PeopleTable extends People with TableInfo<$PeopleTable, Person> {
     requiredDuringInsert: false,
   );
   @override
-  late final GeneratedColumnWithTypeConverter<Messenger?, String>
-  mainMessenger = GeneratedColumn<String>(
-    'main_messenger',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  ).withConverter<Messenger?>($PeopleTable.$convertermainMessengern);
+  late final GeneratedColumnWithTypeConverter<ChatApp?, String> chatApp =
+      GeneratedColumn<String>(
+        'main_messenger',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<ChatApp?>($PeopleTable.$converterchatAppn);
   static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
   @override
   late final GeneratedColumn<String> phone = GeneratedColumn<String>(
@@ -298,34 +298,12 @@ class $PeopleTable extends People with TableInfo<$PeopleTable, Person> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _telegramUsernameMeta = const VerificationMeta(
-    'telegramUsername',
+  static const VerificationMeta _chatTargetMeta = const VerificationMeta(
+    'chatTarget',
   );
   @override
-  late final GeneratedColumn<String> telegramUsername = GeneratedColumn<String>(
-    'telegram_username',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _signalLinkMeta = const VerificationMeta(
-    'signalLink',
-  );
-  @override
-  late final GeneratedColumn<String> signalLink = GeneratedColumn<String>(
-    'signal_link',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _discordUserIdMeta = const VerificationMeta(
-    'discordUserId',
-  );
-  @override
-  late final GeneratedColumn<String> discordUserId = GeneratedColumn<String>(
-    'discord_user_id',
+  late final GeneratedColumn<String> chatTarget = GeneratedColumn<String>(
+    'chat_target',
     aliasedName,
     true,
     type: DriftSqlType.string,
@@ -443,11 +421,9 @@ class $PeopleTable extends People with TableInfo<$PeopleTable, Person> {
     closeness,
     reconnecting,
     rhythmDays,
-    mainMessenger,
+    chatApp,
     phone,
-    telegramUsername,
-    signalLink,
-    discordUserId,
+    chatTarget,
     birthdayMonth,
     birthdayDay,
     birthdayYear,
@@ -511,28 +487,10 @@ class $PeopleTable extends People with TableInfo<$PeopleTable, Person> {
         phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
       );
     }
-    if (data.containsKey('telegram_username')) {
+    if (data.containsKey('chat_target')) {
       context.handle(
-        _telegramUsernameMeta,
-        telegramUsername.isAcceptableOrUnknown(
-          data['telegram_username']!,
-          _telegramUsernameMeta,
-        ),
-      );
-    }
-    if (data.containsKey('signal_link')) {
-      context.handle(
-        _signalLinkMeta,
-        signalLink.isAcceptableOrUnknown(data['signal_link']!, _signalLinkMeta),
-      );
-    }
-    if (data.containsKey('discord_user_id')) {
-      context.handle(
-        _discordUserIdMeta,
-        discordUserId.isAcceptableOrUnknown(
-          data['discord_user_id']!,
-          _discordUserIdMeta,
-        ),
+        _chatTargetMeta,
+        chatTarget.isAcceptableOrUnknown(data['chat_target']!, _chatTargetMeta),
       );
     }
     if (data.containsKey('birthday_month')) {
@@ -632,7 +590,7 @@ class $PeopleTable extends People with TableInfo<$PeopleTable, Person> {
         DriftSqlType.int,
         data['${effectivePrefix}rhythm_days'],
       ),
-      mainMessenger: $PeopleTable.$convertermainMessengern.fromSql(
+      chatApp: $PeopleTable.$converterchatAppn.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}main_messenger'],
@@ -642,17 +600,9 @@ class $PeopleTable extends People with TableInfo<$PeopleTable, Person> {
         DriftSqlType.string,
         data['${effectivePrefix}phone'],
       ),
-      telegramUsername: attachedDatabase.typeMapping.read(
+      chatTarget: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}telegram_username'],
-      ),
-      signalLink: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}signal_link'],
-      ),
-      discordUserId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}discord_user_id'],
+        data['${effectivePrefix}chat_target'],
       ),
       birthdayMonth: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
@@ -708,12 +658,10 @@ class $PeopleTable extends People with TableInfo<$PeopleTable, Person> {
 
   static JsonTypeConverter2<Closeness, String, String> $convertercloseness =
       const EnumNameConverter<Closeness>(Closeness.values);
-  static JsonTypeConverter2<Messenger, String, String> $convertermainMessenger =
-      const EnumNameConverter<Messenger>(Messenger.values);
-  static JsonTypeConverter2<Messenger?, String?, String?>
-  $convertermainMessengern = JsonTypeConverter2.asNullable(
-    $convertermainMessenger,
-  );
+  static JsonTypeConverter2<ChatApp, String, String> $converterchatApp =
+      const EnumNameConverter<ChatApp>(ChatApp.values);
+  static JsonTypeConverter2<ChatApp?, String?, String?> $converterchatAppn =
+      JsonTypeConverter2.asNullable($converterchatApp);
   static JsonTypeConverter2<AvatarShape, String, String> $converteravatarShape =
       const EnumNameConverter<AvatarShape>(AvatarShape.values);
   static JsonTypeConverter2<AvatarColor, String, String> $converteravatarColor =
@@ -736,16 +684,18 @@ class Person extends DataClass implements Insertable<Person> {
   /// The person's own rhythm in days. null = the class default.
   final int? rhythmDays;
 
-  /// What "Open chat" uses. null = no messenger chosen.
-  final Messenger? mainMessenger;
+  /// What "Open chat" uses. null = no messenger chosen. The column keeps
+  /// its old name `main_messenger`: schema 5 stored the four old
+  /// messengers under the same names (02-design.md §8, 2026-11-18).
+  final ChatApp? chatApp;
 
-  /// International form. Serves WhatsApp, Signal and Telegram by number.
+  /// International form. Serves WhatsApp, Signal, Telegram, Viber and SMS
+  /// by number.
   final String? phone;
 
-  /// One handle per messenger besides the phone number.
-  final String? telegramUsername;
-  final String? signalLink;
-  final String? discordUserId;
+  /// The chat link, username or ID for [chatApp] (domain/chat_app.dart).
+  /// Schema 6; replaces the three handles of schema 1 to 5.
+  final String? chatTarget;
 
   /// The birthday. The year is often unknown.
   final int? birthdayMonth;
@@ -777,11 +727,9 @@ class Person extends DataClass implements Insertable<Person> {
     required this.closeness,
     required this.reconnecting,
     this.rhythmDays,
-    this.mainMessenger,
+    this.chatApp,
     this.phone,
-    this.telegramUsername,
-    this.signalLink,
-    this.discordUserId,
+    this.chatTarget,
     this.birthdayMonth,
     this.birthdayDay,
     this.birthdayYear,
@@ -810,22 +758,16 @@ class Person extends DataClass implements Insertable<Person> {
     if (!nullToAbsent || rhythmDays != null) {
       map['rhythm_days'] = Variable<int>(rhythmDays);
     }
-    if (!nullToAbsent || mainMessenger != null) {
+    if (!nullToAbsent || chatApp != null) {
       map['main_messenger'] = Variable<String>(
-        $PeopleTable.$convertermainMessengern.toSql(mainMessenger),
+        $PeopleTable.$converterchatAppn.toSql(chatApp),
       );
     }
     if (!nullToAbsent || phone != null) {
       map['phone'] = Variable<String>(phone);
     }
-    if (!nullToAbsent || telegramUsername != null) {
-      map['telegram_username'] = Variable<String>(telegramUsername);
-    }
-    if (!nullToAbsent || signalLink != null) {
-      map['signal_link'] = Variable<String>(signalLink);
-    }
-    if (!nullToAbsent || discordUserId != null) {
-      map['discord_user_id'] = Variable<String>(discordUserId);
+    if (!nullToAbsent || chatTarget != null) {
+      map['chat_target'] = Variable<String>(chatTarget);
     }
     if (!nullToAbsent || birthdayMonth != null) {
       map['birthday_month'] = Variable<int>(birthdayMonth);
@@ -872,21 +814,15 @@ class Person extends DataClass implements Insertable<Person> {
       rhythmDays: rhythmDays == null && nullToAbsent
           ? const Value.absent()
           : Value(rhythmDays),
-      mainMessenger: mainMessenger == null && nullToAbsent
+      chatApp: chatApp == null && nullToAbsent
           ? const Value.absent()
-          : Value(mainMessenger),
+          : Value(chatApp),
       phone: phone == null && nullToAbsent
           ? const Value.absent()
           : Value(phone),
-      telegramUsername: telegramUsername == null && nullToAbsent
+      chatTarget: chatTarget == null && nullToAbsent
           ? const Value.absent()
-          : Value(telegramUsername),
-      signalLink: signalLink == null && nullToAbsent
-          ? const Value.absent()
-          : Value(signalLink),
-      discordUserId: discordUserId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(discordUserId),
+          : Value(chatTarget),
       birthdayMonth: birthdayMonth == null && nullToAbsent
           ? const Value.absent()
           : Value(birthdayMonth),
@@ -926,13 +862,11 @@ class Person extends DataClass implements Insertable<Person> {
       ),
       reconnecting: serializer.fromJson<bool>(json['reconnecting']),
       rhythmDays: serializer.fromJson<int?>(json['rhythmDays']),
-      mainMessenger: $PeopleTable.$convertermainMessengern.fromJson(
-        serializer.fromJson<String?>(json['mainMessenger']),
+      chatApp: $PeopleTable.$converterchatAppn.fromJson(
+        serializer.fromJson<String?>(json['chatApp']),
       ),
       phone: serializer.fromJson<String?>(json['phone']),
-      telegramUsername: serializer.fromJson<String?>(json['telegramUsername']),
-      signalLink: serializer.fromJson<String?>(json['signalLink']),
-      discordUserId: serializer.fromJson<String?>(json['discordUserId']),
+      chatTarget: serializer.fromJson<String?>(json['chatTarget']),
       birthdayMonth: serializer.fromJson<int?>(json['birthdayMonth']),
       birthdayDay: serializer.fromJson<int?>(json['birthdayDay']),
       birthdayYear: serializer.fromJson<int?>(json['birthdayYear']),
@@ -961,13 +895,11 @@ class Person extends DataClass implements Insertable<Person> {
       ),
       'reconnecting': serializer.toJson<bool>(reconnecting),
       'rhythmDays': serializer.toJson<int?>(rhythmDays),
-      'mainMessenger': serializer.toJson<String?>(
-        $PeopleTable.$convertermainMessengern.toJson(mainMessenger),
+      'chatApp': serializer.toJson<String?>(
+        $PeopleTable.$converterchatAppn.toJson(chatApp),
       ),
       'phone': serializer.toJson<String?>(phone),
-      'telegramUsername': serializer.toJson<String?>(telegramUsername),
-      'signalLink': serializer.toJson<String?>(signalLink),
-      'discordUserId': serializer.toJson<String?>(discordUserId),
+      'chatTarget': serializer.toJson<String?>(chatTarget),
       'birthdayMonth': serializer.toJson<int?>(birthdayMonth),
       'birthdayDay': serializer.toJson<int?>(birthdayDay),
       'birthdayYear': serializer.toJson<int?>(birthdayYear),
@@ -992,11 +924,9 @@ class Person extends DataClass implements Insertable<Person> {
     Closeness? closeness,
     bool? reconnecting,
     Value<int?> rhythmDays = const Value.absent(),
-    Value<Messenger?> mainMessenger = const Value.absent(),
+    Value<ChatApp?> chatApp = const Value.absent(),
     Value<String?> phone = const Value.absent(),
-    Value<String?> telegramUsername = const Value.absent(),
-    Value<String?> signalLink = const Value.absent(),
-    Value<String?> discordUserId = const Value.absent(),
+    Value<String?> chatTarget = const Value.absent(),
     Value<int?> birthdayMonth = const Value.absent(),
     Value<int?> birthdayDay = const Value.absent(),
     Value<int?> birthdayYear = const Value.absent(),
@@ -1014,17 +944,9 @@ class Person extends DataClass implements Insertable<Person> {
     closeness: closeness ?? this.closeness,
     reconnecting: reconnecting ?? this.reconnecting,
     rhythmDays: rhythmDays.present ? rhythmDays.value : this.rhythmDays,
-    mainMessenger: mainMessenger.present
-        ? mainMessenger.value
-        : this.mainMessenger,
+    chatApp: chatApp.present ? chatApp.value : this.chatApp,
     phone: phone.present ? phone.value : this.phone,
-    telegramUsername: telegramUsername.present
-        ? telegramUsername.value
-        : this.telegramUsername,
-    signalLink: signalLink.present ? signalLink.value : this.signalLink,
-    discordUserId: discordUserId.present
-        ? discordUserId.value
-        : this.discordUserId,
+    chatTarget: chatTarget.present ? chatTarget.value : this.chatTarget,
     birthdayMonth: birthdayMonth.present
         ? birthdayMonth.value
         : this.birthdayMonth,
@@ -1052,19 +974,11 @@ class Person extends DataClass implements Insertable<Person> {
       rhythmDays: data.rhythmDays.present
           ? data.rhythmDays.value
           : this.rhythmDays,
-      mainMessenger: data.mainMessenger.present
-          ? data.mainMessenger.value
-          : this.mainMessenger,
+      chatApp: data.chatApp.present ? data.chatApp.value : this.chatApp,
       phone: data.phone.present ? data.phone.value : this.phone,
-      telegramUsername: data.telegramUsername.present
-          ? data.telegramUsername.value
-          : this.telegramUsername,
-      signalLink: data.signalLink.present
-          ? data.signalLink.value
-          : this.signalLink,
-      discordUserId: data.discordUserId.present
-          ? data.discordUserId.value
-          : this.discordUserId,
+      chatTarget: data.chatTarget.present
+          ? data.chatTarget.value
+          : this.chatTarget,
       birthdayMonth: data.birthdayMonth.present
           ? data.birthdayMonth.value
           : this.birthdayMonth,
@@ -1099,11 +1013,9 @@ class Person extends DataClass implements Insertable<Person> {
           ..write('closeness: $closeness, ')
           ..write('reconnecting: $reconnecting, ')
           ..write('rhythmDays: $rhythmDays, ')
-          ..write('mainMessenger: $mainMessenger, ')
+          ..write('chatApp: $chatApp, ')
           ..write('phone: $phone, ')
-          ..write('telegramUsername: $telegramUsername, ')
-          ..write('signalLink: $signalLink, ')
-          ..write('discordUserId: $discordUserId, ')
+          ..write('chatTarget: $chatTarget, ')
           ..write('birthdayMonth: $birthdayMonth, ')
           ..write('birthdayDay: $birthdayDay, ')
           ..write('birthdayYear: $birthdayYear, ')
@@ -1119,18 +1031,16 @@ class Person extends DataClass implements Insertable<Person> {
   }
 
   @override
-  int get hashCode => Object.hashAll([
+  int get hashCode => Object.hash(
     id,
     name,
     contactId,
     closeness,
     reconnecting,
     rhythmDays,
-    mainMessenger,
+    chatApp,
     phone,
-    telegramUsername,
-    signalLink,
-    discordUserId,
+    chatTarget,
     birthdayMonth,
     birthdayDay,
     birthdayYear,
@@ -1141,7 +1051,7 @@ class Person extends DataClass implements Insertable<Person> {
     replyClearedAt,
     nickname,
     photo,
-  ]);
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1152,11 +1062,9 @@ class Person extends DataClass implements Insertable<Person> {
           other.closeness == this.closeness &&
           other.reconnecting == this.reconnecting &&
           other.rhythmDays == this.rhythmDays &&
-          other.mainMessenger == this.mainMessenger &&
+          other.chatApp == this.chatApp &&
           other.phone == this.phone &&
-          other.telegramUsername == this.telegramUsername &&
-          other.signalLink == this.signalLink &&
-          other.discordUserId == this.discordUserId &&
+          other.chatTarget == this.chatTarget &&
           other.birthdayMonth == this.birthdayMonth &&
           other.birthdayDay == this.birthdayDay &&
           other.birthdayYear == this.birthdayYear &&
@@ -1176,11 +1084,9 @@ class PeopleCompanion extends UpdateCompanion<Person> {
   final Value<Closeness> closeness;
   final Value<bool> reconnecting;
   final Value<int?> rhythmDays;
-  final Value<Messenger?> mainMessenger;
+  final Value<ChatApp?> chatApp;
   final Value<String?> phone;
-  final Value<String?> telegramUsername;
-  final Value<String?> signalLink;
-  final Value<String?> discordUserId;
+  final Value<String?> chatTarget;
   final Value<int?> birthdayMonth;
   final Value<int?> birthdayDay;
   final Value<int?> birthdayYear;
@@ -1199,11 +1105,9 @@ class PeopleCompanion extends UpdateCompanion<Person> {
     this.closeness = const Value.absent(),
     this.reconnecting = const Value.absent(),
     this.rhythmDays = const Value.absent(),
-    this.mainMessenger = const Value.absent(),
+    this.chatApp = const Value.absent(),
     this.phone = const Value.absent(),
-    this.telegramUsername = const Value.absent(),
-    this.signalLink = const Value.absent(),
-    this.discordUserId = const Value.absent(),
+    this.chatTarget = const Value.absent(),
     this.birthdayMonth = const Value.absent(),
     this.birthdayDay = const Value.absent(),
     this.birthdayYear = const Value.absent(),
@@ -1223,11 +1127,9 @@ class PeopleCompanion extends UpdateCompanion<Person> {
     required Closeness closeness,
     this.reconnecting = const Value.absent(),
     this.rhythmDays = const Value.absent(),
-    this.mainMessenger = const Value.absent(),
+    this.chatApp = const Value.absent(),
     this.phone = const Value.absent(),
-    this.telegramUsername = const Value.absent(),
-    this.signalLink = const Value.absent(),
-    this.discordUserId = const Value.absent(),
+    this.chatTarget = const Value.absent(),
     this.birthdayMonth = const Value.absent(),
     this.birthdayDay = const Value.absent(),
     this.birthdayYear = const Value.absent(),
@@ -1252,11 +1154,9 @@ class PeopleCompanion extends UpdateCompanion<Person> {
     Expression<String>? closeness,
     Expression<bool>? reconnecting,
     Expression<int>? rhythmDays,
-    Expression<String>? mainMessenger,
+    Expression<String>? chatApp,
     Expression<String>? phone,
-    Expression<String>? telegramUsername,
-    Expression<String>? signalLink,
-    Expression<String>? discordUserId,
+    Expression<String>? chatTarget,
     Expression<int>? birthdayMonth,
     Expression<int>? birthdayDay,
     Expression<int>? birthdayYear,
@@ -1276,11 +1176,9 @@ class PeopleCompanion extends UpdateCompanion<Person> {
       if (closeness != null) 'closeness': closeness,
       if (reconnecting != null) 'reconnecting': reconnecting,
       if (rhythmDays != null) 'rhythm_days': rhythmDays,
-      if (mainMessenger != null) 'main_messenger': mainMessenger,
+      if (chatApp != null) 'main_messenger': chatApp,
       if (phone != null) 'phone': phone,
-      if (telegramUsername != null) 'telegram_username': telegramUsername,
-      if (signalLink != null) 'signal_link': signalLink,
-      if (discordUserId != null) 'discord_user_id': discordUserId,
+      if (chatTarget != null) 'chat_target': chatTarget,
       if (birthdayMonth != null) 'birthday_month': birthdayMonth,
       if (birthdayDay != null) 'birthday_day': birthdayDay,
       if (birthdayYear != null) 'birthday_year': birthdayYear,
@@ -1302,11 +1200,9 @@ class PeopleCompanion extends UpdateCompanion<Person> {
     Value<Closeness>? closeness,
     Value<bool>? reconnecting,
     Value<int?>? rhythmDays,
-    Value<Messenger?>? mainMessenger,
+    Value<ChatApp?>? chatApp,
     Value<String?>? phone,
-    Value<String?>? telegramUsername,
-    Value<String?>? signalLink,
-    Value<String?>? discordUserId,
+    Value<String?>? chatTarget,
     Value<int?>? birthdayMonth,
     Value<int?>? birthdayDay,
     Value<int?>? birthdayYear,
@@ -1326,11 +1222,9 @@ class PeopleCompanion extends UpdateCompanion<Person> {
       closeness: closeness ?? this.closeness,
       reconnecting: reconnecting ?? this.reconnecting,
       rhythmDays: rhythmDays ?? this.rhythmDays,
-      mainMessenger: mainMessenger ?? this.mainMessenger,
+      chatApp: chatApp ?? this.chatApp,
       phone: phone ?? this.phone,
-      telegramUsername: telegramUsername ?? this.telegramUsername,
-      signalLink: signalLink ?? this.signalLink,
-      discordUserId: discordUserId ?? this.discordUserId,
+      chatTarget: chatTarget ?? this.chatTarget,
       birthdayMonth: birthdayMonth ?? this.birthdayMonth,
       birthdayDay: birthdayDay ?? this.birthdayDay,
       birthdayYear: birthdayYear ?? this.birthdayYear,
@@ -1368,22 +1262,16 @@ class PeopleCompanion extends UpdateCompanion<Person> {
     if (rhythmDays.present) {
       map['rhythm_days'] = Variable<int>(rhythmDays.value);
     }
-    if (mainMessenger.present) {
+    if (chatApp.present) {
       map['main_messenger'] = Variable<String>(
-        $PeopleTable.$convertermainMessengern.toSql(mainMessenger.value),
+        $PeopleTable.$converterchatAppn.toSql(chatApp.value),
       );
     }
     if (phone.present) {
       map['phone'] = Variable<String>(phone.value);
     }
-    if (telegramUsername.present) {
-      map['telegram_username'] = Variable<String>(telegramUsername.value);
-    }
-    if (signalLink.present) {
-      map['signal_link'] = Variable<String>(signalLink.value);
-    }
-    if (discordUserId.present) {
-      map['discord_user_id'] = Variable<String>(discordUserId.value);
+    if (chatTarget.present) {
+      map['chat_target'] = Variable<String>(chatTarget.value);
     }
     if (birthdayMonth.present) {
       map['birthday_month'] = Variable<int>(birthdayMonth.value);
@@ -1434,11 +1322,9 @@ class PeopleCompanion extends UpdateCompanion<Person> {
           ..write('closeness: $closeness, ')
           ..write('reconnecting: $reconnecting, ')
           ..write('rhythmDays: $rhythmDays, ')
-          ..write('mainMessenger: $mainMessenger, ')
+          ..write('chatApp: $chatApp, ')
           ..write('phone: $phone, ')
-          ..write('telegramUsername: $telegramUsername, ')
-          ..write('signalLink: $signalLink, ')
-          ..write('discordUserId: $discordUserId, ')
+          ..write('chatTarget: $chatTarget, ')
           ..write('birthdayMonth: $birthdayMonth, ')
           ..write('birthdayDay: $birthdayDay, ')
           ..write('birthdayYear: $birthdayYear, ')
@@ -5625,11 +5511,9 @@ typedef $$PeopleTableCreateCompanionBuilder = PeopleCompanion Function({
   required Closeness closeness,
   Value<bool> reconnecting,
   Value<int?> rhythmDays,
-  Value<Messenger?> mainMessenger,
+  Value<ChatApp?> chatApp,
   Value<String?> phone,
-  Value<String?> telegramUsername,
-  Value<String?> signalLink,
-  Value<String?> discordUserId,
+  Value<String?> chatTarget,
   Value<int?> birthdayMonth,
   Value<int?> birthdayDay,
   Value<int?> birthdayYear,
@@ -5649,11 +5533,9 @@ typedef $$PeopleTableUpdateCompanionBuilder = PeopleCompanion Function({
   Value<Closeness> closeness,
   Value<bool> reconnecting,
   Value<int?> rhythmDays,
-  Value<Messenger?> mainMessenger,
+  Value<ChatApp?> chatApp,
   Value<String?> phone,
-  Value<String?> telegramUsername,
-  Value<String?> signalLink,
-  Value<String?> discordUserId,
+  Value<String?> chatTarget,
   Value<int?> birthdayMonth,
   Value<int?> birthdayDay,
   Value<int?> birthdayYear,
@@ -5804,29 +5686,19 @@ class $$PeopleTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<Messenger?, Messenger, String>
-  get mainMessenger => $composableBuilder(
-    column: $table.mainMessenger,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
-  );
+  ColumnWithTypeConverterFilters<ChatApp?, ChatApp, String> get chatApp =>
+      $composableBuilder(
+        column: $table.chatApp,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<String> get phone => $composableBuilder(
     column: $table.phone,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get telegramUsername => $composableBuilder(
-    column: $table.telegramUsername,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get signalLink => $composableBuilder(
-    column: $table.signalLink,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get discordUserId => $composableBuilder(
-    column: $table.discordUserId,
+  ColumnFilters<String> get chatTarget => $composableBuilder(
+    column: $table.chatTarget,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -6047,8 +5919,8 @@ class $$PeopleTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get mainMessenger => $composableBuilder(
-    column: $table.mainMessenger,
+  ColumnOrderings<String> get chatApp => $composableBuilder(
+    column: $table.chatApp,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -6057,18 +5929,8 @@ class $$PeopleTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get telegramUsername => $composableBuilder(
-    column: $table.telegramUsername,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get signalLink => $composableBuilder(
-    column: $table.signalLink,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get discordUserId => $composableBuilder(
-    column: $table.discordUserId,
+  ColumnOrderings<String> get chatTarget => $composableBuilder(
+    column: $table.chatTarget,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -6154,27 +6016,14 @@ class $$PeopleTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumnWithTypeConverter<Messenger?, String> get mainMessenger =>
-      $composableBuilder(
-        column: $table.mainMessenger,
-        builder: (column) => column,
-      );
+  GeneratedColumnWithTypeConverter<ChatApp?, String> get chatApp =>
+      $composableBuilder(column: $table.chatApp, builder: (column) => column);
 
   GeneratedColumn<String> get phone =>
       $composableBuilder(column: $table.phone, builder: (column) => column);
 
-  GeneratedColumn<String> get telegramUsername => $composableBuilder(
-    column: $table.telegramUsername,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get signalLink => $composableBuilder(
-    column: $table.signalLink,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get discordUserId => $composableBuilder(
-    column: $table.discordUserId,
+  GeneratedColumn<String> get chatTarget => $composableBuilder(
+    column: $table.chatTarget,
     builder: (column) => column,
   );
 
@@ -6388,11 +6237,9 @@ class $$PeopleTableTableManager
                 Value<Closeness> closeness = const Value.absent(),
                 Value<bool> reconnecting = const Value.absent(),
                 Value<int?> rhythmDays = const Value.absent(),
-                Value<Messenger?> mainMessenger = const Value.absent(),
+                Value<ChatApp?> chatApp = const Value.absent(),
                 Value<String?> phone = const Value.absent(),
-                Value<String?> telegramUsername = const Value.absent(),
-                Value<String?> signalLink = const Value.absent(),
-                Value<String?> discordUserId = const Value.absent(),
+                Value<String?> chatTarget = const Value.absent(),
                 Value<int?> birthdayMonth = const Value.absent(),
                 Value<int?> birthdayDay = const Value.absent(),
                 Value<int?> birthdayYear = const Value.absent(),
@@ -6411,11 +6258,9 @@ class $$PeopleTableTableManager
                 closeness: closeness,
                 reconnecting: reconnecting,
                 rhythmDays: rhythmDays,
-                mainMessenger: mainMessenger,
+                chatApp: chatApp,
                 phone: phone,
-                telegramUsername: telegramUsername,
-                signalLink: signalLink,
-                discordUserId: discordUserId,
+                chatTarget: chatTarget,
                 birthdayMonth: birthdayMonth,
                 birthdayDay: birthdayDay,
                 birthdayYear: birthdayYear,
@@ -6436,11 +6281,9 @@ class $$PeopleTableTableManager
                 required Closeness closeness,
                 Value<bool> reconnecting = const Value.absent(),
                 Value<int?> rhythmDays = const Value.absent(),
-                Value<Messenger?> mainMessenger = const Value.absent(),
+                Value<ChatApp?> chatApp = const Value.absent(),
                 Value<String?> phone = const Value.absent(),
-                Value<String?> telegramUsername = const Value.absent(),
-                Value<String?> signalLink = const Value.absent(),
-                Value<String?> discordUserId = const Value.absent(),
+                Value<String?> chatTarget = const Value.absent(),
                 Value<int?> birthdayMonth = const Value.absent(),
                 Value<int?> birthdayDay = const Value.absent(),
                 Value<int?> birthdayYear = const Value.absent(),
@@ -6459,11 +6302,9 @@ class $$PeopleTableTableManager
                 closeness: closeness,
                 reconnecting: reconnecting,
                 rhythmDays: rhythmDays,
-                mainMessenger: mainMessenger,
+                chatApp: chatApp,
                 phone: phone,
-                telegramUsername: telegramUsername,
-                signalLink: signalLink,
-                discordUserId: discordUserId,
+                chatTarget: chatTarget,
                 birthdayMonth: birthdayMonth,
                 birthdayDay: birthdayDay,
                 birthdayYear: birthdayYear,

@@ -279,7 +279,7 @@ class _ClassState extends ConsumerState<_ClassStep> {
   late final _closeness = {
     for (final c in widget.contacts) c.id: Closeness.nowAndThen,
   };
-  Messenger? _messenger = Messenger.whatsapp;
+  ChatApp? _messenger = ChatApp.whatsapp;
   var _saving = false;
 
   Future<void> _add() async {

@@ -51,7 +51,7 @@ void main() {
       lena = await people.add(
         name: 'Lena Hartwig',
         closeness: Closeness.close,
-        mainMessenger: Messenger.whatsapp,
+        chatApp: ChatApp.whatsapp,
         phone: '+4900000000101',
         birthdayMonth: 11,
         birthdayDay: 16,
@@ -60,7 +60,7 @@ void main() {
       tom = await people.add(
         name: 'Tom Berger',
         closeness: Closeness.close,
-        mainMessenger: Messenger.whatsapp,
+        chatApp: ChatApp.whatsapp,
         phone: '+4900000000102',
         birthdayMonth: 3,
         birthdayDay: 3,

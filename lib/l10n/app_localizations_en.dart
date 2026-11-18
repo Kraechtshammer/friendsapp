@@ -119,16 +119,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reconnecting => 'Getting back in touch';
 
   @override
-  String get messengerWhatsapp => 'WhatsApp';
-
-  @override
-  String get messengerTelegram => 'Telegram';
-
-  @override
-  String get messengerSignal => 'Signal';
-
-  @override
-  String get messengerDiscord => 'Discord';
+  String get messengerSms => 'SMS';
 
   @override
   String openMessenger(String messenger) {
@@ -209,13 +200,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get phoneHint => '+49…';
 
   @override
-  String get telegramUsername => 'Telegram user name';
+  String get chatTarget => 'Chat link, username or ID';
 
   @override
-  String get signalLink => 'Signal link';
-
-  @override
-  String get discordUserId => 'Discord user ID';
+  String get chatTargetHint => 'Optional. Without it, Kept. opens the app.';
 
   @override
   String get birthday => 'Birthday';

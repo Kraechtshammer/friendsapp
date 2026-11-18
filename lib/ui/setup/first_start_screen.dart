@@ -37,7 +37,7 @@ class _FirstStartState extends ConsumerState<FirstStartScreen> {
   var _step = _Step.welcome;
   var _picked = <PhoneContact>[];
   final _closeness = <String, Closeness>{};
-  Messenger? _messenger = Messenger.whatsapp;
+  ChatApp? _messenger = ChatApp.whatsapp;
   var _saving = false;
 
   var _eveningOn = true;

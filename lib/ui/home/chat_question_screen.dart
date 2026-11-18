@@ -53,7 +53,7 @@ class ChatQuestionScreen extends ConsumerWidget {
             IntentionKind.meet => l10n.chatQuestionMeet(name),
             IntentionKind.game => l10n.chatQuestionGame(name),
           };
-    final messenger = person.mainMessenger;
+    final messenger = person.chatApp;
     return Scaffold(
       body: SafeArea(
         child: Center(

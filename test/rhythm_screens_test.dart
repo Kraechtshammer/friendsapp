@@ -59,7 +59,7 @@ void main() {
     String name, {
     Closeness closeness = Closeness.nowAndThen,
     bool reconnecting = false,
-    Messenger? messenger = Messenger.whatsapp,
+    ChatApp? messenger = ChatApp.whatsapp,
     DateTime? added,
   }) => real(
     tester,
@@ -69,7 +69,7 @@ void main() {
           name: name,
           closeness: closeness,
           reconnecting: reconnecting,
-          mainMessenger: messenger,
+          chatApp: messenger,
           phone: '+4900000000101',
           now: added ?? DateTime(2026, 11, 10),
         ),

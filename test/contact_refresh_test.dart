@@ -38,10 +38,8 @@ Person _person({
   createdAt: DateTime(2026),
   replyClearedAt: null,
   rhythmDays: null,
-  mainMessenger: null,
-  telegramUsername: null,
-  signalLink: null,
-  discordUserId: null,
+  chatApp: null,
+  chatTarget: null,
 );
 
 void main() {

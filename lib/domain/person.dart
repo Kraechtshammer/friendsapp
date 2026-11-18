@@ -3,11 +3,10 @@
 /// See docs/02-design.md §3 and §8.
 library;
 
+export 'chat_app.dart' show ChatApp;
+
 /// The class a person is in, or Family as its own group.
 enum Closeness { close, nowAndThen, fewTimesAYear, family }
-
-/// The messengers "Open chat" knows (02-design.md §8, opening chats).
-enum Messenger { whatsapp, telegram, signal, discord }
 
 /// The avatar's outline, picked when the person is added.
 enum AvatarShape { scallop, squircle, leaf, arch }

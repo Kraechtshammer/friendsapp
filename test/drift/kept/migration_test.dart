@@ -21,6 +21,7 @@ import 'generated/schema_v2.dart' as v2;
 import 'generated/schema_v3.dart' as v3;
 import 'generated/schema_v4.dart' as v4;
 import 'generated/schema_v5.dart' as v5;
+import 'generated/schema_v6.dart' as v6;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -997,6 +998,116 @@ void main() {
     final stamps = await db.select(db.stamps).get();
     expect(stamps.map((s) => s.personId).toSet(), {'p1', 'p2'});
     expect(couple.kind, GroupKind.couple);
+    await db.close();
+  });
+
+  // v5 -> v6: any messenger, one chat target (02-design.md §8, 2026-11-18).
+  // The three old handles are dropped on purpose; every person, their
+  // messenger and the other tables stay.
+  test('migration from v5 to v6 keeps people and drops the handles', () async {
+    final created =
+        DateTime.utc(2026, 11, 18, 9).millisecondsSinceEpoch ~/ 1000;
+    final oldPeople = [
+      v5.PeopleData(
+        id: 'p1',
+        name: 'Anna Example',
+        contactId: '17',
+        closeness: 'close',
+        reconnecting: 1,
+        rhythmDays: 9,
+        mainMessenger: 'telegram',
+        phone: '+490000000101',
+        telegramUsername: 'anna_t',
+        signalLink: 'https://signal.me/#p/x',
+        discordUserId: '123',
+        birthdayMonth: 2,
+        birthdayDay: 29,
+        birthdayYear: 1992,
+        avatarShape: 'scallop',
+        avatarColor: 'coral',
+        notes: 'Likes calls.',
+        createdAt: created,
+        replyClearedAt: created + 30,
+        nickname: 'Annie',
+        photo: 'p1.jpg',
+      ),
+      v5.PeopleData(
+        id: 'p2',
+        name: 'Ben Example',
+        closeness: 'fewTimesAYear',
+        reconnecting: 0,
+        avatarShape: 'leaf',
+        avatarColor: 'mint',
+        notes: '',
+        createdAt: created + 60,
+      ),
+    ];
+    final oldIntentions = [
+      v5.IntentionsData(
+        id: 'i1',
+        personId: 'p1',
+        note: 'call about the move',
+        kind: 'call',
+        state: 'open',
+        createdAt: created + 120,
+      ),
+    ];
+
+    await verifier.testWithDataIntegrity(
+      oldVersion: 5,
+      newVersion: 6,
+      createOld: v5.DatabaseAtV5.new,
+      createNew: v6.DatabaseAtV6.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) {
+        batch.insertAll(oldDb.people, oldPeople);
+        batch.insertAll(oldDb.intentions, oldIntentions);
+      },
+      validateItems: (newDb) async {
+        final people = await newDb.select(newDb.people).get();
+        expect(people, [
+          for (final r in oldPeople)
+            v6.PeopleData.fromJson(
+              r.toJson()
+                ..remove('telegramUsername')
+                ..remove('signalLink')
+                ..remove('discordUserId'),
+            ),
+        ]);
+        expect(people.map((p) => p.chatTarget), everyElement(isNull));
+        expect(people.first.mainMessenger, 'telegram');
+        expect(await newDb.select(newDb.intentions).get(), [
+          for (final r in oldIntentions) v6.IntentionsData.fromJson(r.toJson()),
+        ]);
+      },
+    );
+  });
+
+  test('the app reads the old messenger after the upgrade to v6', () async {
+    final schema = await verifier.schemaAt(5);
+    final old = v5.DatabaseAtV5(schema.newConnection());
+    await old
+        .into(old.people)
+        .insert(
+          v5.PeopleData(
+            id: 'p1',
+            name: 'Anna Example',
+            closeness: 'close',
+            reconnecting: 0,
+            mainMessenger: 'signal',
+            telegramUsername: 'gone',
+            avatarShape: 'scallop',
+            avatarColor: 'coral',
+            notes: '',
+            createdAt: 0,
+          ),
+        );
+    await old.close();
+
+    final db = AppDatabase(schema.newConnection());
+    final anna = await PeopleRepository(db).watchAll().first;
+    expect(anna.single.chatApp, ChatApp.signal);
+    expect(anna.single.chatTarget, isNull);
     await db.close();
   });
 }

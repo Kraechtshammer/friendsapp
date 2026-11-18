@@ -48,7 +48,7 @@ void main() {
       tom = await people.add(
         name: 'Tom Berger',
         closeness: Closeness.close,
-        mainMessenger: Messenger.whatsapp,
+        chatApp: ChatApp.whatsapp,
         phone: '+4900000000101',
       );
       await thoughts.add(
@@ -61,8 +61,8 @@ void main() {
         anna = await people.add(
           name: 'Anna Keller',
           closeness: Closeness.nowAndThen,
-          mainMessenger: Messenger.telegram,
-          telegramUsername: 'demo_anna',
+          chatApp: ChatApp.telegram,
+          chatTarget: '@demo_anna',
         );
         jonas = await people.add(
           name: 'Jonas Wirth',

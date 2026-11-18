@@ -51,7 +51,7 @@ void main() {
       tom = await people.add(
         name: 'Tom',
         closeness: Closeness.close,
-        mainMessenger: Messenger.whatsapp,
+        chatApp: ChatApp.whatsapp,
         phone: '+4900000000101',
         contactId: 'c1',
       );

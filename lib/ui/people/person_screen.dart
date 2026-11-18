@@ -70,7 +70,7 @@ class _Body extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final messenger = person.mainMessenger;
+    final messenger = person.chatApp;
     return ListView(
       padding: EdgeInsets.zero,
       children: [
@@ -239,7 +239,7 @@ class _Header extends ConsumerWidget {
     final kept = context.kept;
     final shortName = ref.shortName(person);
     final tone = person.avatarColor.tone(kept);
-    final messenger = person.mainMessenger;
+    final messenger = person.chatApp;
     final month = person.birthdayMonth, day = person.birthdayDay;
     return Container(
       padding: EdgeInsets.fromLTRB(

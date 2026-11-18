@@ -11,7 +11,7 @@ Person person(String name, {String? photo, String? nickname}) => Person(
   closeness: Closeness.close,
   avatarShape: AvatarShape.squircle,
   avatarColor: AvatarColor.coral,
-  mainMessenger: Messenger.whatsapp,
+  chatApp: ChatApp.whatsapp,
   reconnecting: false,
   notes: '',
   createdAt: DateTime(2026, 1, 1),
