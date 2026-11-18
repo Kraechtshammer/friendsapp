@@ -38,6 +38,9 @@ ROUNDS = {
                    ("Making music", ["concert-b"]), ("Cooking together", ["cooking"]),
                    ("DIY", ["diy"]), ("Gym", ["gym"]), ("Karaoke", ["karaoke"]),
                    ("Shopping", ["shopping"]), ("Walk", ["@bench"]), REUSED]),
+    "v3": dict(prefix="MeetupV3", y=17720,
+               note="Meetup icons v3: restaurant with the knife mirrored",
+               activities=[("Restaurant", ["restaurant-c", "restaurant-d"])]),
 }
 SET = ["home", "cake", "dice", "chat", "popcorn", "cups", "gift", "mountain"]
 PER_ROW = 7

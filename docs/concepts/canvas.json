@@ -582,6 +582,20 @@
       "w": 560,
       "h": 300,
       "title": "Meetup icons v2 · Reused as they are"
+    },
+    "MeetupV3Weight.dc.html": {
+      "x": 0,
+      "y": 18020,
+      "w": 1180,
+      "h": 200,
+      "title": "Meetup icons v3 · weight check at 26 px: existing set | drafts"
+    },
+    "MeetupV3Restaurant.dc.html": {
+      "x": 0,
+      "y": 18340,
+      "w": 360,
+      "h": 300,
+      "title": "Meetup icons v3 · Restaurant"
     }
   },
   "createdOnFiles": {
@@ -696,6 +710,14 @@
       "kind": "title1",
       "maxW": 2740,
       "text": "Meetup icons v2: picks from v1, new climber, runner and restaurant"
+    },
+    "tMeetupV3": {
+      "x": 0,
+      "y": 17720,
+      "w": 240,
+      "kind": "title1",
+      "maxW": 2740,
+      "text": "Meetup icons v3: restaurant with the knife mirrored"
     }
   },
   "order": [
@@ -781,7 +803,9 @@
     "MeetupV2Karaoke.dc.html",
     "MeetupV2Shopping.dc.html",
     "MeetupV2Walk.dc.html",
-    "MeetupV2ReusedAsTheyAre.dc.html"
+    "MeetupV2ReusedAsTheyAre.dc.html",
+    "MeetupV3Weight.dc.html",
+    "MeetupV3Restaurant.dc.html"
   ],
   "pages": [],
   "title": "Friends app concept screens"
