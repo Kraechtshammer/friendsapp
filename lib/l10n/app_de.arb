@@ -264,6 +264,7 @@
   "logKindMet": "Getroffen",
   "logKindGamed": "Gezockt",
   "logDayYesterday": "Gestern",
+  "captureAlreadyHappened": "Schon passiert",
   "logDayPick": "Tag wählen",
   "notedTheyWrote": "Notiert: {name} hat geschrieben",
   "@notedTheyWrote": {"placeholders": {"name": {"type": "String"}}},

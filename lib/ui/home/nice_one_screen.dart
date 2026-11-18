@@ -99,24 +99,41 @@ Future<void> completeLoggedContact(
   Person person, {
   required ContactKind kind,
   required DateTime at,
-}) => _storeAndCelebrate(
-  context,
-  person: person,
-  thought: '',
-  replace: false,
-  store: () => ref
-      .read(contactEventsRepositoryProvider)
-      .add(
-        personId: person.id,
-        at: at,
-        kind: kind,
-        direction: switch (kind) {
-          ContactKind.wrote || ContactKind.called => ContactDirection.byUser,
-          _ => ContactDirection.together,
-        },
-        source: ContactSource.manual,
-      ),
-);
+  GroupWithMembers? couple,
+  String thought = '',
+}) {
+  final direction = switch (kind) {
+    ContactKind.wrote || ContactKind.called => ContactDirection.byUser,
+    _ => ContactDirection.together,
+  };
+  final repo = ref.read(contactEventsRepositoryProvider);
+  return _storeAndCelebrate(
+    context,
+    person: couple?.members.first ?? person,
+    couple: couple,
+    thought: thought,
+    replace: false,
+    // With a couple it is one shared event for both members.
+    store: couple == null
+        ? () => repo.add(
+            personId: person.id,
+            at: at,
+            kind: kind,
+            direction: direction,
+            source: ContactSource.manual,
+          )
+        : () async {
+            final rows = await repo.addForGroup(
+              groupId: couple.group.id,
+              at: at,
+              kind: kind,
+              direction: direction,
+              source: ContactSource.manual,
+            );
+            return rows.first;
+          },
+  );
+}
 
 /// "We met" on the couple page: stores a meeting with both members as one
 /// shared event ([ContactEventsRepository.addForGroup], source `manual`,

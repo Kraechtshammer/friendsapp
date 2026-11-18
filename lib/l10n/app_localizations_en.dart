@@ -828,6 +828,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logDayYesterday => 'Yesterday';
 
   @override
+  String get captureAlreadyHappened => 'Already happened';
+
+  @override
   String get logDayPick => 'Pick a day';
 
   @override

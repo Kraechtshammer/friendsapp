@@ -1442,6 +1442,12 @@ abstract class AppLocalizations {
   /// **'Yesterday'**
   String get logDayYesterday;
 
+  /// No description provided for @captureAlreadyHappened.
+  ///
+  /// In en, this message translates to:
+  /// **'Already happened'**
+  String get captureAlreadyHappened;
+
   /// No description provided for @logDayPick.
   ///
   /// In en, this message translates to:

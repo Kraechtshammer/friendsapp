@@ -364,6 +364,7 @@
   "logKindMet": "Met",
   "logKindGamed": "Played",
   "logDayYesterday": "Yesterday",
+  "captureAlreadyHappened": "Already happened",
   "logDayPick": "Pick a day",
   "notedTheyWrote": "Noted: {name} wrote",
   "@notedTheyWrote": {"placeholders": {"name": {"type": "String"}}},

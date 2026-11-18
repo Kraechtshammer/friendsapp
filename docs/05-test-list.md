@@ -210,3 +210,6 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] "Pick a day" with a day of last week: the stamp lands in last week (Progress tab), and the streak counts that week.
 - [ ] "Pick a day" with today: the entry shows today with the current time, not noon.
 - [ ] The three buttons fit on the person page in German.
+- [ ] Home capture card: type "Bouldering", pick a person, Meet, "Already happened", Yesterday, Save: Nice one has "Bouldering" as the activity; no new open thought; the card is empty again.
+- [ ] The same for a couple: both timelines have one entry and both get a stamp.
+- [ ] Turning "Already happened" off brings the When row back as it was.

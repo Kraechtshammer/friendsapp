@@ -834,6 +834,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get logDayYesterday => 'Gestern';
 
   @override
+  String get captureAlreadyHappened => 'Schon passiert';
+
+  @override
   String get logDayPick => 'Tag wählen';
 
   @override

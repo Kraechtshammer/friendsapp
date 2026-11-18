@@ -18,7 +18,7 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
   - 0.9.0: schema 5; settings as categories with icons; language setting; predictive back; short display names, nicknames, pictures (contacts, gallery, shared in with a crop screen).
   - 0.9.1 (2026-11-17): couples screens (Partner row, couple page, couple thoughts, shared meetings). Wanted later: a name for a couple.
   - 0.9.2 (2026-11-18): schema 6, any messenger (15 apps, installed only, one chat target, contact entries, help page, new icons); listener matches Discord DMs by chat id and uses message send times.
-  - Not released yet (2026-11-18): the People tab shows couple members on their own too, and the couple in the less close class (02-design.md §8); "We were in touch" on the person page.
+  - Not released yet (2026-11-18): the People tab shows couple members on their own too, and the couple in the less close class (02-design.md §8); "We were in touch" on the person page and "Already happened" on the capture card.
 - **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.9.2 next).
 - **The developer's phone** (2026-11-16): `de.gartenpa.kept.debug` ("Kept. debug", 0.7.0, test data). The old 0.6.0 debug build under `de.gartenpa.kept` is left only in the Private space (user 11), never opened there; it blocks the release install (signature) and the developer removes it by hand (Claude's uninstall was refused). Then the listener build of the release goes on over adb.
 - **The developer's phone since 0.8.0:** the release listener build `kept-0.8.0-listener.apk` is installed over adb as the real app; 0.9.0 is its first real in-app update test. The developer said on 2026-11-16 that commits may be pushed right away.
@@ -115,7 +115,7 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 
 **Planned, decided, not built** (to be built in its own session)
 
-- **Log a contact that already happened** (the developer, 2026-11-18, 02-design.md §8): one shared sheet (what: wrote, called, met, played; when: today, yesterday or a date; optional activity and next-time line; Save leads to "Nice one"), reachable from a "We were in touch" button on the person page beside "They wrote" and "They called", and from an "Already happened" choice on the Home capture card. A back-dated contact earns its week's stamp and counts for the streak. **The person-page button is built (2026-11-18, not released, untried on the phone); the capture-card choice is next.**
+- **Log a contact that already happened** (the developer, 2026-11-18, 02-design.md §8): one shared sheet (what: wrote, called, met, played; when: today, yesterday or a date; optional activity and next-time line; Save leads to "Nice one"), reachable from a "We were in touch" button on the person page beside "They wrote" and "They called", and from an "Already happened" choice on the Home capture card. A back-dated contact earns its week's stamp and counts for the streak. **Both parts are built (2026-11-18, not released, untried on the phone).**
 
 **Ideas for after 1.0.0**
 

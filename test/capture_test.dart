@@ -5,6 +5,7 @@ import 'package:kept/app/app.dart';
 import 'package:kept/app/providers.dart';
 import 'package:kept/app/services.dart';
 import 'package:kept/data/database.dart';
+import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/intention.dart';
 import 'package:kept/domain/person.dart';
 import 'package:kept/platform/app_shortcuts.dart';
@@ -67,6 +68,88 @@ void main() {
     await tester.tap(find.text('Save for $name'));
     await tester.pumpAndSettle();
   }
+
+  testWidgets('Already happened logs a contact for yesterday', (tester) async {
+    await addPeople(tester, ['Tom Berger']);
+    await start(tester);
+    await tester.enterText(find.byType(TextField), 'Bouldering');
+    await tester.tap(find.text('Tom'));
+    await tester.pumpAndSettle();
+    expect(find.text('Date'), findsOneWidget);
+    await tester.tap(find.text('Already happened'));
+    await tester.pumpAndSettle();
+    expect(find.text('Date'), findsNothing);
+    expect(find.text('Save for Tom'), findsNothing);
+    await tester.tap(find.text('Meet'));
+    await tester.tap(find.text('Yesterday'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Nice one!'), findsOneWidget);
+    expect(find.widgetWithText(TextField, 'Bouldering'), findsOneWidget);
+    final events = await tester.runAsync(
+      () => services.contactEventsFor(demo: false).watchAll().first,
+    );
+    final e = events!.single;
+    expect(e.kind, ContactKind.met);
+    expect(e.direction, ContactDirection.together);
+    expect(e.source, ContactSource.manual);
+    expect(e.at, DateTime(2026, 11, 15, 12));
+    final open = await tester.runAsync(
+      () => services.intentionsFor(demo: false).watchOpen().first,
+    );
+    expect(open, isEmpty);
+    await closeDown(tester);
+  });
+
+  testWidgets('Already happened for a couple stores one shared event', (
+    tester,
+  ) async {
+    await tester.runAsync(() async {
+      final people = services.peopleFor(demo: false);
+      final anna = await people.add(name: 'Anna', closeness: Closeness.close);
+      final tom = await people.add(name: 'Tom', closeness: Closeness.close);
+      await services.groupsFor(demo: false).createCouple(anna.id, tom.id);
+    });
+    await start(tester);
+    await tester.tap(find.textContaining('&'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Already happened'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    expect(find.text('Nice one!'), findsOneWidget);
+    final events = await tester.runAsync(
+      () => services.contactEventsFor(demo: false).watchAll().first,
+    );
+    expect(events, hasLength(2));
+    expect(events![0].sharedId, isNotNull);
+    expect(events[0].sharedId, events[1].sharedId);
+    expect({events[0].personId, events[1].personId}, hasLength(2));
+    await closeDown(tester);
+  });
+
+  testWidgets('turning Already happened off brings the thought back', (
+    tester,
+  ) async {
+    await addPeople(tester, ['Tom Berger']);
+    await start(tester);
+    await tester.tap(find.text('Tom'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Already happened'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Already happened'));
+    await tester.pumpAndSettle();
+    expect(find.text('Date'), findsOneWidget);
+    await saveFor(tester, 'Tom');
+    expect(find.text('Saved for Tom.'), findsOneWidget);
+    final open = await tester.runAsync(
+      () => services.intentionsFor(demo: false).watchOpen().first,
+    );
+    expect(open, hasLength(1));
+    await closeDown(tester);
+  });
 
   testWidgets('captures a thought for a recent person', (tester) async {
     await addPeople(tester, ['Tom Berger', 'Anna Roth']);

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../data/database.dart';
+import '../../domain/contact_event.dart';
 import '../../domain/group.dart';
 import '../../domain/intention.dart';
 import '../../l10n/labels.dart';
@@ -12,7 +13,9 @@ import '../widgets/grey_button.dart';
 import '../widgets/kept_card.dart';
 import '../widgets/kept_text_field.dart';
 import '../widgets/main_button.dart';
+import '../widgets/past_day_picker.dart';
 import '../widgets/when_picker.dart';
+import 'nice_one_screen.dart';
 import 'person_choice_row.dart';
 
 /// The capture card: a note, a person, a kind, Save (02-design.md §2.1;
@@ -38,11 +41,40 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
   /// Optional, and collapsed into one row of chips (02-design.md §6.9).
   var _when = const When.none();
 
+  /// "Already happened": the card logs a contact instead of a thought.
+  var _happened = false;
+  var _day = const PastDay.today();
+
   @override
   void dispose() {
     _note.dispose();
     _focus.dispose();
     super.dispose();
+  }
+
+  Future<void> _saveContact(ThoughtSubject subject) async {
+    final note = _note.text.trim();
+    final kind = contactKindFor(_kind);
+    final at = _day.at(ref.read(clockProvider)());
+    FocusScope.of(context).unfocus();
+    final nav = context;
+    _note.clear();
+    setState(() {
+      _personId = null;
+      _kind = IntentionKind.write;
+      _when = const When.none();
+      _happened = false;
+      _day = const PastDay.today();
+    });
+    await completeLoggedContact(
+      nav,
+      ref,
+      subject.person,
+      kind: kind,
+      at: at,
+      couple: subject.couple,
+      thought: note,
+    );
   }
 
   Future<void> _save(ThoughtSubject subject) async {
@@ -150,16 +182,33 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
                 value: _kind,
                 onChanged: (k) => setState(() => _kind = k),
               ),
-              WhenPicker(
-                value: _when,
-                fieldColor: kept.ground,
-                onChanged: (w) => setState(() => _when = w),
+              if (_happened)
+                PastDayChips(
+                  value: _day,
+                  onChanged: (d) => setState(() => _day = d),
+                )
+              else
+                WhenPicker(
+                  value: _when,
+                  fieldColor: kept.ground,
+                  onChanged: (w) => setState(() => _when = w),
+                ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SmallChip(
+                  label: l10n.captureAlreadyHappened,
+                  selected: _happened,
+                  onTap: () => setState(() => _happened = !_happened),
+                ),
               ),
               MainButton(
-                label: l10n.captureSave(
-                  selected.label(ref.watch(displayNamesProvider)),
-                ),
-                onPressed: () => _save(selected!),
+                label: _happened
+                    ? l10n.save
+                    : l10n.captureSave(
+                        selected.label(ref.watch(displayNamesProvider)),
+                      ),
+                onPressed: () =>
+                    _happened ? _saveContact(selected!) : _save(selected!),
               ),
             ],
           ],

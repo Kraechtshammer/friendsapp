@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart' show DateFormat;
 
 import '../../app/providers.dart';
 import '../../data/database.dart';
@@ -12,6 +11,7 @@ import '../home/nice_one_screen.dart';
 import '../material.dart';
 import '../widgets/choice_chips.dart';
 import '../widgets/main_button.dart';
+import '../widgets/past_day_picker.dart';
 import '../widgets/section_label.dart';
 
 /// What the sheet hands back: the kind and the time of the contact.
@@ -43,8 +43,6 @@ Future<void> showLogContactSheet(
   );
 }
 
-enum _Day { today, yesterday, picked }
-
 class _LogContactSheet extends ConsumerStatefulWidget {
   const _LogContactSheet(this.person);
 
@@ -56,41 +54,11 @@ class _LogContactSheet extends ConsumerStatefulWidget {
 
 class _LogContactSheetState extends ConsumerState<_LogContactSheet> {
   var _kind = ContactKind.met;
-  var _day = _Day.today;
-  DateTime? _picked;
+  var _day = const PastDay.today();
 
-  DateTime get _now => ref.read(clockProvider)();
-
-  Future<void> _pick() async {
-    final now = _now;
-    final today = DateTime(now.year, now.month, now.day);
-    final day = await showDatePicker(
-      context: context,
-      initialDate: DateTime(today.year, today.month, today.day - 1),
-      firstDate: DateTime(today.year - 1, today.month, today.day),
-      lastDate: today,
-    );
-    if (day == null || !mounted) return;
-    setState(() {
-      _picked = day;
-      _day = _Day.picked;
-    });
-  }
-
-  void _save() {
-    final now = _now;
-    // No time is asked for a past day: noon keeps it inside that day.
-    // Today picked in the calendar counts as now, never as a later noon.
-    final picked = _picked;
-    final isToday = picked != null && DateUtils.isSameDay(picked, now);
-    final at = switch (_day) {
-      _Day.today => now,
-      _Day.picked when isToday => now,
-      _Day.yesterday => DateTime(now.year, now.month, now.day - 1, 12),
-      _Day.picked => DateTime(picked!.year, picked.month, picked.day, 12),
-    };
-    Navigator.of(context).pop<LoggedContact>((_kind, at));
-  }
+  void _save() =>
+      Navigator.of(context)
+          .pop<LoggedContact>((_kind, _day.at(ref.read(clockProvider)())));
 
   List<ChipOption<ContactKind>> _kinds(AppLocalizations l10n) => [
     ChipOption(
@@ -119,8 +87,6 @@ class _LogContactSheetState extends ConsumerState<_LogContactSheet> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final kept = context.kept;
-    final picked = _picked;
-    final locale = Localizations.localeOf(context).toString();
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
         16,
@@ -143,29 +109,7 @@ class _LogContactSheetState extends ConsumerState<_LogContactSheet> {
             onChanged: (k) => setState(() => _kind = k),
           ),
           SectionLabel(l10n.whenSection),
-          ChoiceChips<_Day>(
-            options: [
-              ChipOption(_Day.today, l10n.timelineToday),
-              ChipOption(_Day.yesterday, l10n.logDayYesterday),
-              ChipOption(
-                _Day.picked,
-                picked == null
-                    ? l10n.logDayPick
-                    : (picked.year == _now.year
-                              ? DateFormat.MMMd(locale)
-                              : DateFormat.yMMMd(locale))
-                          .format(picked),
-              ),
-            ],
-            value: _day,
-            onChanged: (d) {
-              if (d == _Day.picked) {
-                _pick();
-              } else {
-                setState(() => _day = d);
-              }
-            },
-          ),
+          PastDayChips(value: _day, onChanged: (d) => setState(() => _day = d)),
           MainButton(label: l10n.save, onPressed: _save),
         ],
       ),

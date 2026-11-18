@@ -124,20 +124,20 @@ class _WhenPickerState extends ConsumerState<WhenPicker> {
           spacing: 8,
           runSpacing: 8,
           children: [
-            _Chip(
+            SmallChip(
               label: date == null ? l10n.whenDate : l10n.dateShort(date),
               selected: date != null,
               onTap: _date,
             ),
             if (date != null)
-              _Chip(
+              SmallChip(
                 label: _v.hasTime ? l10n.timeShort(date) : l10n.whenAddTime,
                 selected: _v.hasTime,
                 onTap: _time,
               )
             else ...[
               for (final h in Horizon.values)
-                _Chip(
+                SmallChip(
                   label: horizonLabel(h, l10n),
                   selected: _v.horizon == h,
                   onTap: () => _horizon(h),
@@ -160,8 +160,9 @@ class _WhenPickerState extends ConsumerState<WhenPicker> {
 }
 
 /// A chip like [ChoiceChips] draws, but 36 high with 14 px text.
-class _Chip extends StatelessWidget {
-  const _Chip({
+class SmallChip extends StatelessWidget {
+  const SmallChip({
+    super.key,
     required this.label,
     required this.selected,
     required this.onTap,
