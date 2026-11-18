@@ -22,6 +22,7 @@ import '../people/person_screen.dart';
 import '../people/person_timeline_view.dart' show contactTitle;
 import '../widgets/dashed_card.dart';
 import '../widgets/date_badge.dart';
+import '../widgets/face_stack.dart';
 import '../widgets/grey_button.dart';
 import '../widgets/kept_card.dart';
 import '../widgets/section_label.dart';
@@ -218,6 +219,11 @@ class _UpcomingRow extends ConsumerWidget {
       icon: entryIcon(e),
       title: entryTitle(e, l10n, names),
       subtitle: entrySubtitle(e, l10n, names),
+      people: switch (e) {
+        BirthdayEntry(:final person) => [person],
+        ThoughtEntry(:final person, :final couple) =>
+          couple?.members ?? [person],
+      },
       onTap: () => switch (e) {
         BirthdayEntry(:final person) => _openPerson(context, person),
         ThoughtEntry(:final person, :final intention) => showThoughtSheet(
@@ -253,6 +259,7 @@ class _PastRow extends ConsumerWidget {
         tilt: tilt,
         icon: _contactIcon(event.kind),
         title: contactTitle(event, shortNameIn(names, person), l10n),
+        people: couple?.members ?? [person],
         subtitle: [
           couple?.label(names) ?? shortNameIn(names, person),
           ?note(event.note),
@@ -270,6 +277,7 @@ class _PastRow extends ConsumerWidget {
             if (age != null) l10n.turnedAge(age),
             if (congratulated) l10n.youCongratulated,
           ].join(' · '),
+          people: [person],
           onTap: () => _openPerson(context, person),
         ),
       PastOwnBirthday(:final from) => _EntryRow(
@@ -278,6 +286,7 @@ class _PastRow extends ConsumerWidget {
         tilt: tilt,
         icon: KeptIcons.cake,
         title: l10n.yourBirthday,
+        people: from,
         subtitle: l10n.wishesFrom(
           from.map((p) => shortNameIn(names, p)).join(', '),
         ),
@@ -314,6 +323,7 @@ class _EntryRow extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.subtitle,
+    required this.people,
     this.onTap,
   });
 
@@ -323,6 +333,9 @@ class _EntryRow extends StatelessWidget {
   final KeptIcons icon;
   final String title;
   final String subtitle;
+
+  /// Shown as small faces at the start of the [subtitle] line.
+  final List<Person> people;
   final VoidCallback? onTap;
 
   @override
@@ -362,15 +375,23 @@ class _EntryRow extends StatelessWidget {
                             color: context.kept.text,
                           ),
                         ),
-                        if (subtitle.isNotEmpty)
-                          Text(
-                            subtitle,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: context.text.bodyMedium?.copyWith(
-                              fontSize: 13,
+                        const SizedBox(height: 2),
+                        Row(
+                          spacing: 6,
+                          children: [
+                            FaceStack(people),
+                            Expanded(
+                              child: Text(
+                                subtitle,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: context.text.bodyMedium?.copyWith(
+                                  fontSize: 13,
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
+                        ),
                       ],
                     ),
                   ),

@@ -10,6 +10,7 @@ import '../kept_icon.dart';
 import '../material.dart';
 import '../upcoming/entry_style.dart';
 import '../widgets/date_badge.dart';
+import '../widgets/face_stack.dart';
 import '../widgets/kept_card.dart';
 import '../widgets/section_label.dart';
 import 'thought_sheet.dart';
@@ -137,14 +138,26 @@ class _Card extends ConsumerWidget {
               KeptIcon(entryIcon(e), size: 30),
             ],
           ),
-          Text(
-            title,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: context.text.bodyLarge?.copyWith(
-              fontWeight: FontWeight.w500,
-              color: context.kept.text,
-            ),
+          Row(
+            spacing: 6,
+            children: [
+              FaceStack(switch (e) {
+                BirthdayEntry(:final person) => [person],
+                ThoughtEntry(:final person, :final couple) =>
+                  couple?.members ?? [person],
+              }),
+              Expanded(
+                child: Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.text.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: context.kept.text,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
