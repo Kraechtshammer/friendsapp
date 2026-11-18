@@ -111,6 +111,10 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 - Open questions (section 5).
 - Releases take the next number each time (the next after 0.9.1 is 0.9.2).
 
+**Planned, decided, not built** (to be built in its own session)
+
+- **Log a contact that already happened** (the developer, 2026-11-18, 02-design.md §8): one shared sheet (what: wrote, called, met, played; when: today, yesterday or a date; optional activity and next-time line; Save leads to "Nice one"), reachable from a "We were in touch" button on the person page beside "They wrote" and "They called", and from an "Already happened" choice on the Home capture card. A back-dated contact earns its week's stamp and counts for the streak. Start with the person-page button.
+
 **Ideas for after 1.0.0**
 
 - Rotating praise and example texts.
@@ -129,7 +133,7 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
   4. **Installed filter** (done 2026-11-18): `<queries>` package entries for every app in the list (no permission) and a channel call "which of these packages are installed". `ChatOpener` reports "not installed".
   5. **Icons**: done 2026-11-18. The developer chose them (teams-b, the first linkedin, the pinwheel slack-c); all drafts kept in `docs/concepts/messenger-icons-v1/`.
   6. **Edit page** (done 2026-11-18; the help link follows with step 7): the messenger section becomes "From the contact" options, None, the installed list, and the chat target field with the help line; "chat link" opens the help page. ARB keys EN and DE.
-  7. **Help page** "How to get a chat link": only links confirmed with the link test page.
+  7. **Help page** (done 2026-11-18, from the developer's tests in 02-design.md §8; the German names of other apps' menu items are unverified) "How to get a chat link": only links confirmed with the link test page.
   8. **Callers**: open_chat, person page, Tonight's pick, chat question, class chooser, reconnect card, couples, demo data move to `ChatApp`; 04-architecture.md and 05-test-list.md updated.
   Before step 7 the developer runs the link test page for the apps they use and sends the report.
 - The person page covers the tab bar; the concept shows the bar. Keep? (Claude's choice, not confirmed.)

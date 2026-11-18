@@ -197,3 +197,5 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Edit a person imported from contacts who has Signal, Telegram or WhatsApp in the contact: those apps (and SMS when they have a number) show under "From the contact", the others under "Other apps on this phone", each with its icon.
 - [ ] The line under the chat link field changes as you type: a Signal username says a full link is needed; a pasted link says Open goes straight to the chat; empty says what Kept. does instead. Check the German texts too.
 - [ ] LinkedIn with a bare profile name (from the address bar of their profile): "Open LinkedIn" starts a new message to them, in the LinkedIn app or, if the app does not take the link, in the browser.
+- [ ] Discord: paste a "Copy Message Link" link as it is (with the message number): "Open" goes to the DM.
+- [ ] "How do I get a chat link?" under the field opens the help page with the chosen app first; read the German texts (other apps' menu names such as „Nachrichtenlink kopieren“ are guesses).

@@ -210,6 +210,14 @@ void main() {
       ),
       findsOneWidget,
     );
+    // The help page, with Discord first.
+    await tapScrolled(tester, find.text('How do I get a chat link?'));
+    expect(find.text('Chat links'), findsOneWidget);
+    final discord = tester.getTopLeft(find.text('Discord')).dy;
+    final telegram = tester.getTopLeft(find.text('Telegram')).dy;
+    expect(discord < telegram, isTrue);
+    await tester.tap(find.byTooltip('Back'));
+    await tester.pumpAndSettle();
     await tapScrolled(tester, find.text('Save'));
     final eva = await tester.runAsync(
       () => services.peopleFor(demo: false).watchAll().first,

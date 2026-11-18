@@ -247,6 +247,40 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get chatLinkHelpButton => 'Wie komme ich an einen Chat-Link?';
+
+  @override
+  String get chatLinkHelpTitle => 'Chat-Links';
+
+  @override
+  String get chatLinkHelpIntro =>
+      'Mit einem Chat-Link oder Nutzernamen führt „Öffnen“ direkt zum Chat. Bei WhatsApp, Signal und Telegram reicht meist, dass die Person mit ihrer Nummer in deinen Kontakten steht.';
+
+  @override
+  String get chatLinkHelpTelegram =>
+      'Öffne ihr Profil. Wenn sie einen Nutzernamen hat, steht er dort (@name). Trag ihn ein.';
+
+  @override
+  String get chatLinkHelpDiscord =>
+      'Öffne euren Chat, halte eine Nachricht gedrückt und tippe auf „Nachrichtenlink kopieren“. Füg ihn hier ein.';
+
+  @override
+  String get chatLinkHelpLinkedin =>
+      'Öffne ihr Profil, tippe auf „Profil teilen“ und kopiere den Link. Füg ihn ein oder nur den Namen nach /in/. „Öffnen“ beginnt eine neue Nachricht an sie.';
+
+  @override
+  String get chatLinkHelpInstagram =>
+      'Öffne euren Chat. Der Nutzername steht oben. Trag ihn ein.';
+
+  @override
+  String get chatLinkHelpSnapchat =>
+      'Der Nutzername steht in ihrem Profil. Snapchat hat keinen Link zu einem Chat, darum zeigt „Öffnen“ ihr Profil.';
+
+  @override
+  String get chatLinkHelpOthers =>
+      'Bei anderen Apps kann ein Link funktionieren, den die App selbst für eine Person teilt. Füg ihn ein und probier „Öffnen“.';
+
+  @override
   String get birthday => 'Geburtstag';
 
   @override

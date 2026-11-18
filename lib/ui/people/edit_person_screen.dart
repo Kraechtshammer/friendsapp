@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:drift/drift.dart' show Value;
@@ -28,6 +29,7 @@ import '../widgets/kept_text_field.dart';
 import '../widgets/main_button.dart';
 import '../widgets/rhythm_stepper.dart';
 import '../widgets/section_label.dart';
+import 'chat_link_help_page.dart';
 import 'photo_crop_screen.dart';
 import 'refresh_contacts_screen.dart';
 
@@ -655,6 +657,23 @@ class _FormState extends ConsumerState<_Form> {
           onChanged: (_) => setState(() {}),
         ),
         Text(_targetLine(l10n, app), style: context.text.bodySmall),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: TextButton(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+              foregroundColor: context.kept.text,
+            ),
+            onPressed: () => unawaited(
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => ChatLinkHelpPage(current: app),
+                ),
+              ),
+            ),
+            child: Text(l10n.chatLinkHelpButton),
+          ),
+        ),
       ],
     ]);
   }

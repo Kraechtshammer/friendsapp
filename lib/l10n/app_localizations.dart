@@ -500,6 +500,60 @@ abstract class AppLocalizations {
   /// **'If you have a chat link for this person, paste it here. Otherwise Kept. just opens {name}.'**
   String chatTargetHelpLink(String name);
 
+  /// No description provided for @chatLinkHelpButton.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I get a chat link?'**
+  String get chatLinkHelpButton;
+
+  /// No description provided for @chatLinkHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat links'**
+  String get chatLinkHelpTitle;
+
+  /// No description provided for @chatLinkHelpIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'With a chat link or username, Open goes straight to the chat. For WhatsApp, Signal and Telegram, having the person in your phone\'s contacts with their number is usually enough.'**
+  String get chatLinkHelpIntro;
+
+  /// No description provided for @chatLinkHelpTelegram.
+  ///
+  /// In en, this message translates to:
+  /// **'Open their profile. If they have a username, it is shown there (@name). Enter it.'**
+  String get chatLinkHelpTelegram;
+
+  /// No description provided for @chatLinkHelpDiscord.
+  ///
+  /// In en, this message translates to:
+  /// **'Open your chat with them, hold any message and tap “Copy Message Link”. Paste it here.'**
+  String get chatLinkHelpDiscord;
+
+  /// No description provided for @chatLinkHelpLinkedin.
+  ///
+  /// In en, this message translates to:
+  /// **'Open their profile, tap “Share profile” and copy the link. Paste it, or just the name after /in/. Open starts a new message to them.'**
+  String get chatLinkHelpLinkedin;
+
+  /// No description provided for @chatLinkHelpInstagram.
+  ///
+  /// In en, this message translates to:
+  /// **'Open your chat with them. The username is shown at the top. Enter it.'**
+  String get chatLinkHelpInstagram;
+
+  /// No description provided for @chatLinkHelpSnapchat.
+  ///
+  /// In en, this message translates to:
+  /// **'The username is on their profile. Snapchat has no link to a chat, so Open shows their profile.'**
+  String get chatLinkHelpSnapchat;
+
+  /// No description provided for @chatLinkHelpOthers.
+  ///
+  /// In en, this message translates to:
+  /// **'For other apps, a link the app itself shares for a person may work. Paste it and try Open.'**
+  String get chatLinkHelpOthers;
+
   /// No description provided for @birthday.
   ///
   /// In en, this message translates to:
