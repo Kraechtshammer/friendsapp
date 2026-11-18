@@ -32,7 +32,7 @@ void main() {
       );
       expect(
         ChatApp.linkedin.targetLink('anna-meier'),
-        'https://www.linkedin.com/in/anna-meier',
+        'https://www.linkedin.com/messaging/compose/?recipient=anna-meier',
       );
       expect(
         ChatApp.element.targetLink('@anna:matrix.org'),

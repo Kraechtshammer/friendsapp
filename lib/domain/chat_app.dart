@@ -125,7 +125,12 @@ enum ChatApp {
             ? 'https://discord.com/users/$t'
             : null;
       case linkedin:
-        return _plainName(t) ? 'https://www.linkedin.com/in/$t' : null;
+        // The profile name from the address bar. The compose link opens a
+        // new message to them; tested in the browser by the developer
+        // (2026-11-18), not yet in the LinkedIn app.
+        return _plainName(t)
+            ? 'https://www.linkedin.com/messaging/compose/?recipient=$t'
+            : null;
       case threema:
         final id = t.toUpperCase();
         return RegExp(r'^[0-9A-Z*]{8}$').hasMatch(id)
