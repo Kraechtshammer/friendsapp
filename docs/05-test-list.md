@@ -230,3 +230,16 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Home's Coming up: a date a month or more away shows the month ("MAR 6") on its badge, a nearer one the weekday.
 - [ ] Congratulate someone and text with them the same day: the birthday says "You congratulated and texted", with no separate texting entry for them.
 - [ ] A congratulated birthday shows a small chip on the cake: chat when you also texted, a party popper when you only congratulated; readable at that size.
+
+## Activity icons (next release)
+
+- [ ] After a meetup or a game, "Nice one" shows a square button beside "What did you do?"; a tap opens a grid of icons, and the chosen icon shows on the button.
+- [ ] Writing or calling shows no icon button.
+- [ ] The chosen icon replaces the people or controller icon of that entry on the person page and the Timeline tab.
+- [ ] Tapping the entry: the edit sheet has the same button; "No icon" in the grid takes it away again.
+- [ ] Capture card: choose Meet or Game and the button appears beside the text; the saved plan shows the icon on Home, the person page and the Timeline tab.
+- [ ] Editing that plan keeps the icon; switching it to Write or Call drops it.
+- [ ] Marking that plan done: "Nice one" already shows the icon, and the contact keeps it.
+- [ ] "Already happened" on the capture card with an icon: the logged contact has the icon.
+- [ ] The icons are readable in the grid and at timeline size, in light and dark mode.
+- [ ] After the update, existing plans and contacts look as before (schema 7 migration).

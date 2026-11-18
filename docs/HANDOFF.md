@@ -20,6 +20,7 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
   - 0.9.2 (2026-11-18): schema 6, any messenger (15 apps, installed only, one chat target, contact entries, help page, new icons); listener matches Discord DMs by chat id and uses message send times.
   - 0.9.3 (2026-11-18): the People tab shows couple members on their own too, and the couple in the less close class (02-design.md §8); "We were in touch" on the person page and "Already happened" on the capture card (tried by the developer: "works").
   - 0.10.0 (2026-11-18): the Timeline tab replaces Upcoming (Today in the middle, future above, past below, faces, one texting line per day, birthday chips); "Today" instead of a date; the month on far-off Home badges; a day of messages is one entry on the person page.
+- **Built after 0.10.0, not released** (2026-11-18): activity icons for meetups and games, on contacts and on plans, schema 7 (02-design.md §8; 14 new icons, drafts and canvas rows "Meetup icons v1" to "v3" in `docs/concepts/meetup-icons-v1/`). Test points in 05-test-list.md. Open: no icon button yet on the couple page, the share sheet and "Planning to meet up?".
 - **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.10.1 next; the developer chose 0.10.0 over 0.9.4 for the Timeline, 2026-11-18).
 - **The developer's phone** (2026-11-16): `de.gartenpa.kept.debug` ("Kept. debug", 0.7.0, test data). The old 0.6.0 debug build under `de.gartenpa.kept` is left only in the Private space (user 11), never opened there; it blocks the release install (signature) and the developer removes it by hand (Claude's uninstall was refused). Then the listener build of the release goes on over adb.
 - **The developer's phone since 0.8.0:** the release listener build `kept-0.8.0-listener.apk` is installed over adb as the real app; 0.9.0 is its first real in-app update test. The developer said on 2026-11-16 that commits may be pushed right away.
@@ -124,7 +125,6 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 **Ideas for after 1.0.0**
 
 - Rotating praise and example texts.
-- An icon per activity (needs a column and a larger icon set). Drafts v1 (2026-11-18) in `docs/concepts/meetup-icons-v1/`; rerun `board.py` there to rebuild `board.html` after changes. Also on the concept canvas as one board per activity (row "Meetup icons v1"); `canvas_boards.py <round>` regenerates a row. Round 2 (2026-11-18): the developer picked bar, boardgames (a), gym, karaoke, cinema (both), shopping, concert, concert-b as "making music", cooking, diy (a), bench for walk; climber (bouldering-c/d), runner (sports-c/d) and restaurant with food (restaurant-b/c) redrawn, row "Meetup icons v2". Then picked bouldering-c and sports-c; restaurant-d (restaurant-c with the knife mirrored, row v3) awaits a look.
 - Backup export and import.
 - The "two come closer" badge (sketches in `docs/concepts/badge-ideas/`).
 - Groups and shared events; quick "do soon" items (02-design.md §6.12); doctor appointments; iOS.
