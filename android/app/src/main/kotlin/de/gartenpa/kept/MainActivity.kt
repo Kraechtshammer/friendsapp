@@ -20,6 +20,8 @@ class MainActivity : FlutterActivity() {
         share = ShareChannel(flutterEngine.dartExecutor.binaryMessenger, this)
         // In-app update, not in a Play build: see UpdateChannel.kt.
         update = UpdateChannel(flutterEngine.dartExecutor.binaryMessenger, this)
+        // "Open chat" through a contact's messenger entry: see ContactEntriesChannel.kt.
+        ContactEntriesChannel(flutterEngine.dartExecutor.binaryMessenger, this)
         // Chat shortcut experiment, debug builds only: see ShortcutProbe.kt.
         if (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) {
             probe = ShortcutProbe(flutterEngine.dartExecutor.binaryMessenger, this)

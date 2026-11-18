@@ -17,6 +17,7 @@ import '../domain/display_name.dart';
 import '../domain/group.dart';
 import '../platform/app_shortcuts.dart';
 import '../platform/chat_opener.dart';
+import '../platform/contact_entries.dart';
 import '../platform/contacts.dart';
 import '../platform/incoming_listener.dart';
 import '../platform/link_opener.dart';
@@ -49,6 +50,12 @@ final contactsAccessProvider = FutureProvider.autoDispose<bool>(
 /// Opens chats in the messenger apps. Tests override it with a fake.
 final chatOpenerProvider = Provider<ChatOpener>(
   (ref) => const AndroidChatOpener(),
+);
+
+/// The ways to reach a person that their phone contact holds. Tests
+/// override it with a fake.
+final contactEntriesProvider = Provider<ContactEntries>(
+  (ref) => const AndroidContactEntries(),
 );
 
 /// Opens links in the browser. Tests override it with a fake.

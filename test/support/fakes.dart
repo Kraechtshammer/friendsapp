@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart' show VoidCallback;
 import 'package:kept/domain/chat_link.dart';
+import 'package:kept/domain/contact_route.dart';
 import 'package:kept/platform/app_shortcuts.dart';
 import 'package:kept/platform/chat_opener.dart';
+import 'package:kept/platform/contact_entries.dart';
 
 /// [AppShortcuts] that does nothing.
 class NoShortcuts implements AppShortcuts {
@@ -20,6 +22,27 @@ class FakeChatOpener implements ChatOpener {
   @override
   Future<bool> open(ChatLink link) async {
     opened.add(link);
+    return result;
+  }
+}
+
+/// [ContactEntries] with fixed [entries] per contact id; records what was
+/// opened. [result] is what [open] returns.
+class FakeContactEntries implements ContactEntries {
+  final entries = <String, List<ContactEntry>>{};
+  final asked = <String>[];
+  final opened = <ContactEntry>[];
+  bool result = true;
+
+  @override
+  Future<List<ContactEntry>> entriesOf(String contactId) async {
+    asked.add(contactId);
+    return entries[contactId] ?? const [];
+  }
+
+  @override
+  Future<bool> open(ContactEntry entry) async {
+    opened.add(entry);
     return result;
   }
 }

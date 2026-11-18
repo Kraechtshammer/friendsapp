@@ -4,13 +4,15 @@ import '../../app/providers.dart';
 import '../../data/database.dart';
 import '../../domain/chat_link.dart';
 import '../../domain/chat_question.dart';
+import '../../domain/contact_route.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../kept_icon.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
 
-/// "Open" with the person's messenger for [person]: opens their main messenger and queues
+/// "Open" with the person's messenger for [person]: opens their chat (in the
+/// order of [_open]) and queues
 /// the "Did you write?" question for when the user is back in the app
 /// ([pendingChatQuestionProvider]). [intention] is the thought the chat is
 /// for, if any; [birthday] says it was opened to congratulate. If the messenger does not open, nothing is queued and a
@@ -35,7 +37,7 @@ Future<void> openChat(
   final now = ref.read(clockProvider)();
   // Queued before opening, so a quick return cannot beat it.
   pending.set(ChatQuestion(person, intention: intention, birthday: birthday));
-  final opened = await ref.read(chatOpenerProvider).open(link);
+  final opened = await _open(ref, person, link);
   if (!opened) {
     pending.take();
     messenger.showSnackBar(
@@ -48,6 +50,30 @@ Future<void> openChat(
   } catch (e) {
     debugPrint('Owed reply not cleared: ${e.runtimeType}');
   }
+}
+
+/// Opens [person]'s chat in the order of 02-design.md §8 (2026-11-18):
+/// the chat target, the app's entry or chat link in the linked phone
+/// contact, the link from the phone number, the app's main screen. [link]
+/// is `chatLink(person)` (target, else phone); the opener falls back to the
+/// main screen by itself.
+Future<bool> _open(WidgetRef ref, Person person, ChatLink link) async {
+  final app = person.chatApp!;
+  final opener = ref.read(chatOpenerProvider);
+  final contactId = person.contactId;
+  if (app.targetLink(person.chatTarget) == null && contactId != null) {
+    final contact = ref.read(contactEntriesProvider);
+    final routes = contactRoutes(await contact.entriesOf(contactId));
+    for (final route in routes.where((r) => r.app == app)) {
+      final entry = route.entry;
+      if (entry != null && await contact.open(entry)) return true;
+      final routeLink = route.link;
+      if (routeLink != null) {
+        return opener.open(ChatLink(package: link.package, uri: routeLink));
+      }
+    }
+  }
+  return opener.open(link);
 }
 
 /// Whether anyone of [members] has a main messenger, so "Open chat" on a

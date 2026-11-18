@@ -88,8 +88,8 @@ enum ChatApp {
   };
 
   /// The MIME type of the entry this app writes into a linked contact,
-  /// when it writes one. Unverified for all but WhatsApp and Telegram,
-  /// which the developer saw in Contacts (2026-11-18).
+  /// when it writes one. WhatsApp, Signal and Telegram were seen on the
+  /// developer's phone (2026-11-18); Threema and Viber are unverified.
   String? get contactMimeType => switch (this) {
     whatsapp => 'vnd.android.cursor.item/vnd.com.whatsapp.profile',
     signal => 'vnd.android.cursor.item/vnd.org.thoughtcrime.securesms.contact',

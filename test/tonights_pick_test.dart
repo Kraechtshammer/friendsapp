@@ -89,6 +89,7 @@ void main() {
           notificationsProvider.overrideWithValue(FakeNotifications()),
           appShortcutsProvider.overrideWithValue(NoShortcuts()),
           chatOpenerProvider.overrideWithValue(opener),
+          contactEntriesProvider.overrideWithValue(FakeContactEntries()),
         ],
         child: const KeptApp(),
       ),

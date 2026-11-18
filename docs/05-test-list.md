@@ -184,3 +184,11 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] "Open chat" on a couple thought asks whom first; after a write thought "Did you write to Tom?" Yes records for Tom only, after a meet thought "Did you meet Anna & Tom?" records for both.
 - [ ] "Did it happen?" for a dated couple thought, and Done on it, record for both.
 - [ ] Unlink: the confirm says what happens to shared thoughts; afterwards they are two people again, the thoughts belong to the first one and the shared meetings stay on both timelines. Deleting one of the two says the link goes too.
+
+## Any messenger (not released yet)
+
+- [ ] After the update to schema 6, every person still has their messenger; nothing else changed.
+- [ ] A person imported from contacts, messenger Signal, no chat link: "Open Signal" opens the chat with them through the contact (also for WhatsApp and Telegram).
+- [ ] The same person with a chat link entered: the link wins.
+- [ ] A contact with a chat link in its Website field (for example `https://t.me/<name>`), messenger set to that app, no chat link in Kept.: "Open" uses the contact's link.
+- [ ] Messenger SMS: "Open" starts a message to the number in the default SMS app.

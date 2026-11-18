@@ -4,7 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kept/app/app.dart';
 import 'package:kept/app/providers.dart';
 import 'package:kept/app/services.dart';
+import 'package:drift/drift.dart' show Value;
 import 'package:kept/domain/chat_link.dart';
+import 'package:kept/domain/contact_route.dart';
 import 'package:kept/data/database.dart';
 import 'package:kept/domain/person.dart';
 import 'package:kept/ui/material.dart';
@@ -17,9 +19,15 @@ void main() {
   late AppServices services;
 
   final opener = FakeChatOpener();
+  final contact = FakeContactEntries();
 
   setUp(() {
     opener
+      ..opened.clear()
+      ..result = true;
+    contact
+      ..entries.clear()
+      ..asked.clear()
       ..opened.clear()
       ..result = true;
     services = AppServices(
@@ -36,6 +44,7 @@ void main() {
           firstStartEnabledProvider.overrideWithValue(false),
           notificationsProvider.overrideWithValue(FakeNotifications()),
           chatOpenerProvider.overrideWithValue(opener),
+          contactEntriesProvider.overrideWithValue(contact),
         ],
         child: const KeptApp(),
       ),
@@ -133,6 +142,76 @@ void main() {
     expect(find.text('Family'), findsOneWidget);
     expect(find.textContaining('Open'), findsNothing);
     expect(find.text('NOTES'), findsNothing);
+
+    await closeDown(tester);
+  });
+
+  testWidgets('Open chat tries the target, the contact, then the number', (
+    tester,
+  ) async {
+    const signalEntry = ContactEntry(
+      id: '41',
+      mimeType:
+          'vnd.android.cursor.item/vnd.org.thoughtcrime.securesms.contact',
+      label: 'Message +49 170 1234567',
+    );
+    contact.entries['c1'] = [
+      const ContactEntry(
+        id: '40',
+        mimeType: ContactEntry.websiteMimeType,
+        value: 'example.org',
+      ),
+      signalEntry,
+    ];
+    late Person eva;
+    await tester.runAsync(() async {
+      eva = await services
+          .peopleFor(demo: false)
+          .add(
+            name: 'Eva Lund',
+            closeness: Closeness.close,
+            contactId: 'c1',
+            chatApp: ChatApp.signal,
+            phone: '+491701234567',
+          );
+    });
+    await openPeopleTab(tester);
+    await tester.tap(find.text('Eva').last);
+    await tester.pumpAndSettle();
+
+    // No target: the contact's Signal entry opens the chat.
+    await tester.tap(find.text('Open Signal'));
+    await tester.pump();
+    expect(contact.asked, ['c1']);
+    expect(contact.opened.map((e) => e.id), ['41']);
+    expect(opener.opened, isEmpty);
+
+    // The entry does not open: the link from the number.
+    contact.result = false;
+    await tester.tap(find.text('Open Signal'));
+    await tester.pump();
+    expect(opener.opened, [
+      const ChatLink(
+        package: 'org.thoughtcrime.securesms',
+        uri: 'https://signal.me/#p/+491701234567',
+      ),
+    ]);
+
+    // A chat target wins; the contact is not even read.
+    await tester.runAsync(
+      () => services
+          .peopleFor(demo: false)
+          .update(
+            eva.copyWith(chatTarget: const Value('https://signal.me/#eu/x')),
+          ),
+    );
+    await tester.pumpAndSettle();
+    contact.asked.clear();
+    opener.opened.clear();
+    await tester.tap(find.text('Open Signal'));
+    await tester.pump();
+    expect(contact.asked, isEmpty);
+    expect(opener.opened.single.uri, 'https://signal.me/#eu/x');
 
     await closeDown(tester);
   });

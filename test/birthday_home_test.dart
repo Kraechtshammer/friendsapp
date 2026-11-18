@@ -84,6 +84,7 @@ void main() {
           notificationsProvider.overrideWithValue(notifications),
           appShortcutsProvider.overrideWithValue(NoShortcuts()),
           chatOpenerProvider.overrideWithValue(opener),
+          contactEntriesProvider.overrideWithValue(FakeContactEntries()),
           clockProvider.overrideWithValue(() => now),
         ],
         child: const KeptApp(),
