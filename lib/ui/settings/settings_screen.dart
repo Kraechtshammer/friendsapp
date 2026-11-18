@@ -86,7 +86,7 @@ class SettingsScreen extends ConsumerWidget {
         _CategoryRow(
           icon: KeptIcons.wasd,
           title: 'Development',
-          line: 'Demo data, experiments',
+          line: 'Demo data',
           onTap: () => open(const DevelopmentPage()),
         ),
     ];
