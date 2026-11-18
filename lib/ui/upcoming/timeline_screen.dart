@@ -278,7 +278,12 @@ class _PastRow extends ConsumerWidget {
             ? () => _openPerson(context, people.single)
             : null,
       ),
-      PastPersonBirthday(:final person, :final age, :final congratulated) =>
+      PastPersonBirthday(
+        :final person,
+        :final age,
+        :final congratulated,
+        :final texted,
+      ) =>
         _EntryRow(
           day: entry.day,
           accent: KeptColors.pink,
@@ -287,7 +292,8 @@ class _PastRow extends ConsumerWidget {
           title: l10n.birthdayOf(shortNameIn(names, person)),
           subtitle: [
             if (age != null) l10n.turnedAge(age),
-            if (congratulated) l10n.youCongratulated,
+            if (congratulated)
+              texted ? l10n.youCongratulatedAndTexted : l10n.youCongratulated,
           ].join(' · '),
           people: [person],
           onTap: () => _openPerson(context, person),

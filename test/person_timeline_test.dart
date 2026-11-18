@@ -318,7 +318,7 @@ void main() {
           event(
             'msg',
             DateTime(2026, 6, 9, 12),
-            ContactKind.wrote,
+            ContactKind.called,
             ContactDirection.byThem,
           ),
         ],
@@ -393,5 +393,35 @@ void main() {
     expect(hist(t), ['t:b,a', 'c:d', 'c:c', 'added']);
     final day = t.history.first as TextingDay;
     expect(day.byUser && day.byThem, isTrue);
+  });
+
+  test('messages on a day the user congratulated fold into the birthday', () {
+    final t = personTimeline(
+      tom(month: 11, day: 15),
+      [
+        event(
+          'w',
+          DateTime(2026, 11, 15, 9),
+          ContactKind.birthdayWish,
+          ContactDirection.byUser,
+        ),
+        event(
+          'a',
+          DateTime(2026, 11, 15, 9),
+          ContactKind.wrote,
+          ContactDirection.byUser,
+        ),
+        event(
+          'b',
+          DateTime(2026, 11, 15, 10),
+          ContactKind.wrote,
+          ContactDirection.byThem,
+        ),
+      ],
+      [],
+      now,
+    );
+    expect(hist(t), ['pb+', 'added']);
+    expect((t.history.first as PastBirthday).texted, isTrue);
   });
 }

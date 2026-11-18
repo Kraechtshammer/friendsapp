@@ -133,11 +133,15 @@ class PersonTimelineView extends ConsumerWidget {
                   onTap: () =>
                       showContactEntrySheet(context, ref, events.first),
                 ),
-                PastBirthday(:final congratulated) => _Row(
+                PastBirthday(:final congratulated, :final texted) => _Row(
                   date: _DateText(e.day, now),
                   icon: KeptIcons.cake,
                   title: l10n.birthdayOf(name),
-                  note: congratulated ? l10n.youCongratulated : null,
+                  note: !congratulated
+                      ? null
+                      : texted
+                      ? l10n.youCongratulatedAndTexted
+                      : l10n.youCongratulated,
                 ),
                 OwnBirthdayWish() => _Row(
                   date: _DateText(e.day, now),

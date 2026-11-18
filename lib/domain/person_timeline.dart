@@ -88,10 +88,19 @@ class TextingDay extends TimelineEntry {
 /// when the user congratulated that day; otherwise nothing is said
 /// (02-design.md §6.8).
 class PastBirthday extends TimelineEntry {
-  const PastBirthday(super.day, {this.age, required this.congratulated});
+  const PastBirthday(
+    super.day, {
+    this.age,
+    required this.congratulated,
+    this.texted = false,
+  });
 
   final int? age;
   final bool congratulated;
+
+  /// The user also wrote that day; those messages have no entry of their
+  /// own.
+  final bool texted;
 }
 
 /// The user's own birthday on [day], an entry only because this person
@@ -189,12 +198,23 @@ PersonTimeline personTimeline(
   final upcoming = <TimelineEntry>[...plans, ...dated.reversed];
 
   // History.
-  // Messages on one day become one entry.
+  final wishDays = {
+    for (final e in mine)
+      if (e.kind == ContactKind.birthdayWish &&
+          e.direction == ContactDirection.byUser)
+        dayKey(e.at): dayOf(e.at),
+  };
+  // Messages on one day become one entry. On a day the user congratulated
+  // they are folded into the birthday entry instead (the developer,
+  // 2026-11-18): the wish is mostly sent as a message.
+  final textedOnWish = <String>{};
   final contacts = <TimelineEntry>[];
   final texts = <String, List<ContactEvent>>{};
   for (final e in mine) {
     if (e.kind == ContactKind.birthdayWish) continue;
-    if (e.kind == ContactKind.wrote) {
+    if (e.kind == ContactKind.wrote && wishDays.containsKey(dayKey(e.at))) {
+      textedOnWish.add(dayKey(e.at));
+    } else if (e.kind == ContactKind.wrote) {
       texts.putIfAbsent(dayKey(e.at), () => []).add(e);
     } else {
       contacts.add(ContactEntry(e));
@@ -217,12 +237,6 @@ PersonTimeline personTimeline(
     final d = dayOf(e.at);
     if (d.isBefore(start)) start = d;
   }
-  final wishDays = {
-    for (final e in mine)
-      if (e.kind == ContactKind.birthdayWish &&
-          e.direction == ContactDirection.byUser)
-        dayKey(e.at): dayOf(e.at),
-  };
   final birthdays = <TimelineEntry>[];
   final shown = <String>{};
   if (birthday != null) {
@@ -235,6 +249,7 @@ PersonTimeline personTimeline(
           day,
           age: ageTurned(birthday.year, day),
           congratulated: wishDays.containsKey(dayKey(day)),
+          texted: textedOnWish.contains(dayKey(day)),
         ),
       );
     }
@@ -246,6 +261,7 @@ PersonTimeline personTimeline(
           w.value,
           age: birthday == null ? null : ageTurned(birthday.year, w.value),
           congratulated: true,
+          texted: textedOnWish.contains(w.key),
         ),
       );
     }

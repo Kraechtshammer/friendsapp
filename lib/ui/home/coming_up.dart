@@ -135,10 +135,10 @@ class _Card extends ConsumerWidget {
                 tilt: tilt,
                 small: true,
                 today: isToday(e.day, now),
-                // Within a week the weekday says enough; further out the
-                // month does.
+                // Up to the day before the same date next month the weekday
+                // says enough; from then on the month does.
                 month: !e.day.isBefore(
-                  DateTime(now.year, now.month, now.day + 7),
+                  DateTime(now.year, now.month + 1, now.day),
                 ),
               ),
               KeptIcon(entryIcon(e), size: 30),

@@ -227,4 +227,5 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Timeline rows and Home's Coming up cards show small faces (pictures where there are any) before the name line; a couple shows two.
 - [ ] Person page: a day with several messages (yours and theirs) is one "You texted" entry.
 - [ ] Timeline tab: a day with messages to several people is one "You texted" line with their faces and names.
-- [ ] Home's Coming up: a date more than a week away shows the month ("DEC 6") on its badge, a nearer one the weekday.
+- [ ] Home's Coming up: a date a month or more away shows the month ("MAR 6") on its badge, a nearer one the weekday.
+- [ ] Congratulate someone and text with them the same day: the birthday says "You congratulated and texted", with no separate texting entry for them.

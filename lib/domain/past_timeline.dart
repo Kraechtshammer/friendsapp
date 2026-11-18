@@ -43,11 +43,16 @@ class PastPersonBirthday extends PastEntry {
     super.day, {
     this.age,
     required this.congratulated,
+    this.texted = false,
   });
 
   final Person person;
   final int? age;
   final bool congratulated;
+
+  /// The user also wrote with them that day; they are left out of that
+  /// day's [PastTexting].
+  final bool texted;
 }
 
 /// The user's own birthday on [day], with the people who congratulated,
@@ -141,6 +146,7 @@ List<PastEntry> pastEntries(
             day,
             age: ageTurned(b.year, day),
             congratulated: mine.containsKey(key),
+            texted: texts[key]?.contains(p) ?? false,
           ),
         );
       }
@@ -153,12 +159,15 @@ List<PastEntry> pastEntries(
           w.value,
           age: b == null ? null : ageTurned(b.year, w.value),
           congratulated: true,
+          texted: texts[w.key]?.contains(p) ?? false,
         ),
       );
     }
   }
 
   for (final t in texts.entries) {
+    t.value.removeWhere((p) => wishes[p.id]?.containsKey(t.key) ?? false);
+    if (t.value.isEmpty) continue;
     entries.add(
       PastTexting(
         textDays[t.key]!,

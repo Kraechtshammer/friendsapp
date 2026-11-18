@@ -813,6 +813,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addedToYourPeople => 'Added to your people';
 
   @override
+  String get youCongratulatedAndTexted => 'You congratulated and texted';
+
+  @override
   String get youCongratulated => 'You congratulated';
 
   @override

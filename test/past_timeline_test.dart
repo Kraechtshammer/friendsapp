@@ -158,4 +158,34 @@ void main() {
     ], now);
     expect(entries.map(describe), ['w:anna,mia,tom']);
   });
+
+  test('a congratulated birthday takes that day\'s messages with them', () {
+    final people = [
+      added(person('tom', month: 11, day: 17), DateTime(2026, 1, 1)),
+      person('anna'),
+    ];
+    final entries = pastEntries(people, [
+      event(
+        'w',
+        DateTime(2026, 11, 17, 9),
+        ContactKind.birthdayWish,
+        ContactDirection.byUser,
+      ),
+      event(
+        't',
+        DateTime(2026, 11, 17, 9),
+        ContactKind.wrote,
+        ContactDirection.byUser,
+      ),
+      event(
+        'a',
+        DateTime(2026, 11, 17, 12),
+        ContactKind.wrote,
+        ContactDirection.byUser,
+        personId: 'anna',
+      ),
+    ], now);
+    expect(entries.map(describe), ['w:anna', 'b:tom+']);
+    expect((entries[1] as PastPersonBirthday).texted, isTrue);
+  });
 }

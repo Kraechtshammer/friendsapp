@@ -1400,6 +1400,12 @@ abstract class AppLocalizations {
   /// **'Added to your people'**
   String get addedToYourPeople;
 
+  /// No description provided for @youCongratulatedAndTexted.
+  ///
+  /// In en, this message translates to:
+  /// **'You congratulated and texted'**
+  String get youCongratulatedAndTexted;
+
   /// No description provided for @youCongratulated.
   ///
   /// In en, this message translates to:
