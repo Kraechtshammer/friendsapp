@@ -396,12 +396,13 @@ class _EntryRow extends StatelessWidget {
                         const SizedBox(height: 2),
                         Row(
                           spacing: 6,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             FaceStack(people),
                             Expanded(
                               child: Text(
                                 subtitle,
-                                maxLines: 1,
+                                maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: context.text.bodyMedium?.copyWith(
                                   fontSize: 13,
