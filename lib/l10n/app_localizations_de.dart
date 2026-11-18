@@ -210,7 +210,41 @@ class AppLocalizationsDe extends AppLocalizations {
   String get chatTarget => 'Chat-Link, Nutzername oder ID';
 
   @override
-  String get chatTargetHint => 'Optional. Ohne ihn öffnet Kept. die App.';
+  String get editMessengerFromContact => 'Aus dem Kontakt';
+
+  @override
+  String get editMessengerOthers => 'Andere Apps auf diesem Handy';
+
+  @override
+  String get chatTargetHint => '@name, ID oder https://…';
+
+  @override
+  String chatTargetUsed(String name) {
+    return '„Öffnen“ führt direkt zu diesem Chat in $name.';
+  }
+
+  @override
+  String chatTargetNotUnderstood(String name) {
+    return '$name braucht hier einen vollständigen Chat-Link, der mit https:// beginnt.';
+  }
+
+  @override
+  String get chatTargetViaContact =>
+      'Ohne öffnet Kept. den Chat über den Kontakt im Handy.';
+
+  @override
+  String get chatTargetViaPhone =>
+      'Ohne öffnet Kept. den Chat über die Telefonnummer.';
+
+  @override
+  String chatTargetHelpUsername(String name) {
+    return 'Wenn du einen Nutzernamen oder Chat-Link für diese Person hast, trag ihn hier ein. Sonst öffnet Kept. einfach $name.';
+  }
+
+  @override
+  String chatTargetHelpLink(String name) {
+    return 'Wenn du einen Chat-Link für diese Person hast, füg ihn hier ein. Sonst öffnet Kept. einfach $name.';
+  }
 
   @override
   String get birthday => 'Geburtstag';

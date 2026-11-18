@@ -208,7 +208,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatTarget => 'Chat link, username or ID';
 
   @override
-  String get chatTargetHint => 'Optional. Without it, Kept. opens the app.';
+  String get editMessengerFromContact => 'From the contact';
+
+  @override
+  String get editMessengerOthers => 'Other apps on this phone';
+
+  @override
+  String get chatTargetHint => '@name, ID or https://…';
+
+  @override
+  String chatTargetUsed(String name) {
+    return 'Open goes straight to this chat in $name.';
+  }
+
+  @override
+  String chatTargetNotUnderstood(String name) {
+    return '$name needs a full chat link here, starting with https://.';
+  }
+
+  @override
+  String get chatTargetViaContact =>
+      'Without one, Kept. opens the chat through the phone contact.';
+
+  @override
+  String get chatTargetViaPhone =>
+      'Without one, Kept. opens the chat by the phone number.';
+
+  @override
+  String chatTargetHelpUsername(String name) {
+    return 'If you have a username or chat link for this person, enter it here. Otherwise Kept. just opens $name.';
+  }
+
+  @override
+  String chatTargetHelpLink(String name) {
+    return 'If you have a chat link for this person, paste it here. Otherwise Kept. just opens $name.';
+  }
 
   @override
   String get birthday => 'Birthday';

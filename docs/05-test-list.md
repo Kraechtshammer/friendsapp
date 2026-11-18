@@ -194,3 +194,5 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Messenger SMS: "Open" starts a message to the number in the default SMS app.
 - [ ] The messenger choice on the edit page, on first start and in the contact import shows only the apps installed on the phone (and the person's current one).
 - [ ] A person whose messenger was uninstalled: "Open" says it is not installed.
+- [ ] Edit a person imported from contacts who has Signal, Telegram or WhatsApp in the contact: those apps show under "From the contact", the others under "Other apps on this phone", each with its icon.
+- [ ] The line under the chat link field changes as you type: a Signal username says a full link is needed; a pasted link says Open goes straight to the chat; empty says what Kept. does instead. Check the German texts too.

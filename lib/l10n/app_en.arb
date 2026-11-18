@@ -97,7 +97,43 @@
   "phoneNumber": "Phone number",
   "phoneHint": "+49…",
   "chatTarget": "Chat link, username or ID",
-  "chatTargetHint": "Optional. Without it, Kept. opens the app.",
+  "editMessengerFromContact": "From the contact",
+  "editMessengerOthers": "Other apps on this phone",
+  "chatTargetHint": "@name, ID or https://…",
+  "chatTargetUsed": "Open goes straight to this chat in {name}.",
+  "@chatTargetUsed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "chatTargetNotUnderstood": "{name} needs a full chat link here, starting with https://.",
+  "@chatTargetNotUnderstood": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "chatTargetViaContact": "Without one, Kept. opens the chat through the phone contact.",
+  "chatTargetViaPhone": "Without one, Kept. opens the chat by the phone number.",
+  "chatTargetHelpUsername": "If you have a username or chat link for this person, enter it here. Otherwise Kept. just opens {name}.",
+  "@chatTargetHelpUsername": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "chatTargetHelpLink": "If you have a chat link for this person, paste it here. Otherwise Kept. just opens {name}.",
+  "@chatTargetHelpLink": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "birthday": "Birthday",
   "birthdayDay": "Day",
   "birthdayMonthField": "Month",

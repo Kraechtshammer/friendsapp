@@ -12,6 +12,8 @@ import '../../domain/display_name.dart';
 import '../../domain/group.dart';
 import '../../domain/rhythm.dart';
 import '../../domain/person.dart';
+import '../../domain/contact_route.dart';
+import '../../l10n/app_localizations.dart';
 import '../../l10n/labels.dart';
 import '../../platform/installed_apps.dart';
 import '../common.dart';
@@ -136,6 +138,19 @@ class _FormState extends ConsumerState<_Form> {
   void initState() {
     super.initState();
     _loadContactPhoto();
+    _loadContactRoutes();
+  }
+
+  /// The apps the linked contact can reach the person in (its messengers'
+  /// entries and chat links in its Website field). Read once per visit;
+  /// nothing of it is stored (02-design.md §8, 2026-11-18).
+  List<ContactRoute> _routes = const [];
+
+  Future<void> _loadContactRoutes() async {
+    final contactId = widget.person?.contactId;
+    if (contactId == null) return;
+    final entries = await ref.read(contactEntriesProvider).entriesOf(contactId);
+    if (mounted) setState(() => _routes = contactRoutes(entries));
   }
 
   Future<void> _loadContactPhoto() async {
@@ -489,20 +504,7 @@ class _FormState extends ConsumerState<_Form> {
                   onChanged: (v) => setState(() => _reconnecting = v),
                 ),
                 const SizedBox(height: 18),
-                _group(l10n.editMessenger, [
-                  ChoiceChips<ChatApp?>(
-                    options: [
-                      ChipOption(null, l10n.messengerNone),
-                      for (final m
-                          in (ref.watch(installedChatAppsProvider).value ??
-                                  InstalledChatApps.all)
-                              .choices(_messenger))
-                        ChipOption(m, messengerLabel(m, l10n)),
-                    ],
-                    value: _messenger,
-                    onChanged: (v) => setState(() => _messenger = v),
-                  ),
-                ]),
+                _messengerSection(context),
                 const SizedBox(height: 18),
                 _group(l10n.editReach, [
                   KeptTextField(
@@ -511,13 +513,8 @@ class _FormState extends ConsumerState<_Form> {
                     label: l10n.phoneNumber,
                     hint: l10n.phoneHint,
                     keyboardType: TextInputType.phone,
-                  ),
-                  KeptTextField(
-                    key: const ValueKey('chatTarget'),
-                    controller: _target,
-                    label: l10n.chatTarget,
-                    hint: l10n.chatTargetHint,
-                    keyboardType: TextInputType.url,
+                    // The messenger line above may change with the number.
+                    onChanged: (_) => setState(() {}),
                   ),
                 ]),
                 const SizedBox(height: 18),
@@ -601,6 +598,76 @@ class _FormState extends ConsumerState<_Form> {
         ],
       ),
     );
+  }
+
+  /// The messenger: the apps the contact offers first, then None and the
+  /// other installed apps, then the optional chat target with a line that
+  /// says what "Open" will do (02-design.md §8, 2026-11-18).
+  Widget _messengerSection(BuildContext context) {
+    final l10n = context.l10n;
+    final installed =
+        ref.watch(installedChatAppsProvider).value ?? InstalledChatApps.all;
+    final fromContact = <ChatApp>[
+      for (final app in ChatApp.values)
+        if (_routes.any((r) => r.app == app)) app,
+    ];
+    ChipOption<ChatApp?> option(ChatApp m) =>
+        ChipOption(m, messengerLabel(m, l10n), icon: messengerIcon(m));
+    final others = [
+      for (final m in installed.choices(_messenger))
+        if (!fromContact.contains(m)) m,
+    ];
+    void choose(ChatApp? v) => setState(() => _messenger = v);
+    final app = _messenger;
+    return _group(l10n.editMessenger, [
+      if (fromContact.isNotEmpty) ...[
+        Text(l10n.editMessengerFromContact, style: context.text.bodySmall),
+        ChoiceChips<ChatApp?>(
+          options: [for (final m in fromContact) option(m)],
+          value: _messenger,
+          onChanged: choose,
+        ),
+        Text(l10n.editMessengerOthers, style: context.text.bodySmall),
+      ],
+      ChoiceChips<ChatApp?>(
+        options: [
+          ChipOption(null, l10n.messengerNone),
+          for (final m in others) option(m),
+        ],
+        value: _messenger,
+        onChanged: choose,
+      ),
+      if (app != null) ...[
+        KeptTextField(
+          key: const ValueKey('chatTarget'),
+          controller: _target,
+          label: l10n.chatTarget,
+          hint: l10n.chatTargetHint,
+          keyboardType: TextInputType.url,
+          onChanged: (_) => setState(() {}),
+        ),
+        Text(_targetLine(l10n, app), style: context.text.bodySmall),
+      ],
+    ]);
+  }
+
+  /// What "Open" does with what is entered now, in the order of
+  /// `openChat`: the target, the contact, the phone number, the app.
+  String _targetLine(AppLocalizations l10n, ChatApp app) {
+    final name = messengerLabel(app, l10n);
+    final target = _target.text.trim();
+    if (target.isNotEmpty) {
+      return app.targetLink(target) != null
+          ? l10n.chatTargetUsed(name)
+          : l10n.chatTargetNotUnderstood(name);
+    }
+    if (_routes.any((r) => r.app == app)) return l10n.chatTargetViaContact;
+    if (app.phoneLink(_orNull(_phone)) != null) {
+      return l10n.chatTargetViaPhone;
+    }
+    return app.takesBareTarget
+        ? l10n.chatTargetHelpUsername(name)
+        : l10n.chatTargetHelpLink(name);
   }
 
   Widget _group(String label, List<Widget> children) => Column(

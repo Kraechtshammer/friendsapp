@@ -446,11 +446,59 @@ abstract class AppLocalizations {
   /// **'Chat link, username or ID'**
   String get chatTarget;
 
+  /// No description provided for @editMessengerFromContact.
+  ///
+  /// In en, this message translates to:
+  /// **'From the contact'**
+  String get editMessengerFromContact;
+
+  /// No description provided for @editMessengerOthers.
+  ///
+  /// In en, this message translates to:
+  /// **'Other apps on this phone'**
+  String get editMessengerOthers;
+
   /// No description provided for @chatTargetHint.
   ///
   /// In en, this message translates to:
-  /// **'Optional. Without it, Kept. opens the app.'**
+  /// **'@name, ID or https://…'**
   String get chatTargetHint;
+
+  /// No description provided for @chatTargetUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Open goes straight to this chat in {name}.'**
+  String chatTargetUsed(String name);
+
+  /// No description provided for @chatTargetNotUnderstood.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} needs a full chat link here, starting with https://.'**
+  String chatTargetNotUnderstood(String name);
+
+  /// No description provided for @chatTargetViaContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Without one, Kept. opens the chat through the phone contact.'**
+  String get chatTargetViaContact;
+
+  /// No description provided for @chatTargetViaPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Without one, Kept. opens the chat by the phone number.'**
+  String get chatTargetViaPhone;
+
+  /// No description provided for @chatTargetHelpUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'If you have a username or chat link for this person, enter it here. Otherwise Kept. just opens {name}.'**
+  String chatTargetHelpUsername(String name);
+
+  /// No description provided for @chatTargetHelpLink.
+  ///
+  /// In en, this message translates to:
+  /// **'If you have a chat link for this person, paste it here. Otherwise Kept. just opens {name}.'**
+  String chatTargetHelpLink(String name);
 
   /// No description provided for @birthday.
   ///

@@ -11,12 +11,17 @@ import 'package:kept/ui/people/edit_person_screen.dart';
 import 'package:kept/ui/people/people_screen.dart';
 import 'package:kept/ui/people/person_screen.dart';
 
+import 'package:kept/domain/contact_route.dart';
+
 import 'fake_notifications.dart';
+import 'support/fakes.dart';
 
 void main() {
   late AppServices services;
+  late FakeContactEntries contact;
 
   setUp(() {
+    contact = FakeContactEntries();
     services = AppServices(
       db: AppDatabase(NativeDatabase.memory()),
       openDemo: () => AppDatabase(NativeDatabase.memory()),
@@ -30,6 +35,8 @@ void main() {
           servicesProvider.overrideWithValue(services),
           firstStartEnabledProvider.overrideWithValue(false),
           notificationsProvider.overrideWithValue(FakeNotifications()),
+          contactEntriesProvider.overrideWithValue(contact),
+          installedAppsProvider.overrideWithValue(FakeInstalledApps()),
         ],
         child: const KeptApp(),
       ),
@@ -137,6 +144,63 @@ void main() {
     expect(saveEnabled(tester), isFalse);
     await type(tester, 'year', '2000');
     expect(saveEnabled(tester), isTrue);
+    await closeDown(tester);
+  });
+
+  testWidgets('the messenger section: contact first, then what Open does', (
+    tester,
+  ) async {
+    contact.entries['c1'] = [
+      const ContactEntry(
+        id: '9',
+        mimeType:
+            'vnd.android.cursor.item/vnd.org.thoughtcrime.securesms.contact',
+      ),
+    ];
+    await tester.runAsync(
+      () => services
+          .peopleFor(demo: false)
+          .add(name: 'Eva Lund', closeness: Closeness.close, contactId: 'c1'),
+    );
+    await openPeopleTab(tester);
+    await tester.tap(find.text('Eva'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Edit'));
+    await tester.pumpAndSettle();
+
+    await scrollTo(tester, find.text('From the contact'));
+    expect(find.text('Other apps on this phone'), findsOneWidget);
+    expect(find.byKey(const ValueKey('chatTarget')), findsNothing);
+    await tapScrolled(tester, find.text('Signal').first);
+    expect(
+      find.text('Without one, Kept. opens the chat through the phone contact.'),
+      findsOneWidget,
+    );
+    await type(tester, 'chatTarget', 'eva.42');
+    expect(
+      find.text('Signal needs a full chat link here, starting with https://.'),
+      findsOneWidget,
+    );
+    await type(tester, 'chatTarget', 'https://signal.me/#eu/eva');
+    expect(
+      find.text('Open goes straight to this chat in Signal.'),
+      findsOneWidget,
+    );
+    await tapScrolled(tester, find.text('Telegram'));
+    await type(tester, 'chatTarget', '');
+    expect(
+      find.text(
+        'If you have a username or chat link for this person, enter it '
+        'here. Otherwise Kept. just opens Telegram.',
+      ),
+      findsOneWidget,
+    );
+    await tapScrolled(tester, find.text('Save'));
+    final eva = await tester.runAsync(
+      () => services.peopleFor(demo: false).watchAll().first,
+    );
+    expect(eva!.single.chatApp, ChatApp.telegram);
+    expect(eva.single.chatTarget, isNull);
     await closeDown(tester);
   });
 
