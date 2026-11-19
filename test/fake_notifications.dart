@@ -32,6 +32,10 @@ class FakeNotifications implements Notifications {
   var settingsOpened = 0;
   ValueChanged<DayAnswerValue>? _onAnswer;
   ValueChanged<BirthdayResponse>? _onBirthday;
+  ValueChanged<String>? _onNoReply;
+
+  /// Sends "No" on an owed reply to [personId] as the plugin would.
+  void noReply(String personId) => _onNoReply!(personId);
 
   /// Sends [answer] to the app as the plugin would.
   void answer(DayAnswerValue answer) => _onAnswer!(answer);
@@ -43,9 +47,11 @@ class FakeNotifications implements Notifications {
   Future<void> setUp({
     required ValueChanged<DayAnswerValue> onAnswer,
     required ValueChanged<BirthdayResponse> onBirthday,
+    required ValueChanged<String> onNoReply,
   }) async {
     _onAnswer = onAnswer;
     _onBirthday = onBirthday;
+    _onNoReply = onNoReply;
   }
 
   @override

@@ -253,6 +253,7 @@
   "@eveningReconnect": {"description": "The evening notification when the reconnect person is its reason. title is for example \"This month: Anna\".", "placeholders": {"title": {"type": "String"}}},
   "eveningYes": "Yes",
   "eveningNotToday": "Not today",
+  "eveningNoReply": "No",
   "eveningChannel": "Evening question",
   "settingsEvening": "Evening question",
   "settingsEveningSwitch": "Ask me in the evening",

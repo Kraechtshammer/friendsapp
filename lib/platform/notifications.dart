@@ -25,9 +25,12 @@ abstract class Notifications {
   /// by [onResponseInBackground]. [onBirthday] gets the birthday responses
   /// that reach the running app: "Open chat", a tap, and "Yes" when the
   /// plugin delivers it to the app instead of the background handler.
+  /// [onNoReply] gets the person id of "No" on "Still owe NAME a reply?"
+  /// when the plugin delivers it to the app.
   Future<void> setUp({
     required ValueChanged<DayAnswerValue> onAnswer,
     required ValueChanged<BirthdayResponse> onBirthday,
+    required ValueChanged<String> onNoReply,
   });
 
   /// Makes the scheduled evening notifications match [plan]: a one-off
@@ -80,11 +83,13 @@ class LocalNotifications implements Notifications {
   Future<void> setUp({
     required ValueChanged<DayAnswerValue> onAnswer,
     required ValueChanged<BirthdayResponse> onBirthday,
-  }) => _ready ??= _setUp(onAnswer, onBirthday);
+    required ValueChanged<String> onNoReply,
+  }) => _ready ??= _setUp(onAnswer, onBirthday, onNoReply);
 
   Future<void> _setUp(
     ValueChanged<DayAnswerValue> onAnswer,
     ValueChanged<BirthdayResponse> onBirthday,
+    ValueChanged<String> onNoReply,
   ) async {
     await _initTimeZone();
     try {
@@ -99,6 +104,11 @@ class LocalNotifications implements Notifications {
           payload: r.payload,
         );
         if (birthday != null) onBirthday(birthday);
+        final noReply = eveningNoReplyPersonFor(
+          actionId: r.actionId,
+          payload: r.payload,
+        );
+        if (noReply != null) onNoReply(noReply);
       }
 
       await _plugin.initialize(
@@ -135,25 +145,28 @@ class LocalNotifications implements Notifications {
       final pending = [
         for (final p in await _plugin.pendingNotificationRequests()) p.id,
       ];
-      final details = NotificationDetails(
-        android: AndroidNotificationDetails(
-          _channelId,
-          plan.channelName,
-          icon: _icon,
-          color: KeptColors.coral,
-          importance: Importance.high,
-          priority: Priority.high,
-          category: AndroidNotificationCategory.reminder,
-          actions: [
-            AndroidNotificationAction(
-              eveningYesAction,
-              plan.yes,
-              showsUserInterface: true,
+      NotificationDetails details({required bool noReply}) =>
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              _channelId,
+              plan.channelName,
+              icon: _icon,
+              color: KeptColors.coral,
+              importance: Importance.high,
+              priority: Priority.high,
+              category: AndroidNotificationCategory.reminder,
+              actions: [
+                AndroidNotificationAction(
+                  eveningYesAction,
+                  plan.yes,
+                  showsUserInterface: true,
+                ),
+                if (noReply)
+                  AndroidNotificationAction(eveningNoReplyAction, plan.noReply),
+                AndroidNotificationAction(eveningNotTodayAction, plan.notToday),
+              ],
             ),
-            AndroidNotificationAction(eveningNotTodayAction, plan.notToday),
-          ],
-        ),
-      );
+          );
       final changes = eveningChanges(plan, pending);
       // Only pending ones: cancel also removes a notification that is shown.
       for (final id in changes.cancel) {
@@ -167,7 +180,10 @@ class LocalNotifications implements Notifications {
       // days before those are added.
       for (final a in changes.schedule) {
         try {
-          await _scheduleEveningAlarm(a, details);
+          await _scheduleEveningAlarm(
+            a,
+            details(noReply: a.replyPersonId != null),
+          );
         } catch (e) {
           // One that fails (for example a time that just passed) must not
           // stop the others.
@@ -199,7 +215,7 @@ class LocalNotifications implements Notifications {
     matchDateTimeComponents: a.weekly
         ? DateTimeComponents.dayOfWeekAndTime
         : null,
-    payload: eveningPayload,
+    payload: a.payload,
   );
 
   @override
@@ -362,8 +378,28 @@ Future<void> recordBirthdayYes(
   }
 }
 
-/// Buttons that do not open the app: "Not today" on the evening question
-/// and "Yes" on a birthday notification. Runs in a background isolate the
+/// "No" on "Still owe NAME a reply?": the conversation has ended. Stores a
+/// `wrote` contact by the user now, as "We texted" does, so the reply is
+/// no longer owed and the contact counts. Shared by the running app and
+/// the background handler.
+Future<void> recordNoReply(
+  ContactEventsRepository events,
+  String personId, {
+  DateTime? now,
+}) {
+  final at = now ?? DateTime.now();
+  return events.add(
+    personId: personId,
+    at: at,
+    kind: ContactKind.wrote,
+    direction: ContactDirection.byUser,
+    source: ContactSource.confirmed,
+    now: at,
+  );
+}
+
+/// Buttons that do not open the app: "Not today" and "No" on the evening
+/// question and "Yes" on a birthday notification. Runs in a background isolate the
 /// plugin starts, also when the app is closed.
 ///
 /// Writes to the real database only: it opens it with [openAppDatabase],
@@ -379,11 +415,24 @@ Future<void> onResponseInBackground(NotificationResponse r) async {
     actionId: r.actionId,
     payload: r.payload,
   );
-  if (evening == null && birthday?.action != BirthdayAction.yes) return;
+  final noReply = eveningNoReplyPersonFor(
+    actionId: r.actionId,
+    payload: r.payload,
+  );
+  if (evening == null &&
+      noReply == null &&
+      birthday?.action != BirthdayAction.yes) {
+    return;
+  }
   DartPluginRegistrant.ensureInitialized();
   final db = openAppDatabase();
   try {
-    if (evening != null) {
+    if (noReply != null) {
+      await recordNoReply(
+        ContactEventsRepository(db),
+        noReply,
+      ).timeout(const Duration(seconds: 20));
+    } else if (evening != null) {
       await recordEveningResponse(
         DayAnswersRepository(db),
         actionId: r.actionId,

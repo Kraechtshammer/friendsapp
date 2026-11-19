@@ -25,6 +25,7 @@ void main() {
       title: 'general',
       yes: 'Yes',
       notToday: 'Not today',
+      noReply: 'No',
       channelName: 'Evening question',
       start: DateTime(t.year, t.month, t.day),
       days: eveningDays(
@@ -129,6 +130,29 @@ void main() {
         eveningAlarms(p).where((a) => a.weekly).map((a) => a.title),
         everyElement('general'),
       );
+    });
+
+    test('only an owed-reply day names the person in its payload', () {
+      final p = plan(
+        inputs: EveningInputs(
+          people: [person('jonas')],
+          events: [event('jonas', DateTime(2026, 11, 16, 12))],
+        ),
+      );
+      final alarms = eveningAlarms(p);
+      final owed = alarms.firstWhere((a) => a.title == 'owe jonas');
+      expect(owed.replyPersonId, 'jonas');
+      expect(
+        eveningNoReplyPersonFor(
+          actionId: eveningNoReplyAction,
+          payload: owed.payload,
+        ),
+        'jonas',
+      );
+      for (final a in alarms.where((a) => a.title == 'general')) {
+        expect(a.replyPersonId, isNull);
+        expect(a.payload, eveningPayload);
+      }
     });
 
     test('no day has two, also on excluded days and after the time', () {

@@ -1,9 +1,12 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kept/data/contact_events_repository.dart';
 import 'package:kept/data/database.dart';
 import 'package:kept/data/day_answers_repository.dart';
+import 'package:kept/data/people_repository.dart';
 import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/evening_question.dart';
+import 'package:kept/domain/person.dart';
 import 'package:kept/platform/notifications.dart';
 
 void main() {
@@ -78,6 +81,22 @@ void main() {
       expect(eveningAnswerFor(payload: eveningPayload), DayAnswerValue.yes);
     });
 
+    test('an owed-reply day answers like the general one', () {
+      final payload = eveningPayloadFor('p1');
+      expect(
+        eveningAnswerFor(actionId: eveningYesAction, payload: payload),
+        DayAnswerValue.yes,
+      );
+      expect(
+        eveningAnswerFor(actionId: eveningNotTodayAction, payload: payload),
+        DayAnswerValue.notToday,
+      );
+      expect(
+        eveningAnswerFor(actionId: eveningNoReplyAction, payload: payload),
+        isNull,
+      );
+    });
+
     test('ignores other notifications and unknown buttons', () {
       expect(eveningAnswerFor(actionId: 'yes', payload: 'birthday'), isNull);
       expect(eveningAnswerFor(actionId: 'yes'), isNull);
@@ -85,6 +104,56 @@ void main() {
         eveningAnswerFor(actionId: 'later', payload: eveningPayload),
         isNull,
       );
+    });
+  });
+
+  group('eveningNoReplyPersonFor', () {
+    test('is the person for "No" on an owed-reply day', () {
+      expect(
+        eveningNoReplyPersonFor(
+          actionId: eveningNoReplyAction,
+          payload: eveningPayloadFor('p1'),
+        ),
+        'p1',
+      );
+    });
+
+    test('is null for other buttons and payloads', () {
+      expect(
+        eveningNoReplyPersonFor(
+          actionId: eveningYesAction,
+          payload: eveningPayloadFor('p1'),
+        ),
+        isNull,
+      );
+      expect(
+        eveningNoReplyPersonFor(
+          actionId: eveningNoReplyAction,
+          payload: eveningPayload,
+        ),
+        isNull,
+      );
+      expect(eveningNoReplyPersonFor(actionId: eveningNoReplyAction), isNull);
+    });
+  });
+
+  group('recordNoReply', () {
+    test('stores a confirmed text by the user', () async {
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+      final anna = await PeopleRepository(db)
+          .add(name: 'Anna', closeness: Closeness.close);
+      final events = ContactEventsRepository(db);
+      final at = DateTime(2026, 11, 16, 19, 3);
+      await recordNoReply(events, anna.id, now: at);
+      final stored = await db.select(db.contactEvents).get();
+      expect(stored, hasLength(1));
+      final e = stored.single;
+      expect(e.personId, anna.id);
+      expect(e.at, at);
+      expect(e.kind, ContactKind.wrote);
+      expect(e.direction, ContactDirection.byUser);
+      expect(e.source, ContactSource.confirmed);
     });
   });
 

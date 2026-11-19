@@ -243,3 +243,10 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] "Already happened" on the capture card with an icon: the logged contact has the icon.
 - [ ] The icons are readable in the grid and at timeline size, in light and dark mode.
 - [ ] After the update, existing plans and contacts look as before (schema 7 migration).
+
+## "No" on an owed reply (after 0.10.1)
+
+- [ ] On an evening that asks "Still owe NAME a reply?", the notification has three buttons: Yes, No, Not today. Other evenings keep two.
+- [ ] "No" closes the notification without opening the app.
+- [ ] Afterwards the person page shows "You wrote" (or "You texted") for today, and the owed reply is gone from Tonight's pick.
+- [ ] Same with the app open in the background.

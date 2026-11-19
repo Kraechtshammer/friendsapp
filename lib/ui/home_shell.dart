@@ -98,7 +98,11 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     unawaited(
       ref
           .read(notificationsProvider)
-          .setUp(onAnswer: _onEveningAnswer, onBirthday: _onBirthday),
+          .setUp(
+            onAnswer: _onEveningAnswer,
+            onBirthday: _onBirthday,
+            onNoReply: _onNoReply,
+          ),
     );
     ref.listenManual(settingsProvider, (_, next) {
       if (next.value case final settings?) _onSettings(settings);
@@ -382,6 +386,18 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   /// background handler would (real database, once). "Open chat" and a tap
   /// open Home at the birthday pick; "Open chat" also opens the messenger
   /// and queues "Did you congratulate?".
+  /// "No" on "Still owe NAME a reply?" that reached the running app: store
+  /// it as "We texted", in the real database like the other answers.
+  void _onNoReply(String personId) {
+    final events = ref.read(servicesProvider).contactEventsFor(demo: false);
+    unawaited(
+      recordNoReply(events, personId).then<void>(
+        (_) {},
+        onError: (Object e) => debugPrint('Ended reply not stored: $e'),
+      ),
+    );
+  }
+
   void _onBirthday(BirthdayResponse response) {
     final services = ref.read(servicesProvider);
     if (response.action == BirthdayAction.yes) {
@@ -443,6 +459,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       title: l10n.eveningQuestion,
       yes: l10n.eveningYes,
       notToday: l10n.eveningNotToday,
+      noReply: l10n.eveningNoReply,
       channelName: l10n.eveningChannel,
       start: DateTime(now.year, now.month, now.day),
       days: eveningDays(

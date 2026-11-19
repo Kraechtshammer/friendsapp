@@ -13,9 +13,35 @@ const eveningYesAction = 'yes';
 /// The id of the "Not today" button. It does not open the app.
 const eveningNotTodayAction = 'not_today';
 
+/// The id of the "No" button on a day that asks "Still owe NAME a reply?":
+/// the conversation has ended. It stores a `wrote` contact by the user, as
+/// "We texted" would, and does not open the app.
+const eveningNoReplyAction = 'no_reply';
+
 /// The payload of every evening notification, so a response can be told
 /// apart from other notifications that come later.
 const eveningPayload = 'evening';
+
+const _replyPayloadPrefix = '$eveningPayload:reply:';
+
+/// The payload of an evening notification: [eveningPayload], or on a day
+/// that asks about an owed reply, that plus the person's id.
+String eveningPayloadFor(String? replyPersonId) => replyPersonId == null
+    ? eveningPayload
+    : '$_replyPayloadPrefix$replyPersonId';
+
+bool _isEveningPayload(String? payload) =>
+    payload == eveningPayload ||
+    (payload?.startsWith(_replyPayloadPrefix) ?? false);
+
+/// The person whose owed reply the user ended with "No", or null for any
+/// other response.
+String? eveningNoReplyPersonFor({String? actionId, String? payload}) {
+  if (actionId != eveningNoReplyAction) return null;
+  if (payload == null || !payload.startsWith(_replyPayloadPrefix)) return null;
+  final id = payload.substring(_replyPayloadPrefix.length);
+  return id.isEmpty ? null : id;
+}
 
 /// The weekdays the question comes on, Monday first. None when it is off.
 List<int> eveningWeekdays({required bool on, required Set<int> excluded}) => [
@@ -44,9 +70,9 @@ DateTime nextEvening(DateTime now, int weekday, int minute) {
 /// What a response to the evening notification stores: "Not today" for
 /// that button, "Yes" for the Yes button and for a tap on the notification
 /// itself. Null for anything else (another notification, an unknown
-/// button).
+/// button, "No" on an owed reply: [eveningNoReplyPersonFor]).
 DayAnswerValue? eveningAnswerFor({String? actionId, String? payload}) {
-  if (payload != eveningPayload) return null;
+  if (!_isEveningPayload(payload)) return null;
   return switch (actionId) {
     eveningNotTodayAction => DayAnswerValue.notToday,
     eveningYesAction || null || '' => DayAnswerValue.yes,
@@ -64,6 +90,7 @@ class EveningPlan {
     required this.title,
     required this.yes,
     required this.notToday,
+    required this.noReply,
     required this.channelName,
     required this.start,
     this.days = const [],
@@ -76,6 +103,9 @@ class EveningPlan {
   final String title;
   final String yes;
   final String notToday;
+
+  /// "No", the extra button on a day that asks about an owed reply.
+  final String noReply;
 
   /// The name of the notification channel in the phone's settings.
   final String channelName;
@@ -95,6 +125,7 @@ class EveningPlan {
       other.title == title &&
       other.yes == yes &&
       other.notToday == notToday &&
+      other.noReply == noReply &&
       other.channelName == channelName &&
       other.start == start &&
       listEquals(other.days, days);
@@ -106,6 +137,7 @@ class EveningPlan {
     title,
     yes,
     notToday,
+    noReply,
     channelName,
     start,
     Object.hashAll(days),
@@ -143,6 +175,7 @@ class EveningAlarm {
     required this.title,
     this.body,
     required this.weekly,
+    this.replyPersonId,
   });
 
   final int id;
@@ -151,6 +184,13 @@ class EveningAlarm {
   final String? body;
   final bool weekly;
 
+  /// The person on a day that asks "Still owe NAME a reply?". Such a day
+  /// gets the "No" button ([eveningNoReplyAction]).
+  final String? replyPersonId;
+
+  /// The payload the notification carries ([eveningPayloadFor]).
+  String get payload => eveningPayloadFor(replyPersonId);
+
   @override
   bool operator ==(Object other) =>
       other is EveningAlarm &&
@@ -158,10 +198,11 @@ class EveningAlarm {
       other.at == at &&
       other.title == title &&
       other.body == body &&
-      other.weekly == weekly;
+      other.weekly == weekly &&
+      other.replyPersonId == replyPersonId;
 
   @override
-  int get hashCode => Object.hash(id, at, title, body, weekly);
+  int get hashCode => Object.hash(id, at, title, body, weekly, replyPersonId);
 
   @override
   String toString() =>
@@ -196,6 +237,10 @@ List<EveningAlarm> eveningAlarms(EveningPlan plan) {
         title: d.title,
         body: d.body,
         weekly: false,
+        replyPersonId: switch (d.reason) {
+          EveningOwedReply(:final person) => person.id,
+          _ => null,
+        },
       ),
   ];
 }

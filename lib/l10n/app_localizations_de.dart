@@ -488,6 +488,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eveningNotToday => 'Heute nicht';
 
   @override
+  String get eveningNoReply => 'Nein';
+
+  @override
   String get eveningChannel => 'Abendfrage';
 
   @override

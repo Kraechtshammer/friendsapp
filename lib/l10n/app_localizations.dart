@@ -914,6 +914,12 @@ abstract class AppLocalizations {
   /// **'Not today'**
   String get eveningNotToday;
 
+  /// No description provided for @eveningNoReply.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get eveningNoReply;
+
   /// No description provided for @eveningChannel.
   ///
   /// In en, this message translates to:

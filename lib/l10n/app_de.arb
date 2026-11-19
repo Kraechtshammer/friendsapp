@@ -161,6 +161,7 @@
   "eveningReconnect": "{title}. Hast du zehn Minuten?",
   "eveningYes": "Ja",
   "eveningNotToday": "Heute nicht",
+  "eveningNoReply": "Nein",
   "eveningChannel": "Abendfrage",
   "settingsEvening": "Abendfrage",
   "settingsEveningSwitch": "Frag mich am Abend",
