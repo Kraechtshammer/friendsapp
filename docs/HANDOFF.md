@@ -5,8 +5,8 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
 ## 1. Where things stand
 
 - Phase: **implement**. The app is called **Kept.** with the full stop (running text may write Kept). App ID `de.gartenpa.kept`; debug builds use `de.gartenpa.kept.debug`. Repository and folder are `friendsapp`.
-- **M0 to M10 are all built.** Everything is released; the newest release is 0.10.1.
-- **Released** (tags `v0.1.0` to `v0.10.1`, 2026-11-16 to 2026-11-18, no version skipped):
+- **M0 to M10 are all built.** Everything is released; the newest release is 0.10.2.
+- **Released** (tags `v0.1.0` to `v0.10.2`, 2026-11-16 to 2026-11-19, no version skipped):
   - 0.1.0: M1, people, contacts import, "Open chat".
   - 0.2.0: M2 and M3, capture, the evening question, Tonight's pick, "Nice one".
   - 0.3.0: M4, birthdays.
@@ -22,8 +22,8 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
   - 0.10.0 (2026-11-18): the Timeline tab replaces Upcoming (Today in the middle, future above, past below, faces, one texting line per day, birthday chips); "Today" instead of a date; the month on far-off Home badges; a day of messages is one entry on the person page.
   - 0.10.1 (2026-11-18): schema 7, activity icons for meetups and games on contacts and plans (14 new icons, a grid picker; tried by the developer on the debug build: "works fine").
 - **Activity icons** (2026-11-18, in 0.10.1): activity icons for meetups and games, on contacts and on plans, schema 7 (02-design.md §8; 14 new icons, drafts and canvas rows "Meetup icons v1" to "v3" in `docs/concepts/meetup-icons-v1/`). Test points in 05-test-list.md. Open: no icon button yet on the couple page, the share sheet and "Planning to meet up?".
-- **"No" on an owed reply** (2026-11-19, not released): the evening notification "Still owe NAME a reply?" has a "No" button that stores "We texted" without opening the app (02-design.md §8). Tests pass; not tried on the phone yet (05-test-list.md).
-- **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.10.2 next; the developer chose 0.10.0 over 0.9.4 for the Timeline, 2026-11-18).
+  - 0.10.2 (2026-11-19): "No" on the owed-reply evening notification stores "We texted" without opening the app (02-design.md §8). Released at the developer's word without a debug try on the phone; test points in 05-test-list.md.
+- **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.10.3 next; the developer chose 0.10.0 over 0.9.4 for the Timeline, 2026-11-18).
 - **The developer's phone** (2026-11-16): `de.gartenpa.kept.debug` ("Kept. debug", 0.7.0, test data). The old 0.6.0 debug build under `de.gartenpa.kept` is left only in the Private space (user 11), never opened there; it blocks the release install (signature) and the developer removes it by hand (Claude's uninstall was refused). Then the listener build of the release goes on over adb.
 - **The developer's phone since 0.8.0:** the release listener build `kept-0.8.0-listener.apk` is installed over adb as the real app; 0.9.0 is its first real in-app update test. The developer said on 2026-11-16 that commits may be pushed right away.
 - **Play Protect blocks sideloaded APKs with a notification listener** (found 2026-11-16 on the Pixel 7 Pro: "The app can request access to sensitive data..."). Since then the listener is the build flag `KEPT_INCOMING` (03-dev-setup.md). Each release publishes `kept-<v>.apk` (no listener, installs from the browser) and `kept-<v>-listener.apk` (for the developer, installed over adb); the updater keeps each build on its own kind. Whether Play Protect lets the app's own updater install the listener APK is unverified. A Play internal testing track would be the legal way to ship the listener to others.
@@ -115,7 +115,7 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 - Review of the German texts (written by subagents).
 - The light theme on a phone.
 - Open questions (section 5).
-- Releases take the next number each time (the next after 0.10.1 is 0.10.2).
+- Releases take the next number each time (the next after 0.10.2 is 0.10.3).
 - **Timeline tab** (2026-11-18, in 0.10.0): replaces Upcoming; Today in the middle, future above, past below (02-design.md §8). Things on the current day show "Today" instead of a date on Home, the Timeline tab and the person page.
 
 **Planned, decided, not built** (to be built in its own session)

@@ -244,7 +244,7 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] The icons are readable in the grid and at timeline size, in light and dark mode.
 - [ ] After the update, existing plans and contacts look as before (schema 7 migration).
 
-## "No" on an owed reply (after 0.10.1)
+## "No" on an owed reply (in 0.10.2)
 
 - [ ] On an evening that asks "Still owe NAME a reply?", the notification has three buttons: Yes, No, Not today. Other evenings keep two.
 - [ ] "No" closes the notification without opening the app.
