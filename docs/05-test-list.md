@@ -260,7 +260,7 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Two saves on the same day ("Played" with Tom, then with Franz and Lucy) stay two entries.
 - [ ] Adding exactly the partner of a couple works as a couple's meeting, as before.
 
-## With row on the capture card (not released yet)
+## With row on the capture card (in 0.10.4)
 
 - [ ] Capture card: choose a person, tap "Already happened". A "With" row shows with that person and "Add person".
 - [ ] Add two people, save. "Nice one" shows three overlapping faces; the Timeline tab shows one shared contact.
