@@ -101,22 +101,50 @@ Future<void> completeLoggedContact(
   required ContactKind kind,
   required DateTime at,
   GroupWithMembers? couple,
+  List<Person> withPeople = const [],
   String thought = '',
   String? activityIcon,
 }) {
+  // Several people at once: one shared event. When they are exactly a
+  // couple it is the couple's.
+  GroupWithMembers? shownCouple = couple;
+  if (couple == null && withPeople.isNotEmpty) {
+    final ids = {person.id, for (final p in withPeople) p.id};
+    for (final c in ref.read(couplesByIdProvider).values) {
+      if (c.members.length == ids.length &&
+          c.members.every((m) => ids.contains(m.id))) {
+        shownCouple = c;
+      }
+    }
+  }
+  final theCouple = shownCouple;
   final direction = switch (kind) {
     ContactKind.wrote || ContactKind.called => ContactDirection.byUser,
     _ => ContactDirection.together,
   };
   final repo = ref.read(contactEventsRepositoryProvider);
+  final shared = theCouple == null && withPeople.isNotEmpty;
   return _storeAndCelebrate(
     context,
-    person: couple?.members.first ?? person,
-    couple: couple,
+    person: theCouple?.members.first ?? person,
+    couple: theCouple,
+    others: shared ? withPeople : const [],
     thought: thought,
     replace: false,
     // With a couple it is one shared event for both members.
-    store: couple == null
+    store: shared
+        ? () async {
+            final rows = await repo.addForPeople(
+              personIds: [person.id, for (final p in withPeople) p.id],
+              at: at,
+              kind: kind,
+              direction: direction,
+              source: ContactSource.manual,
+              activityIcon: activityIcon,
+            );
+            return rows.first;
+          }
+        : theCouple == null
         ? () => repo.add(
             personId: person.id,
             at: at,
@@ -127,7 +155,7 @@ Future<void> completeLoggedContact(
           )
         : () async {
             final rows = await repo.addForGroup(
-              groupId: couple.group.id,
+              groupId: theCouple.group.id,
               at: at,
               kind: kind,
               direction: direction,
@@ -205,6 +233,7 @@ Future<void> _storeAndCelebrate(
   BuildContext context, {
   required Person person,
   GroupWithMembers? couple,
+  List<Person> others = const [],
   required String thought,
   required bool replace,
   required Future<ContactEvent> Function() store,
@@ -220,6 +249,7 @@ Future<void> _storeAndCelebrate(
       event: event,
       thought: thought,
       couple: couple,
+      others: others,
     ),
   );
   unawaited(replace ? navigator.pushReplacement(route) : navigator.push(route));
@@ -248,6 +278,7 @@ class NiceOneScreen extends ConsumerStatefulWidget {
     required this.event,
     this.thought = '',
     this.couple,
+    this.others = const [],
   });
 
   /// The person the contact was stored for (the first member when it was
@@ -257,6 +288,11 @@ class NiceOneScreen extends ConsumerStatefulWidget {
 
   /// The couple the thought was for, if any.
   final GroupWithMembers? couple;
+
+  /// The other people of a contact with several people at once (not a
+  /// couple's); the screen shows their faces with [person]'s and adds up
+  /// all their stamps.
+  final List<Person> others;
 
   /// The text of the thought that was done; prefills the activity.
   final String thought;
@@ -276,6 +312,9 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
 
   /// The contact is the couple's: stored for both members.
   bool get _forBoth => widget.couple != null && widget.event.groupId != null;
+
+  /// The event is shared by several people (a couple or more).
+  bool get _isShared => _forBoth || widget.others.isNotEmpty;
 
   bool get _asksActivity =>
       widget.event.kind == ContactKind.met ||
@@ -374,6 +413,19 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
                                     widget.couple!.members,
                                     size: 112,
                                   )
+                                : widget.others.isNotEmpty
+                                ? Wrap(
+                                    alignment: WrapAlignment.center,
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    children: [
+                                      for (final p in [
+                                        widget.person,
+                                        ...widget.others,
+                                      ])
+                                        Avatar.person(p, size: 72),
+                                    ],
+                                  )
                                 : Avatar.person(widget.person, size: 96),
                           ),
                           Text(
@@ -457,7 +509,7 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
                               when: _planWhen,
                               onWhen: (w) => setState(() => _planWhen = w),
                             ),
-                          _StampsCard(event: widget.event, shared: _forBoth),
+                          _StampsCard(event: widget.event, shared: _isShared),
                         ],
                       ),
                     ),

@@ -76,6 +76,34 @@ void main() {
     expect(pastEntries(people, [a, b], now).map(describe), ['c:a']);
   });
 
+  test('a contact with three people is one entry with all of them', () {
+    final people = [person('tom'), person('anna'), person('ben')];
+    final rows = [
+      for (final id in ['tom', 'anna', 'ben'])
+        event(
+          'r$id',
+          DateTime(2026, 11, 12),
+          ContactKind.gamed,
+          ContactDirection.together,
+          personId: id,
+        ).copyWith(sharedId: const Value('s')),
+    ];
+    // Another entry the same day stays separate.
+    final alone = event(
+      'solo',
+      DateTime(2026, 11, 12, 1),
+      ContactKind.gamed,
+      ContactDirection.together,
+    );
+    final entries = pastEntries(people, [...rows, alone], now);
+    expect(entries.length, 2);
+    final shared = entries.whereType<PastContact>().firstWhere(
+      (e) => e.event.sharedId == 's',
+    );
+    expect(shared.people.map((p) => p.id).toSet(), {'tom', 'anna', 'ben'});
+    expect(shared.couple, isNull);
+  });
+
   test('birthdays since the person was added, marked when congratulated', () {
     final people = [
       added(person('tom', month: 3, day: 4, year: 1990), DateTime(2025, 1, 1)),

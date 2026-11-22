@@ -22,6 +22,7 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
   - 0.10.0 (2026-11-18): the Timeline tab replaces Upcoming (Today in the middle, future above, past below, faces, one texting line per day, birthday chips); "Today" instead of a date; the month on far-off Home badges; a day of messages is one entry on the person page.
   - 0.10.1 (2026-11-18): schema 7, activity icons for meetups and games on contacts and plans (14 new icons, a grid picker; tried by the developer on the debug build: "works fine").
   - 0.10.2 (2026-11-19): "No" on the owed-reply evening notification stores "We texted" without opening the app (02-design.md §8). Released at the developer's word without a debug try on the phone; test points in 05-test-list.md.
+- **One contact with several people** (2026-11-22, not released): "We were in touch" has a "With" row to add people; one shared event for all (02-design.md §8). Written without a Flutter SDK in the session: `flutter gen-l10n` was not run (the generated l10n files were edited by hand), and `flutter analyze` and `flutter test` were not run. Run them first, then try it on the phone (05-test-list.md). The capture card's "Already happened" has no "With" row yet.
 - **Activity icons** (2026-11-18, in 0.10.1): activity icons for meetups and games, on contacts and on plans, schema 7 (02-design.md §8; 14 new icons, drafts and canvas rows "Meetup icons v1" to "v3" in `docs/concepts/meetup-icons-v1/`). Test points in 05-test-list.md. Open: no icon button yet on the couple page, the share sheet and "Planning to meet up?".
 - **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.10.3 next; the developer chose 0.10.0 over 0.9.4 for the Timeline, 2026-11-18).
 - **The developer's phone** (2026-11-16): `de.gartenpa.kept.debug` ("Kept. debug", 0.7.0, test data). The old 0.6.0 debug build under `de.gartenpa.kept` is left only in the Private space (user 11), never opened there; it blocks the release install (signature) and the developer removes it by hand (Claude's uninstall was refused). Then the listener build of the release goes on over adb.
@@ -129,7 +130,7 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 - Rotating praise and example texts.
 - Backup export and import.
 - The "two come closer" badge (sketches in `docs/concepts/badge-ideas/`).
-- Groups and shared events; quick "do soon" items (02-design.md §6.12); doctor appointments; iOS.
+- Groups with a name or kind beyond couples; quick "do soon" items (02-design.md §6.12); doctor appointments; iOS.
 - Excluded hours; a language setting.
 
 ## 5. Open questions for the developer

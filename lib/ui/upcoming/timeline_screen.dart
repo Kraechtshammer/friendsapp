@@ -254,15 +254,17 @@ class _PastRow extends ConsumerWidget {
     }
 
     return switch (entry) {
-      PastContact(:final person, :final event, :final couple) => _EntryRow(
+      PastContact(:final person, :final event, :final couple, :final people) =>
+        _EntryRow(
         day: entry.day,
         accent: _contactAccent(event.kind),
         tilt: tilt,
         icon: contactIcon(event),
         title: contactTitle(event, shortNameIn(names, person), l10n),
-        people: couple?.members ?? [person],
+        people: people,
         subtitle: [
-          couple?.label(names) ?? shortNameIn(names, person),
+          couple?.label(names) ??
+              people.map((p) => shortNameIn(names, p)).join(', '),
           ?note(event.note),
         ].join(' · '),
         onTap: () => showContactEntrySheet(context, ref, event),

@@ -17,15 +17,20 @@ sealed class PastEntry {
   final DateTime day;
 }
 
-/// A call, meet-up or gaming session. For a couple's shared contact
-/// [couple] is set and the entry stands for every member's row.
+/// A call, meet-up or gaming session. For a shared contact (a couple, or
+/// several people at once) the entry stands for every person's row: [couple]
+/// is set when it is a couple's, [others] are the other people of it.
 class PastContact extends PastEntry {
-  PastContact(this.person, this.event, {this.couple})
+  PastContact(this.person, this.event, {this.couple, this.others = const []})
     : super(DateTime(event.at.year, event.at.month, event.at.day));
 
   final Person person;
   final ContactEvent event;
   final GroupWithMembers? couple;
+  final List<Person> others;
+
+  /// Everyone the entry is about.
+  List<Person> get people => couple?.members ?? [person, ...others];
 }
 
 /// Messages on [day] with [people] (either direction), by name.
@@ -92,6 +97,14 @@ List<PastEntry> pastEntries(
 
   // Contacts.
   final shared = <String>{};
+  final sharedPeople = <String, List<Person>>{};
+  for (final e in events) {
+    final p = byId[e.personId];
+    final s = e.sharedId;
+    if (p == null || s == null || e.at.isAfter(now)) continue;
+    final list = sharedPeople.putIfAbsent(s, () => []);
+    if (!list.contains(p)) list.add(p);
+  }
   final starts = {for (final p in people) p.id: dayOf(p.createdAt)};
   final wishes = <String, Map<String, DateTime>>{};
   final ownWishes = <String, List<Person>>{};
@@ -124,7 +137,15 @@ List<PastEntry> pastEntries(
       if (!shared.add(s)) continue;
     }
     entries.add(
-      PastContact(p, e, couple: e.groupId == null ? null : couples[e.groupId]),
+      PastContact(
+        p,
+        e,
+        couple: e.groupId == null ? null : couples[e.groupId],
+        others: [
+          for (final o in sharedPeople[e.sharedId] ?? const <Person>[])
+            if (o != p) o,
+        ],
+      ),
     );
   }
 

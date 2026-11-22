@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../data/database.dart';
 import '../../domain/contact_event.dart';
+import '../../domain/shared_event.dart';
 import '../common.dart';
 import '../material.dart';
 import '../widgets/activity_icon_picker.dart';
@@ -103,18 +104,14 @@ class _EntrySheetState extends ConsumerState<_EntrySheet> {
     final kept = context.kept;
     // A shared event (a meeting with a couple) is also on the other
     // person's timeline; changing or deleting it changes both.
-    final sharedId = widget.event.sharedId;
     final names = ref.watch(displayNamesProvider);
-    final others = sharedId == null
-        ? const <String>[]
-        : [
-            for (final e
-                in ref.watch(allContactEventsProvider).value ?? const [])
-              if (e.sharedId == sharedId &&
-                  e.id != widget.event.id &&
-                  names[e.personId] != null)
-                names[e.personId]!,
-          ];
+    final others = [
+      for (final id in sharedWith(
+        ref.watch(allContactEventsProvider).value ?? const [],
+        widget.event,
+      ))
+        if (names[id] != null) names[id]!,
+    ];
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
         16,
@@ -132,7 +129,7 @@ class _EntrySheetState extends ConsumerState<_EntrySheet> {
           ),
           if (others.isNotEmpty)
             Text(
-              l10n.coupleAlsoChanges(others.join(' & ')),
+              l10n.coupleAlsoChanges(joinNames(others, l10n.namesAnd)),
               style: context.text.bodySmall?.copyWith(color: kept.muted),
             ),
           Row(

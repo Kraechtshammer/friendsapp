@@ -236,6 +236,35 @@ void main() {
       },
     );
 
+    test('a contact with three people shares one id, no group', () async {
+      final rows = await events.addForPeople(
+        personIds: [anna.id, ben.id, cleo.id],
+        at: t,
+        kind: ContactKind.gamed,
+        direction: ContactDirection.together,
+        source: ContactSource.manual,
+        now: t,
+      );
+      expect(rows.map((e) => e.personId), [anna.id, ben.id, cleo.id]);
+      expect(rows.map((e) => e.sharedId).toSet().single, isNotNull);
+      expect(rows.every((e) => e.groupId == null), isTrue);
+      // Deleting one row removes the whole event.
+      await events.delete(rows.first.id);
+      expect(await db.select(db.contactEvents).get(), isEmpty);
+    });
+
+    test('one person alone is a plain event', () async {
+      final rows = await events.addForPeople(
+        personIds: [anna.id],
+        at: t,
+        kind: ContactKind.gamed,
+        direction: ContactDirection.together,
+        source: ContactSource.manual,
+        now: t,
+      );
+      expect(rows.single.sharedId, isNull);
+    });
+
     test('a group without members stores nothing', () async {
       final couple = await groups.createCouple(anna.id, ben.id);
       await db.delete(db.groupMembers).go();

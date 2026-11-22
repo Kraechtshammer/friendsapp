@@ -1460,6 +1460,30 @@ abstract class AppLocalizations {
   /// **'What'**
   String get logContactWhat;
 
+  /// No description provided for @logContactWith.
+  ///
+  /// In en, this message translates to:
+  /// **'With'**
+  String get logContactWith;
+
+  /// No description provided for @logAddPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Add person'**
+  String get logAddPerson;
+
+  /// No description provided for @logPickPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'Who else was there?'**
+  String get logPickPeople;
+
+  /// No description provided for @namesAnd.
+  ///
+  /// In en, this message translates to:
+  /// **'{rest} and {last}'**
+  String namesAnd(String rest, String last);
+
   /// No description provided for @logKindWrote.
   ///
   /// In en, this message translates to:

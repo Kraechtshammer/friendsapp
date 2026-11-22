@@ -250,3 +250,12 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] "No" closes the notification without opening the app.
 - [ ] Afterwards the person page shows "You wrote" (or "You texted") for today, and the owed reply is gone from Tonight's pick.
 - [ ] Same with the app open in the background.
+
+## One contact with several people (not released yet)
+
+- [ ] Person page, "We were in touch": a "With" row shows the person; "Add person" opens a list with search and tick boxes; Done adds the chips. An added chip can be removed, the first one cannot.
+- [ ] Save with two others ("Played" with Franz and Lucy): "Nice one" shows all three faces and the added-up stamps.
+- [ ] The Timeline tab shows one entry with three faces and all names. Each person's page says "with Franz and Lucy" (the others) on that entry.
+- [ ] The edit sheet of the entry says it also changes the others' timelines; delete removes it for all.
+- [ ] Two saves on the same day ("Played" with Tom, then with Franz and Lucy) stay two entries.
+- [ ] Adding exactly the partner of a couple works as a couple's meeting, as before.

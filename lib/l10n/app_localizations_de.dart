@@ -853,6 +853,20 @@ class AppLocalizationsDe extends AppLocalizations {
   String get logContactWhat => 'Was';
 
   @override
+  String get logContactWith => 'Mit';
+
+  @override
+  String get logAddPerson => 'Person hinzufügen';
+
+  @override
+  String get logPickPeople => 'Wer war noch dabei?';
+
+  @override
+  String namesAnd(String rest, String last) {
+    return '$rest und $last';
+  }
+
+  @override
   String get logKindWrote => 'Geschrieben';
 
   @override

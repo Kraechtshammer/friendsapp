@@ -9,6 +9,7 @@ import '../../domain/birthdays.dart';
 import '../../domain/contact_event.dart';
 import '../../domain/person_timeline.dart';
 import '../../domain/plans.dart';
+import '../../domain/shared_event.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
@@ -54,6 +55,19 @@ class PersonTimelineView extends ConsumerWidget {
         : l10n.coupleWith(ref.shortName(partner));
     String? withPartner(String? groupId) =>
         groupId != null && groupId == couple?.group.id ? withText : null;
+    // A contact with several people at once says "with Franz and Lucy".
+    final all = ref.watch(allContactEventsProvider).value ?? const [];
+    final names = ref.watch(displayNamesProvider);
+    String? withOthers(ContactEvent e) {
+      final who = [
+        for (final id in sharedWith(all, e))
+          if (names[id] != null) names[id]!,
+      ];
+      return who.isEmpty
+          ? withPartner(e.groupId)
+          : l10n.coupleWith(joinNames(who, l10n.namesAnd));
+    }
+
     String? join(Iterable<String?> parts) {
       final text = parts.where((t) => t != null && t.isNotEmpty).join(' · ');
       return text.isEmpty ? null : text;
@@ -117,7 +131,7 @@ class PersonTimelineView extends ConsumerWidget {
                   icon: contactIcon(event),
                   arrow: _arrow(event.direction),
                   title: contactTitle(event, name, l10n),
-                  note: join([withPartner(event.groupId), _note(event.note)]),
+                  note: join([withOthers(event), _note(event.note)]),
                   onTap: () => showContactEntrySheet(context, ref, event),
                 ),
                 // One line per day; tapping edits the newest message.

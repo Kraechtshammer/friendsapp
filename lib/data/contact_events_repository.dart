@@ -118,6 +118,45 @@ class ContactEventsRepository {
     });
   }
 
+  /// A contact with several people at once (gaming with Franz and Lucy):
+  /// one row per person in [personIds] order, all with the same time, kind
+  /// and a new `sharedId`, in one transaction. [groupId] is set only when
+  /// the people are exactly a couple. Each row goes through [add], so each
+  /// person gets their stamp by the one rule. With one person it is a plain
+  /// event (no `sharedId`). Throws an [ArgumentError] if [personIds] is empty.
+  Future<List<ContactEvent>> addForPeople({
+    required List<String> personIds,
+    required DateTime at,
+    required ContactKind kind,
+    required ContactDirection direction,
+    required ContactSource source,
+    String? groupId,
+    String? activity,
+    String? activityIcon,
+    String? note,
+    DateTime? now,
+  }) {
+    if (personIds.isEmpty) throw ArgumentError.value(personIds, 'personIds');
+    final time = now ?? DateTime.now();
+    final sharedId = personIds.length > 1 ? _uuid.v4() : null;
+    return _db.transaction(() async => [
+      for (final id in personIds)
+        await add(
+          personId: id,
+          at: at,
+          kind: kind,
+          direction: direction,
+          source: source,
+          activity: activity,
+          activityIcon: activityIcon,
+          note: note,
+          groupId: sharedId == null ? null : groupId,
+          sharedId: sharedId,
+          now: time,
+        ),
+    ]);
+  }
+
   /// All events of one person, newest first.
   Stream<List<ContactEvent>> watchForPerson(String personId) =>
       (_db.select(_db.contactEvents)

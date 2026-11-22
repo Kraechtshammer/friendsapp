@@ -847,6 +847,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logContactWhat => 'What';
 
   @override
+  String get logContactWith => 'With';
+
+  @override
+  String get logAddPerson => 'Add person';
+
+  @override
+  String get logPickPeople => 'Who else was there?';
+
+  @override
+  String namesAnd(String rest, String last) {
+    return '$rest and $last';
+  }
+
+  @override
   String get logKindWrote => 'Wrote';
 
   @override
