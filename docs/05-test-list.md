@@ -251,7 +251,7 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Afterwards the person page shows "You wrote" (or "You texted") for today, and the owed reply is gone from Tonight's pick.
 - [ ] Same with the app open in the background.
 
-## One contact with several people (not released yet)
+## One contact with several people (in 0.10.3)
 
 - [ ] Person page, "We were in touch": a "With" row shows the person; "Add person" opens a list with search and tick boxes; Done adds the chips. An added chip can be removed, the first one cannot.
 - [ ] Save with two others ("Played" with Franz and Lucy): "Nice one" shows all three faces and the added-up stamps.
