@@ -122,6 +122,8 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 
 **Planned, decided, not built** (to be built in its own session)
 
+- **Overview of who was in touch how long ago** (the developer, 2026-11-22, planned, not designed yet): one place that shows each person and how long ago the last contact was, so the user sees at a glance who has not been in touch for a while. The developer calls it integral. How it looks (own tab, list on People, sort order, link to rhythms) is open and gets decided before building.
+
 - **One entry per day for texting** (the developer, 2026-11-18): built the same day, in 0.10.0 (02-design.md §8). Filter chips on the Timeline tab stay an idea for later.
 
 - **Log a contact that already happened** (the developer, 2026-11-18, 02-design.md §8): one shared sheet (what: wrote, called, met, played; when: today, yesterday or a date; optional activity and next-time line; Save leads to "Nice one"), reachable from a "We were in touch" button on the person page beside "They wrote" and "They called", and from an "Already happened" choice on the Home capture card. A back-dated contact earns its week's stamp and counts for the streak. **Both parts are built and in 0.9.3.**
