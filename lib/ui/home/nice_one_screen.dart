@@ -414,18 +414,15 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
                                     size: 112,
                                   )
                                 : widget.others.isNotEmpty
-                                ? Wrap(
-                                    alignment: WrapAlignment.center,
-                                    spacing: 8,
-                                    runSpacing: 8,
-                                    children: [
-                                      for (final p in [
-                                        widget.person,
-                                        ...widget.others,
-                                      ])
-                                        Avatar.person(p, size: 72),
-                                    ],
-                                  )
+                                ? widget.others.length == 1
+                                      ? CoupleAvatar([
+                                          widget.person,
+                                          ...widget.others,
+                                        ], size: 112)
+                                      : CrowdAvatar([
+                                          widget.person,
+                                          ...widget.others,
+                                        ], size: 72)
                                 : Avatar.person(widget.person, size: 96),
                           ),
                           Text(

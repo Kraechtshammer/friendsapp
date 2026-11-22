@@ -68,3 +68,86 @@ class _RingPainter extends CustomPainter {
   bool shouldRepaint(_RingPainter old) =>
       old.color != color || old.path != path;
 }
+
+/// Three or more faces for a contact with several people, overlapping in a
+/// row like [CoupleAvatar]'s pair, each with a ring in [ringColor]. Shows at
+/// most [max] faces; the rest are one "+n" bubble. [size] is the height of
+/// a face.
+class CrowdAvatar extends StatelessWidget {
+  const CrowdAvatar(
+    this.people, {
+    super.key,
+    this.size = 72,
+    this.max = 4,
+    this.ringColor,
+  });
+
+  final List<Person> people;
+  final double size;
+  final int max;
+  final Color? ringColor;
+
+  static const _ring = 3.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final shown = people.take(max).toList();
+    final more = people.length - shown.length;
+    final ring = ringColor ?? context.kept.ground;
+    final step = size * .62;
+    final count = shown.length + (more > 0 ? 1 : 0);
+    return SizedBox(
+      width: size + step * (count - 1),
+      height: size,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          for (var i = 0; i < shown.length; i++) ...[
+            if (i > 0)
+              Positioned(
+                left: step * i - _ring,
+                top: -_ring,
+                child: CustomPaint(
+                  size: Size.square(size + 2 * _ring),
+                  painter: _RingPainter(
+                    avatarPath(shown[i].avatarShape, size + 2 * _ring),
+                    ring,
+                  ),
+                ),
+              ),
+            Positioned(
+              left: step * i,
+              child: Avatar.person(shown[i], size: size),
+            ),
+          ],
+          if (more > 0)
+            Positioned(
+              left: step * shown.length - _ring,
+              top: -_ring,
+              child: Container(
+                width: size + 2 * _ring,
+                height: size + 2 * _ring,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(color: ring, shape: BoxShape.circle),
+                child: Container(
+                  width: size,
+                  height: size,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: context.kept.surface,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    '+$more',
+                    style: context.text.titleLarge?.copyWith(
+                      color: context.kept.text,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}

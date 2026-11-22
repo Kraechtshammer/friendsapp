@@ -139,22 +139,24 @@ class ContactEventsRepository {
     if (personIds.isEmpty) throw ArgumentError.value(personIds, 'personIds');
     final time = now ?? DateTime.now();
     final sharedId = personIds.length > 1 ? _uuid.v4() : null;
-    return _db.transaction(() async => [
-      for (final id in personIds)
-        await add(
-          personId: id,
-          at: at,
-          kind: kind,
-          direction: direction,
-          source: source,
-          activity: activity,
-          activityIcon: activityIcon,
-          note: note,
-          groupId: sharedId == null ? null : groupId,
-          sharedId: sharedId,
-          now: time,
-        ),
-    ]);
+    return _db.transaction(
+      () async => [
+        for (final id in personIds)
+          await add(
+            personId: id,
+            at: at,
+            kind: kind,
+            direction: direction,
+            source: source,
+            activity: activity,
+            activityIcon: activityIcon,
+            note: note,
+            groupId: sharedId == null ? null : groupId,
+            sharedId: sharedId,
+            now: time,
+          ),
+      ],
+    );
   }
 
   /// All events of one person, newest first.

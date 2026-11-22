@@ -13,6 +13,7 @@ import 'package:kept/ui/home/nice_one_screen.dart';
 import 'package:kept/ui/kept_icon.dart';
 import 'package:kept/ui/material.dart';
 import 'package:kept/ui/people/person_screen.dart';
+import 'package:kept/ui/widgets/couple_avatar.dart';
 
 import 'fake_notifications.dart';
 
@@ -128,6 +129,35 @@ void main() {
     expect(events![0].sharedId, isNotNull);
     expect(events[0].sharedId, events[1].sharedId);
     expect({events[0].personId, events[1].personId}, hasLength(2));
+    await closeDown(tester);
+  });
+
+  testWidgets('Already happened with two more people is one shared event', (
+    tester,
+  ) async {
+    await addPeople(tester, ['Tom', 'Anna', 'Ben']);
+    await start(tester);
+    await tester.tap(find.text('Tom'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Already happened'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Add person'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(ListTile, 'Anna'));
+    await tester.tap(find.widgetWithText(ListTile, 'Ben'));
+    await tester.pump();
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    expect(find.text('Nice one!'), findsOneWidget);
+    expect(find.byType(CrowdAvatar), findsOneWidget);
+    final events = await tester.runAsync(
+      () => services.contactEventsFor(demo: false).watchAll().first,
+    );
+    expect(events, hasLength(3));
+    expect({for (final e in events!) e.sharedId}, hasLength(1));
+    expect(events.first.sharedId, isNotNull);
     await closeDown(tester);
   });
 

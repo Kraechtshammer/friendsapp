@@ -259,3 +259,11 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] The edit sheet of the entry says it also changes the others' timelines; delete removes it for all.
 - [ ] Two saves on the same day ("Played" with Tom, then with Franz and Lucy) stay two entries.
 - [ ] Adding exactly the partner of a couple works as a couple's meeting, as before.
+
+## With row on the capture card (not released yet)
+
+- [ ] Capture card: choose a person, tap "Already happened". A "With" row shows with that person and "Add person".
+- [ ] Add two people, save. "Nice one" shows three overlapping faces; the Timeline tab shows one shared contact.
+- [ ] Add five people in total. "Nice one" shows four faces and a "+1" bubble.
+- [ ] Choose a couple, "Already happened": no "With" row, and saving works as before.
+- [ ] Change the chosen person: the added people are cleared.

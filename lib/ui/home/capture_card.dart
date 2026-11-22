@@ -9,6 +9,7 @@ import '../../l10n/labels.dart';
 import '../common.dart';
 import '../material.dart';
 import '../kept_icon.dart';
+import '../people/with_row.dart';
 import '../widgets/activity_icon_picker.dart';
 import '../widgets/choice_chips.dart';
 import '../widgets/grey_button.dart';
@@ -49,6 +50,7 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
   /// "Already happened": the card logs a contact instead of a thought.
   var _happened = false;
   var _day = const PastDay.today();
+  final _others = <Person>[];
 
   bool get _hasIcon =>
       _kind == IntentionKind.meet || _kind == IntentionKind.game;
@@ -67,6 +69,7 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
     final kind = contactKindFor(_kind);
     final at = _day.at(ref.read(clockProvider)());
     final icon = _iconName;
+    final others = subject.isCouple ? const <Person>[] : List.of(_others);
     FocusScope.of(context).unfocus();
     final nav = context;
     _note.clear();
@@ -77,6 +80,7 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
       _when = const When.none();
       _happened = false;
       _day = const PastDay.today();
+      _others.clear();
     });
     await completeLoggedContact(
       nav,
@@ -85,6 +89,7 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
       kind: kind,
       at: at,
       couple: subject.couple,
+      withPeople: others,
       thought: note,
       activityIcon: icon,
     );
@@ -195,6 +200,7 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
                 final isCouple = couples.any((c) => c.group.id == id);
                 // A couple is met together; the kind follows the choice
                 // until the user picks one.
+                if (id != _personId) _others.clear();
                 if (isCouple && !wasCouple) _kind = IntentionKind.meet;
                 if (!isCouple && wasCouple) _kind = IntentionKind.write;
                 _personId = id;
@@ -209,12 +215,22 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
                 value: _kind,
                 onChanged: (k) => setState(() => _kind = k),
               ),
-              if (_happened)
+              if (_happened) ...[
+                if (!selected.isCouple)
+                  WithRow(
+                    person: selected.person,
+                    others: _others,
+                    onChanged: (list) => setState(() {
+                      _others
+                        ..clear()
+                        ..addAll(list);
+                    }),
+                  ),
                 PastDayChips(
                   value: _day,
                   onChanged: (d) => setState(() => _day = d),
-                )
-              else
+                ),
+              ] else
                 WhenPicker(
                   value: _when,
                   fieldColor: kept.ground,
