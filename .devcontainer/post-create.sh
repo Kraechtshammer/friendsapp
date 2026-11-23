@@ -20,6 +20,8 @@ if [ -f pubspec.yaml ]; then
 fi
 # Commit subjects need a type prefix (Feature:, Bugfix:, ...), see CLAUDE.md.
 step "Enabling the repo's git hooks" git config core.hooksPath .githooks
+# Debug builds keep their signature across rebuilds, see the script.
+step "Keeping the debug signing key on the volume" bash .devcontainer/debug-key.sh
 
 if [ ${#failed[@]} -gt 0 ]; then
   echo >&2
