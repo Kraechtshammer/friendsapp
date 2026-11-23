@@ -103,3 +103,5 @@ Added on 2026-11-18 for meetup activities (drafts, the board script and the canv
 Still to draw for the app: the icons for anything new that milestones bring (idea or note, treat types, "they wrote", voice message).
 
 Added on 2026-11-23 (drafts and board in `docs/concepts/activity-icons-v2/`; the developer chose swimmer-c, racket-c and dancer-d): swimmer (teal crawl figure over two blue waves), racket (green tilted oval frame, slate handle that stops at the frame, yellow ball), dancer (a couple, pink and yellow, leaning in with raised joined hands; each figure's limbs in its own darker tone).
+
+Added on 2026-11-23 (drafts in `docs/concepts/activity-icons-v3/`; the developer chose bike-a, football-b, trip-a): bike (orange frame, slate wheels), football (red figure kicking a small white ball), suitcase (purple case with darker straps, slate handle and wheels; for a trip).

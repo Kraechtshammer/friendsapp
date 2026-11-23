@@ -77,7 +77,10 @@ enum KeptIcons {
   // More activities (02-design.md §8, 2026-11-23).
   swimmer,
   racket,
-  dancer;
+  dancer,
+  bike,
+  football,
+  suitcase;
 
   String get asset => 'assets/icons/$name.svg';
 }

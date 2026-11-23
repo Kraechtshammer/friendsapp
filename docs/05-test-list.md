@@ -285,4 +285,4 @@ A real update needs two release-signed builds: install one release, then a newer
 
 ## More activity icons (not released)
 
-- [ ] The activity grid shows swimmer, racket and dancer after the dumbbell; picked on a plan, they show on Home and the Timeline tab.
+- [ ] The activity grid shows swimmer, racket, dancer, bike, football and suitcase after the dumbbell, in six full rows; picked on a plan, they show on Home and the Timeline tab.
