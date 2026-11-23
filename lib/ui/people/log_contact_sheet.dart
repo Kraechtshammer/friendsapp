@@ -9,7 +9,7 @@ import '../../l10n/labels.dart';
 import '../common.dart';
 import '../home/nice_one_screen.dart';
 import '../material.dart';
-import '../widgets/choice_chips.dart';
+import '../widgets/kind_tiles.dart';
 import '../widgets/main_button.dart';
 import '../widgets/past_day_picker.dart';
 import '../widgets/section_label.dart';
@@ -67,26 +67,22 @@ class _LogContactSheetState extends ConsumerState<_LogContactSheet> {
     List.of(_others),
   ));
 
-  List<ChipOption<ContactKind>> _kinds(AppLocalizations l10n) => [
-    ChipOption(
+  List<KindOption<ContactKind>> _kinds(AppLocalizations l10n) => [
+    KindOption(
       ContactKind.wrote,
+      kindIcon(IntentionKind.write),
       l10n.logKindWrote,
-      icon: kindIcon(IntentionKind.write),
     ),
-    ChipOption(
+    KindOption(
       ContactKind.called,
+      kindIcon(IntentionKind.call),
       l10n.logKindCalled,
-      icon: kindIcon(IntentionKind.call),
     ),
-    ChipOption(
-      ContactKind.met,
-      l10n.logKindMet,
-      icon: kindIcon(IntentionKind.meet),
-    ),
-    ChipOption(
+    KindOption(ContactKind.met, kindIcon(IntentionKind.meet), l10n.logKindMet),
+    KindOption(
       ContactKind.gamed,
+      kindIcon(IntentionKind.game),
       l10n.logKindGamed,
-      icon: kindIcon(IntentionKind.game),
     ),
   ];
 
@@ -110,11 +106,13 @@ class _LogContactSheetState extends ConsumerState<_LogContactSheet> {
             style: context.text.titleLarge?.copyWith(color: kept.text),
           ),
           SectionLabel(l10n.logContactWhat),
-          ChoiceChips<ContactKind>(
+          KindTiles<ContactKind>(
             options: _kinds(l10n),
             value: _kind,
             onChanged: (k) => setState(() => _kind = k),
           ),
+          SectionLabel(l10n.whenSection),
+          PastDayChips(value: _day, onChanged: (d) => setState(() => _day = d)),
           WithRow(
             person: widget.person,
             others: _others,
@@ -124,8 +122,6 @@ class _LogContactSheetState extends ConsumerState<_LogContactSheet> {
                 ..addAll(list);
             }),
           ),
-          SectionLabel(l10n.whenSection),
-          PastDayChips(value: _day, onChanged: (d) => setState(() => _day = d)),
           MainButton(label: l10n.save, onPressed: _save),
         ],
       ),

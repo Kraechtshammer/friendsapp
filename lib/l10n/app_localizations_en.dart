@@ -873,10 +873,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logKindGamed => 'Played';
 
   @override
-  String get logDayYesterday => 'Yesterday';
+  String get logDayYesterdayShort => 'Yday';
 
   @override
-  String get captureAlreadyHappened => 'Already happened';
+  String get logDayPickShort => 'Pick';
+
+  @override
+  String pickerChosen(int count) {
+    return '$count chosen';
+  }
+
+  @override
+  String get capturePickPeople => 'Pick people';
+
+  @override
+  String get logDayYesterday => 'Yesterday';
 
   @override
   String get logDayPick => 'Pick a day';

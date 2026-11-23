@@ -6,6 +6,7 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
 
 - Phase: **implement**. The app is called **Kept.** with the full stop (running text may write Kept). App ID `de.gartenpa.kept`; debug builds use `de.gartenpa.kept.debug`. Repository and folder are `friendsapp`.
 - **M0 to M10 are all built.** Everything is released; the newest release is 0.10.4.
+- **Not released yet (2026-11-23):** the new logging look (kind tiles, five day badges, grid people picker, faces row, Done/plan chips on the capture card, one thought per person); see 02-design.md §8. Tests and analyze pass; not tried on the phone.
 - **Released** (tags `v0.1.0` to `v0.10.4`, 2026-11-16 to 2026-11-22, no version skipped):
   - 0.1.0: M1, people, contacts import, "Open chat".
   - 0.2.0: M2 and M3, capture, the evening question, Tonight's pick, "Nice one".

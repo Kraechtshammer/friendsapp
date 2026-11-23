@@ -267,3 +267,14 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Add five people in total. "Nice one" shows four faces and a "+1" bubble.
 - [ ] Choose a couple, "Already happened": no "With" row, and saving works as before.
 - [ ] Change the chosen person: the added people are cleared.
+
+## New logging look (not released yet)
+
+- [ ] "We were in touch": four icon tiles, only the chosen one shows its label; five day badges in one row (German "Gestern" fits); the calendar badge opens the date picker and then shows the picked day.
+- [ ] "With" row: the person first, a dashed "+" opens the grid picker (search, ring and check, "n chosen", Done); tapping an added face removes it.
+- [ ] Home card, nothing chosen: up to four faded suggested faces and "More"; Save is greyed.
+- [ ] Tap faces: chosen ones move to the front; the row never scrolls. "More" adds more people.
+- [ ] Soon, Later, Date, When… fit in one row with Done; Save reads "Save for Franz and Lucy"; each person gets their own thought; a couple stays one thought.
+- [ ] Done: kind labels turn to Wrote, Called, Met, Played; the five day badges show; Save logs one shared contact.
+- [ ] Dark theme: tiles, badges and faces are readable.
+

@@ -71,19 +71,18 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('Already happened logs a contact for yesterday', (tester) async {
+  testWidgets('Done logs a contact for yesterday', (tester) async {
     await addPeople(tester, ['Tom Berger']);
     await start(tester);
     await tester.enterText(find.byType(TextField), 'Bouldering');
     await tester.tap(find.text('Tom'));
     await tester.pumpAndSettle();
     expect(find.text('Date'), findsOneWidget);
-    await tester.tap(find.text('Already happened'));
+    await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
-    expect(find.text('Date'), findsNothing);
     expect(find.text('Save for Tom'), findsNothing);
-    await tester.tap(find.text('Meet'));
-    await tester.tap(find.text('Yesterday'));
+    await tester.tap(find.byTooltip('Met'));
+    await tester.tap(find.text('YDAY'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Save'));
     await tester.pumpAndSettle();
@@ -105,9 +104,7 @@ void main() {
     await closeDown(tester);
   });
 
-  testWidgets('Already happened for a couple stores one shared event', (
-    tester,
-  ) async {
+  testWidgets('Done for a couple stores one shared event', (tester) async {
     await tester.runAsync(() async {
       final people = services.peopleFor(demo: false);
       final anna = await people.add(name: 'Anna', closeness: Closeness.close);
@@ -117,7 +114,7 @@ void main() {
     await start(tester);
     await tester.tap(find.textContaining('&'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Already happened'));
+    await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Save'));
     await tester.pumpAndSettle();
@@ -132,21 +129,16 @@ void main() {
     await closeDown(tester);
   });
 
-  testWidgets('Already happened with two more people is one shared event', (
-    tester,
-  ) async {
+  testWidgets('Done with two more people is one shared event', (tester) async {
     await addPeople(tester, ['Tom', 'Anna', 'Ben']);
     await start(tester);
     await tester.tap(find.text('Tom'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Already happened'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Add person'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(ListTile, 'Anna'));
-    await tester.tap(find.widgetWithText(ListTile, 'Ben'));
-    await tester.pump();
     await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Anna'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ben'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Save'));
     await tester.pumpAndSettle();
@@ -161,16 +153,14 @@ void main() {
     await closeDown(tester);
   });
 
-  testWidgets('turning Already happened off brings the thought back', (
-    tester,
-  ) async {
+  testWidgets('turning Done off brings the thought back', (tester) async {
     await addPeople(tester, ['Tom Berger']);
     await start(tester);
     await tester.tap(find.text('Tom'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Already happened'));
+    await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Already happened'));
+    await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
     expect(find.text('Date'), findsOneWidget);
     await saveFor(tester, 'Tom');
@@ -179,6 +169,45 @@ void main() {
       () => services.intentionsFor(demo: false).watchOpen().first,
     );
     expect(open, hasLength(1));
+    await closeDown(tester);
+  });
+
+  testWidgets('a plan for several people is one thought each', (tester) async {
+    await addPeople(tester, ['Tom', 'Anna', 'Ben']);
+    await start(tester);
+    await tester.enterText(find.byType(TextField), 'Climbing');
+    await tester.tap(find.text('Tom'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Anna'));
+    await tester.pumpAndSettle();
+    expect(find.text('Save for Tom and Anna'), findsOneWidget);
+    // The plan forms of the kinds, the past forms after Done.
+    expect(find.text('Write'), findsOneWidget);
+    await tester.tap(find.text('Soon'));
+    await tester.pumpAndSettle();
+    await saveFor(tester, 'Tom and Anna');
+    expect(find.text('Saved for Tom and Anna.'), findsOneWidget);
+    final open = await tester.runAsync(
+      () => services.intentionsFor(demo: false).watchOpen().first,
+    );
+    expect(open, hasLength(2));
+    expect({for (final i in open!) i.personId}, hasLength(2));
+    await closeDown(tester);
+  });
+
+  testWidgets('Done shows the past form of the kind and the day badges', (
+    tester,
+  ) async {
+    await addPeople(tester, ['Tom']);
+    await start(tester);
+    await tester.tap(find.text('Tom'));
+    await tester.pumpAndSettle();
+    expect(find.text('YDAY'), findsNothing);
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    expect(find.text('Wrote'), findsOneWidget);
+    expect(find.text('YDAY'), findsOneWidget);
+    expect(find.text('TODAY'), findsOneWidget);
     await closeDown(tester);
   });
 
@@ -193,7 +222,7 @@ void main() {
     await tester.enterText(find.byType(TextField), 'saw a bouldering video');
     await tester.tap(find.text('Tom'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Call'));
+    await tester.tap(find.byTooltip('Call'));
     await tester.pumpAndSettle();
     await saveFor(tester, 'Tom');
 
@@ -217,7 +246,7 @@ void main() {
     await tester.tap(find.byTooltip('Edit thought').last);
     await tester.pumpAndSettle();
     expect(find.text('Edit thought'), findsOneWidget);
-    await tester.tap(find.text('Save'));
+    await tester.tap(find.text('Save').last);
     await tester.pumpAndSettle();
     expect(find.text('Edit thought'), findsNothing);
 
@@ -264,7 +293,7 @@ void main() {
     await tester.enterText(find.byType(TextField), 'bouldering');
     await tester.tap(find.text('Tom'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Meet'));
+    await tester.tap(find.byTooltip('Meet'));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Icon for the activity'));
     await tester.pumpAndSettle();
@@ -322,8 +351,11 @@ void main() {
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField).last, 'somm');
     await tester.pumpAndSettle();
-    expect(find.byType(ListTile), findsOneWidget);
-    await tester.tap(find.text('Eve Sommer'));
+    final sheet = find.byType(BottomSheet);
+    await tester.tap(find.descendant(of: sheet, matching: find.text('Eve')));
+    await tester.pumpAndSettle();
+    expect(find.text('1 chosen'), findsOneWidget);
+    await tester.tap(find.descendant(of: sheet, matching: find.text('Done')));
     await tester.pumpAndSettle();
     expect(find.text('Save for Eve'), findsOneWidget);
     await saveFor(tester, 'Eve');

@@ -1,29 +1,32 @@
-import '../../data/database.dart';
 import '../common.dart';
 import '../material.dart';
-import '../widgets/avatar.dart';
+import '../widgets/face_blob.dart';
 import '../widgets/kept_text_field.dart';
 import '../widgets/main_button.dart';
 
-/// A bottom sheet to tick several of [people] (with a search field).
-/// Returns the ticked people in the order of [people], or null when closed
-/// without Done.
-Future<List<Person>?> showPeopleMultiPicker(
+/// A bottom sheet over the screen with everyone in a grid like the People
+/// tab, a search field and a counter. Tapped people get a ring and a check;
+/// [initial] holds the ids chosen already. Returns the chosen ones in the
+/// order of [choices], or null when closed without Done.
+Future<List<PersonChoice>?> showPeopleMultiPicker(
   BuildContext context,
-  List<Person> people, {
+  List<PersonChoice> choices, {
   required String title,
-}) => showModalBottomSheet<List<Person>>(
+  Set<String> initial = const {},
+}) => showModalBottomSheet<List<PersonChoice>>(
   context: context,
   isScrollControlled: true,
   showDragHandle: true,
-  builder: (_) => _PeopleMultiPicker(people, title),
+  backgroundColor: context.kept.surface,
+  builder: (_) => _PeopleMultiPicker(choices, title, initial),
 );
 
 class _PeopleMultiPicker extends StatefulWidget {
-  const _PeopleMultiPicker(this.people, this.title);
+  const _PeopleMultiPicker(this.choices, this.title, this.initial);
 
-  final List<Person> people;
+  final List<PersonChoice> choices;
   final String title;
+  final Set<String> initial;
 
   @override
   State<_PeopleMultiPicker> createState() => _PeopleMultiPickerState();
@@ -31,7 +34,7 @@ class _PeopleMultiPicker extends StatefulWidget {
 
 class _PeopleMultiPickerState extends State<_PeopleMultiPicker> {
   final _search = TextEditingController();
-  final _ticked = <String>{};
+  late final _chosen = {...widget.initial};
 
   @override
   void dispose() {
@@ -44,24 +47,37 @@ class _PeopleMultiPickerState extends State<_PeopleMultiPicker> {
     final l10n = context.l10n;
     final query = _search.text.trim().toLowerCase();
     final matches = [
-      for (final p in widget.people)
-        if (p.name.toLowerCase().contains(query) ||
-            (p.nickname ?? '').toLowerCase().contains(query))
-          p,
+      for (final c in widget.choices)
+        if (c.members.any(
+          (p) =>
+              p.name.toLowerCase().contains(query) ||
+              (p.nickname ?? '').toLowerCase().contains(query),
+        ))
+          c,
     ];
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: SizedBox(
-        height: MediaQuery.sizeOf(context).height * .7,
+        height: MediaQuery.sizeOf(context).height * .75,
         child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-              child: Text(
-                widget.title,
-                style: context.text.titleLarge?.copyWith(
-                  color: context.kept.text,
-                ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.title,
+                      style: context.text.titleLarge?.copyWith(
+                        color: context.kept.text,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    l10n.pickerChosen(_chosen.length),
+                    style: context.text.bodyMedium,
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -80,22 +96,26 @@ class _PeopleMultiPickerState extends State<_PeopleMultiPicker> {
                         style: context.text.bodyMedium,
                       ),
                     )
-                  : ListView(
-                      children: [
-                        for (final p in matches)
-                          CheckboxListTile(
-                            value: _ticked.contains(p.id),
-                            secondary: Avatar.person(p, size: 40),
-                            title: Text(p.name, style: context.text.bodyLarge),
-                            onChanged: (on) => setState(() {
-                              if (on ?? false) {
-                                _ticked.add(p.id);
-                              } else {
-                                _ticked.remove(p.id);
-                              }
-                            }),
-                          ),
-                      ],
+                  : SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Wrap(
+                        alignment: WrapAlignment.start,
+                        spacing: 4,
+                        runSpacing: 10,
+                        children: [
+                          for (final c in matches)
+                            FaceBlob(
+                              label: c.label,
+                              face: c.face(54),
+                              size: 54,
+                              width: 76,
+                              selected: _chosen.contains(c.id),
+                              onTap: () => setState(() {
+                                if (!_chosen.add(c.id)) _chosen.remove(c.id);
+                              }),
+                            ),
+                        ],
+                      ),
                     ),
             ),
             Padding(
@@ -103,8 +123,8 @@ class _PeopleMultiPickerState extends State<_PeopleMultiPicker> {
               child: MainButton(
                 label: l10n.done,
                 onPressed: () => Navigator.of(context).pop([
-                  for (final p in widget.people)
-                    if (_ticked.contains(p.id)) p,
+                  for (final c in widget.choices)
+                    if (_chosen.contains(c.id)) c,
                 ]),
               ),
             ),

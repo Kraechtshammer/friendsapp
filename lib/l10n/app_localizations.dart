@@ -1508,17 +1508,35 @@ abstract class AppLocalizations {
   /// **'Played'**
   String get logKindGamed;
 
+  /// No description provided for @logDayYesterdayShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Yday'**
+  String get logDayYesterdayShort;
+
+  /// No description provided for @logDayPickShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick'**
+  String get logDayPickShort;
+
+  /// No description provided for @pickerChosen.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} chosen'**
+  String pickerChosen(int count);
+
+  /// No description provided for @capturePickPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick people'**
+  String get capturePickPeople;
+
   /// No description provided for @logDayYesterday.
   ///
   /// In en, this message translates to:
   /// **'Yesterday'**
   String get logDayYesterday;
-
-  /// No description provided for @captureAlreadyHappened.
-  ///
-  /// In en, this message translates to:
-  /// **'Already happened'**
-  String get captureAlreadyHappened;
 
   /// No description provided for @logDayPick.
   ///

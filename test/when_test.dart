@@ -181,7 +181,6 @@ void main() {
         // The chip now shows the day, and a Time chip offers the time.
         expect(find.text('Fri 20 Nov'), findsOneWidget);
         expect(find.text('Time'), findsOneWidget);
-        expect(find.text('Soon'), findsNothing);
       });
       expect(whenFields(i), (DateTime(2026, 11, 20), null, null));
       expect(When.date(i.date!).hasTime, isFalse);
@@ -345,7 +344,8 @@ void main() {
       await tester.tap(find.text('Date').last);
       await tester.pumpAndSettle();
       await pickDay(tester, '20');
-      await tapText(tester, 'Save');
+      await tester.tap(find.text('Save').last);
+      await tester.pumpAndSettle();
       expect(find.text('Edit thought'), findsNothing);
 
       final i = (await all(tester)).single;
@@ -365,7 +365,8 @@ void main() {
       // Later is chosen; tap again to clear.
       await tester.tap(find.text('Later').last);
       await tester.pumpAndSettle();
-      await tapText(tester, 'Save');
+      await tester.tap(find.text('Save').last);
+      await tester.pumpAndSettle();
       final i = (await all(tester)).single;
       expect(whenFields(i), (null, null, null));
       await closeDown(tester);
@@ -380,7 +381,8 @@ void main() {
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField).last, '  when it is warm ');
       await tester.pump();
-      await tapText(tester, 'Save');
+      await tester.tap(find.text('Save').last);
+      await tester.pumpAndSettle();
       expect(whenFields((await all(tester)).single), (
         null,
         Horizon.whenCondition,

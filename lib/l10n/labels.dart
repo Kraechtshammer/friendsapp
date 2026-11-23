@@ -95,6 +95,15 @@ String kindLabel(IntentionKind kind, AppLocalizations l10n) => switch (kind) {
   IntentionKind.game => l10n.kindGame,
 };
 
+/// The kind in the past ("Wrote"), for a contact that already happened.
+String pastKindLabel(IntentionKind kind, AppLocalizations l10n) =>
+    switch (kind) {
+      IntentionKind.write => l10n.logKindWrote,
+      IntentionKind.call => l10n.logKindCalled,
+      IntentionKind.meet => l10n.logKindMet,
+      IntentionKind.game => l10n.logKindGamed,
+    };
+
 KeptIcons kindIcon(IntentionKind kind) => switch (kind) {
   IntentionKind.write => KeptIcons.chat,
   IntentionKind.call => KeptIcons.phone,

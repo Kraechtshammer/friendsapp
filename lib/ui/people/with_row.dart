@@ -2,15 +2,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../data/database.dart';
+import '../../domain/display_name.dart';
 import '../common.dart';
 import '../material.dart';
 import '../widgets/avatar.dart';
+import '../widgets/face_blob.dart';
 import '../widgets/section_label.dart';
 import 'people_multi_picker.dart';
 
-/// The "With" label and chips of a contact with several people at once:
-/// [person] (fixed), the [others] (removable) and "Add person". The owner
-/// keeps the list; every change goes out through [onChanged].
+/// The "With" label and faces of a contact with several people at once:
+/// [person] first and fixed, the [others] (tap to remove) and a dashed "+"
+/// that opens the picker. The owner keeps the list; every change goes out
+/// through [onChanged].
 class WithRow extends ConsumerWidget {
   const WithRow({
     super.key,
@@ -24,18 +27,19 @@ class WithRow extends ConsumerWidget {
   final ValueChanged<List<Person>> onChanged;
 
   Future<void> _add(BuildContext context, WidgetRef ref) async {
-    final taken = {person.id, for (final p in others) p.id};
-    final free = [
+    final names = ref.read(displayNamesProvider);
+    final choices = [
       for (final p in ref.read(peopleProvider).value ?? const <Person>[])
-        if (!taken.contains(p.id)) p,
+        if (p.id != person.id) PersonChoice(p.id, shortNameIn(names, p), p),
     ];
     final picked = await showPeopleMultiPicker(
       context,
-      free,
+      choices,
       title: context.l10n.logPickPeople,
+      initial: {for (final p in others) p.id},
     );
     if (picked == null || !context.mounted) return;
-    onChanged([...others, ...picked]);
+    onChanged([for (final c in picked) c.person]);
   }
 
   @override
@@ -43,30 +47,30 @@ class WithRow extends ConsumerWidget {
     final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: 14,
+      spacing: 10,
       children: [
         SectionLabel(l10n.logContactWith),
         Wrap(
-          spacing: 8,
+          spacing: 4,
           runSpacing: 8,
           children: [
-            InputChip(
-              avatar: Avatar.person(person, size: 24),
-              label: Text(ref.readShortName(person)),
+            FaceBlob(
+              label: ref.readShortName(person),
+              face: Avatar.person(person),
             ),
             for (final p in others)
-              InputChip(
-                avatar: Avatar.person(p, size: 24),
-                label: Text(ref.readShortName(p)),
-                onDeleted: () => onChanged([
+              FaceBlob(
+                label: ref.readShortName(p),
+                face: Avatar.person(p),
+                selected: true,
+                onTap: () => onChanged([
                   for (final o in others)
                     if (o != p) o,
                 ]),
               ),
-            ActionChip(
-              avatar: const Icon(Icons.add_rounded, size: 18),
-              label: Text(l10n.logAddPerson),
-              onPressed: () => _add(context, ref),
+            AddFaceBlob(
+              label: l10n.logAddPerson,
+              onTap: () => _add(context, ref),
             ),
           ],
         ),

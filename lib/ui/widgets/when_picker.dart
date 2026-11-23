@@ -4,9 +4,11 @@ import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../domain/intention.dart';
 import '../../domain/timeline.dart';
+import '../../l10n/app_localizations.dart';
 import '../../l10n/labels.dart';
 import '../common.dart';
 import '../material.dart';
+import '../kept_icon.dart';
 import 'kept_text_field.dart';
 
 /// Asks for a day with the date picker. The day lies between today and the
@@ -49,7 +51,13 @@ class WhenPicker extends ConsumerStatefulWidget {
     required this.value,
     required this.onChanged,
     this.fieldColor,
+    this.leading,
   });
+
+  /// With [leading] the picker is the compact Home card row: [leading] (the
+  /// "Done" chip), Soon, Later, Date with a calendar icon and When…, all in
+  /// one row of equal chips. The time chip then goes on a second line.
+  final Widget? leading;
 
   final When value;
   final ValueChanged<When> onChanged;
@@ -112,10 +120,71 @@ class _WhenPickerState extends ConsumerState<WhenPicker> {
     );
   }
 
+  Widget _compact(AppLocalizations l10n, DateTime? date) {
+    Widget chip(Widget c) => Expanded(child: c);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 8,
+      children: [
+        Row(
+          spacing: 6,
+          children: [
+            chip(widget.leading!),
+            for (final h in [Horizon.soon, Horizon.later])
+              chip(
+                SmallChip(
+                  label: horizonLabel(h, l10n),
+                  selected: _v.horizon == h,
+                  onTap: () => _horizon(h),
+                  fit: true,
+                ),
+              ),
+            chip(
+              SmallChip(
+                label: date == null ? l10n.whenDate : l10n.dateShort(date),
+                icon: KeptIcons.calendar,
+                selected: date != null,
+                onTap: _date,
+                fit: true,
+              ),
+            ),
+            chip(
+              SmallChip(
+                label: horizonLabel(Horizon.whenCondition, l10n),
+                selected: _v.horizon == Horizon.whenCondition,
+                onTap: () => _horizon(Horizon.whenCondition),
+                fit: true,
+              ),
+            ),
+          ],
+        ),
+        if (date != null)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: SmallChip(
+              label: _v.hasTime ? l10n.timeShort(date) : l10n.whenAddTime,
+              selected: _v.hasTime,
+              onTap: _time,
+            ),
+          ),
+        if (_v.horizon == Horizon.whenCondition)
+          KeptTextField(
+            controller: _condition,
+            hint: l10n.whenConditionHint,
+            fillColor: widget.fieldColor,
+            onChanged: (text) => widget.onChanged(
+              When.horizon(Horizon.whenCondition, condition: text),
+            ),
+          ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final date = _v.date;
+    if (widget.leading != null) return _compact(l10n, date);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: 8,
@@ -166,7 +235,15 @@ class SmallChip extends StatelessWidget {
     required this.label,
     required this.selected,
     required this.onTap,
+    this.icon,
+    this.fit = false,
   });
+
+  /// A small icon before the label.
+  final KeptIcons? icon;
+
+  /// Shrinks the label to the width the chip is given.
+  final bool fit;
 
   final String label;
   final bool selected;
@@ -176,6 +253,21 @@ class SmallChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final kept = context.kept;
     final shape = BorderRadius.circular(14);
+    final content = Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 4,
+      children: [
+        if (icon != null) KeptIcon(icon!, size: 16),
+        Text(
+          label,
+          maxLines: 1,
+          style: context.text.labelLarge?.copyWith(
+            fontSize: 14,
+            color: selected ? KeptColors.onAccent : kept.text,
+          ),
+        ),
+      ],
+    );
     return Semantics(
       selected: selected,
       button: true,
@@ -191,16 +283,12 @@ class SmallChip extends StatelessWidget {
           child: SizedBox(
             height: 36,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: EdgeInsets.symmetric(horizontal: fit ? 4 : 12),
               child: Center(
                 widthFactor: 1,
-                child: Text(
-                  label,
-                  style: context.text.labelLarge?.copyWith(
-                    fontSize: 14,
-                    color: selected ? KeptColors.onAccent : kept.text,
-                  ),
-                ),
+                child: fit
+                    ? FittedBox(fit: BoxFit.scaleDown, child: content)
+                    : content,
               ),
             ),
           ),

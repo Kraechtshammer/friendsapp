@@ -879,10 +879,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get logKindGamed => 'Gezockt';
 
   @override
-  String get logDayYesterday => 'Gestern';
+  String get logDayYesterdayShort => 'Gestern';
 
   @override
-  String get captureAlreadyHappened => 'Schon passiert';
+  String get logDayPickShort => 'Wählen';
+
+  @override
+  String pickerChosen(int count) {
+    return '$count gewählt';
+  }
+
+  @override
+  String get capturePickPeople => 'Leute wählen';
+
+  @override
+  String get logDayYesterday => 'Gestern';
 
   @override
   String get logDayPick => 'Tag wählen';
