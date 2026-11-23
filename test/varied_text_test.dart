@@ -4,7 +4,7 @@ import 'package:kept/ui/varied_text.dart';
 
 void main() {
   for (final locale in AppLocalizations.supportedLocales) {
-    test('every rotating text has six different variants ($locale)', () {
+    test('every rotating text has twelve different variants ($locale)', () {
       final l10n = lookupAppLocalizations(locale);
       for (final texts in [
         l10n.niceOneTitles,
@@ -14,7 +14,7 @@ void main() {
         l10n.ideaTextHints,
         l10n.whenConditionHints,
       ]) {
-        expect(texts.toSet(), hasLength(6), reason: texts.first);
+        expect(texts.toSet(), hasLength(12), reason: texts.first);
       }
     });
   }

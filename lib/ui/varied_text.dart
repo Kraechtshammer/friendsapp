@@ -30,6 +30,12 @@ extension VariedTexts on AppLocalizations {
     niceOneTitle4,
     niceOneTitle5,
     niceOneTitle6,
+    niceOneTitle7,
+    niceOneTitle8,
+    niceOneTitle9,
+    niceOneTitle10,
+    niceOneTitle11,
+    niceOneTitle12,
   ];
 
   List<String> get niceOneSubtitles => [
@@ -39,6 +45,12 @@ extension VariedTexts on AppLocalizations {
     niceOneSubtitle4,
     niceOneSubtitle5,
     niceOneSubtitle6,
+    niceOneSubtitle7,
+    niceOneSubtitle8,
+    niceOneSubtitle9,
+    niceOneSubtitle10,
+    niceOneSubtitle11,
+    niceOneSubtitle12,
   ];
 
   List<String> get captureHints => [
@@ -48,6 +60,12 @@ extension VariedTexts on AppLocalizations {
     captureHint4,
     captureHint5,
     captureHint6,
+    captureHint7,
+    captureHint8,
+    captureHint9,
+    captureHint10,
+    captureHint11,
+    captureHint12,
   ];
 
   List<String> get nextTimeHints => [
@@ -57,6 +75,12 @@ extension VariedTexts on AppLocalizations {
     nextTimeHint4,
     nextTimeHint5,
     nextTimeHint6,
+    nextTimeHint7,
+    nextTimeHint8,
+    nextTimeHint9,
+    nextTimeHint10,
+    nextTimeHint11,
+    nextTimeHint12,
   ];
 
   List<String> get ideaTextHints => [
@@ -66,6 +90,12 @@ extension VariedTexts on AppLocalizations {
     ideaTextHint4,
     ideaTextHint5,
     ideaTextHint6,
+    ideaTextHint7,
+    ideaTextHint8,
+    ideaTextHint9,
+    ideaTextHint10,
+    ideaTextHint11,
+    ideaTextHint12,
   ];
 
   List<String> get whenConditionHints => [
@@ -75,5 +105,11 @@ extension VariedTexts on AppLocalizations {
     whenConditionHint4,
     whenConditionHint5,
     whenConditionHint6,
+    whenConditionHint7,
+    whenConditionHint8,
+    whenConditionHint9,
+    whenConditionHint10,
+    whenConditionHint11,
+    whenConditionHint12,
   ];
 }
