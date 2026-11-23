@@ -278,16 +278,16 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Done: kind labels turn to Wrote, Called, Met, Played; the five day badges show; Save logs one shared contact.
 - [ ] Dark theme: tiles, badges and faces are readable.
 
-## Rotating texts (not released)
+## Rotating texts (in 0.10.6)
 
 - [ ] Finish a few thoughts: the "Nice one" heading and line change between times, and the line fits under the heading (also in German).
 - [ ] Open the capture card, a new idea, "Nice one" and "When…" a few times: the grey example text in the field changes and is never cut off.
 
-## More activity icons (not released)
+## More activity icons (in 0.10.6)
 
 - [ ] The activity grid shows swimmer, racket, dancer, bike, football and suitcase after the dumbbell, in six full rows; picked on a plan, they show on Home and the Timeline tab.
 
-## People picker sections (not released)
+## People picker sections (in 0.10.6)
 
 - [ ] Capture card, "More": people are under Close friends, Now and then, A few times a year, Family, each sorted by name; a couple sits in the class of the less close member.
 - [ ] The button beside "n chosen" switches to one list by name and back; closing and reopening the picker keeps the last choice. Search works in both.
