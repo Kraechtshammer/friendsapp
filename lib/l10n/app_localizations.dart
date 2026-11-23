@@ -1505,7 +1505,7 @@ abstract class AppLocalizations {
   /// No description provided for @logKindGamed.
   ///
   /// In en, this message translates to:
-  /// **'Played'**
+  /// **'Gamed'**
   String get logKindGamed;
 
   /// No description provided for @logDayYesterdayShort.

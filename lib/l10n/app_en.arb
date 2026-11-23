@@ -378,7 +378,7 @@
   "logKindWrote": "Texted",
   "logKindCalled": "Called",
   "logKindMet": "Met",
-  "logKindGamed": "Played",
+  "logKindGamed": "Gamed",
   "logDayYesterdayShort": "Yday",
   "logDayPickShort": "Pick",
   "pickerChosen": "{count} chosen",

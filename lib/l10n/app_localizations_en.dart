@@ -870,7 +870,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logKindMet => 'Met';
 
   @override
-  String get logKindGamed => 'Played';
+  String get logKindGamed => 'Gamed';
 
   @override
   String get logDayYesterdayShort => 'Yday';
