@@ -286,3 +286,8 @@ A real update needs two release-signed builds: install one release, then a newer
 ## More activity icons (not released)
 
 - [ ] The activity grid shows swimmer, racket, dancer, bike, football and suitcase after the dumbbell, in six full rows; picked on a plan, they show on Home and the Timeline tab.
+
+## People picker sections (not released)
+
+- [ ] Capture card, "More": people are under Close friends, Now and then, A few times a year, Family, each sorted by name; a couple sits in the class of the less close member.
+- [ ] The button beside "n chosen" switches to one list by name and back; closing and reopening the picker keeps the last choice. Search works in both.

@@ -466,6 +466,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get pickerSearchHint => 'Menschen suchen';
 
   @override
+  String get pickerSortByName => 'Nach Name sortieren';
+
+  @override
+  String get pickerSortByClass => 'Nach Gruppe sortieren';
+
+  @override
   String get pickerNoMatch => 'Niemand gefunden.';
 
   @override

@@ -155,6 +155,8 @@
   "captureAddPeople": "Menschen hinzufügen",
   "onYourMind": "Gerade im Kopf",
   "pickerSearchHint": "Menschen suchen",
+  "pickerSortByName": "Nach Name sortieren",
+  "pickerSortByClass": "Nach Gruppe sortieren",
   "pickerNoMatch": "Niemand gefunden.",
   "done": "Erledigt",
   "drop": "Loslassen",

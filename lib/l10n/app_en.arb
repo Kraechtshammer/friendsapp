@@ -239,6 +239,8 @@
   "captureAddPeople": "Add people",
   "onYourMind": "On your mind",
   "pickerSearchHint": "Search people",
+  "pickerSortByName": "Sort by name",
+  "pickerSortByClass": "Sort by class",
   "pickerNoMatch": "Nobody found.",
   "done": "Done",
   "drop": "Drop",

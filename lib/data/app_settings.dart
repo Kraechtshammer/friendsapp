@@ -20,6 +20,10 @@ enum AppLanguage { system, en, de }
 /// one first.
 enum ShareImageChoice { picture, idea }
 
+/// How the grid people picker shows everyone: in the class sections of the
+/// People tab, or all by name.
+enum PickerSort { byClass, byName }
+
 /// How many open items Home offers for tonight (02-design.md §2.3).
 enum OpenItemsMode { one, three }
 
@@ -52,6 +56,7 @@ class AppSettings {
     this.updateCheckEnabled = false,
     this.updateCheckAsked = false,
     this.shareImageChoice = ShareImageChoice.picture,
+    this.pickerSort = PickerSort.byClass,
     this.picturesCatchUpAsked = false,
   });
 
@@ -154,6 +159,10 @@ class AppSettings {
 
   /// The last choice for a shared picture (start value: a person's picture).
   final ShareImageChoice shareImageChoice;
+
+  /// How the people picker sorts: in class sections or by name; the last
+  /// choice is kept.
+  final PickerSort pickerSort;
 
   /// The one-time card on the People tab "Add pictures from your contacts?"
   /// was answered (Add or Not now), so it does not come back (02-design.md
@@ -286,6 +295,7 @@ class AppSettings {
         'shareImageChoice',
         d.shareImageChoice,
       ),
+      pickerSort: pick(PickerSort.values, 'pickerSort', d.pickerSort),
       picturesCatchUpAsked: m['picturesCatchUpAsked'] == 'true',
     );
   }
@@ -320,6 +330,7 @@ class AppSettings {
     'updateCheckEnabled': '$updateCheckEnabled',
     'updateCheckAsked': '$updateCheckAsked',
     'shareImageChoice': shareImageChoice.name,
+    'pickerSort': pickerSort.name,
     'picturesCatchUpAsked': '$picturesCatchUpAsked',
   };
 
@@ -346,6 +357,7 @@ class AppSettings {
     bool? updateCheckEnabled,
     bool? updateCheckAsked,
     ShareImageChoice? shareImageChoice,
+    PickerSort? pickerSort,
     bool? picturesCatchUpAsked,
   }) => _copy(
     themeMode: themeMode,
@@ -370,6 +382,7 @@ class AppSettings {
     updateCheckEnabled: updateCheckEnabled,
     updateCheckAsked: updateCheckAsked,
     shareImageChoice: shareImageChoice,
+    pickerSort: pickerSort,
     picturesCatchUpAsked: picturesCatchUpAsked,
   );
 
@@ -414,6 +427,7 @@ class AppSettings {
     bool? updateCheckEnabled,
     bool? updateCheckAsked,
     ShareImageChoice? shareImageChoice,
+    PickerSort? pickerSort,
     bool? picturesCatchUpAsked,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
@@ -448,6 +462,7 @@ class AppSettings {
     updateCheckEnabled: updateCheckEnabled ?? this.updateCheckEnabled,
     updateCheckAsked: updateCheckAsked ?? this.updateCheckAsked,
     shareImageChoice: shareImageChoice ?? this.shareImageChoice,
+    pickerSort: pickerSort ?? this.pickerSort,
     picturesCatchUpAsked: picturesCatchUpAsked ?? this.picturesCatchUpAsked,
   );
 
@@ -479,6 +494,7 @@ class AppSettings {
       other.updateCheckEnabled == updateCheckEnabled &&
       other.updateCheckAsked == updateCheckAsked &&
       other.shareImageChoice == shareImageChoice &&
+      other.pickerSort == pickerSort &&
       other.picturesCatchUpAsked == picturesCatchUpAsked;
 
   @override
@@ -508,6 +524,7 @@ class AppSettings {
     updateCheckEnabled,
     updateCheckAsked,
     shareImageChoice,
+    pickerSort,
     picturesCatchUpAsked,
   ]);
 }

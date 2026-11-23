@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kept/app/app.dart';
 import 'package:kept/app/providers.dart';
 import 'package:kept/app/services.dart';
+import 'package:kept/data/app_settings.dart';
 import 'package:kept/data/database.dart';
 import 'package:kept/domain/contact_event.dart';
 import 'package:kept/domain/intention.dart';
@@ -360,6 +361,43 @@ void main() {
     expect(find.text('Save for Eve'), findsOneWidget);
     await saveFor(tester, 'Eve');
     expect(find.text('Saved for Eve.'), findsOneWidget);
+    await closeDown(tester);
+  });
+
+  testWidgets('More shows class sections, or everyone by name', (tester) async {
+    await tester.runAsync(() async {
+      final people = services.peopleFor(demo: false);
+      await people.add(name: 'Zoe', closeness: Closeness.close);
+      await people.add(name: 'Ann', closeness: Closeness.close);
+      await people.add(name: 'Max', closeness: Closeness.family);
+      for (final n in ['Bob', 'Cleo', 'Dan']) {
+        await people.add(name: n, closeness: Closeness.nowAndThen);
+      }
+    });
+    await start(tester);
+    await tester.tap(find.text('More'));
+    await tester.pumpAndSettle();
+    final sheet = find.byType(BottomSheet);
+    Offset at(String text) => tester.getTopLeft(
+      find.descendant(of: sheet, matching: find.text(text)),
+    );
+    // By class: sections in the order of the People tab, names sorted.
+    expect(at('CLOSE FRIENDS').dy, lessThan(at('Ann').dy));
+    expect(at('Ann').dx, lessThan(at('Zoe').dx));
+    expect(at('Zoe').dy, lessThan(at('NOW AND THEN').dy));
+    expect(at('NOW AND THEN').dy, lessThan(at('FAMILY').dy));
+    expect(at('FAMILY').dy, lessThan(at('Max').dy));
+    // By name: no sections, and the choice is kept.
+    await tester.tap(find.byTooltip('Sort by name'));
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(of: sheet, matching: find.text('FAMILY')),
+      findsNothing,
+    );
+    expect(at('Max').dx, lessThan(at('Zoe').dx));
+    final settings = await tester.runAsync(services.settings.load);
+    expect(settings!.pickerSort, PickerSort.byName);
+    expect(find.byTooltip('Sort by class'), findsOneWidget);
     await closeDown(tester);
   });
 

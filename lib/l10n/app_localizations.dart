@@ -878,6 +878,18 @@ abstract class AppLocalizations {
   /// **'Search people'**
   String get pickerSearchHint;
 
+  /// No description provided for @pickerSortByName.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by name'**
+  String get pickerSortByName;
+
+  /// No description provided for @pickerSortByClass.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by class'**
+  String get pickerSortByClass;
+
   /// No description provided for @pickerNoMatch.
   ///
   /// In en, this message translates to:
