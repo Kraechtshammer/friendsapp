@@ -278,3 +278,7 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Done: kind labels turn to Wrote, Called, Met, Played; the five day badges show; Save logs one shared contact.
 - [ ] Dark theme: tiles, badges and faces are readable.
 
+## Rotating texts (not released)
+
+- [ ] Finish a few thoughts: the "Nice one" heading and line change between times, and the line fits under the heading (also in German).
+- [ ] Open the capture card, a new idea, "Nice one" and "When…" a few times: the grey example text in the field changes and is never cut off.

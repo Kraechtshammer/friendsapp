@@ -66,6 +66,7 @@ Imports that go against a strict order: `app/app.dart` imports `ui/home_shell.da
 - English is the template; German is `app_de.arb`. Today there are 12 keys (title, four tabs, settings, theme labels, empty hint).
 - The generated `app_localizations*.dart` files are committed. After changing an ARB file, run the generator and commit its output with the change.
 - Screens read texts with `context.l10n`. No text is written in a widget.
+- Rotating texts (2026-11-23): `ui/varied_text.dart`. A text with variants has numbered keys (`niceOneTitle`, `niceOneTitle2` to `6`); an extension on `AppLocalizations` lists them, and the `VariedText` mixin on a `State` picks one position at random for the State's life (`vary(list)`). `test/flutter_test_config.dart` sets `variantPicker` to 0, so tests see the first text.
 
 ### 1.6 Riverpod
 

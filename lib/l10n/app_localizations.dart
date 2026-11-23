@@ -746,6 +746,36 @@ abstract class AppLocalizations {
   /// **'saw a bouldering video…'**
   String get captureHint;
 
+  /// No description provided for @captureHint2.
+  ///
+  /// In en, this message translates to:
+  /// **'ask how the move went…'**
+  String get captureHint2;
+
+  /// No description provided for @captureHint3.
+  ///
+  /// In en, this message translates to:
+  /// **'send the photo from the lake…'**
+  String get captureHint3;
+
+  /// No description provided for @captureHint4.
+  ///
+  /// In en, this message translates to:
+  /// **'a podcast they would like…'**
+  String get captureHint4;
+
+  /// No description provided for @captureHint5.
+  ///
+  /// In en, this message translates to:
+  /// **'congratulate on the new job…'**
+  String get captureHint5;
+
+  /// No description provided for @captureHint6.
+  ///
+  /// In en, this message translates to:
+  /// **'ask about their sister…'**
+  String get captureHint6;
+
   /// No description provided for @captureMore.
   ///
   /// In en, this message translates to:
@@ -842,11 +872,71 @@ abstract class AppLocalizations {
   /// **'Nice one!'**
   String get niceOneTitle;
 
+  /// No description provided for @niceOneTitle2.
+  ///
+  /// In en, this message translates to:
+  /// **'Well done!'**
+  String get niceOneTitle2;
+
+  /// No description provided for @niceOneTitle3.
+  ///
+  /// In en, this message translates to:
+  /// **'There you go!'**
+  String get niceOneTitle3;
+
+  /// No description provided for @niceOneTitle4.
+  ///
+  /// In en, this message translates to:
+  /// **'Look at you!'**
+  String get niceOneTitle4;
+
+  /// No description provided for @niceOneTitle5.
+  ///
+  /// In en, this message translates to:
+  /// **'Lovely!'**
+  String get niceOneTitle5;
+
+  /// No description provided for @niceOneTitle6.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s the way!'**
+  String get niceOneTitle6;
+
   /// No description provided for @niceOneSubtitle.
   ///
   /// In en, this message translates to:
   /// **'That\'s what counts.'**
   String get niceOneSubtitle;
+
+  /// No description provided for @niceOneSubtitle2.
+  ///
+  /// In en, this message translates to:
+  /// **'Friendships live on moments like this.'**
+  String get niceOneSubtitle2;
+
+  /// No description provided for @niceOneSubtitle3.
+  ///
+  /// In en, this message translates to:
+  /// **'Small steps keep people close.'**
+  String get niceOneSubtitle3;
+
+  /// No description provided for @niceOneSubtitle4.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone is glad you did.'**
+  String get niceOneSubtitle4;
+
+  /// No description provided for @niceOneSubtitle5.
+  ///
+  /// In en, this message translates to:
+  /// **'Another one kept.'**
+  String get niceOneSubtitle5;
+
+  /// No description provided for @niceOneSubtitle6.
+  ///
+  /// In en, this message translates to:
+  /// **'That was worth it.'**
+  String get niceOneSubtitle6;
 
   /// No description provided for @activityLabel.
   ///
@@ -865,6 +955,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'new job in March'**
   String get nextTimeHint;
+
+  /// No description provided for @nextTimeHint2.
+  ///
+  /// In en, this message translates to:
+  /// **'ask about the half marathon'**
+  String get nextTimeHint2;
+
+  /// No description provided for @nextTimeHint3.
+  ///
+  /// In en, this message translates to:
+  /// **'their cat was ill'**
+  String get nextTimeHint3;
+
+  /// No description provided for @nextTimeHint4.
+  ///
+  /// In en, this message translates to:
+  /// **'moving to Leipzig in summer'**
+  String get nextTimeHint4;
+
+  /// No description provided for @nextTimeHint5.
+  ///
+  /// In en, this message translates to:
+  /// **'wants to try the new ramen place'**
+  String get nextTimeHint5;
+
+  /// No description provided for @nextTimeHint6.
+  ///
+  /// In en, this message translates to:
+  /// **'exam on Friday'**
+  String get nextTimeHint6;
 
   /// No description provided for @remindMe.
   ///
@@ -1183,6 +1303,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'when it is warm again'**
   String get whenConditionHint;
+
+  /// No description provided for @whenConditionHint2.
+  ///
+  /// In en, this message translates to:
+  /// **'when the exams are over'**
+  String get whenConditionHint2;
+
+  /// No description provided for @whenConditionHint3.
+  ///
+  /// In en, this message translates to:
+  /// **'after the move'**
+  String get whenConditionHint3;
+
+  /// No description provided for @whenConditionHint4.
+  ///
+  /// In en, this message translates to:
+  /// **'when the baby is a bit older'**
+  String get whenConditionHint4;
+
+  /// No description provided for @whenConditionHint5.
+  ///
+  /// In en, this message translates to:
+  /// **'when the new season starts'**
+  String get whenConditionHint5;
+
+  /// No description provided for @whenConditionHint6.
+  ///
+  /// In en, this message translates to:
+  /// **'when I am in Berlin'**
+  String get whenConditionHint6;
 
   /// No description provided for @editThought.
   ///
@@ -2203,6 +2353,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'bouldering hall in Altona…'**
   String get ideaTextHint;
+
+  /// No description provided for @ideaTextHint2.
+  ///
+  /// In en, this message translates to:
+  /// **'board game café…'**
+  String get ideaTextHint2;
+
+  /// No description provided for @ideaTextHint3.
+  ///
+  /// In en, this message translates to:
+  /// **'the jazz night on Thursdays…'**
+  String get ideaTextHint3;
+
+  /// No description provided for @ideaTextHint4.
+  ///
+  /// In en, this message translates to:
+  /// **'a walk around the lake…'**
+  String get ideaTextHint4;
+
+  /// No description provided for @ideaTextHint5.
+  ///
+  /// In en, this message translates to:
+  /// **'cook that curry together…'**
+  String get ideaTextHint5;
+
+  /// No description provided for @ideaTextHint6.
+  ///
+  /// In en, this message translates to:
+  /// **'the new Pixar film…'**
+  String get ideaTextHint6;
 
   /// No description provided for @linkHint.
   ///

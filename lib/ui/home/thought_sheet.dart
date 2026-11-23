@@ -19,6 +19,7 @@ import '../widgets/main_button.dart';
 import '../widgets/section_label.dart';
 import '../widgets/when_picker.dart';
 import 'nice_one_screen.dart';
+import '../varied_text.dart';
 
 /// Opens the sheet that edits an open thought: text, kind, "when", an
 /// optional link and, for a meetup or a game, an activity icon, with
@@ -53,7 +54,7 @@ class _ThoughtSheet extends ConsumerStatefulWidget {
   ConsumerState<_ThoughtSheet> createState() => _ThoughtSheetState();
 }
 
-class _ThoughtSheetState extends ConsumerState<_ThoughtSheet> {
+class _ThoughtSheetState extends ConsumerState<_ThoughtSheet> with VariedText {
   late final _note = TextEditingController(text: widget.intention.note);
   late var _kind = widget.intention.kind;
   late var _when = whenOf(widget.intention);
@@ -184,7 +185,7 @@ class _ThoughtSheetState extends ConsumerState<_ThoughtSheet> {
               Expanded(
                 child: KeptTextField(
                   controller: _note,
-                  hint: l10n.captureHint,
+                  hint: vary(l10n.captureHints),
                   fillColor: kept.ground,
                   textCapitalization: TextCapitalization.sentences,
                   maxLines: 3,

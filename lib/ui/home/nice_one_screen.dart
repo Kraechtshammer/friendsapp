@@ -24,6 +24,7 @@ import '../widgets/main_button.dart';
 import '../widgets/section_label.dart';
 import '../widgets/stamps.dart';
 import '../widgets/when_picker.dart';
+import '../varied_text.dart';
 
 /// Done on an open thought: stores the contact at once, then shows the
 /// "Nice one" screen for it. Leaving that screen early loses nothing.
@@ -301,7 +302,7 @@ class NiceOneScreen extends ConsumerStatefulWidget {
   ConsumerState<NiceOneScreen> createState() => _NiceOneScreenState();
 }
 
-class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
+class _NiceOneScreenState extends ConsumerState<NiceOneScreen> with VariedText {
   late final _activity = TextEditingController(text: widget.thought);
   late var _icon = activityIconByName(widget.event.activityIcon);
   final _line = TextEditingController();
@@ -426,12 +427,12 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
                                 : Avatar.person(widget.person, size: 96),
                           ),
                           Text(
-                            l10n.niceOneTitle,
+                            vary(l10n.niceOneTitles),
                             textAlign: TextAlign.center,
                             style: context.text.headlineLarge,
                           ),
                           Text(
-                            l10n.niceOneSubtitle,
+                            vary(l10n.niceOneSubtitles),
                             textAlign: TextAlign.center,
                             style: context.text.bodyMedium,
                           ),
@@ -465,7 +466,7 @@ class _NiceOneScreenState extends ConsumerState<NiceOneScreen> {
                                 _Label(l10n.nextTimeLabel),
                                 KeptTextField(
                                   controller: _line,
-                                  hint: l10n.nextTimeHint,
+                                  hint: vary(l10n.nextTimeHints),
                                   fillColor: kept.ground,
                                   textCapitalization:
                                       TextCapitalization.sentences,

@@ -10,6 +10,7 @@ import '../common.dart';
 import '../material.dart';
 import '../kept_icon.dart';
 import 'kept_text_field.dart';
+import '../varied_text.dart';
 
 /// Asks for a day with the date picker. The day lies between today and the
 /// end of the 12 months the Upcoming tab shows; [initial] outside of that
@@ -69,7 +70,7 @@ class WhenPicker extends ConsumerStatefulWidget {
   ConsumerState<WhenPicker> createState() => _WhenPickerState();
 }
 
-class _WhenPickerState extends ConsumerState<WhenPicker> {
+class _WhenPickerState extends ConsumerState<WhenPicker> with VariedText {
   late final _condition = TextEditingController(
     text: widget.value.condition ?? '',
   );
@@ -170,7 +171,7 @@ class _WhenPickerState extends ConsumerState<WhenPicker> {
         if (_v.horizon == Horizon.whenCondition)
           KeptTextField(
             controller: _condition,
-            hint: l10n.whenConditionHint,
+            hint: vary(l10n.whenConditionHints),
             fillColor: widget.fieldColor,
             onChanged: (text) => widget.onChanged(
               When.horizon(Horizon.whenCondition, condition: text),
@@ -217,7 +218,7 @@ class _WhenPickerState extends ConsumerState<WhenPicker> {
         if (_v.horizon == Horizon.whenCondition)
           KeptTextField(
             controller: _condition,
-            hint: l10n.whenConditionHint,
+            hint: vary(l10n.whenConditionHints),
             fillColor: widget.fieldColor,
             onChanged: (text) => widget.onChanged(
               When.horizon(Horizon.whenCondition, condition: text),

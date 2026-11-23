@@ -14,6 +14,7 @@ import '../widgets/kept_text_field.dart';
 import '../widgets/link_row.dart';
 import '../widgets/main_button.dart';
 import '../widgets/picture_thumb.dart';
+import '../varied_text.dart';
 
 /// The text an idea shows: its text, else its link, else "Picture".
 String ideaText(Idea idea, AppLocalizations l10n) {
@@ -51,7 +52,7 @@ class _IdeaSheet extends ConsumerStatefulWidget {
   ConsumerState<_IdeaSheet> createState() => _IdeaSheetState();
 }
 
-class _IdeaSheetState extends ConsumerState<_IdeaSheet> {
+class _IdeaSheetState extends ConsumerState<_IdeaSheet> with VariedText {
   late final _note = TextEditingController(text: widget.idea.note);
   late final _link = TextEditingController(text: widget.idea.link ?? '');
   late var _kind = widget.idea.kind;
@@ -110,7 +111,7 @@ class _IdeaSheetState extends ConsumerState<_IdeaSheet> {
               Expanded(
                 child: KeptTextField(
                   controller: _note,
-                  hint: l10n.ideaTextHint,
+                  hint: vary(l10n.ideaTextHints),
                   fillColor: kept.ground,
                   textCapitalization: TextCapitalization.sentences,
                   maxLines: 3,

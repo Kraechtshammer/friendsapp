@@ -20,6 +20,7 @@ import '../widgets/past_day_picker.dart';
 import '../widgets/when_picker.dart';
 import 'nice_one_screen.dart';
 import 'who_row.dart';
+import '../varied_text.dart';
 
 /// The capture card: a note, the people, a kind, when, Save (02-design.md
 /// §2.1 and §8, 2026-11-23; concept log-sheet-v3). The kind tiles, the when
@@ -35,7 +36,7 @@ class CaptureCard extends ConsumerStatefulWidget {
   ConsumerState<CaptureCard> createState() => _CaptureCardState();
 }
 
-class _CaptureCardState extends ConsumerState<CaptureCard> {
+class _CaptureCardState extends ConsumerState<CaptureCard> with VariedText {
   final _note = TextEditingController();
   final _focus = FocusNode();
 
@@ -175,7 +176,7 @@ class _CaptureCardState extends ConsumerState<CaptureCard> {
                 child: KeptTextField(
                   controller: _note,
                   focusNode: _focus,
-                  hint: l10n.captureHint,
+                  hint: vary(l10n.captureHints),
                   fillColor: kept.ground,
                   textCapitalization: TextCapitalization.sentences,
                 ),

@@ -23,6 +23,7 @@ import '../widgets/when_picker.dart';
 import 'contact_entry_sheet.dart';
 import 'person_screen.dart';
 import 'person_timeline_view.dart';
+import '../varied_text.dart';
 
 /// A couple's page (02-design.md §8, 2026-11-16): both people large side
 /// by side (a tap opens their own page), "We met", a thought for both, the
@@ -260,7 +261,7 @@ class _ThoughtForm extends ConsumerStatefulWidget {
   ConsumerState<_ThoughtForm> createState() => _ThoughtFormState();
 }
 
-class _ThoughtFormState extends ConsumerState<_ThoughtForm> {
+class _ThoughtFormState extends ConsumerState<_ThoughtForm> with VariedText {
   final _note = TextEditingController();
   var _kind = IntentionKind.meet;
   var _when = const When.none();
@@ -306,7 +307,7 @@ class _ThoughtFormState extends ConsumerState<_ThoughtForm> {
           ),
           KeptTextField(
             controller: _note,
-            hint: l10n.captureHint,
+            hint: vary(l10n.captureHints),
             fillColor: kept.ground,
             textCapitalization: TextCapitalization.sentences,
           ),

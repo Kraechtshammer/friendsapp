@@ -395,6 +395,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get captureHint => 'Boulder-Video gesehen…';
 
   @override
+  String get captureHint2 => 'fragen, wie der Umzug lief…';
+
+  @override
+  String get captureHint3 => 'Foto vom See schicken…';
+
+  @override
+  String get captureHint4 => 'ein Podcast, der passen würde…';
+
+  @override
+  String get captureHint5 => 'zum neuen Job gratulieren…';
+
+  @override
+  String get captureHint6 => 'nach der Schwester fragen…';
+
+  @override
   String get captureMore => 'Mehr';
 
   @override
@@ -448,7 +463,37 @@ class AppLocalizationsDe extends AppLocalizations {
   String get niceOneTitle => 'Stark!';
 
   @override
+  String get niceOneTitle2 => 'Gut gemacht!';
+
+  @override
+  String get niceOneTitle3 => 'So geht\'s!';
+
+  @override
+  String get niceOneTitle4 => 'Schön!';
+
+  @override
+  String get niceOneTitle5 => 'Klasse!';
+
+  @override
+  String get niceOneTitle6 => 'Sehr gut!';
+
+  @override
   String get niceOneSubtitle => 'Das zählt.';
+
+  @override
+  String get niceOneSubtitle2 => 'Von solchen Momenten leben Freundschaften.';
+
+  @override
+  String get niceOneSubtitle3 => 'Kleine Schritte halten Menschen nah.';
+
+  @override
+  String get niceOneSubtitle4 => 'Darüber freut sich jemand.';
+
+  @override
+  String get niceOneSubtitle5 => 'Genau so bleibt man in Kontakt.';
+
+  @override
+  String get niceOneSubtitle6 => 'Das hat sich gelohnt.';
 
   @override
   String get activityLabel => 'Was habt ihr gemacht?';
@@ -458,6 +503,21 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get nextTimeHint => 'neuer Job im März';
+
+  @override
+  String get nextTimeHint2 => 'nach dem Halbmarathon fragen';
+
+  @override
+  String get nextTimeHint3 => 'die Katze war krank';
+
+  @override
+  String get nextTimeHint4 => 'zieht im Sommer nach Leipzig';
+
+  @override
+  String get nextTimeHint5 => 'will den neuen Ramen-Laden testen';
+
+  @override
+  String get nextTimeHint6 => 'Prüfung am Freitag';
 
   @override
   String get remindMe => 'Erinnere mich';
@@ -651,6 +711,21 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get whenConditionHint => 'wenn es wieder warm ist';
+
+  @override
+  String get whenConditionHint2 => 'wenn die Prüfungen vorbei sind';
+
+  @override
+  String get whenConditionHint3 => 'nach dem Umzug';
+
+  @override
+  String get whenConditionHint4 => 'wenn das Baby etwas älter ist';
+
+  @override
+  String get whenConditionHint5 => 'wenn die neue Staffel startet';
+
+  @override
+  String get whenConditionHint6 => 'wenn ich in Berlin bin';
 
   @override
   String get editThought => 'Gedanke bearbeiten';
@@ -1358,6 +1433,21 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ideaTextHint => 'Boulderhalle in Altona…';
+
+  @override
+  String get ideaTextHint2 => 'Brettspielcafé…';
+
+  @override
+  String get ideaTextHint3 => 'Jazzabend donnerstags…';
+
+  @override
+  String get ideaTextHint4 => 'Runde um den See…';
+
+  @override
+  String get ideaTextHint5 => 'zusammen das Curry kochen…';
+
+  @override
+  String get ideaTextHint6 => 'der neue Pixar-Film…';
 
   @override
   String get linkHint => 'Link (optional)';
