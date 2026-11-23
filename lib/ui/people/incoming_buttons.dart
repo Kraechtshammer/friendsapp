@@ -47,6 +47,7 @@ class IncomingButtons extends ConsumerWidget {
               ? l10n.notedTheyWrote(name)
               : l10n.notedTheyCalled(name),
         ),
+        persist: false,
         action: SnackBarAction(
           label: l10n.undo,
           onPressed: () => repo.delete(event.id),
