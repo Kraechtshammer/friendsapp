@@ -282,3 +282,7 @@ A real update needs two release-signed builds: install one release, then a newer
 
 - [ ] Finish a few thoughts: the "Nice one" heading and line change between times, and the line fits under the heading (also in German).
 - [ ] Open the capture card, a new idea, "Nice one" and "When…" a few times: the grey example text in the field changes and is never cut off.
+
+## More activity icons (not released)
+
+- [ ] The activity grid shows swimmer, racket and dancer after the dumbbell; picked on a plan, they show on Home and the Timeline tab.
