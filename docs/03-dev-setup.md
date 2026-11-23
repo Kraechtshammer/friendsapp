@@ -153,7 +153,7 @@ Checked on 2026-11-15:
 - The shell scripts pass a syntax check.
 - The Dockerfile's instructions are identical to akai-timetrack's (compared with comments removed).
 - `.devcontainer/.env` is matched by `.gitignore`.
-- A plain `docker build` of `.devcontainer` succeeds (10 minutes, image about 16 GB). In the image, `flutter --version` reports 3.47.9 and `adb version` runs.
+- A plain `docker build` of `.devcontainer` succeeds (10 minutes, image about 16 GB). In the image, `flutter --version` reports 3.47.9 and `adb version` runs. On 2026-11-23 the image moved to Flutter 3.50.1, JDK 21, build-tools 37.0.0 (together with akai-timetrack); the rebuild is not checked yet.
 - The Docker volume `timetrack-emulator` exists on this PC.
 - The developer opened the folder in the container from VS Code.
 - In that container: `flutter analyze`, `flutter test` and `flutter build apk --debug` succeed on the new project.
