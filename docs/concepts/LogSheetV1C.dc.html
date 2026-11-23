@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>C People picker</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.s{width:390px;height:844px;box-sizing:border-box;background:var(--bg);color:var(--on);font-family:'Roboto',system-ui,sans-serif;font-size:16px;line-height:1.35;position:relative;overflow:hidden;flex:none;
+--coral:#FF8A7A;--corald:#C4564A;--sun:#FFCF5C;--sund:#C4962A;--mint:#7EDDBE;--lilac:#C3B4FF;--sky:#8CCBFF;--pink:#FF9EC6;--onacc:#1F1326;
+--bg:#FFF6EA;--s1:#FFFFFF;--s2:#F3E6D6;--s2d:#D9C7B2;--shd:rgba(42,27,61,.2);--on:#2A1B3D;--mut:#6B5A7A;--line:#CDBBA8;
+--sunc:#FFE08A;--mintc:#BDEFDD;--lilacc:#DDD4FF;--pinkc:#FFD0E2;--skyc:#C6E5FF;--coralc:#FFC9C0}
+.s *{box-sizing:border-box}
+.pair{display:flex;gap:40px;align-items:flex-start}
+.lab{font:600 13px Outfit,sans-serif;color:#6B5A7A;margin:0 0 8px 4px;letter-spacing:.04em}
+h1,.o{font-family:Outfit,sans-serif}
+.back{position:absolute;inset:0;padding:22px 16px}
+.back .blk{background:var(--s1);border-radius:28px;box-shadow:0 5px 0 var(--shd);height:110px;margin-bottom:14px}
+.scrim{position:absolute;inset:0;background:rgba(31,19,38,.55)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-radius:28px 28px 0 0;padding:10px 16px 18px;display:flex;flex-direction:column;gap:14px;box-shadow:0 -4px 0 rgba(0,0,0,.12)}
+.grab{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 2px}
+h1{font-size:24px;font-weight:700;margin:0}
+.sub{font-size:14px;color:var(--mut)}
+.l{font:600 13px Outfit,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:0 0 10px}
+.sec{display:block}
+.card{background:var(--s1);border-radius:22px;padding:12px 14px 14px;box-shadow:0 4px 0 var(--shd)}
+.t1{background:var(--lilacc)}.t2{background:var(--skyc)}.t3{background:var(--mintc)}.t4{background:var(--pinkc)}
+.row{display:flex;gap:8px;align-items:center}
+.chip{height:44px;border-radius:14px;border:1.5px solid var(--on);display:inline-flex;align-items:center;gap:6px;padding:0 14px;font:500 15px Roboto;color:var(--on);background:transparent;white-space:nowrap}
+.chip.on{background:var(--sun);border-color:var(--sun);color:var(--onacc)}
+.tiles{display:flex;gap:10px}
+.tile{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.tb{width:100%;aspect-ratio:1;border-radius:22px;background:var(--s2);box-shadow:0 4px 0 var(--s2d);display:flex;align-items:center;justify-content:center}
+.tile.on .tb{background:var(--sun);box-shadow:0 4px 0 var(--sund)}
+.tile.on .tb svg{transform:scale(1.08)}
+.tile span{font:600 14px Outfit;color:var(--mut)}.tile.on span{color:var(--on);font-weight:700}
+.tile.hid .tb{aspect-ratio:1}
+.av{display:flex;align-items:center;justify-content:center;font:700 22px Outfit;color:var(--onacc);filter:drop-shadow(0 2px 0 rgba(0,0,0,.3));flex:none}
+.sc{clip-path:polygon(100.0% 50.0%,99.2% 53.2%,97.1% 56.2%,94.1% 58.8%,91.1% 61.0%,88.5% 63.1%,87.0% 65.3%,86.5% 68.0%,86.8% 71.2%,87.4% 75.0%,87.7% 78.9%,87.1% 82.5%,85.4% 85.4%,82.5% 87.1%,78.9% 87.7%,75.0% 87.4%,71.3% 86.8%,68.0% 86.5%,65.3% 87.0%,63.1% 88.5%,61.0% 91.1%,58.8% 94.1%,56.2% 97.1%,53.2% 99.2%,50.0% 100.0%,46.8% 99.2%,43.8% 97.1%,41.2% 94.1%,39.0% 91.1%,36.9% 88.5%,34.7% 87.0%,32.0% 86.5%,28.8% 86.8%,25.0% 87.4%,21.1% 87.7%,17.5% 87.1%,14.6% 85.4%,12.9% 82.5%,12.3% 78.9%,12.6% 75.0%,13.2% 71.2%,13.5% 68.0%,13.0% 65.3%,11.5% 63.1%,8.9% 61.0%,5.9% 58.8%,2.9% 56.2%,0.8% 53.2%,0.0% 50.0%,0.8% 46.8%,2.9% 43.8%,5.9% 41.2%,8.9% 39.0%,11.5% 36.9%,13.0% 34.7%,13.5% 32.0%,13.2% 28.8%,12.6% 25.0%,12.3% 21.1%,12.9% 17.5%,14.6% 14.6%,17.5% 12.9%,21.1% 12.3%,25.0% 12.6%,28.7% 13.2%,32.0% 13.5%,34.7% 13.0%,36.9% 11.5%,39.0% 8.9%,41.2% 5.9%,43.8% 2.9%,46.8% 0.8%,50.0% 0.0%,53.2% 0.8%,56.2% 2.9%,58.8% 5.9%,61.0% 8.9%,63.1% 11.5%,65.3% 13.0%,68.0% 13.5%,71.3% 13.2%,75.0% 12.6%,78.9% 12.3%,82.5% 12.9%,85.4% 14.6%,87.1% 17.5%,87.7% 21.1%,87.4% 25.0%,86.8% 28.7%,86.5% 32.0%,87.0% 34.7%,88.5% 36.9%,91.1% 39.0%,94.1% 41.2%,97.1% 43.8%,99.2% 46.8%)}.rs{border-radius:34%}.lf{border-radius:50% 50% 50% 16%}.ar{border-radius:50% 50% 16% 16%}
+.a-coral{background:var(--coral)}.a-sun{background:var(--sun)}.a-mint{background:var(--mint)}.a-lilac{background:var(--lilac)}.a-sky{background:var(--sky)}.a-pink{background:var(--pink)}
+.faces{display:flex;gap:14px;align-items:flex-start}
+.face{display:flex;flex-direction:column;align-items:center;gap:5px;font:500 13px Roboto;width:58px}
+.face .av{width:54px;height:54px}
+.add{width:54px;height:54px;border-radius:50%;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--mut)}
+.strip{display:flex;gap:8px;align-items:center;overflow:hidden}
+.cal{width:44px;height:44px;border-radius:14px;background:var(--s2);box-shadow:0 3px 0 var(--s2d);display:flex;align-items:center;justify-content:center;flex:none}
+.db{width:62px;height:62px;border-radius:18px;background:var(--s2);box-shadow:0 4px 0 var(--s2d);display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;color:var(--on)}
+.db small{font:600 9.5px Outfit;letter-spacing:.02em;text-transform:uppercase;color:var(--mut)}
+.db b{font:700 24px Outfit;line-height:1.05}
+.db.on{background:var(--sun);box-shadow:0 4px 0 var(--sund);color:var(--onacc)}.db.on small{color:var(--onacc)}
+.btn{height:52px;border-radius:26px;background:var(--coral);box-shadow:0 4px 0 var(--corald);color:var(--onacc);font:600 17px Outfit;display:flex;align-items:center;justify-content:center;gap:8px}
+.search{height:48px;border-radius:26px;background:#F6EEE4;display:flex;align-items:center;gap:10px;padding:0 16px;color:var(--mut);font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 6px;padding:4px 0}
+.g{display:flex;flex-direction:column;align-items:center;gap:10px;font:500 14px Roboto}
+.pw{position:relative;width:68px;height:68px;display:flex;align-items:center;justify-content:center}
+.pw .av{width:60px;height:60px;font-size:24px}
+.pw.sel{box-shadow:0 0 0 4px #fff,0 0 0 7px var(--coral);border-radius:50%}
+.pw.sel .av{width:62px;height:62px}
+.ck{position:absolute;right:-4px;bottom:-4px;width:26px;height:26px;border-radius:50%;background:var(--mint);box-shadow:0 2px 0 rgba(0,0,0,.3),0 0 0 3px var(--bg);display:flex;align-items:center;justify-content:center}
+
+.w{padding:16px;background:#EDE3D6;width:462px;height:906px}</style>
+</helmet>
+<div class="w"><div class="pair"><div><p class="lab">C · picker slides up, two chosen</p><div class="s"><div class="back"><h1 style="margin-bottom:14px">Tom</h1><div class="blk"></div><div class="blk"></div><div class="blk"></div></div><div class="scrim"></div><div class="scrim" style="background:rgba(31,19,38,.45)"></div><div class="sheet" style="top:150px;gap:14px;background:#FFFFFF"><div class="grab"></div><div style="display:flex;align-items:baseline;justify-content:space-between"><h1 style="font-size:22px">Who else was there?</h1><span class="sub">2 chosen</span></div><div class="search"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5 20 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><span>Search people</span></div><div class="grid"><div class="g"><div class="pw sel"><span class="av a-mint sc" style="width:60px;height:60px;font-size:24px">F</span><span class="ck"><svg width="15" height="15" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#1F1326" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><span>Franz</span></div><div class="g"><div class="pw sel"><span class="av a-pink lf" style="width:60px;height:60px;font-size:24px">L</span><span class="ck"><svg width="15" height="15" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#1F1326" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><span>Lucy</span></div><div class="g"><div class="pw"><span class="av a-lilac ar" style="width:60px;height:60px;font-size:24px">A</span></div><span>Anna</span></div><div class="g"><div class="pw"><span class="av a-sun sc" style="width:60px;height:60px;font-size:24px">M</span></div><span>Mark</span></div><div class="g"><div class="pw"><span class="av a-coral rs" style="width:60px;height:60px;font-size:24px">S</span></div><span>Sofia</span></div><div class="g"><div class="pw"><span class="av a-sky ar" style="width:60px;height:60px;font-size:24px">J</span></div><span>Jonas</span></div><div class="g"><div class="pw"><span class="av a-mint lf" style="width:60px;height:60px;font-size:24px">M</span></div><span>Maya</span></div><div class="g"><div class="pw"><span class="av a-pink sc" style="width:60px;height:60px;font-size:24px">B</span></div><span>Ben</span></div><div class="g"><div class="pw"><span class="av a-sun ar" style="width:60px;height:60px;font-size:24px">E</span></div><span>Eva</span></div><div class="g"><div class="pw"><span class="av a-lilac rs" style="width:60px;height:60px;font-size:24px">P</span></div><span>Paul</span></div><div class="g"><div class="pw"><span class="av a-coral lf" style="width:60px;height:60px;font-size:24px">N</span></div><span>Nora</span></div></div><div style="flex:1"></div><div class="btn">Done</div></div></div></div></div></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview": {"width": 462, "height": 906}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

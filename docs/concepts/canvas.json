@@ -596,6 +596,97 @@
       "w": 360,
       "h": 300,
       "title": "Meetup icons v3 · Restaurant"
+    },
+    "LogSheetV1A.dc.html": {
+      "x": 0,
+      "y": 19300,
+      "w": 892,
+      "h": 906,
+      "title": "Log sheet v1 · A What as tiles"
+    },
+    "LogSheetV1B.dc.html": {
+      "x": 972,
+      "y": 19300,
+      "w": 462,
+      "h": 906,
+      "title": "Log sheet v1 · B With as faces"
+    },
+    "LogSheetV1C.dc.html": {
+      "x": 1514,
+      "y": 19300,
+      "w": 462,
+      "h": 906,
+      "title": "Log sheet v1 · C People picker"
+    },
+    "LogSheetV1D.dc.html": {
+      "x": 2056,
+      "y": 19300,
+      "w": 892,
+      "h": 906,
+      "title": "Log sheet v1 · D When as a strip of days"
+    },
+    "LogSheetV1E.dc.html": {
+      "x": 3028,
+      "y": 19300,
+      "w": 892,
+      "h": 906,
+      "title": "Log sheet v1 · E Full sheet"
+    },
+    "LogSheetV1F.dc.html": {
+      "x": 4000,
+      "y": 19300,
+      "w": 1346,
+      "h": 936,
+      "title": "Log sheet v1 · F Flow from the person page"
+    },
+    "LogSheetV1G.dc.html": {
+      "x": 5426,
+      "y": 19300,
+      "w": 892,
+      "h": 936,
+      "title": "Log sheet v1 · G Home capture card"
+    },
+    "LogSheetV2H.dc.html": {
+      "x": 0,
+      "y": 20400,
+      "w": 1282,
+      "h": 936,
+      "title": "Log sheet v2 · H Home card"
+    },
+    "LogSheetV2I.dc.html": {
+      "x": 1362,
+      "y": 20400,
+      "w": 852,
+      "h": 792,
+      "title": "Log sheet v2 · I When tiles"
+    },
+    "LogSheetV2D3.dc.html": {
+      "x": 2294,
+      "y": 20400,
+      "w": 852,
+      "h": 512,
+      "title": "Log sheet v2 · D3 Past-day row"
+    },
+    "LogSheetV3J.dc.html": {
+      "x": 0,
+      "y": 21400,
+      "w": 1712,
+      "h": 936,
+      "title": "Log sheet v3 · J Home flow"
+    },
+    "LogSheetV3K.dc.html": {
+      "x": 1792,
+      "y": 21400,
+      "w": 422,
+      "h": 936,
+      "title": "Log sheet v3 · K Log sheet"
+    },
+    "LogSheetV3L.dc.html": {
+      "x": 2294,
+      "y": 21400,
+      "w": 1282,
+      "h": 936,
+      "title": "Log sheet v3 · L Home suggested"
     }
   },
   "createdOnFiles": {
@@ -718,6 +809,30 @@
       "kind": "title1",
       "maxW": 2740,
       "text": "Meetup icons v3: restaurant with the knife mirrored"
+    },
+    "tLogSheetV1": {
+      "x": 0,
+      "y": 19000,
+      "w": 240,
+      "kind": "title1",
+      "maxW": 2740,
+      "text": "Log sheet v1: redesign of \"We were in touch\" (tiles for What, faces for With, picker, strip of days), light"
+    },
+    "tLogSheetV2": {
+      "x": 0,
+      "y": 20100,
+      "w": 240,
+      "kind": "title1",
+      "maxW": 2740,
+      "text": "Log sheet v2: Home card with one dashed plus, when as five tiles, past days as five badges"
+    },
+    "tLogSheetV3": {
+      "x": 0,
+      "y": 21100,
+      "w": 240,
+      "kind": "title1",
+      "maxW": 2740,
+      "text": "Log sheet v3: final Home flow and log sheet"
     }
   },
   "order": [
@@ -805,7 +920,20 @@
     "MeetupV2Walk.dc.html",
     "MeetupV2ReusedAsTheyAre.dc.html",
     "MeetupV3Weight.dc.html",
-    "MeetupV3Restaurant.dc.html"
+    "MeetupV3Restaurant.dc.html",
+    "LogSheetV1A.dc.html",
+    "LogSheetV1B.dc.html",
+    "LogSheetV1C.dc.html",
+    "LogSheetV1D.dc.html",
+    "LogSheetV1E.dc.html",
+    "LogSheetV1F.dc.html",
+    "LogSheetV1G.dc.html",
+    "LogSheetV2H.dc.html",
+    "LogSheetV2I.dc.html",
+    "LogSheetV2D3.dc.html",
+    "LogSheetV3J.dc.html",
+    "LogSheetV3K.dc.html",
+    "LogSheetV3L.dc.html"
   ],
   "pages": [],
   "title": "Friends app concept screens"
