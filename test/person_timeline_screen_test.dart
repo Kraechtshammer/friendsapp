@@ -156,7 +156,7 @@ void main() {
     final before = (await events(tester)).length;
     await tester.tap(find.text('We were in touch'));
     await tester.pumpAndSettle();
-    expect(find.text('We were in touch with Tom'), findsOneWidget);
+    expect(find.text('I was in touch with Tom'), findsOneWidget);
     await tester.tap(find.byTooltip('Called'));
     await tester.tap(find.text('YDAY'));
     await tester.pump();

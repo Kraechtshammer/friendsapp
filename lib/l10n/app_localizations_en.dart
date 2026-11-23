@@ -396,7 +396,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get captureMore => 'More';
 
   @override
-  String get kindWrite => 'Write';
+  String get kindWrite => 'Text';
 
   @override
   String get kindCall => 'Call';
@@ -840,7 +840,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String logContactTitle(String name) {
-    return 'We were in touch with $name';
+    return 'I was in touch with $name';
   }
 
   @override
@@ -861,7 +861,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get logKindWrote => 'Wrote';
+  String get logKindWrote => 'Texted';
 
   @override
   String get logKindCalled => 'Called';

@@ -182,7 +182,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Save for Tom and Anna'), findsOneWidget);
     // The plan forms of the kinds, the past forms after Done.
-    expect(find.text('Write'), findsOneWidget);
+    expect(find.text('Text'), findsOneWidget);
     await tester.tap(find.text('Soon'));
     await tester.pumpAndSettle();
     await saveFor(tester, 'Tom and Anna');
@@ -205,7 +205,7 @@ void main() {
     expect(find.text('YDAY'), findsNothing);
     await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
-    expect(find.text('Wrote'), findsOneWidget);
+    expect(find.text('Texted'), findsOneWidget);
     expect(find.text('YDAY'), findsOneWidget);
     expect(find.text('TODAY'), findsOneWidget);
     await closeDown(tester);

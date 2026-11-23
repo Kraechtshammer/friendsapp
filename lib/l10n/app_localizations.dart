@@ -755,7 +755,7 @@ abstract class AppLocalizations {
   /// No description provided for @kindWrite.
   ///
   /// In en, this message translates to:
-  /// **'Write'**
+  /// **'Text'**
   String get kindWrite;
 
   /// No description provided for @kindCall.
@@ -1451,7 +1451,7 @@ abstract class AppLocalizations {
   /// No description provided for @logContactTitle.
   ///
   /// In en, this message translates to:
-  /// **'We were in touch with {name}'**
+  /// **'I was in touch with {name}'**
   String logContactTitle(String name);
 
   /// No description provided for @logContactWhat.
@@ -1487,7 +1487,7 @@ abstract class AppLocalizations {
   /// No description provided for @logKindWrote.
   ///
   /// In en, this message translates to:
-  /// **'Wrote'**
+  /// **'Texted'**
   String get logKindWrote;
 
   /// No description provided for @logKindCalled.
