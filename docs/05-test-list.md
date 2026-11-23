@@ -268,7 +268,7 @@ A real update needs two release-signed builds: install one release, then a newer
 - [ ] Choose a couple, "Already happened": no "With" row, and saving works as before.
 - [ ] Change the chosen person: the added people are cleared.
 
-## New logging look (not released yet)
+## New logging look (in 0.10.5)
 
 - [ ] "We were in touch": four icon tiles, only the chosen one shows its label; five day badges in one row (German "Gestern" fits); the calendar badge opens the date picker and then shows the picked day.
 - [ ] "With" row: the person first, a dashed "+" opens the grid picker (search, ring and check, "n chosen", Done); tapping an added face removes it.

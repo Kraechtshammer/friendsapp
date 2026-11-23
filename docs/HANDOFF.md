@@ -5,9 +5,8 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
 ## 1. Where things stand
 
 - Phase: **implement**. The app is called **Kept.** with the full stop (running text may write Kept). App ID `de.gartenpa.kept`; debug builds use `de.gartenpa.kept.debug`. Repository and folder are `friendsapp`.
-- **M0 to M10 are all built.** Everything is released; the newest release is 0.10.4.
-- **Not released yet (2026-11-23):** the new logging look (kind tiles, five day badges, grid people picker, faces row, Done/plan chips on the capture card, one thought per person); see 02-design.md §8. Tests and analyze pass; not tried on the phone.
-- **Released** (tags `v0.1.0` to `v0.10.4`, 2026-11-16 to 2026-11-22, no version skipped):
+- **M0 to M10 are all built.** Everything is released; the newest release is 0.10.5.
+- **Released** (tags `v0.1.0` to `v0.10.5`, 2026-11-16 to 2026-11-23, no version skipped):
   - 0.1.0: M1, people, contacts import, "Open chat".
   - 0.2.0: M2 and M3, capture, the evening question, Tonight's pick, "Nice one".
   - 0.3.0: M4, birthdays.
@@ -25,9 +24,10 @@ The first thing a new session reads. Last rewritten on 2026-11-16, after the rev
   - 0.10.2 (2026-11-19): "No" on the owed-reply evening notification stores "We texted" without opening the app (02-design.md §8). Released at the developer's word without a debug try on the phone; test points in 05-test-list.md.
   - 0.10.3 (2026-11-22): log one contact with several people at once ("With" row in "We were in touch"); shared contacts show all their people. Released without a debug try on the phone.
   - 0.10.4 (2026-11-22): the "With" row also on Home's "Already happened"; three or more faces stacked on "Nice one". Released without a debug try on the phone.
+  - 0.10.5 (2026-11-23): new logging look (kind tiles, five day badges, grid people picker, faces row with suggestions, Done/plan chips on the Home card, one thought per person; 02-design.md §8); "Texted"/"Gamed" and "I was in touch with"; "Noted" messages with Undo close on their own. Tried by the developer on the debug build: "works fine" (before the wording and the bugfix).
 - **One contact with several people** (2026-11-22, in 0.10.3): "We were in touch" has a "With" row to add people; one shared event for all (02-design.md §8). `flutter gen-l10n`, `flutter analyze` and `flutter test` (724) passed in the dev container. Released at the developer's word without a debug try on the phone; test points in 05-test-list.md. The capture card's "Already happened" now has the same "With" row (shared `WithRow` widget), and "Nice one" shows three or more faces stacked (`CrowdAvatar`, at most 4 plus "+n"); this part is in 0.10.4, not tried on the phone. Tests (725) and analyze passed in the dev container.
 - **Activity icons** (2026-11-18, in 0.10.1): activity icons for meetups and games, on contacts and on plans, schema 7 (02-design.md §8; 14 new icons, drafts and canvas rows "Meetup icons v1" to "v3" in `docs/concepts/meetup-icons-v1/`). Test points in 05-test-list.md. Open: no icon button yet on the couple page, the share sheet and "Planning to meet up?".
-- **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.10.5 next; the developer chose 0.10.0 over 0.9.4 for the Timeline, 2026-11-18).
+- **1.0.0 is not soon (the developer, 2026-11-16):** the developer tests for days or weeks first. Until then releases keep taking the next number (0.10.6 next; the developer chose 0.10.0 over 0.9.4 for the Timeline, 2026-11-18).
 - **The developer's phone** (2026-11-16): `de.gartenpa.kept.debug` ("Kept. debug", 0.7.0, test data). The old 0.6.0 debug build under `de.gartenpa.kept` is left only in the Private space (user 11), never opened there; it blocks the release install (signature) and the developer removes it by hand (Claude's uninstall was refused). Then the listener build of the release goes on over adb.
 - **The developer's phone since 0.8.0:** the release listener build `kept-0.8.0-listener.apk` is installed over adb as the real app; 0.9.0 is its first real in-app update test. The developer said on 2026-11-16 that commits may be pushed right away.
 - **Play Protect blocks sideloaded APKs with a notification listener** (found 2026-11-16 on the Pixel 7 Pro: "The app can request access to sensitive data..."). Since then the listener is the build flag `KEPT_INCOMING` (03-dev-setup.md). Each release publishes `kept-<v>.apk` (no listener, installs from the browser) and `kept-<v>-listener.apk` (for the developer, installed over adb); the updater keeps each build on its own kind. Whether Play Protect lets the app's own updater install the listener APK is unverified. A Play internal testing track would be the legal way to ship the listener to others.
@@ -119,7 +119,7 @@ What was built is in [04-architecture.md](04-architecture.md); decisions are in 
 - Review of the German texts (written by subagents).
 - The light theme on a phone.
 - Open questions (section 5).
-- Releases take the next number each time (the next after 0.10.4 is 0.10.5).
+- Releases take the next number each time (the next after 0.10.5 is 0.10.6).
 - **Timeline tab** (2026-11-18, in 0.10.0): replaces Upcoming; Today in the middle, future above, past below (02-design.md §8). Things on the current day show "Today" instead of a date on Home, the Timeline tab and the person page.
 
 **Planned, decided, not built** (to be built in its own session)
